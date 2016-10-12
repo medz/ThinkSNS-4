@@ -3182,10 +3182,11 @@ function RemoveXSS($val)
  *
  * @author zhangwei
  * @date   2016-10-10
- * @param  string     $department_id 1,2,3
+ * @param  string $department_id 1,2,3
  * @return array
  */
-function getDepartmentById($department_id){
+function getDepartmentById($department_id)
+{
     if ($department_id) {
         $dep = explode(',', $department_id);
         foreach ($dep as $key => $value) {
@@ -3197,6 +3198,7 @@ function getDepartmentById($department_id){
                 );*/
             $data[] = $dep_item;
         }
+
         return $data;
     }
 }

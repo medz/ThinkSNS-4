@@ -425,7 +425,6 @@ class DepartmentModel extends Model
      */
     public function synchronizeDepart()
     {
-
         $list = dingtalk_get_dept_list();
         if ($list->department) {
             foreach ($list->department as $key => $value) {
