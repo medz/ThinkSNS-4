@@ -35,7 +35,7 @@ class InformationApi extends Api
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <title>' .htmlspecialchars($info->subject, ENT_QUOTES, 'UTF-8').'</title>
+  <title>'.htmlspecialchars($info->subject, ENT_QUOTES, 'UTF-8').'</title>
   <style type="text/css">
     * {
       box-sizing: border-box;
@@ -94,14 +94,14 @@ class InformationApi extends Api
 </head>
 <body>
 <div class="wrap">
-  <h2 class="title">' .htmlspecialchars($info->subject, ENT_QUOTES, 'UTF-8').'</h2>
+  <h2 class="title">'.htmlspecialchars($info->subject, ENT_QUOTES, 'UTF-8').'</h2>
   <div class="date">
-    ' .date('Y-m-d', $info->rtime).'
-    <span class="right">浏览：' .intval($info->hits).'</span>
+    '.date('Y-m-d', $info->rtime).'
+    <span class="right">浏览：'.intval($info->hits).'</span>
   </div>
-  <div class="abstract"><strong>[摘要]&nbsp;</strong>' .htmlspecialchars($info->abstract, ENT_QUOTES, 'UTF-8').'</div>
+  <div class="abstract"><strong>[摘要]&nbsp;</strong>'.htmlspecialchars($info->abstract, ENT_QUOTES, 'UTF-8').'</div>
   <div class="content">
-    ' .$info->content.'
+    '.$info->content.'
   </div>
 </div>
 </body>

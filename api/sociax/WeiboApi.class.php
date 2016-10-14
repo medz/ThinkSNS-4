@@ -1,4 +1,5 @@
 <?php
+
 // 微博Api接口V2
 class WeiboApi extends Api
 {

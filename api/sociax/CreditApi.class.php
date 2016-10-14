@@ -13,6 +13,7 @@ class CreditApi extends Api
     {
         $credit = model('Credit')->getUserCredit($this->mid);
         $list = M()->query('select b.small_src from '.C('DB_PREFIX').'medal_user a inner join '.C('DB_PREFIX').'medal b on a.medal_id=b.id where a.uid='.$this->mid.' order by a.ctime desc limit 10');
+
         return array(
                 'score' => $credit ['credit'] ['score'] ['value'],
                 'medal_count' => count($list),
