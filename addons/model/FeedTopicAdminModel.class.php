@@ -63,7 +63,7 @@ class FeedTopicAdminModel extends Model
             $topic_list['data'][$k]['type'] = $v['create_uid'] == 0 ? '系统话题' : '个人话题';
             $isrecommend = $v['recommend'] ? '取消推荐' : '推荐';
             $topic_list['data'][$k]['DOACTION'] = '<a href="javascript:void(0);" onclick="admin.setTopic(1,'.$v['topic_id'].','.intval($v['recommend']).')">'.$isrecommend.'</a>-';
-            $isessence = $v['essence']?'取消精华':'设为精华';
+            $isessence = $v['essence'] ? '取消精华' : '设为精华';
             $topic_list['data'][$k]['DOACTION'] .= '<a href="javascript:void(0);" onclick="admin.setTopic(2,'.$v['topic_id'].','.intval($v['essence']).')">'.$isessence.'</a>-';
             // 操作数据
             $topic_list['data'][$k]['DOACTION'] .= '<a href="javascript:void(0);" onclick="admin.setTopic(3,'.$v['topic_id'].','.intval($v['lock']).')">'.$islock.'</a> - ';

@@ -1,6 +1,6 @@
 <?php
 
-use Ts\Models\Department AS DepModel;
+use Ts\Models\Department as DepModel;
 
 /**
  * 菜单选择Widget
@@ -84,7 +84,7 @@ class MenuWidget extends Widget
                 $cate = $cate ? $cate->toArray() : [];
 
                 if ($cate['parent_dept_id'] != 1) {
-                    $parent1 = DepModel::where('department_id', $cate['parent_dept_id'])->first();//上级
+                    $parent1 = DepModel::where('department_id', $cate['parent_dept_id'])->first(); //上级
 
                     $var['parent1'] = $parent1 ? $parent1->toArray() : [];
                     if ($var['parent1']['parent_dept_id'] != 1) {
@@ -99,7 +99,6 @@ class MenuWidget extends Widget
                 } else {
                     $var['parent1']['title'] = $cate['title'];
                     $var['parent1']['id'] = $cate['department_id'];
-
                 }
 
                 //下级

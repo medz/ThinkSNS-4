@@ -686,7 +686,7 @@ class ContentAction extends AdministratorAction
         $this->pageKeyList = array('topic_name', 'note', 'domain', 'des', 'pic', 'topic_user', 'outlink', 'recommend');
         $topic['domain'] = SITE_URL.'/topics/'.'<input type="text" value="" name="domain" id="form_domain">';
         $this->opt['recommend'] = array('1' => '是', '0' => '否');
-        $this->opt['essence'] = array('1'=>'是','0'=>'否');
+        $this->opt['essence'] = array('1' => '是', '0' => '否');
         $this->notEmpty = array('topic_name', 'note');
         // 表单URL设置
         $this->savePostUrl = U('admin/Content/doAddTopic');

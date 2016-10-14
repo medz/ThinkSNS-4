@@ -476,7 +476,7 @@ class PeopleModel extends model
         $data['limit'] && $page = intval($data['limit']);
         $data['uids'] = '1';
         // 设置表明
-        $depart = D('UserDepartment')->where(array('department_id'=>$data['unit']))->select();
+        $depart = D('UserDepartment')->where(array('department_id' => $data['unit']))->select();
         $depart = $depart ? getSubByKey($depart, 'uid') : '';
         $data['uid'] = implode(',', $depart);
         $table = '`'.C('DB_PREFIX').'user`';

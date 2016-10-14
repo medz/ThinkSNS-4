@@ -3,12 +3,11 @@
 use Apps\Information\Model\Subject as SubjectModel;
 
 /**
-* 首页文章推荐Widget
-*
-*/
+ * 首页文章推荐Widget
+ *
+ */
 class RelatedArticleWidget extends Widget
 {
-
     /**
      * 渲染首页文章推荐页面
      * @param  array  $data 配置相关数据
