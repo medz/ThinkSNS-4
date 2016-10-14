@@ -40,11 +40,11 @@ class NotifytionApi extends Api
     public function set_notify_read()
     {
         if ($this->data['type'] == 'atme') {
-            model('UserCount')->resetUserCount($this->mid, 'unread_atme',  0);
+            model('UserCount')->resetUserCount($this->mid, 'unread_atme', 0);
 
             return 1;
         } elseif ($this->data['type'] == 'comment') {
-            model('UserCount')->resetUserCount($this->mid, 'unread_comment',  0);
+            model('UserCount')->resetUserCount($this->mid, 'unread_comment', 0);
 
             return 1;
         } elseif ($this->data['type'] == 'new_follower') {

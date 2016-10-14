@@ -1,4 +1,5 @@
 <?php
+
 //相册模块
 class PhotoApi extends Api
 {

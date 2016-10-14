@@ -1,4 +1,5 @@
 <?php
+
 //投票接口
 include_once SITE_PATH.'/apps/vote/Lib/Model/BaseModel.class.php';
 class VoteApi extends Api

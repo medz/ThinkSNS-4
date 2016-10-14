@@ -1,4 +1,5 @@
 <?php
+
 //视频接口
 class VideoApi extends Api
 {

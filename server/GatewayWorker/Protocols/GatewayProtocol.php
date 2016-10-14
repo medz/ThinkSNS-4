@@ -114,7 +114,7 @@ class GatewayProtocol
         $ext_len = strlen($data['ext_data']);
         $package_len = self::HEAD_LEN + $ext_len + strlen($data['body']);
 
-        return pack('NCNnNnNNC',  $package_len,
+        return pack('NCNnNnNNC', $package_len,
                         $data['cmd'], ip2long($data['local_ip']),
                         $data['local_port'], ip2long($data['client_ip']),
                         $data['client_port'], $data['client_id'],

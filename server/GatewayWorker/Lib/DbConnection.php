@@ -1679,9 +1679,9 @@ class DbConnection
     public function bind($para, $value)
     {
         if (is_string($para)) {
-            $this->parameters[sizeof($this->parameters)] = ':'.$para."\x7F".$value;
+            $this->parameters[count($this->parameters)] = ':'.$para."\x7F".$value;
         } else {
-            $this->parameters[sizeof($this->parameters)] = $para."\x7F".$value;
+            $this->parameters[count($this->parameters)] = $para."\x7F".$value;
         }
     }
 

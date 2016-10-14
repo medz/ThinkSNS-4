@@ -543,7 +543,7 @@ class Worker
     protected static function installSignal()
     {
         // stop
-        pcntl_signal(SIGINT,  array('\Workerman\Worker', 'signalHandler'), false);
+        pcntl_signal(SIGINT, array('\Workerman\Worker', 'signalHandler'), false);
         // reload
         pcntl_signal(SIGUSR1, array('\Workerman\Worker', 'signalHandler'), false);
         // status
@@ -558,7 +558,7 @@ class Worker
     protected static function reinstallSignal()
     {
         // uninstall stop signal handler
-        pcntl_signal(SIGINT,  SIG_IGN, false);
+        pcntl_signal(SIGINT, SIG_IGN, false);
         // uninstall reload signal handler
         pcntl_signal(SIGUSR1, SIG_IGN, false);
         // uninstall  status signal handler
@@ -923,7 +923,7 @@ class Worker
             file_put_contents(self::$_statisticsFile, 'Workerman version:'.Worker::VERSION.'          PHP version:'.PHP_VERSION."\n", FILE_APPEND);
             file_put_contents(self::$_statisticsFile, 'start time:'.date('Y-m-d H:i:s', self::$_globalStatistics['start_timestamp']).'   run '.floor((time() - self::$_globalStatistics['start_timestamp']) / (24 * 60 * 60)).' days '.floor(((time() - self::$_globalStatistics['start_timestamp']) % (24 * 60 * 60)) / (60 * 60))." hours   \n", FILE_APPEND);
             file_put_contents(self::$_statisticsFile, 'load average: '.implode(', ', $loadavg)."\n", FILE_APPEND);
-            file_put_contents(self::$_statisticsFile,  count(self::$_pidMap).' workers       '.count(self::getAllWorkerPids())." processes\n", FILE_APPEND);
+            file_put_contents(self::$_statisticsFile, count(self::$_pidMap).' workers       '.count(self::getAllWorkerPids())." processes\n", FILE_APPEND);
             file_put_contents(self::$_statisticsFile, str_pad('worker_name', self::$_maxWorkerNameLength)." exit_status     exit_count\n", FILE_APPEND);
             foreach (self::$_pidMap as $worker_id => $worker_pid_array) {
                 $worker = self::$_workers[$worker_id];
@@ -935,7 +935,7 @@ class Worker
                     file_put_contents(self::$_statisticsFile, str_pad($worker->name, self::$_maxWorkerNameLength).' '.str_pad(0, 16)." 0\n", FILE_APPEND);
                 }
             }
-            file_put_contents(self::$_statisticsFile,  "---------------------------------------PROCESS STATUS-------------------------------------------\n", FILE_APPEND);
+            file_put_contents(self::$_statisticsFile, "---------------------------------------PROCESS STATUS-------------------------------------------\n", FILE_APPEND);
             file_put_contents(self::$_statisticsFile, "pid\tmemory  ".str_pad('listening', self::$_maxSocketNameLength).' '.str_pad('worker_name', self::$_maxWorkerNameLength).' connections '.str_pad('total_request', 13).' '.str_pad('send_fail', 9).' '.str_pad('throw_exception', 15)."\n", FILE_APPEND);
 
             chmod(self::$_statisticsFile, 0722);
@@ -1108,7 +1108,7 @@ class Worker
             if ($this->transport !== 'udp') {
                 self::$globalEvent->add($this->_mainSocket, EventInterface::EV_READ, array($this, 'acceptConnection'));
             } else {
-                self::$globalEvent->add($this->_mainSocket,  EventInterface::EV_READ, array($this, 'acceptUdpConnection'));
+                self::$globalEvent->add($this->_mainSocket, EventInterface::EV_READ, array($this, 'acceptUdpConnection'));
             }
         }
     }
@@ -1145,7 +1145,7 @@ class Worker
                 if ($this->transport !== 'udp') {
                     self::$globalEvent->add($this->_mainSocket, EventInterface::EV_READ, array($this, 'acceptConnection'));
                 } else {
-                    self::$globalEvent->add($this->_mainSocket,  EventInterface::EV_READ, array($this, 'acceptUdpConnection'));
+                    self::$globalEvent->add($this->_mainSocket, EventInterface::EV_READ, array($this, 'acceptUdpConnection'));
                 }
             }
         }

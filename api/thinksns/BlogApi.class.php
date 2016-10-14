@@ -1,4 +1,5 @@
 <?php
+
 //知识接口
 class BlogApi extends Api
 {

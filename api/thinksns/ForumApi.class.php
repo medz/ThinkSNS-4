@@ -1,4 +1,5 @@
 <?php
+
 // 论坛API接口
 class ForumApi extends Api
 {

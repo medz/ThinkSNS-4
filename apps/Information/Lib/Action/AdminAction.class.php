@@ -378,7 +378,6 @@ class Admin extends Controller
 
         //$data = SubjectModel::getInstance()->getSubject();
         if (SubjectModel::getInstance()->where('id='.$id)->setField('isIndex', $type)) {
-
             $this->success('执行成功');
         }
         $this->error('执行失败');
