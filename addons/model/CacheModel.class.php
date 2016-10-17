@@ -154,11 +154,11 @@ class CacheModel
 
     /**
      * 缓存写入次数
-<<<<<<< HEAD
+     <<<<<<< HEAD
      * @return 获取缓存写??次数
-=======
+     =======
      * @return 获取缓存写入次数
->>>>>>> master
+     >>>>>>> master
      */
     public function W()
     {
