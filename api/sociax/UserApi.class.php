@@ -257,7 +257,7 @@ class UserApi extends Api
             // $user_info = model('User')->where('uid='.$uid)->field('uid,uname,sex,location,province,city,area,intro,avatar,department_id,ctime,last_login_time')->find();
             $user_info = \Ts\Models\User::byUid($uid)
                 ->first();
-                
+
             if ($user_info) {
                 $user_info = $user_info->toArray();
             }
