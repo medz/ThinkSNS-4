@@ -7,14 +7,14 @@
  * get($key, $mutex = false)            获取缓存数据，支持mutex模式
  * getList($prefix, $key)               批量获取指定前缀下的多个key值的缓存
  * rm($key)                             删除缓存
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 // 加载缓存操作类
 tsload(CORE_LIB_PATH.'/Cache.class.php');
 class CacheModel
 {
-    //public static $_cacheHash = array();  // 缓存的静态变量          
+    //public static $_cacheHash = array();  // 缓存的静态变量
     protected $handler;                        // 操作句柄
     protected $type = 'FILE';                // 缓存类型，默认为文件缓存
 
@@ -90,7 +90,7 @@ class CacheModel
         // 获取缓存数据
         $data = $this->handler->get($key);
 
-        // 未设置缓存 
+        // 未设置缓存
         if (!$data) {
             return false;
         }
@@ -145,7 +145,6 @@ class CacheModel
 
     /**
      * 清除缓存
-     * @access public
      * @return boolen
      */
     public function clear()
