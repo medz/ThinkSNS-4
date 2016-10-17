@@ -421,8 +421,8 @@ class DepartmentModel extends Model
      *
      * @author zhangwei
      * @date   2016-10-17
-     * @param  int    $uid    用户uid
-     * @param  string     $department_id 部门字符串(1,2,3)
+     * @param int    $uid           用户uid
+     * @param string $department_id 部门字符串(1,2,3)
      */
     public function setDepartMentById($uid, $department_id)
     {
