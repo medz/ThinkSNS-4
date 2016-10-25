@@ -936,6 +936,7 @@ class Db extends Think
                 throw_exception($this->error());
             }
         }
+
         return true;
     }
 

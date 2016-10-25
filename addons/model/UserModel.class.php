@@ -921,7 +921,7 @@ class UserModel extends Model
             $user['uname'] = EmojiFormat::de($user['uname']);
 
             //用户备注
-            if($GLOBALS ['ts'] ['mid'] != 0){
+            if ($GLOBALS ['ts'] ['mid'] != 0) {
                 $rm['mid'] = $GLOBALS['ts']['mid'];
                 $rm['uid'] = $user['uid'];
                 $remark = D('UserRemark')->where($rm)->getField('remark');
