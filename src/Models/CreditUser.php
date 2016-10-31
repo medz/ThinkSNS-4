@@ -14,4 +14,4 @@ class CreditUser extends Model
 {
     protected $table = 'credit_user';
     protected $primaryKey = 'id';
-} 
+}

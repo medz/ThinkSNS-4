@@ -58,18 +58,17 @@ class UserRemarkModel extends Model
     /**
      * 通过备注名搜索
      *
-     * @param  int    $mid 用户id
-     * @param  string    $remark 备注名
+     * @param  int    $mid    用户id
+     * @param  string $remark 备注名
      * @return array
      * @author Foreach <missu082500@163.com>
      **/
     public function searchRemark($mid, $remark)
     {
-
         $rmap['mid'] = $mid;
-        $rmap['remark'] = array('LIKE','%' . $remark . '%');
+        $rmap['remark'] = array('LIKE', '%'.$remark.'%');
         $ruid_arr = getSubByKey($this->where($rmap)->field('uid')->findAll(), 'uid');
+
         return $ruid_arr;
     }
-
 }

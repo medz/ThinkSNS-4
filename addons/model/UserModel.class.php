@@ -272,7 +272,7 @@ class UserModel extends Model
             $rm ['uid'] = $user ['uid'];
             $remark = D('UserRemark')->where($rm)->getField('remark');
             $user ['remark'] = $remark ? $remark : '';
-        }else {
+        } else {
             $user ['remark'] = '';
         }
 

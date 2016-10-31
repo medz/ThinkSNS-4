@@ -12,6 +12,6 @@ return array(
         'Information/reader' => true,
         'LiveOauth/ZB_User_Get_AuthByTicket' => true,
         'LiveGift/*' => true,
-        'LiveUser/*' => true
+        'LiveUser/*' => true,
     ),
 );
