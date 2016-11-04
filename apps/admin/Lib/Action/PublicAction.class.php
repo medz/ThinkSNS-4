@@ -315,15 +315,17 @@ class PublicAction extends AdministratorAction
     /**
      * 存储分类配置操作
      */
-    public function delTrashUser(){
-        $sql = "SELECT `uname` FROM `ts_user` GROUP BY `uname` HAVING count(`uname`) >2";
+    public function delTrashUser()
+    {
+        $sql = 'SELECT `uname` FROM `ts_user` GROUP BY `uname` HAVING count(`uname`) >2';
         $rs = D()->query($sql);
         foreach ($rs as $key => $value) {
-            $_rs = D('User')->where(array('uname'=>$value['uname']))->select();
+            $_rs = D('User')->where(array('uname' => $value['uname']))->select();
             $uids = getSubByKey($_rs, 'uid');
             $pos = array_search(min($uids), $uids);
             unset($uids[$pos]);
-            var_dump($uids);exit;
+            var_dump($uids);
+            exit;
             D('User')->trueDeleteUsers($uids);
         }
     }
