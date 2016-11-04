@@ -3351,8 +3351,10 @@ function postUser()
  * 转换备注
  * @Author Foreach[missu082500@163.cocm]
  */
-function parse_remark($content){
+function parse_remark($content)
+{
     $content = preg_replace_callback('/@([\w\x{2e80}-\x{9fff}\-]+)/u', '_parse_remark', $content);
+
     return $content;
 }
 
@@ -3373,7 +3375,8 @@ function _parse_remark($result)
 
     if ($info && $info['is_active'] && $info['is_audit'] && $info['is_init']) {
         $remark = model('UserRemark')->getRemark($_SESSION['mid'], $info['uid']);
-        return $remark ? '@' . $remark : $result[0];
+
+        return $remark ? '@'.$remark : $result[0];
     } else {
         return $result[0];
     }
