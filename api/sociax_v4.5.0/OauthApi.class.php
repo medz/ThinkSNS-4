@@ -217,19 +217,19 @@ class OauthApi extends Api
                 $data['oauth_token'] = getOAuthToken($user['uid']);
                 $data['oauth_token_secret'] = getOAuthTokenSecret();
                 $data['uid'] = $user['uid'];
-                $login =  D('')->table(C('DB_PREFIX').'login')->where('uid='.$user['uid']." AND type='location'")->find();
+                $login = D('')->table(C('DB_PREFIX').'login')->where('uid='.$user['uid']." AND type='location'")->find();
                 if (! $login) {
                     $savedata['type'] = 'location';
                     $savedata = array_merge($savedata, $data);
                     D('')->table(C('DB_PREFIX').'login')->add($savedata);
-                }else {
+                } else {
                     //清除缓存
                     model('Cache')->rm($login['oauth_token'].$login['oauth_token_secret']);
                     D('')->table(C('DB_PREFIX').'login')->where('uid='.$user['uid']." AND type='location'")->save($data);
                 }
-            
+
                 //直播用户信息
-                if($live_user_info = D('live_user_info')->where(array('uid'=>$user['uid']))->find()){
+                if ($live_user_info = D('live_user_info')->where(array('uid' => $user['uid']))->find()) {
                     $data['ticket'] = $live_user_info['ticket'];
                 } else {
                     $live_user_info = file_get_contents(SITE_URL.'/api.php?api_version=live&mod=LiveUser&act=postUser&uid='.$user['uid']);
@@ -238,6 +238,7 @@ class OauthApi extends Api
                     $live_user_info['status'] == 1 && $data['ticket'] = $live_user_info['data']['ticket'];
                 }
                 $data['status'] = 1;
+
                 return $data;
             } else {
                 return array('status' => 0, 'msg' => '用户名或密码错误');
@@ -712,7 +713,7 @@ class OauthApi extends Api
                     }
                 }
                 //生成ticket
-                if($live_user_info = D('live_user_info')->where(array('uid'=>$user['uid']))->find()){
+                if ($live_user_info = D('live_user_info')->where(array('uid' => $user['uid']))->find()) {
                     $data['ticket'] = $live_user_info['ticket'];
                 } else {
                     $live_user_info = file_get_contents(SITE_URL.'/api.php?api_version=live&mod=LiveUser&act=postUser&uid='.$user['uid']);
@@ -720,6 +721,7 @@ class OauthApi extends Api
                     $live_user_info['status'] == 1 && $data['ticket'] = $live_user_info['data']['ticket'];
                 }
                 $data['ticket'] = $live_user_info ['ticket'];
+
                 return $data;
             } else {
                 return array('status' => 0, 'msg' => '帐号尚未绑定');
@@ -792,7 +794,7 @@ class OauthApi extends Api
             $result = M('login')->add($savedata);
 
             //直播用户信息
-            if($live_user_info = D('live_user_info')->where(array('uid'=>$uid))->find()){
+            if ($live_user_info = D('live_user_info')->where(array('uid' => $uid))->find()) {
                 $data['ticket'] = $live_user_info['ticket'];
             } else {
                 $live_user_info = file_get_contents(SITE_URL.'/api.php?api_version=live&mod=LiveUser&act=postUser&uid='.$uid);

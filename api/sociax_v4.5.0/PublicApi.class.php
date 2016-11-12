@@ -106,21 +106,21 @@ class PublicApi extends Api
      **/
     public function discover()
     {
-        $open_arr = isset($this->data['needs']) ? explode(',', t($this->data['needs'])) : array('1','2','3','4','5','6','7','8','9');
+        $open_arr = isset($this->data['needs']) ? explode(',', t($this->data['needs'])) : array('1', '2', '3', '4', '5', '6', '7', '8', '9');
         $type = isset($this->data['type']) ? t($this->data['type']) : 'system';
         $list = S('api_discover_'.$type);
 
-        if(!$list) {
+        if (!$list) {
             $list = array();
 
             // 轮播图
-            if (in_array('1', $open_arr)){
+            if (in_array('1', $open_arr)) {
                 $banners = $this->getSlideShow();
                 $list ['banner'] = $banners ? $banners : array();
             }
 
             // 微吧
-            if (in_array('2', $open_arr)){
+            if (in_array('2', $open_arr)) {
                 $wmap['recommend'] = 1;
                 $wmap['status'] = 1;
                 $wmap['is_del'] = 0;
@@ -142,15 +142,15 @@ class PublicApi extends Api
             }
 
             // 话题
-            if (in_array('3', $open_arr)){      
+            if (in_array('3', $open_arr)) {
                 $tmap ['recommend'] = 1;
                 $tmap ['lock'] = 0;
                 $topic_recommend = D('FeedTopic')->where($tmap)->order('count desc')->limit(8)->field('topic_id,topic_name,pic')->findAll();
 
                 foreach ($topic_recommend as $key => $value) {
-                    if ($value['pic'] != null){
-                        $topic_recommend [$key]['pic'] = getImageUrlByAttachId($value['pic'], 100, 100);   
-                    } else{
+                    if ($value['pic'] != null) {
+                        $topic_recommend [$key]['pic'] = getImageUrlByAttachId($value['pic'], 100, 100);
+                    } else {
                         $topic_recommend [$key]['pic'] = '';
                     }
                 }
@@ -158,24 +158,24 @@ class PublicApi extends Api
             }
 
             //频道
-            if (in_array('4', $open_arr)){  
+            if (in_array('4', $open_arr)) {
                 $cmap ['pid'] = 0;
                 $channel_recommend = D('ChannelCategory')->where($cmap)->order('sort asc')->limit(8)->field('channel_category_id,title,ext')->findAll();
 
                 foreach ($channel_recommend as $key => $value) {
                     $serialize = unserialize($value['ext']);
-                    if ($serialize['attach'] != ''){
+                    if ($serialize['attach'] != '') {
                         $channel_recommend [$key]['pic'] = getImageUrlByAttachId($serialize['attach'], 100, 100);
-                    } else{
-                        $channel_recommend [$key]['pic'] = ''; 
+                    } else {
+                        $channel_recommend [$key]['pic'] = '';
                     }
-                    unset($channel_recommend [$key]['ext']); 
+                    unset($channel_recommend [$key]['ext']);
                 }
                 $list ['channels'] = $channel_recommend ? $channel_recommend : array();
             }
 
             //资讯
-            if (in_array('5', $open_arr)){  
+            if (in_array('5', $open_arr)) {
                 $tconf = model('Xdata')->get('Information_Admin:config');
                 $hotTime = intval($tconf['hotTime']);
                 if ($hotTime > 0) {
@@ -205,7 +205,7 @@ class PublicApi extends Api
             }
 
             //找人
-            if (in_array('6', $open_arr)){
+            if (in_array('6', $open_arr)) {
                 $user = model('RelatedUser')->getRelatedUser(8);
                 $user_list = array();
 
@@ -221,7 +221,7 @@ class PublicApi extends Api
             }
 
             //附近的人
-            if (in_array('7', $open_arr)){
+            if (in_array('7', $open_arr)) {
                 $users = api('FindPeople')->around();
 
                 foreach ($users['data'] as $key => $value) {
@@ -237,11 +237,11 @@ class PublicApi extends Api
             }
 
             //积分商城
-            if (in_array('8', $open_arr)){
+            if (in_array('8', $open_arr)) {
                 $giftlogs = D('GiftLog')->field('`gid`')->group('`gid`')->order('COUNT(`gid`) DESC')->limit(8)->findAll();
 
                 foreach ($giftlogs as $key => $value) {
-                    $gift = D('Gift')->where(array('id'=>$value['gid']))->field('id,name,image')->find();
+                    $gift = D('Gift')->where(array('id' => $value['gid']))->field('id,name,image')->find();
                     $gift ['image'] = getImageUrlByAttachId($gift ['image']);
                     $gifts[] = $gift;
                 }
@@ -252,50 +252,51 @@ class PublicApi extends Api
         }
 
         //直播
-        if (in_array('9', $open_arr)){
-            $lives_url = "http://zbtest.zhibocloud.cn/stream/getList";
+        if (in_array('9', $open_arr)) {
+            $lives_url = 'http://zbtest.zhibocloud.cn/stream/getList';
             $lives_rs = file_get_contents($lives_url);
             $lives_rs = json_decode($lives_rs, true);
 
             if ($lives_rs['data']) {
                 foreach ($lives_rs['data'] as $key => $value) {
-                    if ($key > 8) break;
+                    if ($key > 8) {
+                        break;
+                    }
 
                     //用户信息
                     $uid = D('live_user_info')->where(array('usid' => $value['user']['usid']))->getField('uid');
                     $userInfo = api('User')->get_user_info($uid);
-                    $user_info ['uid'] = (string)$userInfo ['uid'];
+                    $user_info ['uid'] = (string) $userInfo ['uid'];
                     $user_info ['uname'] = $userInfo ['uname'];
                     $user_info ['sex'] = $userInfo ['sex'];
                     $user_info ['intro'] = $userInfo ['intro'] ? formatEmoji(false, $userInfo ['intro']) : '';
                     $user_info ['location'] = $userInfo ['location'] ? $userInfo ['location'] : '';
-                    $user_info ['avatar'] = (object)array( $userInfo ['avatar'] ['avatar_big'] );
+                    $user_info ['avatar'] = (object) array($userInfo ['avatar'] ['avatar_big']);
                     $user_info ['gold'] = intval($userInfo ['user_credit'] ['credit'] ['score'] ['value']);
                     $user_info ['fans_count'] = intval($userInfo ['user_data'] ['follower_count']);
                     $user_info ['is_verified'] = 0;
                     $user_info ['usid'] = $value['user']['usid'];
                     $credit_mod = M('credit_user');
-                    $credit = $credit_mod->where( array( 'uid' => $uid ) )->find();
+                    $credit = $credit_mod->where(array('uid' => $uid))->find();
                     $user_info ['zan_count'] = $credit ['zan_remain'];
                     $user_info ['live_time'] = $credit ['live_time'];
                     $res = model('Follow')->getFollowStateByFids($this->mid, intval($uid));
                     $user_info ['is_follow'] = $res[$uid]['following'];
                     /* # 获取用户封面 */
                     $cover = D('user_data')->where('`key` LIKE "application_user_cover" AND `uid` = '.$v)->field('value')->getField('value');
-                    $user_info ['cover'] = $cover ? (object)array($cover) : (object)[];
+                    $user_info ['cover'] = $cover ? (object) array($cover) : (object) [];
                     $value['user'] = $user_info;
 
                     $icon = $value['stream']['icon'];
-                    $value['stream']['icon'] = $icon ? (object)$icon : (object)[];
+                    $value['stream']['icon'] = $icon ? (object) $icon : (object) [];
                     $lives[] = $value;
                 }
                 $list ['lives'] = $lives;
-            }else{
+            } else {
                 $list ['lives'] = array();
             }
         }
 
         return $list;
     }
-
 } // END class PublicApi extends Api

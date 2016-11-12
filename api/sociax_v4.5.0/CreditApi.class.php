@@ -40,8 +40,8 @@ class CreditApi extends Api
             $detail = @json_decode($val['detail'], true);
             $rs['score'] = (string) $detail['score'];
             $rs['score'] = trim($rs['score'], '+');
-			$is_add = $rs['score'] > 0 ? true : false;
-            $rs['action'] = ($val['action'] && $val['action'] != null) ? $val['action'] : ($is_add ? '系统赠送':'系统扣除');
+            $is_add = $rs['score'] > 0 ? true : false;
+            $rs['action'] = ($val['action'] && $val['action'] != null) ? $val['action'] : ($is_add ? '系统赠送' : '系统扣除');
             $rs['score'] = $is_add ? "+{$rs['score']}" : "{$rs['score']}";
             $data[] = $rs;
         }

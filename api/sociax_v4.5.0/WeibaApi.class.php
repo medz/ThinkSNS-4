@@ -224,7 +224,7 @@ class WeibaApi extends Api
         $data['title'] = formatEmoji(false, $data['title']);
 
         // 处理换行，临时解决方案
-        $br = array("\r\n","\n","\r");
+        $br = array("\r\n", "\n", "\r");
         $replace = '<br/>';
         $data['content'] = str_replace($br, $replace, $data['content']);
 
@@ -1577,7 +1577,7 @@ class WeibaApi extends Api
         $data['content'] = formatEmoji(true, $data['content']);
 
         // 处理换行，临时解决方案
-        $br = array("\r\n","\n","\r");
+        $br = array("\r\n", "\n", "\r");
         $replace = '<br/>';
         $data['content'] = str_replace($br, $replace, $data['content']);
 

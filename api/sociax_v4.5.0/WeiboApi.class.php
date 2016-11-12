@@ -1,4 +1,5 @@
 <?php
+
 // 微博Api接口V2
 class WeiboApi extends Api
 {
@@ -2112,7 +2113,7 @@ class WeiboApi extends Api
         $user_info['follow_state'] = model('Follow')->getFollowState($this->mid, $uid);
 
         // 用户隐私设置
-        $privacy = model('UserPrivacy')->getPrivacy($this->mid,$uid);
+        $privacy = model('UserPrivacy')->getPrivacy($this->mid, $uid);
         $user_info ['space_privacy'] = $privacy['space'];
 
         return $user_info;

@@ -110,7 +110,7 @@ class FindPeopleApi extends Api
                         'neq',
                         $uid_arr [0] ['uid'],
                 );
-                if (!empty($key)){
+                if (!empty($key)) {
                     $_map ['search_key'] = array('like', '%'.$key.'%');
 
                     //备注
@@ -119,7 +119,7 @@ class FindPeopleApi extends Api
                         $_map ['uid'] = array('IN', $ruid_arr);
                         $_map ['_logic'] = 'OR';
                     }
-                    
+
                     $map['_complex'] = $_map;
                 }
 
@@ -146,7 +146,7 @@ class FindPeopleApi extends Api
                         $max_id,
                 );
 
-                if (!empty($key)){
+                if (!empty($key)) {
                     $_map ['search_key'] = array('like', '%'.$key.'%');
 
                     //备注
@@ -165,7 +165,7 @@ class FindPeopleApi extends Api
             $follow_status = model('Follow')->getFollowStateByFids($this->mid, getSubByKey($user_list, 'uid'));
             foreach ($user_list as $k => $v) {
                 $user_list [$k] ['uid'] = $v['uid'];
-                $user_list [$k] ['uname'] = $v['uname']; 
+                $user_list [$k] ['uname'] = $v['uname'];
                 $user_list [$k] ['remark'] = D('UserRemark')->getRemark($this->mid, $v['uid']);
                 $user_list [$k] ['intro'] = $user_list [$k] ['intro'] ? formatEmoji(false, $user_list [$k] ['intro']) : '';
                 $user_list [$k] ['follow_status'] = $follow_status [$v ['uid']];
@@ -293,9 +293,9 @@ class FindPeopleApi extends Api
      *         integer sex 性别
      * @param
      *         integer max_id 上次返回的最后一个用户ID
-     * @param  
+     * @param
      *         string $count 数量
-     * @return 
+     * @return
      *         array  用户列表
      */
     public function search_by_sex()
@@ -310,7 +310,7 @@ class FindPeopleApi extends Api
             );
         }
         $sex = intval($this->data ['sex']);
-        
+
         //0查全部
         $sex != 0 && $map['sex'] = $sex;
 

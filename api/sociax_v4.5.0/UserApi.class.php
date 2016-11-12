@@ -216,9 +216,9 @@ class UserApi extends Api
         $user_info ['user_credit'] = $userInfo ['user_credit'];
         $user_info ['tags'] = (array) model('Tag')->setAppName('public')->setAppTable('user')->getAppTags($uid, true);
 
-        // 没登陆过智播没有usid的 直接生成一个 
+        // 没登陆过智播没有usid的 直接生成一个
         $live_user_mod = M('live_user_info');
-        if (!$usid = $live_user_mod->where(array('uid'=>$userInfo['uid']))->getField('usid')) {
+        if (!$usid = $live_user_mod->where(array('uid' => $userInfo['uid']))->getField('usid')) {
             $live_user_info = file_get_contents(SITE_URL.'/api.php?api_version=live&mod=LiveUser&act=postUser&uid='.$userInfo['uid']);
             $live_user_info = json_decode($live_user_info, true);
             $live_user_info ['status'] == 1 && $user_info['usid'] = $live_user_info['data']['usid'];
@@ -227,16 +227,17 @@ class UserApi extends Api
         }
         //可查看自己的绑定账户
         if ($uid == $this->mid) {
-            $userAccountinfo = D('user_account')->where(array('uid'=>$this->mid))->find();
+            $userAccountinfo = D('user_account')->where(array('uid' => $this->mid))->find();
             if (!$userAccountinfo) {
                 $user_info['account'] = '';
                 $user_info['account_type'] = 0;
             } else {
                 $length = strlen($userAccountinfo['account']);
-                $user_info['account'] = substr_replace($userAccountinfo['account'], '****', 3, $length-3);
+                $user_info['account'] = substr_replace($userAccountinfo['account'], '****', 3, $length - 3);
                 $user_info['account_type'] = $userAccountinfo['type'];
             }
         }
+
         return $user_info;
     }
 
@@ -495,11 +496,11 @@ class UserApi extends Api
             $ruid_arr = D('UserRemark')->searchRemark($this->mid, t($this->data['key']));
             //合并去重
             if (!is_array($uid_arr)) {
-               $uid_arr = array();
+                $uid_arr = array();
             }
             if (!is_array($ruid_arr)) {
-               $ruid_arr = array();
-            } 
+                $ruid_arr = array();
+            }
             $_uid_arr = array_unique(array_merge($uid_arr, $ruid_arr));
 
             $where .= ' AND b.uid IN ('.implode(',', $_uid_arr).')';
@@ -597,7 +598,6 @@ class UserApi extends Api
 
             return $letters;
         } else {
-
             $where = ' `uid` IN ('.implode(',', getSubByKey($friend, 'fid')).')';
             $max_id = $this->max_id ? intval($this->max_id) : 0;
             $count = $this->count ? intval($this->count) : 20;
@@ -605,9 +605,9 @@ class UserApi extends Api
 
             //通过备注名搜索
             $ruid_arr = D('UserRemark')->searchRemark($this->mid, t($this->data['key']));
-            if($ruid_arr){
-                $where .= " AND (`uname` like '%".t($this->data ['key'])."%' OR " . "`uid` IN (" . implode(',', $ruid_arr) . "))";
-            }else{
+            if ($ruid_arr) {
+                $where .= " AND (`uname` like '%".t($this->data ['key'])."%' OR ".'`uid` IN ('.implode(',', $ruid_arr).'))';
+            } else {
                 $where .= " AND `uname` like '%".t($this->data ['key'])."%'";
             }
 
@@ -621,7 +621,7 @@ class UserApi extends Api
                 $user_detail ['remark'] = $friend_info ['remark'];
                 $user_detail ['intro'] = $friend_info ['intro'] ? formatEmoji(false, $friend_info ['intro']) : '';
                 $user_detail ['avatar'] = $friend_info ['avatar'] ['avatar_original'];
-                $user_detail ['follow_status'] = $follow_status [$v ['uid']];  
+                $user_detail ['follow_status'] = $follow_status [$v ['uid']];
                 $user_list [] = $user_detail;
             }
 
@@ -1585,17 +1585,18 @@ class UserApi extends Api
      *          varchar name 备注名
      * @return array 状态+提示
      */
-    public function set_remark(){
+    public function set_remark()
+    {
         $uid = $this->data['uid'];
         $remark = $this->data['remark'];
 
         //判断长度
         $length = mb_strlen($remark, 'utf-8');
         $res = ($length >= 2 && $length <= 10);
-        if(!$res){
+        if (!$res) {
             return array(
                 'status' => 0,
-                'msg' => '备注长度必须在2-10个字之间'
+                'msg' => '备注长度必须在2-10个字之间',
             );
         }
 
@@ -1603,20 +1604,19 @@ class UserApi extends Api
             $rm ['mid'] = $this->mid;
             $rm ['uid'] = $uid;
 
-            $rs = D('UserRemark')->setRemark($uid,$remark);
+            $rs = D('UserRemark')->setRemark($uid, $remark);
 
-            if($rs !== false){
+            if ($rs !== false) {
                 return array(
                         'status' => 1,
                         'msg' => '设置成功',
                 );
-            }else{
+            } else {
                 return array(
                         'status' => 0,
                         'msg' => '设置失败',
                 );
             }
-
         } else {
             return array(
                     'status' => 0,

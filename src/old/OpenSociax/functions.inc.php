@@ -3387,29 +3387,30 @@ function _parse_remark($result)
  * type gold - 充值金币 cash - 金币提现
  * bs
  */
-function getExchangeConfig($type = 'gold') {
+function getExchangeConfig($type = 'gold')
+{
     $info = model('Xdata')->get('admin_Application:ZB_config');
     switch ($type) {
         case 'cash':
             $value = 'cash_exchange_ratio_list';
             $defaultconfig = array(
-                array('cash'=>'1','gold'=>'100'),
-                array('cash'=>'2.5','gold'=>'200'),
-            );//后台未配置时的默认比例
+                array('cash' => '1', 'gold' => '100'),
+                array('cash' => '2.5', 'gold' => '200'),
+            ); //后台未配置时的默认比例
             break;
         default:
             $value = 'gold_exchange_ratio_list';
             $defaultconfig = array(
-                array('cash'=>'1','gold'=>'100'),
-                array('cash'=>'2.5','gold'=>'200'),
-            );//后台未配置时的默认比例
+                array('cash' => '1', 'gold' => '100'),
+                array('cash' => '2.5', 'gold' => '200'),
+            ); //后台未配置时的默认比例
             break;
     }
     if (!empty($info[$value])) {
-        $list = explode(',',$info[$value]);//分割存储
+        $list = explode(',', $info[$value]); //分割存储
         foreach ($list as $key => $value) {
-            $config = explode(':',$value);
-            $return[] = array('cash'=>$config[0], 'gold'=>$config[1]);
+            $config = explode(':', $value);
+            $return[] = array('cash' => $config[0], 'gold' => $config[1]);
         }
     } else {
         $return = $defaultconfig;

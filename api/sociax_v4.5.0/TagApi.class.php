@@ -1,4 +1,5 @@
 <?php
+
 // 礼物接口
 class TagApi extends Api
 {
