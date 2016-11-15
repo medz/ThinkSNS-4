@@ -44,9 +44,9 @@ class ApplicationApi extends Api
         }
         $chongzhi_info = model('Xdata')->get('admin_Config:charge');
         $info['cash_exchange_ratio_list'] = getExchangeConfig('cash');
-        $info['charge_ratio'] = $chongzhi_info['charge_ratio'] ? : '100';//1人民币等于多少积分
-        $info['charge_description'] = $chongzhi_info['description'] ? : '充值描述';//充值描述
-        $field = $this->data['field'];//关键字  不传为全部
+        $info['charge_ratio'] = $chongzhi_info['charge_ratio'] ?: '100'; //1人民币等于多少积分
+        $info['charge_description'] = $chongzhi_info['description'] ?: '充值描述'; //充值描述
+        $field = $this->data['field']; //关键字  不传为全部
         if ($field) {
             $field = explode(',', $field);
             foreach ($info as $key => $value) {
@@ -54,7 +54,7 @@ class ApplicationApi extends Api
                     unset($info[$key]);
                 }
             }
-        } 
+        }
 
         return $this->rd($info);
     }

@@ -2374,7 +2374,7 @@ define('UC_SYNC', {$ucopen});
 
     //充值配置
     public function charge()
-    {   
+    {
         $this->pageTab[] = array('title' => '充值配置', 'tabHash' => 'charge', 'url' => U('admin/Config/charge'));
         $this->pageTab[] = array('title' => '提现配置', 'tabHash' => 'ZB_config', 'url' => U('admin/Application/ZB_config'));
 

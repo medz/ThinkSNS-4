@@ -48,7 +48,7 @@ function createAlipayUrl(array $alipayConfig, array $parameter, $type = 1)
         $parameter['seller_id'] = trim($alipayConfig['partner']);
 
         $url = $alipaySubmit->alipay_client_url;
-        $url .=  urlencode(json_encode(array('requestType' => 'SafePay', "fromAppUrlScheme" => "com.zhiyiThinkSNS4", "dataString" => $alipaySubmit->buildRequestParaToString($parameter))));
+        $url .= urlencode(json_encode(array('requestType' => 'SafePay', 'fromAppUrlScheme' => 'com.zhiyiThinkSNS4', 'dataString' => $alipaySubmit->buildRequestParaToString($parameter))));
     }
 
 

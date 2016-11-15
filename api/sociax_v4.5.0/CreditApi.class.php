@@ -152,7 +152,7 @@ class CreditApi extends Api
      */
     public function createChargeIOS()
     {
-        $price = 0.01;//($this->data['money']);
+        $price = 0.01; //($this->data['money']);
         // if ($price < 1) {
         //     return array('status' => 0, 'mesage' => '充值金额不正确');
         // }
@@ -186,16 +186,16 @@ class CreditApi extends Api
             $configs['seller_email'] = $chargeConfigs['alipay_email'];
             $configs['key'] = $chargeConfigs['alipay_key'];
             $parameter = array(
-                'notify_url'    => SITE_URL.'/alipay_notify_api.php',
-                'out_trade_no'  => $data['serial_number'],
-                'subject'       => '积分充值:'.$data['charge_sroce'].'积分',
-                'total_fee'     => $data['charge_value'],
-                'body'          => '',
-                'payment_type'  => 1,
-                'service'       => 'mobile.securitypay.pay',
-                'it_b_pay'      => '1c',
+                'notify_url' => SITE_URL.'/alipay_notify_api.php',
+                'out_trade_no' => $data['serial_number'],
+                'subject' => '积分充值:'.$data['charge_sroce'].'积分',
+                'total_fee' => $data['charge_value'],
+                'body' => '',
+                'payment_type' => 1,
+                'service' => 'mobile.securitypay.pay',
+                'it_b_pay' => '1c',
             );
-            $url = createAlipayUrl($configs, $parameter, 2);//直接返回支付宝支付url
+            $url = createAlipayUrl($configs, $parameter, 2); //直接返回支付宝支付url
             return array(
                 'status' => 1,
                 'mesage' => '',
@@ -207,7 +207,7 @@ class CreditApi extends Api
             $res ['mesage'] = '充值创建失败';
 
             return $res;
-        }   
+        }
     }
 
     //调用支付后的返回验证 验证通过则加积分
@@ -236,22 +236,19 @@ class CreditApi extends Api
     {
         $map['serial_number'] = $this->data['out_trade_no'];
         if (!$map['serial_number']) {
-            
             return array('status' => 0, 'mesage' => '参数错误');
         }
 
         $status = D('credit_charge')->where($map)->getField('status');
         if ($status == 1) {
-
             return array('status' => 1, 'mesage' => '充值成功');
         } else {
-
             return array('status' => 0, 'mesage' => '充值失败');
         }
     }  //这个参数的返回跟其他接口不一致、、、
 
     public function saveCharge()
-    {   
+    {
         $number = (string) $this->data['serial_number'];
         $status = intval($this->data['status']);
         $sign = (string) $this->data['sign'];

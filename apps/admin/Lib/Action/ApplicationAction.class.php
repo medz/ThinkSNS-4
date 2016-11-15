@@ -275,7 +275,7 @@ class ApplicationAction extends AdministratorAction
             'tabHash' => 'ZB_config',
             'url' => U('admin/Application/ZB_config'),
         ));
-       
+
         $this->displayConfig();
     }
 
