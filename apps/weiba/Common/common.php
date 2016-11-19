@@ -1,13 +1,13 @@
 <?php
 /**
  * 微吧获取图片存在相对地址
- * @param integer $attachid 附件ID
+ * @param  int    $attachid 附件ID
  * @return string 附件存储相对地址
  */
 function getImageUrlByAttachIdByWeiba($attachid)
 {
     if ($attachInfo = model('Attach')->getAttachById($attachid)) {
-        return $attachInfo ['save_path'] . $attachInfo ['save_name'];
+        return $attachInfo ['save_path'].$attachInfo ['save_name'];
     } else {
         return false;
     }
@@ -17,26 +17,26 @@ function updateWeiBaCount($weiba_id)
 {
     $map ['weiba_id'] = intval($weiba_id);
     $map ['is_del'] = 0;
-    
+
     $save ['thread_count'] = M('weiba_post')->where($map)->count();
     $save ['post_count'] = M('weiba_reply')->where($map)->count();
-    
+
     $time = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
     $map ['post_time'] = array(
             'gt',
-            $time
+            $time,
     );
     $post_count = M('weiba_post')->where($map)->count();
     unset($map ['post_time']);
-    
+
     $map ['time'] = array(
             'gt',
-            $time
+            $time,
     );
     $reply_count = M('weiba_reply')->where($map)->count();
-    
+
     $save ['today_count'] = $post_count + $reply_count;
-    
+
     unset($map ['time']);
     $res = D('weiba')->where($map)->save($save);
     // dump($res);
@@ -54,7 +54,7 @@ function refreshWeibaCount($weiba_id = 0, $field = array('follow_count', 'thread
     in_array('thread_count', $field) && $data ['thread_count'] = M('weiba_post')->where($map)->count();
     // 帖子数
     in_array('post_count', $field) && $data ['post_count'] = M('weiba_reply')->where($map)->count();
-    
+
     if (in_array('today_count', $field)) {
         // 今日帖子数--昨日帖子数
         $time = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
@@ -62,29 +62,29 @@ function refreshWeibaCount($weiba_id = 0, $field = array('follow_count', 'thread
 
         $map ['post_time'] = array(
                 'gt',
-                $time
+                $time,
         );
         $data ['today_count'] = M('weiba_post')->where($map)->count();
-        
+
         $map ['post_time'] = array(
                 'gt',
-                $ytime
+                $ytime,
         );
         $data ['yesterday_count'] = M('weiba_post')->where($map)->count();
-        
+
         unset($map ['post_time']);
         $map ['ctime'] = array(
                 'gt',
-                $time
+                $time,
         );
         $data ['today_count'] = M('weiba_reply')->where($map)->count() + $data ['today_count'];
-        
+
         $map ['ctime'] = array(
                 'gt',
-                $ytime
+                $ytime,
         );
         $data ['yesterday_count'] = M('weiba_reply')->where($map)->count() + $data ['yesterday_count'] - $data ['today_count'];
-        
+
         $data ['today_date'] = date('Ymd');
     }
     $res = M('weiba')->where($maps)->save($data);
@@ -99,9 +99,9 @@ function refreshDayCOunt()
     if ($lock == $today) {
         return false;
     }
-    
-    $yesterday = date("Ymd", strtotime("-1 day"));
-    
+
+    $yesterday = date('Ymd', strtotime('-1 day'));
+
     $sql = "UPDATE ts_weiba set yesterday_count=today_count,today_count=0,today_date='$today' where today_date='$yesterday'";
     $res = M()->execute($sql);
 // 	dump ( $res );
@@ -143,6 +143,7 @@ function parseemail($email, $text)
     $text = str_replace('\"', '"', $text);
     if (!$email && preg_match("/\s*([a-z0-9\-_.+]+)@([a-z0-9\-_]+[.][a-z0-9\-_.]+)\s*/i", $text, $matches)) {
         $email = trim($matches[0]);
+
         return '<a href="mailto:'.$email.'">'.$email.'</a>';
     } else {
         return '<a href="mailto:'.substr($email, 1).'">'.$text.'</a>';
@@ -160,6 +161,7 @@ function parsetable($width, $bgcolor, $message)
             $s .= '<tr><td>'.str_replace(array('\|', '|', '\n'), array('&#124;', '</td><td>', "\n"), $row).'</td></tr>';
         }
         $s .= '</table>';
+
         return $s;
     } else {
         if (!preg_match("/^\[tr(?:=([\(\)\s%,#\w]+))?\]\s*\[td([=\d,%]+)?\]/", $message) && !preg_match("/^<tr[^>]*?>\s*<td[^>]*?>/", $message)) {
@@ -171,6 +173,7 @@ function parsetable($width, $bgcolor, $message)
             $width = intval($width);
             $width = $width ? ($width <= 560 ? $width.'px' : '98%') : '';
         }
+
         return (!defined('IN_MOBILE') ? '<table cellspacing="0" class="t_table" '.
             ($width == '' ? null : 'style="width:'.$width.'"').
             ($bgcolor ? ' bgcolor="'.$bgcolor.'">' : '>') : '<table>').
@@ -179,13 +182,13 @@ function parsetable($width, $bgcolor, $message)
                     "/\[\/td\]\s*\[td(?:=(\d{1,4}%?))?\]/ie",
                     "/\[tr(?:=([\(\)\s%,#\w]+))?\]\s*\[td(?:=(\d{1,2}),(\d{1,2})(?:,(\d{1,4}%?))?)?\]/ie",
                     "/\[\/td\]\s*\[td(?:=(\d{1,2}),(\d{1,2})(?:,(\d{1,4}%?))?)?\]/ie",
-                    "/\[\/td\]\s*\[\/tr\]\s*/i"
+                    "/\[\/td\]\s*\[\/tr\]\s*/i",
                 ), array(
                     "parsetrtd('\\1', '0', '0', '\\2')",
                     "parsetrtd('td', '0', '0', '\\1')",
                     "parsetrtd('\\1', '\\2', '\\3', '\\4')",
                     "parsetrtd('td', '\\1', '\\2', '\\3')",
-                    '</td></tr>'
+                    '</td></tr>',
                 ), $message)
             ).'</table>';
     }
@@ -200,6 +203,7 @@ function parseaudio($url, $width = 400)
     switch ($ext) {
         case 'mp3':
             $randomid = 'mp3_'.random(3);
+
             return '<span id="'.$randomid.'"></span><script type="text/javascript" reload="1">$(\''.$randomid.'\').innerHTML=AC_FL_RunContent(\'FlashVars\', \'soundFile='.urlencode($url).'\', \'width\', \'290\', \'height\', \'24\', \'allowNetworking\', \'internal\', \'allowScriptAccess\', \'never\', \'src\', \''.STATICURL.'image/common/player.swf\', \'quality\', \'high\', \'bgcolor\', \'#FFFFFF\', \'menu\', \'false\', \'wmode\', \'transparent\', \'allowNetworking\', \'internal\');</script>';
         case 'wma':
         case 'mid':
@@ -209,6 +213,7 @@ function parseaudio($url, $width = 400)
         case 'rm':
         case 'ram':
             $mediaid = 'media_'.random(3);
+
             return '<object classid="clsid:CFCDAA03-8BE4-11CF-B84B-0020AFBBCCFA" width="'.$width.'" height="32"><param name="autostart" value="0" /><param name="src" value="'.$url.'" /><param name="controls" value="controlpanel" /><param name="console" value="'.$mediaid.'_" /><embed src="'.$url.'" autostart="0" type="audio/x-pn-realaudio-plugin" controls="ControlPanel" console="'.$mediaid.'_" width="'.$width.'" height="32"></embed></object>';
     }
 }
@@ -242,12 +247,15 @@ function parsemedia($params, $url)
             case 'rmvb':
             case 'rtsp':
                 $mediaid = 'media_'.random(3);
+
                 return '<object classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="'.$width.'" height="'.$height.'"><param name="autostart" value="0" /><param name="src" value="'.$url.'" /><param name="controls" value="imagewindow" /><param name="console" value="'.$mediaid.'_" /><embed src="'.$url.'" autostart="0" type="audio/x-pn-realaudio-plugin" controls="imagewindow" console="'.$mediaid.'_" width="'.$width.'" height="'.$height.'"></embed></object><br /><object classid="clsid:CFCDAA03-8BE4-11CF-B84B-0020AFBBCCFA" width="'.$width.'" height="32"><param name="src" value="'.$url.'" /><param name="controls" value="controlpanel" /><param name="console" value="'.$mediaid.'_" /><embed src="'.$url.'" autostart="0" type="audio/x-pn-realaudio-plugin" controls="controlpanel" console="'.$mediaid.'_" width="'.$width.'" height="32"></embed></object>';
             case 'flv':
                 $randomid = 'flv_'.random(3);
+
                 return '<span id="'.$randomid.'"></span><script type="text/javascript" reload="1">$(\''.$randomid.'\').innerHTML=AC_FL_RunContent(\'width\', \''.$width.'\', \'height\', \''.$height.'\', \'allowNetworking\', \'internal\', \'allowScriptAccess\', \'never\', \'src\', \''.STATICURL.'image/common/flvplayer.swf\', \'flashvars\', \'file='.rawurlencode($url).'\', \'quality\', \'high\', \'wmode\', \'transparent\', \'allowfullscreen\', \'true\');</script>';
             case 'swf':
                 $randomid = 'swf_'.random(3);
+
                 return '<span id="'.$randomid.'"></span><script type="text/javascript" reload="1">$(\''.$randomid.'\').innerHTML=AC_FL_RunContent(\'width\', \''.$width.'\', \'height\', \''.$height.'\', \'allowNetworking\', \'internal\', \'allowScriptAccess\', \'never\', \'src\', encodeURI(\''.$url.'\'), \'quality\', \'high\', \'bgcolor\', \'#ffffff\', \'wmode\', \'transparent\', \'allowfullscreen\', \'true\');</script>';
             case 'asf':
             case 'asx':
@@ -263,15 +271,17 @@ function parsemedia($params, $url)
                 return '<a href="'.$url.'" target="_blank">'.$url.'</a>';
         }
     }
+
     return;
 }
 
 function bbcodeurl($url, $tags)
 {
-    if (!preg_match("/<.+?>/s", $url)) {
+    if (!preg_match('/<.+?>/s', $url)) {
         if (!in_array(strtolower(substr($url, 0, 6)), array('http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://')) && !preg_match('/^static\//', $url) && !preg_match('/^data\//', $url)) {
             $url = 'http://'.$url;
         }
+
         return str_replace(array('submit', 'member.php?mod=logging'), array('', ''), str_replace('{url}', addslashes($url), $tags));
     } else {
         return '&nbsp;'.$url;
@@ -287,6 +297,7 @@ function parseurl($url, $text, $scheme)
         if (strlen($url) > $length) {
             $text = substr($url, 0, intval($length * 0.5)).' ... '.substr($url, - intval($length * 0.3));
         }
+
         return '<a href="'.(substr(strtolower($url), 0, 4) == 'www.' ? 'http://'.$url : $url).'" target="_blank">'.$text.'</a>';
     } else {
         $url = substr($url, 1);
@@ -294,6 +305,7 @@ function parseurl($url, $text, $scheme)
             $url = 'http://'.$url;
         }
         $url = !$scheme ? $_G['siteurl'].$url : $url;
+
         return '<a href="'.$url.'" target="_blank">'.$text.'</a>';
     }
 }
@@ -302,7 +314,6 @@ function parsetrtd($bgcolor, $colspan, $rowspan, $width)
 {
     return ($bgcolor == 'td' ? '</td>' : '<tr'.($bgcolor && !defined('IN_MOBILE') ? ' style="background-color:'.$bgcolor.'"' : '').'>').'<td'.($colspan > 1 ? ' colspan="'.$colspan.'"' : '').($rowspan > 1 ? ' rowspan="'.$rowspan.'"' : '').($width && !defined('IN_MOBILE') ? ' width="'.$width.'"' : '').'>';
 }
-
 
 //解析UBB标签
 function bbcode($message)
@@ -328,11 +339,11 @@ function bbcode($message)
     $message = str_replace(array(
             '[/color]', '[/backcolor]', '[/size]', '[/font]', '[/align]', '[b]', '[/b]', '[s]', '[/s]', '[hr]', '[/p]',
             '[i=s]', '[i]', '[/i]', '[u]', '[/u]', '[list]', '[list=1]', '[list=a]',
-            '[list=A]', "\r\n[*]", '[*]', '[/list]', '[indent]', '[/indent]', '[/float]'
+            '[list=A]', "\r\n[*]", '[*]', '[/list]', '[indent]', '[/indent]', '[/float]',
     ), array(
             '</font>', '</font>', '</font>', '</font>', '</div>', '<strong>', '</strong>', '<strike>', '</strike>', '<hr class="l" />', '</p>', '<i class="pstatus">', '<i>',
             '</i>', '<u>', '</u>', '<ul>', '<ul type="1" class="litype_1">', '<ul type="a" class="litype_2">',
-            '<ul type="A" class="litype_3">', '<li>', '<li>', '</ul>', '<blockquote>', '</blockquote>', '</span>'
+            '<ul type="A" class="litype_3">', '<li>', '<li>', '</ul>', '<blockquote>', '</blockquote>', '</span>',
     ), preg_replace(array(
             "/\[color=([#\w]+?)\]/i",
             "/\[color=((rgb|rgba)\([\d\s,]+?\))\]/i",
@@ -344,32 +355,30 @@ function bbcode($message)
             "/\[align=(left|center|right)\]/i",
             "/\[p=(\d{1,2}|null), (\d{1,2}|null), (left|center|right)\]/i",
             "/\[float=left\]/i",
-            "/\[float=right\]/i"
+            "/\[float=right\]/i",
 
     ), array(
-            "<font color=\"\\1\">",
-            "<font style=\"color:\\1\">",
-            "<font style=\"background-color:\\1\">",
-            "<font style=\"background-color:\\1\">",
-            "<font size=\"\\1\">",
-            "<font style=\"font-size:\\1\">",
-            "\\2", //"<font face=\"\\1\">",
-            "<div align=\"\\1\">",
-            "<p style=\"line-height:\\1px;text-indent:\\2em;text-align:\\3\">",
-            "<span style=\"float:left;margin-right:5px\">",
-            "<span style=\"float:right;margin-left:5px\">"
+            '<font color="\\1">',
+            '<font style="color:\\1">',
+            '<font style="background-color:\\1">',
+            '<font style="background-color:\\1">',
+            '<font size="\\1">',
+            '<font style="font-size:\\1">',
+            '\\2', //"<font face=\"\\1\">",
+            '<div align="\\1">',
+            '<p style="line-height:\\1px;text-indent:\\2em;text-align:\\3">',
+            '<span style="float:left;margin-right:5px">',
+            '<span style="float:right;margin-left:5px">',
     ), $message));
 
-
-    $message = preg_replace("/\s?\[postbg\]\s*([^\[\<\r\n;'\"\?\(\)]+?)\s*\[\/postbg\]\s?/is", "", $message);
-
+    $message = preg_replace("/\s?\[postbg\]\s*([^\[\<\r\n;'\"\?\(\)]+?)\s*\[\/postbg\]\s?/is", '', $message);
 
     if (strpos($msglower, '[/quote]') !== false) {
-        $message = preg_replace("/\s?\[quote\][\n\r]*(.+?)[\n\r]*\[\/quote\]\s?/is", "<div class=\"quote\"><blockquote>\\1</blockquote></div>", $message);
+        $message = preg_replace("/\s?\[quote\][\n\r]*(.+?)[\n\r]*\[\/quote\]\s?/is", '<div class="quote"><blockquote>\\1</blockquote></div>', $message);
     }
 
     if (strpos($msglower, '[/free]') !== false) {
-        $message = preg_replace("/\s*\[free\][\n\r]*(.+?)[\n\r]*\[\/free\]\s*/is", "\\1", $message);
+        $message = preg_replace("/\s*\[free\][\n\r]*(.+?)[\n\r]*\[\/free\]\s*/is", '\\1', $message);
     }
 
     // if(!defined('IN_MOBILE')) {
@@ -383,24 +392,22 @@ function bbcode($message)
         $message = preg_replace("/\[flash(=(\d+),(\d+))?\]\s*([^\[\<\r\n]+?)\s*\[\/flash\]/ies", $allowmediacode ? "parseflash('\\2', '\\3', '\\4');" : "bbcodeurl('\\4', '<a href=\"{url}\" target=\"_blank\">{url}</a>')", $message);
     }
 
-
-    $message = preg_replace("/\[attach\](.+?)\[\/attach\]/is", "<img src=\"attach.php?aid=\\1\" />", $message);
+    $message = preg_replace("/\[attach\](.+?)\[\/attach\]/is", '<img src="attach.php?aid=\\1" />', $message);
 
     $message = str_replace('[img]static/image/common/back.gif[/img]', '', $message);
 
     $message = str_replace('[img=700,28]static/image/hrline/4.gif[/img]', '', $message);
 
-    $neter_mo=array(
+    $neter_mo = array(
       "/\[img=([0-9]+),([0-9]+)\](.+?)\[\/img\]/is",
       "/\[img\](.+?)\[\/img\]/is",
       "/\[hide\](.+?)\[\/hide\]/is",
     );
 
-
-    $neter_str=array(
-      "<img width=\"\\1\" height=\"\\2\" src=\"\\3\" />",
-      "<img src=\"\\1\" />",
-      "<div class=\"hide\">\\1</div>",
+    $neter_str = array(
+      '<img width="\\1" height="\\2" src="\\3" />',
+      '<img src="\\1" />',
+      '<div class="hide">\\1</div>',
     );
 
     $message = preg_replace($neter_mo, $neter_str, $message);

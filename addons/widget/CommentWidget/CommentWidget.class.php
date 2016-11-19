@@ -1,14 +1,14 @@
 <?php
 /**
   * 评论发布/显示框
-  * @example W('Comment',array('tpl'=>'detail','row_id'=>72,'order'=>'DESC','app_uid'=>'14983','cancomment'=>1,'cancomment_old'=>0,'showlist'=>1,'canrepost'=>1))                                  
-  * @author jason <yangjs17@yeah.net> 
+  * @example W('Comment',array('tpl'=>'detail','row_id'=>72,'order'=>'DESC','app_uid'=>'14983','cancomment'=>1,'cancomment_old'=>0,'showlist'=>1,'canrepost'=>1))
+  * @author jason <yangjs17@yeah.net>
   * @version TS3.0
   */
 class CommentWidget extends Widget
 {
     private static $rand = 1;
-    
+
     /**
      *
      * @param
@@ -69,8 +69,9 @@ class CommentWidget extends Widget
                     if ($userPrivacy ['comment_weibo'] == 1) {
                         $return = array(
                                             'status' => 0,
-                                            'data' => L('PUBLIC_CONCENT_TIPES')
+                                            'data' => L('PUBLIC_CONCENT_TIPES'),
                             );
+
                         return $var ['isAjax'] == 1 ? json_encode($return) : $return ['data'];
                     }
                 }
@@ -79,14 +80,14 @@ class CommentWidget extends Widget
             // 获取源资源作者用户信息
             $appRowData = model('Feed')->get(intval($sourceInfo['app_row_id']));
             $var['user_info'] = $appRowData['user_info'];
-                        
+
                         //评论原分享权限
                         $userPrivacy = model('UserPrivacy')->getPrivacy($this->mid, $var['user_info']['uid']);
             if ($userPrivacy ['comment_weibo'] === 0) {
                 $var['comment_origin'] = 1;
             }
         }
-                
+
         if ($this->mid == $var ['app_uid']) {
             $var['comment_origin'] = 1;
         }
@@ -98,7 +99,7 @@ class CommentWidget extends Widget
             $map ['row_id'] = intval($var ['row_id']); // 必须存在
             if (! empty($map ['row_id'])) {
                 // 分页形式数据
-                $var ['list'] = model('Comment')->getCommentList($map, 'comment_id ' . t($var ['order']), intval($var ['limit']));
+                $var ['list'] = model('Comment')->getCommentList($map, 'comment_id '.t($var ['order']), intval($var ['limit']));
             }
         } // 渲染模版
 
@@ -107,14 +108,14 @@ class CommentWidget extends Widget
         if (! CheckPermission('core_normal', 'feed_share') || ! in_array('repost', $weiboSet ['weibo_premission'])) {
             $var ['canrepost'] = 0;
         }
-        $content = $this->renderFile(dirname(__FILE__) . "/" . $var ['tpl'] . '.html', $var);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$var ['tpl'].'.html', $var);
         self::$rand ++;
         $ajax = $var ['isAjax'];
         unset($var, $data);
         // 输出数据
         $return = array(
                 'status' => 1,
-                'data' => $content
+                'data' => $content,
         );
         // var_dump($return);exit;
 
@@ -141,9 +142,9 @@ class CommentWidget extends Widget
             $var ['app_name'] = t($_POST ['app_name']);
             $var ['table'] = t($_POST ['table']);
             $var ['row_id'] = intval($_POST ['row_id']);
-            $var ['list'] = model('Comment')->getCommentList($map, 'comment_id ' . $var ['order'], $var ['limit']);
+            $var ['list'] = model('Comment')->getCommentList($map, 'comment_id '.$var ['order'], $var ['limit']);
         }
-        $content = $this->renderFile(dirname(__FILE__) . '/commentList.html', $var);
+        $content = $this->renderFile(dirname(__FILE__).'/commentList.html', $var);
         exit($content);
     }
 
@@ -157,9 +158,16 @@ class CommentWidget extends Widget
         // 返回结果集默认值
         $return = array(
                 'status' => 0,
-                'data' => L('PUBLIC_CONCENT_IS_ERROR')
+                'data' => L('PUBLIC_CONCENT_IS_ERROR'),
         );
 
+        //检测用户是否被禁言
+        if ($isDisabled = model('DisableUser')->isDisableUser($this->mid, 'post')) {
+            return json_encode(array(
+                'status' => 0,
+                'data' => '您已经被禁言了',
+            ));
+        }
         // 获取接收数据
         $data ['app'] = t($_POST ['app_name']);
         $data ['table'] = t($_POST ['table_name']);
@@ -175,18 +183,18 @@ class CommentWidget extends Widget
         $data ['ifShareFeed'] = intval($_POST['ifShareFeed']);
         $data ['comment_old'] = intval($_POST['comment_old']);
         $data ['app_detail_summary'] = t($_POST['app_detail_summary']);
-                
+
         $source = model('Source')->getSourceInfo($data ['table'], $data ['row_id'], false, $data ['app']);
-        $uid            = $source['uid'];
+        $uid = $source['uid'];
         if ($this->mid != $uid) {
             $userPrivacy = model('UserPrivacy')->getPrivacy($this->mid, $uid);
             if ($userPrivacy['comment_weibo'] == 1) {
-                exit(json_encode(array('status'=>0, 'data'=>L('PUBLIC_CONCENT_TIPES'))));
+                exit(json_encode(array('status' => 0, 'data' => L('PUBLIC_CONCENT_TIPES'))));
             }
         }
         $filterContentStatus = filter_words($data['content']);
         if (!$filterContentStatus['status']) {
-            exit(json_encode(array('status'=>0, 'data'=>$filterContentStatus['data'])));
+            exit(json_encode(array('status' => 0, 'data' => $filterContentStatus['data'])));
         }
         $data['content'] = $filterContentStatus['data'];
 
@@ -195,7 +203,7 @@ class CommentWidget extends Widget
         $idField = $dao->getPk();
         $map [$idField] = intval($data ['row_id']);
         $sourceInfo = $dao->where($map)->find();
-        
+
         if (! $sourceInfo) {
             $return ['status'] = 0;
             $return ['data'] = '内容已被删除，评论失败';
@@ -206,12 +214,12 @@ class CommentWidget extends Widget
         if (empty($data['app_detail_summary'])) {
             $source = model('Source')->getSourceInfo($data ['table'], $data ['row_id'], false, $data ['app']);
             $data['app_detail_summary'] = $source['source_body'];
-            $data['app_detail_url']     = $source['source_url'];
-            $data['app_uid']            = $source['source_user_info']['uid'];
+            $data['app_detail_url'] = $source['source_url'];
+            $data['app_uid'] = $source['source_user_info']['uid'];
         } else {
-            $data['app_detail_summary'] = $data ['app_detail_summary'] . '<a class="ico-details" href="' . $data['app_detail_url'] . '"></a>';
+            $data['app_detail_summary'] = $data ['app_detail_summary'].'<a class="ico-details" href="'.$data['app_detail_url'].'"></a>';
         }
-        
+        // $data['from'] = 'feed';
         // 添加评论操作
         $data ['comment_id'] = model('Comment')->addComment($data);
         $return['sql'] = D()->getLastSql();
@@ -219,18 +227,18 @@ class CommentWidget extends Widget
             $talkbox = intval($_POST['talkbox']);
             $return ['status'] = 1;
             $return ['data'] = $this->parseComment($data, $talkbox);
-            
+
             // 同步到微吧
             if ($data ['app'] == 'weiba') {
                 $this->_upateToweiba($data);
             }
-            
+
             // 去掉回复用户@
             $lessUids = array();
             if (! empty($data ['to_uid'])) {
                 $lessUids [] = $data ['to_uid'];
             }
-                
+
             if ($_POST ['ifShareFeed'] == 1) {  // 转发到我的分享
                 //解锁内容发布
                 unlockSubmit();
@@ -243,7 +251,7 @@ class CommentWidget extends Widget
         !$data['comment_id'] && $return['data'] = model('Comment')->getError();
         exit(json_encode($return));
     }
-    
+
     /**
      * 删除评论
      *
@@ -273,13 +281,14 @@ class CommentWidget extends Widget
                 return false;
             }
         }
-        
+
         if (! empty($comment_id)) {
             return model('Comment')->deleteComment($comment_id, $this->mid);
         }
+
         return false;
     }
-    
+
     /**
      * 渲染评论页面 在addcomment方法中调用
      */
@@ -295,7 +304,7 @@ class CommentWidget extends Widget
         if ($talkbox) {
             $html = '<dl model-node="comment_list" class="msg-dialog">';
             $html .= '<dt class="right">';
-            $html .= '<a href="'.U('public/Profile/index', array('uid'=>$data['userInfo']['uid'])).'"><img src="'.$data['userInfo']['avatar_tiny'].'"></a>';
+            $html .= '<a href="'.U('public/Profile/index', array('uid' => $data['userInfo']['uid'])).'"><img src="'.$data['userInfo']['avatar_tiny'].'"></a>';
             $html .= '</dt>';
             $html .= '<dd class="dialog-r">';
             $html .= '<i class="arrow-mes-r"></i>';
@@ -307,38 +316,39 @@ class CommentWidget extends Widget
             $html .= '</span>刚刚</p>';
             $html .= '</dd>';
             $html .= '</dl>';
+
             return $html;
         } else {
-            return $this->renderFile(dirname(__FILE__) . "/_parseComment.html", $data);
+            return $this->renderFile(dirname(__FILE__).'/_parseComment.html', $data);
         }
     }
 
     // 同步到微吧
     public function _upateToweiba($data)
     {
-        $postDetail = D('weiba_post')->where('feed_id=' . $data ['row_id'])->find();
+        $postDetail = D('weiba_post')->where('feed_id='.$data ['row_id'])->find();
         if (! $postDetail) {
             return false;
         }
-        
+
         $datas ['weiba_id'] = $postDetail ['weiba_id'];
         $datas ['post_id'] = $postDetail ['post_id'];
         $datas ['post_uid'] = $postDetail ['post_uid'];
-        $datas ['to_reply_id'] = $data ['to_comment_id'] ? D('weiba_reply')->where('comment_id=' . $data ['to_comment_id'])->getField('reply_id') : 0;
+        $datas ['to_reply_id'] = $data ['to_comment_id'] ? D('weiba_reply')->where('comment_id='.$data ['to_comment_id'])->getField('reply_id') : 0;
         $datas ['to_uid'] = $data ['to_uid'];
         $datas ['uid'] = $this->mid;
         $datas ['ctime'] = time();
         $datas ['content'] = $data ['content'];
         $datas ['comment_id'] = $data ['comment_id'];
-        $datas ['storey'] = model('comment')->where('comment_id=' . $data ['comment_id'])->getField('storey');
+        $datas ['storey'] = model('comment')->where('comment_id='.$data ['comment_id'])->getField('storey');
         if (D('weiba_reply')->add($datas)) {
             $map ['last_reply_uid'] = $this->mid;
             $map ['last_reply_time'] = $datas ['ctime'];
             $map ['reply_count'] = array(
                     'exp',
-                    "reply_count+1"
+                    'reply_count+1',
             );
-            D('weiba_post')->where('post_id=' . $datas ['post_id'])->save($map);
+            D('weiba_post')->where('post_id='.$datas ['post_id'])->save($map);
         }
     }
 
@@ -347,7 +357,7 @@ class CommentWidget extends Widget
     {
         $commentInfo = model('Source')->getSourceInfo($data ['table'], $data ['row_id'], false, $data ['app']);
         $oldInfo = isset($commentInfo ['sourceInfo']) ? $commentInfo ['sourceInfo'] : $commentInfo;
-        
+
         // 根据评论的对象获取原来的内容
         $arr = array(
                 'post',
@@ -359,25 +369,25 @@ class CommentWidget extends Widget
                 'weiba_post',
                 'event_post',
                 'vote_post',
-                'photo_post'
+                'photo_post',
         );
         $scream = '';
         if (! in_array($sourceInfo ['type'], $arr)) {
-            $scream = '//@' . $commentInfo ['source_user_info'] ['uname'] . '：' . $commentInfo ['source_content'];
+            $scream = '//@'.$commentInfo ['source_user_info'] ['uname'].'：'.$commentInfo ['source_content'];
         }
         if (! empty($data ['to_comment_id'])) {
             $replyInfo = model('Comment')->init($data ['app'], $data ['table'])->getCommentInfo($data ['to_comment_id'], false);
-            $replyScream = '//@' . $replyInfo ['user_info'] ['uname'] . ' ：';
-            $data ['content'] .= $replyScream . $replyInfo ['content'];
+            $replyScream = '//@'.$replyInfo ['user_info'] ['uname'].' ：';
+            $data ['content'] .= $replyScream.$replyInfo ['content'];
         }
-        $s ['body'] = $data ['content'] . $scream;
-        
+        $s ['body'] = $data ['content'].$scream;
+
         $s ['sid'] = $oldInfo ['source_id'];
         $s ['app_name'] = $oldInfo ['app'];
         $s ['type'] = $oldInfo ['source_table'];
         $s ['comment'] = $data ['comment_old'];
         $s ['comment_touid'] = $data ['app_uid'];
-        
+
         // 如果为原创分享，不给原创用户发送@信息
         if ($sourceInfo ['type'] == 'post' && empty($data ['to_uid'])) {
             $lessUids [] = $this->mid;
@@ -385,7 +395,7 @@ class CommentWidget extends Widget
         model('Share')->shareFeed($s, 'comment', $lessUids);
         model('Credit')->setUserCredit($this->mid, 'forwarded_weibo');
     }
-    
+
     // 评论给原来作者
     public function _updateToComment($data, $sourceInfo, $lessUids)
     {
@@ -401,7 +411,7 @@ class CommentWidget extends Widget
             $c ['row_id'] = $oldInfo ['feed_id'];
         }
         $c ['client_type'] = getVisitorClient();
-        
+
         model('Comment')->addComment($c, false, false, $lessUids);
     }
 }

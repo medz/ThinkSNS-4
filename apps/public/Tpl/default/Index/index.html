@@ -166,8 +166,8 @@
                   </ul>
                 </div>
               </div>-->
-              {:Addons::hook('home_index_left_feedtop')} 
-              <!--feed list--> 
+              {:Addons::hook('home_index_left_feedtop')}
+              <!--feed list-->
               {:W('FeedList',array('type'=>$type,'feed_type'=>$feed_type,'feed_key'=>$feed_key,'fgid'=>t($_GET['fgid'])))}
               </div>
           </div>
@@ -203,6 +203,7 @@ $(".cancel-share").click(function(){
   $(this).parents().find(".post").hide();
   $(".kind-list").hide();//关闭当前下拉选项
   $(".diy-share-cont").slideDown("fast");
+  $("#contribute").val('');
   })
 })
 	
@@ -230,7 +231,7 @@ function weibaName(weiba_id){
 
 //如果没有可选择微吧，添加提示
 function nocircleTip(obj,tips){
-	var tipContent = ''+'<p class="f8 p20">您没有可选择的微吧，<a href="{:U('weiba/Index/weibaList',array('type'=>$_GET['type']))}"class="f-red">赶紧去加入吧！</a></p>'
+	var tipContent = ''+'<p class="f8 p20">您没有可选择的微吧，<a href="{:U('weiba/Index/weibaList',array('type'=>$type))}"class="f-red">赶紧去加入吧！</a></p>'
 	if($(obj).length<1){
 		$(tips).html(tipContent);
 	}

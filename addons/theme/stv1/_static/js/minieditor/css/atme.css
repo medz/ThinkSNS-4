@@ -1,7 +1,0 @@
-#autoTalkBox{font:12px/1.5 tahoma,arial,宋体,sans-serif;font-family:Arial,Helvetica,sans-serif,宋体;padding:5px 0;width:99.3%;text-align:left}
-#autoTipsUserList{padding:0}
-.recipients-tips{position:absolute;background:#f8f8f8;z-index:2147483647;padding:0;border:1px solid #bbb;display:none;border:#666 solid 1px;border-radius:3px;box-shadow:0 0 3px rgba(0, 0, 0, 0.3)}
-.recipients-tips h4{border-bottom: 1px solid #ccc;font-size: 12px;padding: 8px 10px;text-align: left;}
-.recipients-tips li a{display:block;padding:8px 10px;color:#395594;cursor:pointer;font-family:Tahoma, Arial}
-.recipients-tips li a em{font-weight:700;color:#ff6600;font-family:Tahoma, Arial}
-.autoSelected{background:#e8e8e8;font-family:Tahoma, Arial}

@@ -1,13 +1,13 @@
 <?php
 
-namespace Ts\Model;
+namespace Ts\Models;
 
-use Ts\Base\Model;
+use Ts\Bases\Model;
 
 /**
  * 频道分类数据模型
  *
- * @package Ts\Model\ChannelCategory
+ * @package Ts\Models\ChannelCategory
  * @author Seven Du <lovevipdsw@outlook.com>
  **/
 class ChannelCategory extends Model
@@ -36,7 +36,7 @@ class ChannelCategory extends Model
     /**
      * 设置是否开启软删除
      *
-     * @var boolean
+     * @var bool
      */
     protected $softDelete = false;
 
@@ -50,7 +50,7 @@ class ChannelCategory extends Model
      */
     public function channels()
     {
-        return $this->hasMany('Ts\\Model\\Channel', 'channel_category_id');
+        return $this->hasMany('Ts\\Models\\Channel', 'channel_category_id');
     }
 
     /**
@@ -63,7 +63,6 @@ class ChannelCategory extends Model
      */
     public function follows()
     {
-        return $this->hasMany('Ts\\Model\\ChannelFollow', 'channel_category_id');
+        return $this->hasMany('Ts\\Models\\ChannelFollow', 'channel_category_id');
     }
-
 } // END class ChannelCategory extends Model

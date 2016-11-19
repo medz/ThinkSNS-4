@@ -53,7 +53,6 @@ final class Ts
      * 入口文件
      *
      * @param \Composer\Autoload\ClassLoader $classLoader
-     * @return void
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public static function run(ClassLoader $classLoader)
@@ -82,7 +81,6 @@ final class Ts
     /**
      * 初始化
      *
-     * @return void
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     protected static function init()
@@ -95,41 +93,43 @@ final class Ts
 
         /* 初始化数据库 */
         self::$capsule = new Capsule;
-        self::$capsule->addConnection((array) include TS_CONFIGURE . '/database.php');
+        self::$capsule->addConnection((array) include TS_CONFIGURE.'/database.php');
         self::$capsule->setEventDispatcher(new Dispatcher(new Container));
         // Make this Capsule instance available globally via static methods... (optional)
         self::$capsule->setAsGlobal();
         // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
         self::$capsule->bootEloquent();
+        // 关闭日志功能
+        self::$capsule->connection()->disableQueryLog();
     }
 
     /**
      * 文件加载类
      *
      * @param string $name 文件名
-     * @param string $ext 文件拓展名
+     * @param string $ext  文件拓展名
      * @param param [param ...] 按照完整路径的层级，最后一个默认为拓展名
-     * @return boolean
+     * @return bool
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public static function import($name, $ext = '.php')
     {
-        $name  = func_get_args();
-        $ext   = array_pop($name);
-        $name  = implode(self::DS, $name);
+        $name = func_get_args();
+        $ext = array_pop($name);
+        $name = implode(self::DS, $name);
         $name .= $ext;
         unset($ext);
-        $name  = 'file://' . $name;
-        /* 是否已经加载过了 */
-        if (in_array($name, self::$_files)) {
-            return true;
 
-        /* 加载文件，并插入到记录 */
-        } elseif (file_exists($name)) {
-            array_push(self::$_files, $name);
-            return include $name;
+        if (isset(self::$_files[$name])) {
+            return self::$_files[$name];
+        } elseif (file_exists($name) && is_file($name)) {
+            self::$_files[$name] = true;
+            include_once $name;
+        } else {
+            self::$_files[$name] = false;
         }
-        return false;
+
+        return self::$_files[$name];
     }
 
     /**
@@ -153,5 +153,4 @@ final class Ts
     {
         return self::$capsule;
     }
-
 } // END final class Ts

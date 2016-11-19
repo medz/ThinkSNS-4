@@ -7,7 +7,6 @@ class MessageAction extends Action
 {
     /**
      * 模块初始化
-     * @return void
      */
     public function _initialize()
     {
@@ -15,7 +14,6 @@ class MessageAction extends Action
 
     /**
      * 私信列表
-     * @return void
      */
     public function index()
     {
@@ -32,15 +30,14 @@ class MessageAction extends Action
 
     /**
      * 系统通知
-     * @return void
      */
     public function notify()
     {
         //$list = model('Notify')->getMessageList($this->mid);     //2012/12/27
         $list = D('notify_message')->where('uid='.$this->mid)->order('ctime desc')->findpage(20);
-        foreach ($list['data'] as $k=>$v) {
+        foreach ($list['data'] as $k => $v) {
             $list['data'][$k]['body'] = parse_html($v['body']);
-            if ($appname !='public') {
+            if ($appname != 'public') {
                 $list['data'][$k]['app'] = model('App')->getAppByName($v['appname']);
             }
         }
@@ -53,10 +50,9 @@ class MessageAction extends Action
         $this->setKeywords(L('PUBLIC_MESSAGE_NOTIFY'));
         $this->display('mynotify');
     }
-    
+
     /**
      * 获取指定应用指定用户下的消息列表
-     * @return void
      */
     public function notifyDetail()
     {
@@ -64,7 +60,7 @@ class MessageAction extends Action
         //设置为已读
         //model('Notify')->setRead($this->mid,$appname);
         $this->assign('appname', $appname);
-        if ($appname !='public') {
+        if ($appname != 'public') {
             $appinfo = model('App')->getAppByName($appname);
             $this->assign('appinfo', $appinfo);
         }
@@ -75,7 +71,6 @@ class MessageAction extends Action
 
     /**
      * 删除私信
-     * @return void
      */
     public function delnotify()
     {
@@ -84,7 +79,6 @@ class MessageAction extends Action
 
     /**
      * 私信详情
-     * @return void
      */
     public function detail()
     {
@@ -103,7 +97,7 @@ class MessageAction extends Action
         // 设置信息已读(私信列表页去掉new标识)
         model('Message')->setMessageIsRead(t($_GET['id']), $this->mid, 0);
         $message['since_id'] = model('Message')->getSinceMessageId($message['list_id'], $message['message_num']);
-        
+
         $this->assign('message', $message);
         $this->assign('type', intval($_GET['type']));
 
@@ -114,7 +108,6 @@ class MessageAction extends Action
 
     /**
      * 获取指定私信列表中的私信内容
-     * @return void
      */
     public function loadMessage()
     {
@@ -137,7 +130,7 @@ class MessageAction extends Action
                         'count' => count($msg['attach_infos']),
                         'index' => $mk + 1,
                         'url' => $mv['url'],
-                        'attach_id' => $mv['attach_id']
+                        'attach_id' => $mv['attach_id'],
                     );
                 }
             }
@@ -150,7 +143,6 @@ class MessageAction extends Action
 
     /**
      * 发送私信弹窗
-     * @return void
      */
     public function post()
     {
@@ -161,19 +153,18 @@ class MessageAction extends Action
         // 是否能够编辑用户
         $editable = intval($_REQUEST['editable']) == 0 ? 0 : 1;
         $this->assign('editable', $editable);
-        
+
         $this->display();
     }
 
     /**
      * 发送私信
-     * @return void
      */
     public function doPost()
     {
-        $return = array('data'=>L('PUBLIC_SEND_SUCCESS'),'status'=>1);
+        $return = array('data' => L('PUBLIC_SEND_SUCCESS'), 'status' => 1);
         if (empty($_POST['to']) || !CheckPermission('core_normal', 'send_message')) {
-            $return['data']=L('PUBLIC_SYSTEM_MAIL_ISNOT');
+            $return['data'] = L('PUBLIC_SYSTEM_MAIL_ISNOT');
             $return['status'] = 0;
             echo json_encode($return);
             exit();
@@ -186,7 +177,7 @@ class MessageAction extends Action
         }
         $_POST['to'] = trim(t($_POST['to']), ',');
         $to_num = explode(',', $_POST['to']);
-        if (sizeof($to_num)>10) {
+        if (count($to_num) > 10) {
             $return['data'] = '';
             $return['status'] = 0;
             echo json_encode($return);
@@ -206,29 +197,27 @@ class MessageAction extends Action
             exit();
         } else {
             $return['status'] = 0;
-            $return['data']   = model('Message')->getError();
-            ;
+            $return['data'] = model('Message')->getError();
             echo json_encode($return);
             exit();
         }
     }
-    
+
     /**
      * 回复私信
-     * @return void
      */
     public function doReply()
     {
         $UserPrivacy = model('UserPrivacy')->getPrivacy($this->mid, intval($_POST['to']));
         if ($UserPrivacy['message'] != 0) {
-            echo json_encode(array('status'=>0, 'data'=>'根据对方的隐私设置，您无法给TA发送私信'));
+            echo json_encode(array('status' => 0, 'data' => '根据对方的隐私设置，您无法给TA发送私信'));
             exit;
         }
         $_POST['reply_content'] = t($_POST['reply_content']);
-        $_POST['id']  = intval($_POST['id']);
+        $_POST['id'] = intval($_POST['id']);
 
         if (!$_POST['id'] || empty($_POST['reply_content'])) {
-            echo json_encode(array('status'=>0, 'data'=>L('PUBLIC_COMMENT_MAIL_REQUIRED')));
+            echo json_encode(array('status' => 0, 'data' => L('PUBLIC_COMMENT_MAIL_REQUIRED')));
             exit;
         }
 
@@ -241,16 +230,16 @@ class MessageAction extends Action
 
         $res = model('Message')->replyMessage($_POST['id'], $_POST['reply_content'], $this->mid, $_POST['attach_ids']);
         if ($res) {
-            echo json_encode(array('status'=>1, 'data'=>L('PUBLIC_PRIVATE_MESSAGE_SEND_SUCCESS')));
+            echo json_encode(array('status' => 1, 'data' => L('PUBLIC_PRIVATE_MESSAGE_SEND_SUCCESS')));
         } else {
-            echo json_encode(array('status'=>0, 'data'=>L('PUBLIC_PRIVATE_MESSAGE_SEND_FAIL')));
+            echo json_encode(array('status' => 0, 'data' => L('PUBLIC_PRIVATE_MESSAGE_SEND_FAIL')));
         }
         exit();
     }
 
     /**
      * 设置指定私信为已读
-     * @return integer 1=成功 0=失败
+     * @return int 1=成功 0=失败
      */
     public function doSetIsRead()
     {
@@ -264,7 +253,7 @@ class MessageAction extends Action
 
     /**
      * 删除私信
-     * @return integer 1=成功 0=失败
+     * @return int 1=成功 0=失败
      */
     public function doDelete()
     {
@@ -278,7 +267,7 @@ class MessageAction extends Action
 
     /**
      * 删除用户指定私信会话
-     * @return integer 1=成功 0=失败
+     * @return int 1=成功 0=失败
      */
     public function doDeleteSession()
     {
@@ -289,7 +278,7 @@ class MessageAction extends Action
             echo 0;
         }
     }
-    
+
     public function doSendFeedMail()
     {
         //手动执行邮件任务

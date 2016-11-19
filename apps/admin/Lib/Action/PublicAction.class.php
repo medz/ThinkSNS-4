@@ -7,7 +7,6 @@
 tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
 class PublicAction extends AdministratorAction
 {
-    
     public function _initialize()
     {
         if (!in_array(ACTION_NAME, array('login', 'doLogin', 'logout', 'selectDepartment'))) {
@@ -49,7 +48,7 @@ class PublicAction extends AdministratorAction
             $this->error(model('Passport')->getError());
         }
     }
-    
+
     /**
      * 退出登录
      * Enter description here ...
@@ -59,18 +58,17 @@ class PublicAction extends AdministratorAction
         model('Passport')->adminLogout();
         U('admin/Public/login', '', true);
     }
-    
-    
+
     /**
      * 通用部门选择数据接口
      */
     public function selectDepartment()
     {
-        $return = array('status'=>1,'data'=>'');
-        
+        $return = array('status' => 1, 'data' => '');
+
         if (empty($_POST['pid'])) {
             $return['status'] = 0;
-            $return['data']   = L('PUBLIC_SYSTEM_CATEGORY_ISNOT');
+            $return['data'] = L('PUBLIC_SYSTEM_CATEGORY_ISNOT');
             echo json_encode($return);
             exit();
         }
@@ -80,15 +78,15 @@ class PublicAction extends AdministratorAction
         $ctree = model('Department')->getDepartment($_POST['pid']);
         if (empty($ctree['_child'])) {
             $return['status'] = 0;
-            $return['data']   = L('PUBLIC_SYSTEM_SONCATEGORY_ISNOT');
+            $return['data'] = L('PUBLIC_SYSTEM_SONCATEGORY_ISNOT');
         } else {
             $return['data'] = "<select name='_parent_dept_id[]' onchange='admin.selectDepart(this.value,$(this))' id='_parent_dept_{$_POST['pid']}'>";
-            $return['data'] .= "<option value='-1'>".L('PUBLIC_SYSTEM_SELECT')."</option>";
+            $return['data'] .= "<option value='-1'>".L('PUBLIC_SYSTEM_SELECT').'</option>';
             $sid = !empty($_POST['sid']) ? $_POST['sid'] : '';
             foreach ($ctree['_child'] as $key => $value) {
-                $return['data'] .="<option value='{$value['department_id']}' ".($value['department_id'] == $sid ? " selected='selected'":'').">{$value['title']}</option>";
+                $return['data'] .= "<option value='{$value['department_id']}' ".($value['department_id'] == $sid ? " selected='selected'" : '').">{$value['title']}</option>";
             }
-            $return['data'] .="</select>";
+            $return['data'] .= '</select>';
         }
         echo json_encode($return);
         exit();
@@ -119,7 +117,6 @@ class PublicAction extends AdministratorAction
 
     /**
      * 添加分类窗口API
-     * @return void
      */
     public function addTreeCategory()
     {
@@ -160,7 +157,6 @@ class PublicAction extends AdministratorAction
 
     /**
      * 编辑分类窗口API
-     * @return void
      */
     public function upTreeCategory()
     {
@@ -202,7 +198,7 @@ class PublicAction extends AdministratorAction
             $res['data'] = '编辑分类成功';
         } else {
             $res['status'] = 0;
-            $res['data'] = '编辑分类失败';
+            $res['data'] = '编辑分类失败，编辑的名称可能已经存在于当前级别。';
         }
 
         exit(json_encode($res));
@@ -235,7 +231,6 @@ class PublicAction extends AdministratorAction
 
     /**
      * 设置分类配置页面
-     * @return void
      */
     public function setCategoryConf()
     {
@@ -273,7 +268,7 @@ class PublicAction extends AdministratorAction
         }
         $this->pageKeyList = $pageKeyList;
         // 提交表单URL设置
-        $this->savePostUrl = U('admin/Public/doSetCategoryConf', array('cid'=>$cid, 'stable'=>$stable));
+        $this->savePostUrl = U('admin/Public/doSetCategoryConf', array('cid' => $cid, 'stable' => $stable));
         // 获取配置信息
         $extend = empty($category['ext']) ? $detailData : unserialize($category['ext']);
 
@@ -282,7 +277,6 @@ class PublicAction extends AdministratorAction
 
     /**
      * 存储分类配置操作
-     * @return void
      */
     public function doSetCategoryConf()
     {
@@ -304,7 +298,7 @@ class PublicAction extends AdministratorAction
             $this->error('分类配置失败');
         }
     }
-    
+
     //发送测试邮件
     public function test_email()
     {
@@ -315,6 +309,22 @@ class PublicAction extends AdministratorAction
             echo model('Mail')->message;
         } else {
             echo 1;
+        }
+    }
+
+    /**
+     * 删除用户脏数据（昵称重复）
+     */
+    public function delTrashUser()
+    {
+        $sql = 'SELECT `uname` FROM `ts_user` GROUP BY `uname` HAVING count(`uname`) >1';
+        $rs = D()->query($sql);
+        foreach ($rs as $key => $value) {
+            $_rs = D('User')->where(array('uname' => $value['uname']))->select();
+            $uids = getSubByKey($_rs, 'uid');
+            $pos = array_search(min($uids), $uids);
+            unset($uids[$pos]);
+            D('User')->trueDeleteUsers($uids);
         }
     }
 }

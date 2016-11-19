@@ -8,7 +8,6 @@ class IndexAction extends Action
 {
     /**
      * 频道首页页面
-     * @return void
      */
     public function index()
     {
@@ -22,6 +21,7 @@ class IndexAction extends Action
         $categoryIds = getSubByKey($channelCategory, 'channel_category_id');
         if (!in_array($cid, $categoryIds) && !empty($cid)) {
             $this->error('您请求的频道分类不存在');
+
             return false;
         }
         $channelConf = model('Xdata')->get('channel_Admin:index');
@@ -47,20 +47,20 @@ class IndexAction extends Action
         //获取频道信息
         //广播数
         $channel_count = model('Channel')->where('channel_category_id='.$cid.' AND status=1')->count();
-        $this->assign("channel_count", $channel_count);
+        $this->assign('channel_count', $channel_count);
         //收听人数
-        $channel_follower_count = model("ChannelFollow")->where('channel_category_id='.$cid)->count();
-        $this->assign("channel_follower_count", $channel_follower_count);
+        $channel_follower_count = model('ChannelFollow')->where('channel_category_id='.$cid)->count();
+        $this->assign('channel_follower_count', $channel_follower_count);
         //banner,desc
-        $channel_category = D("channelCategory")->where('channel_category_id='.$cid)->getField('ext');
+        $channel_category = D('channelCategory')->where('channel_category_id='.$cid)->getField('ext');
         $channel_category = unserialize($channel_category);
-        $channel_banner =  getImageUrlByAttachId($channel_category['attach'], 1000);
+        $channel_banner = getImageUrlByAttachId($channel_category['attach'], 1000);
         $this->assign('channel_banner', $channel_banner);
         $this->assign('channel_desc', $channel_category['desc']);
 
         //排序
         $order = $_GET['order'] == null ? 0 : $_GET['order'];
-        $this->assign("order", intval($order));
+        $this->assign('order', intval($order));
 
         // 设置页面信息
         $titleHash = model('CategoryTree')->setTable('channel_category')->getCategoryHash();
@@ -85,13 +85,12 @@ class IndexAction extends Action
             $result['status'] = 1;
             $result['data'] = $data;
         }
-        
+
         exit(json_encode($result));
     }
 
     /**
      * 投稿发布框
-     * @return void
      */
     public function contributeBox()
     {

@@ -11,7 +11,7 @@ class WeibaDarenWidget extends Widget
      * 渲染执行方法
      * 输出默认html结构
      *
-     * @param array $var 固定结构
+     * @param  array  $var 固定结构
      * @return string 执行后的HTML字符串
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -19,12 +19,13 @@ class WeibaDarenWidget extends Widget
     {
         /* # 合并覆盖初始数据 */
         $data = array_merge(array(
-            'max'     => 5,
+            'max' => 5,
             'weibaid' => null,
-            'title'   => '用户推荐',
-            'uid'     => null
+            'title' => '用户推荐',
+            'uid' => null,
         ), $data);
-        return $this->renderFile(dirname(__FILE__) . '/template.html', $data);
+
+        return $this->renderFile(dirname(__FILE__).'/template.html', $data);
     }
 
     /**
@@ -44,8 +45,8 @@ class WeibaDarenWidget extends Widget
         $limit || $limit = 3;
 
         $where = '`is_del` != 1';
-        $uid && $where .= ' AND `post_uid` != ' . $uid;
-        $wid && $where .= ' AND `weiba_id` = ' . $wid;
+        $uid && $where .= ' AND `post_uid` != '.$uid;
+        $wid && $where .= ' AND `weiba_id` = '.$wid;
         $uids = D('WeibaPost', 'weiba')->where($where)->field('`post_uid`, count(`post_id`) as `num`')->order('`num` DESC')->group('`post_uid`')->limit(50)->select();
         $limit > count($uids) && $limit = count($uids);
         $ids = array();
@@ -54,7 +55,7 @@ class WeibaDarenWidget extends Widget
         }
         unset($uids);
         $ids = model('User')->getUserInfoByUids($ids);
-        echo $this->renderFile(dirname(__FILE__) . '/_userList.html', array('userList' => $ids));
+        echo $this->renderFile(dirname(__FILE__).'/_userList.html', array('userList' => $ids));
         exit;
     }
 } // END class WeibaDarenWidget extends Widget
@@ -66,12 +67,11 @@ class WeibaDarenWidget extends Widget
  */
 class OldWeibaDarenWidget extends Widget
 {
-    
     /**
      * 渲染可能感兴趣的人页面
      *
-     * @param array $data
-     *        	配置相关数据
+     * @param  array  $data
+     *                      配置相关数据
      * @return string 渲染页面的HTML
      */
     public function render($data)
@@ -88,11 +88,11 @@ class OldWeibaDarenWidget extends Widget
         $var ['weibaid'] = isset($data ['weibaid']) ? intval($data ['weibaid']) : 0;
         // 标题信息
         $var ['title'] = isset($data ['title']) ? t($data ['title']) : '推荐关注';
-        $content = $this->renderFile(dirname(__FILE__) . "/weibaDaren.html", $var);
-        
+        $content = $this->renderFile(dirname(__FILE__).'/weibaDaren.html', $var);
+
         return $content;
     }
-    
+
     /**
      * 换一换数据处理
      *
@@ -104,15 +104,15 @@ class OldWeibaDarenWidget extends Widget
         $data ['limit'] = intval($_POST ['limit']);
         $data ['weibaid'] = intval($_POST ['weibaid']);
         $var = $this->_getRelatedDaren($data);
-        $content = $this->renderFile(dirname(__FILE__) . "/_weibaDaren.html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/_weibaDaren.html', $var);
         exit(json_encode($content));
     }
-    
+
     /**
      * 获取用户的相关数据
      *
-     * @param array $data
-     *        	配置相关数据
+     * @param  array $data
+     *                     配置相关数据
      * @return array 显示所需数据
      */
     private function _getRelatedDaren($data)
@@ -126,11 +126,11 @@ class OldWeibaDarenWidget extends Widget
         }
         $var ['weibaid'] = isset($data ['weibaid']) ? intval($data ['weibaid']) : 0;
         // 收藏达人的信息
-        $key = '_getWeibaDaren' . $var ['uid'] . '_' . $var ['limit'] . '_' . date('Ymd').'_'.$weibaid;
+        $key = '_getWeibaDaren'.$var ['uid'].'_'.$var ['limit'].'_'.date('Ymd').'_'.$weibaid;
         $var ['user'] = S($key);
         if ($var ['user'] === false || intval($_REQUEST ['rel']) == 1) {
             $uidlist = M('user_group_link')->where('user_group_id=7')->limit(1000)->select();
-            $map['follower_uid'] = array('in',getSubByKey($uidlist, 'uid'));
+            $map['follower_uid'] = array('in', getSubByKey($uidlist, 'uid'));
             if ($data ['weibaid']) {
                 $map['weiba_id'] = $weibaid;
             }
@@ -146,9 +146,10 @@ class OldWeibaDarenWidget extends Widget
                 $arr [$key] ['info'] ['extendMsg'] = '';
             }
             $var ['user'] = $arr;
-            
+
             S($key, $var ['user'], 86400);
         }
+
         return $var;
     }
 }

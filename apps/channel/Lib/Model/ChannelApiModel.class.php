@@ -19,7 +19,7 @@ class ChannelApiModel
         $attachIds = array_unique($attachIds);
         $attachInfos = model('Attach')->getAttachByIds($attachIds);
         $attachData = array();
-        
+
         foreach ($attachInfos as $attach) {
             $attachData[$attach['attach_id']] = $attach;
         }
@@ -35,7 +35,7 @@ class ChannelApiModel
                 $value['followStatus'] = intval(D('ChannelFollow', 'channel')->getFollowStatus($uid, $value['channel_category_id']));
             }
         }
-        
+
         return $data;
     }
 
@@ -43,7 +43,7 @@ class ChannelApiModel
      * 获取频道分类数据
      * @return array 所有频道分类数据
      */
-    public function getChannels($uid, $count=6, $page=1, $order='sort asc', $sql='')
+    public function getChannels($uid, $count = 6, $page = 1, $order = 'sort asc', $sql = '')
     {
         $start = ($page - 1) * $count;
         $end = $count;
@@ -61,7 +61,7 @@ class ChannelApiModel
         $attachIds = array_unique($attachIds);
         $attachInfos = model('Attach')->getAttachByIds($attachIds);
         $attachData = array();
-        
+
         foreach ($attachInfos as $attach) {
             $attachData[$attach['attach_id']] = $attach;
         }
@@ -77,42 +77,42 @@ class ChannelApiModel
                 $value['followStatus'] = intval(D('ChannelFollow', 'channel')->getFollowStatus($uid, $value['channel_category_id']));
             }
         }
-        
+
         return $data;
     }
 
     /**
      * 获取频道下的分享
      */
-    public function getChannelFeed($cid, $type, $count=10, $page=1, $order, $sql='')
+    public function getChannelFeed($cid, $type, $count = 10, $page = 1, $order, $sql = '')
     {
         // $cid = intval($cid);
         $count = intval($count);
         $page = intval($page);
         // 组装查询条件
-        $where = "c.status = 1";
+        $where = 'c.status = 1';
         if ($cid) {
             if (is_array($cid)) {
-                $where .= " AND c.channel_category_id in (" . implode(',', $cid) . ")";
+                $where .= ' AND c.channel_category_id in ('.implode(',', $cid).')';
             } else {
-                $where .= " AND c.channel_category_id = " . intval($cid) ;
+                $where .= ' AND c.channel_category_id = '.intval($cid) ;
             }
         }
         if ($type) {
             $where .= " AND f.type='".$type."'";
         }
         if (!$order) {
-            $order ='c.feed_id DESC';
+            $order = 'c.feed_id DESC';
         }
         if ($sql) {
             $where .= $sql;
         }
         $start = ($page - 1) * $count;
         $end = $count;
-        $sql = "SELECT distinct c.feed_id FROM `".C('DB_PREFIX')."channel` c LEFT JOIN `".C('DB_PREFIX')."feed` f ON c.feed_id = f.feed_id WHERE ".$where." ORDER BY ".$order." LIMIT ".$start.", ".$end."";
+        $sql = 'SELECT distinct c.feed_id FROM `'.C('DB_PREFIX').'channel` c LEFT JOIN `'.C('DB_PREFIX').'feed` f ON c.feed_id = f.feed_id WHERE '.$where.' ORDER BY '.$order.' LIMIT '.$start.', '.$end.'';
         $feedIds = getSubByKey(D()->query($sql), 'feed_id');
         $data = model('Feed')->formatFeed($feedIds, true);
-        
+
         return $data;
     }
 }

@@ -7,10 +7,10 @@
 class UserOfficialModel extends Model
 {
     protected $tableName = 'user_official';
-    protected $fields = array(0=>'uid',1=>'info',2=>'user_official_category_id');
+    protected $fields = array(0 => 'uid', 1 => 'info', 2 => 'user_official_category_id');
     /**
      * 获取指定官方用户的信息
-     * @param array $uids 用户ID
+     * @param  array $uids 用户ID
      * @return array 指定官方用户的信息
      */
     public function getUserOfficialInfo($uids)
@@ -20,16 +20,16 @@ class UserOfficialModel extends Model
         }
         $map['uid'] = array('IN', $uids);
         $data = $this->where($map)->getHashList('uid', 'info');
-        
+
         return $data;
     }
 
     /**
      * 添加官方用户信息
-     * @param array $uids 添加用户ID数组
-     * @param integer $cid 官方用户分类ID
-     * @param string $info 相关信息
-     * @return boolean 是否添加成功
+     * @param  array  $uids 添加用户ID数组
+     * @param  int    $cid  官方用户分类ID
+     * @param  string $info 相关信息
+     * @return bool   是否添加成功
      */
     public function addOfficialUser($uids, $cid, $info)
     {
@@ -78,8 +78,8 @@ class UserOfficialModel extends Model
 
     /**
      * 移除官方用户
-     * @param array $ids 官方用户表主键ID
-     * @return boolean 是否成功移除官方用户
+     * @param  array $ids 官方用户表主键ID
+     * @return bool  是否成功移除官方用户
      */
     public function removeUserOfficial($ids)
     {
@@ -93,13 +93,13 @@ class UserOfficialModel extends Model
         $map['official_id'] = array('IN', $ids);
         $res = $this->where($map)->delete();
 
-        return (boolean)$res;
+        return (boolean) $res;
     }
 
     /**
      * 删除分类关联信息
-     * @param integer $cid 分类ID
-     * @return boolean 是否删除成功
+     * @param  int  $cid 分类ID
+     * @return bool 是否删除成功
      */
     public function deleteAssociatedData($cid)
     {

@@ -1,12 +1,11 @@
 <?php
 /**
  * 收藏控制器
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 class CollectionAction extends Action
 {
-
     /**
      * 我的收藏页面
      */
@@ -17,12 +16,12 @@ class CollectionAction extends Action
         $this->assign($weiboSet);
         // TODO:后续可能由表中获取语言KEY
         $d['tabHash'] = array(
-                            'feed'    => L('PUBLIC_WEIBO')                // 分享
+                            'feed' => L('PUBLIC_WEIBO'),                // 分享
                         );
 
         $d['tab'] = model('Collection')->getCollTab($map);
         $this->assign($d);
-        
+
         // 安全过滤
         $t = t($_GET['t']);
         !empty($t) && $map['source_table_name'] = $t;

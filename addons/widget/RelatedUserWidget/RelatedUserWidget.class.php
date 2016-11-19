@@ -6,10 +6,9 @@
  */
 class RelatedUserWidget extends Widget
 {
-
     /**
      * 渲染可能感兴趣的人页面
-     * @param array $data 配置相关数据
+     * @param  array  $data 配置相关数据
      * @return string 渲染页面的HTML
      */
     public function render($data)
@@ -25,7 +24,8 @@ class RelatedUserWidget extends Widget
         $var ['limit'] = isset($data ['limit']) ? intval($data ['limit']) : 8;
         // 标题信息
         $var['title'] = isset($data['title']) ? t($data['title']) : '推荐关注';
-        $content = $this->renderFile(dirname(__FILE__)."/relatedUser.html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/relatedUser.html', $var);
+
         return $content;
     }
 
@@ -38,13 +38,13 @@ class RelatedUserWidget extends Widget
         $data['uid'] = intval($_POST['uid']);
         $data['limit'] = intval($_POST['limit']);
         $var = $this->_getRelatedUser($data);
-        $content = $this->renderFile(dirname(__FILE__)."/_relatedUser.html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/_relatedUser.html', $var);
         exit(json_encode($content));
     }
-    
+
     /**
      * 获取用户的相关数据
-     * @param array $data 配置相关数据
+     * @param  array $data 配置相关数据
      * @return array 显示所需数据
      */
     private function _getRelatedUser($data)
@@ -57,15 +57,15 @@ class RelatedUserWidget extends Widget
         $var['title'] = isset($data['title']) ? t($data['title']) : '推荐关注';
         // 相关用户信息
 
-        $key = '_getRelatedUser' . $var ['uid'] . '_' . $var ['limit'] . '_' . date('Ymd');
+        $key = '_getRelatedUser'.$var ['uid'].'_'.$var ['limit'].'_'.date('Ymd');
         //$var ['user'] = S ( $key );
         $var ['user'] = false;
         if ($var ['user'] === false || intval($_REQUEST ['rel']) == 1) {
             $var ['user'] = model('RelatedUser')->getRelatedUser($var ['limit']);
-            
+
             S($key, $var ['user'], 86400);
         }
-        
+
         return $var;
     }
 }

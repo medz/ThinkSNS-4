@@ -9,8 +9,8 @@ tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
 class UserGroupAction extends AdministratorAction
 {
     public $pageTitle = array(
-                            'index'          => '用户组管理',
-                            'addUsergroup'=> '编辑用户组',
+                            'index' => '用户组管理',
+                            'addUsergroup' => '编辑用户组',
                             );
     public function _initialize()
     {
@@ -22,21 +22,21 @@ class UserGroupAction extends AdministratorAction
     {
 
          // 页面具有的字段，可以移动到配置文件中！！！
-        $this->pageKeyList = array('user_group_id','app_name','user_group_name','user_group_type','user_group_icon','is_authenticate','DOACTION');
+        $this->pageKeyList = array('user_group_id', 'app_name', 'user_group_name', 'user_group_type', 'user_group_icon', 'is_authenticate', 'DOACTION');
 
-        $this->pageButton[] = array('title'=>L('PUBLIC_ADD_USER_GROUP'),'onclick'=>"admin.addUserGroup()");
+        $this->pageButton[] = array('title' => L('PUBLIC_ADD_USER_GROUP'), 'onclick' => 'admin.addUserGroup()');
         // $this->pageButton[] = array('title'=>L('PUBLIC_DELETE_USER_GROUP'),'onclick'=>"admin.delUserGroup(this)");
 
         $list = model('UserGroup')->findPage(10);
 
         foreach ($list['data'] as & $value) {
-            $value['user_group_type'] = empty($value['user_group_type']) ? L('PUBLIC_ORDINARY'):L('PUBLIC_SPECIAL');
-            $value['user_group_icon'] = $value['user_group_icon']!='-1' ? '<img src="'.THEME_PUBLIC_URL.'/image/usergroup/'.$value['user_group_icon'].'">' :'';
-            $value['is_authenticate'] = $value['is_authenticate']==1?'是':'否';
-            $value['DOACTION'] = "<a href='".U('admin/UserGroup/addUsergroup', array('user_group_id'=>$value['user_group_id']))."'>".L('PUBLIC_EDIT')."</a>&nbsp;-&nbsp;";
-            $value['DOACTION'] .= "<a href='".U('admin/Config/permissionset', array('gid'=>$value['user_group_id']))."'>".L('PUBLIC_PERMISSION_GROUP_CONFIGURATION')."</a>&nbsp;";
+            $value['user_group_type'] = empty($value['user_group_type']) ? L('PUBLIC_ORDINARY') : L('PUBLIC_SPECIAL');
+            $value['user_group_icon'] = $value['user_group_icon'] != '-1' ? '<img src="'.THEME_PUBLIC_URL.'/image/usergroup/'.$value['user_group_icon'].'">' : '';
+            $value['is_authenticate'] = $value['is_authenticate'] == 1 ? '是' : '否';
+            $value['DOACTION'] = "<a href='".U('admin/UserGroup/addUsergroup', array('user_group_id' => $value['user_group_id']))."'>".L('PUBLIC_EDIT').'</a>&nbsp;-&nbsp;';
+            $value['DOACTION'] .= "<a href='".U('admin/Config/permissionset', array('gid' => $value['user_group_id']))."'>".L('PUBLIC_PERMISSION_GROUP_CONFIGURATION').'</a>&nbsp;';
             if ($value['user_group_id'] > 6) {
-                $value['DOACTION'] .= "<a href='javascript:void(0)' onclick=\"admin.delUserGroup(this,'{$value['user_group_id']}')\">".L('PUBLIC_STREAM_DELETE')."</a> ";
+                $value['DOACTION'] .= "<a href='javascript:void(0)' onclick=\"admin.delUserGroup(this,'{$value['user_group_id']}')\">".L('PUBLIC_STREAM_DELETE').'</a> ';
             }
         }
 
@@ -60,26 +60,25 @@ class UserGroupAction extends AdministratorAction
             }
         }
 
+        $this->pageKeyList = array('user_group_id', 'user_group_name', 'user_group_icon', 'user_group_type', 'is_authenticate');
 
-        $this->pageKeyList = array('user_group_id','user_group_name','user_group_icon','user_group_type','is_authenticate');
-
-        $this->opt['user_group_type'] = array(0=>L('PUBLIC_ORDINARY'),1=>L('PUBLIC_SPECIAL'));
-        $this->opt['is_authenticate'] = array(1=>'是',0=>'否');
+        $this->opt['user_group_type'] = array(0 => L('PUBLIC_ORDINARY'), 1 => L('PUBLIC_SPECIAL'));
+        $this->opt['is_authenticate'] = array(1 => '是', 0 => '否');
 
         require_once ADDON_PATH.'/library/io/Dir.class.php';
-        $dirs   = new Dir(THEME_PUBLIC_PATH.'/image/usergroup');
-        $dirs   = $dirs->toArray();
+        $dirs = new Dir(THEME_PUBLIC_PATH.'/image/usergroup');
+        $dirs = $dirs->toArray();
 //      $icons = array('-1'=>'无');
-        $icons = array('-1'=>L('PUBLIC_NO_MORE_INFO'));
-        foreach ($dirs as $k=>$v) {
+        $icons = array('-1' => L('PUBLIC_NO_MORE_INFO'));
+        foreach ($dirs as $k => $v) {
             $icons[$v['filename']] = "<img src='".THEME_PUBLIC_URL.'/image/usergroup/'.$v['filename']."'>";
         }
 
         $this->opt['user_group_icon'] = $icons;
-            
+
         $this->savePostUrl = U('admin/UserGroup/addUsergroup');
 
-        $detailData =  array();
+        $detailData = array();
 
         if (!empty($_REQUEST['user_group_id'])) {
             $map['user_group_id'] = $_REQUEST['user_group_id'];
@@ -94,10 +93,10 @@ class UserGroupAction extends AdministratorAction
     //删除用户
     public function delgroup()
     {
-        $return = array('status'=>1,'data'=>L('PUBLIC_DELETE_SUCCESS'));
+        $return = array('status' => 1, 'data' => L('PUBLIC_DELETE_SUCCESS'));
         if (empty($_POST['gid'])) {
             $return['status'] = 0;
-            $return['data']   = L('PUBLIC_USERGROUP_ISNOT');
+            $return['data'] = L('PUBLIC_USERGROUP_ISNOT');
             echo json_encode($return);
             exit();
         }

@@ -6,15 +6,14 @@
  */
 class DiyWeibo extends TagsAbstract
 {
-    
     /**
      * 是否是封闭的标签
      * @var unknown_type
      */
     public static $TAG_CLOSED = false;
-    
+
     public $config = array();
-    
+
     public function __construct()
     {
     }
@@ -33,6 +32,7 @@ class DiyWeibo extends TagsAbstract
         if (!empty($tpl)) {
             $file = $tpl;
         }
+
         return dirname(__FILE__).'/DiyWeibo/'.$file.'.html';
     }
 
@@ -61,13 +61,13 @@ class DiyWeibo extends TagsAbstract
         switch ($attr['source']) {
             case 'user'://指定用户分享
                 if (!empty($attr['user'])) {
-                    $map['uid'] = array( 'in', explode(',', $attr['user']) );
+                    $map['uid'] = array('in', explode(',', $attr['user']));
                 }
                 break;
             case 'topic'://指定话题分享
                 if (!empty($attr['topic'])) {
                     $fids = model('FeedTopic')->getFeedIdByTopic($attr['topic']);
-                    $map['feed_id'] = array( 'in' , $fids );
+                    $map['feed_id'] = array('in', $fids);
                 }
                 break;
         }
@@ -78,6 +78,7 @@ class DiyWeibo extends TagsAbstract
         $weiboSet = model('Xdata')->get('admin_Config:feed');
         $attr = array_merge($attr, $weiboSet);
         $attr['remarkHash'] = model('Follow')->getRemarkHash($GLOBALS['ts']['mid']);
+
         return $attr;
     }
 }

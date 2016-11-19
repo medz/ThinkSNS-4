@@ -6,7 +6,7 @@
  */
 class DiyWidgetModel extends Model
 {
-    protected $tableName    =    'diy_widget';
+    protected $tableName = 'diy_widget';
 
     public function checkCache($sign)
     {
@@ -25,7 +25,7 @@ class DiyWidgetModel extends Model
         } else {
             //有缓存时间
             $time = $cacheInfo['cacheTime'] * 60;
-            if (time()-$cacheInfo['mTime']>=$time) {
+            if (time() - $cacheInfo['mTime'] >= $time) {
                 return true;
             } else {
                 return false;
@@ -34,7 +34,7 @@ class DiyWidgetModel extends Model
     }
     /**
      * 返回模块参数
-     * @param string $sign
+     * @param  string $sign
      * @return mixed
      */
     public function getTagInfo($sign)
@@ -44,18 +44,19 @@ class DiyWidgetModel extends Model
         $ext = unserialize($data['ext']);
         $result['tagName'] = $ext['tagInfo']['name'];
         $result['content'] = $data['content'];
-        $result['tagLib']  = $data['tagLib'];
+        $result['tagLib'] = $data['tagLib'];
         $result['attr'] = unserialize($ext['attr']);
+
         return $result;
     }
     /**
-     * 返回模块参数  $sign是数组 
-     * @param array $sign
+     * 返回模块参数  $sign是数组
+     * @param  array $sign
      * @return mixed
      */
     public function getTagInofs(array $sign)
     {
-        $map['pluginId'] = array('in',$sign);
+        $map['pluginId'] = array('in', $sign);
         $res = implode("','", $sign);
         $data = $this->query("select pluginId,tagLib,content,ext,status from {$this->tablePrefix}diy_widget where pluginId in ('".$res."')");
         $result = array();
@@ -63,9 +64,10 @@ class DiyWidgetModel extends Model
             $ext = unserialize($value['ext']);
             $result[$value['pluginId']]['tagName'] = $ext['tagInfo']['name'];
             $result[$value['pluginId']]['content'] = $value['content'];
-            $result[$value['pluginId']]['tagLib']  = $value['tagLib'];
+            $result[$value['pluginId']]['tagLib'] = $value['tagLib'];
             $result[$value['pluginId']]['attr'] = unserialize($ext['attr']);
         }
+
         return $result;
     }
 
@@ -76,6 +78,7 @@ class DiyWidgetModel extends Model
     {
         $map['widgetId'] = $widgetId;
         $ext = unserialize($this->where($map)->getField('ext'));
+
         return $ext['tagInfo']['name'];
     }
 
@@ -87,7 +90,8 @@ class DiyWidgetModel extends Model
     {
         $map['pluginId'] = $pluginId;
         $content = $this->where($map)->getField('content');
-        return empty($content)?false:$content;
+
+        return empty($content) ? false : $content;
     }
 
     /**
@@ -97,7 +101,8 @@ class DiyWidgetModel extends Model
     {
         $map['widgetId'] = $WidgetId;
         $content = $this->where($map)->getField('content');
-        return empty($content)?false:$content;
+
+        return empty($content) ? false : $content;
     }
     /**
      * 通过Id更新该widget的样式模板
@@ -106,13 +111,14 @@ class DiyWidgetModel extends Model
     {
         $map['widgetId'] = $widgetId;
         $save['content'] = $content;
+
         return $this->where($map)->save($save);
     }
-
 
     public function getCache($sign)
     {
         $map['pluginId'] = $sign;
+
         return $this->where($map)->getField('cache');
     }
 
@@ -125,13 +131,14 @@ class DiyWidgetModel extends Model
     }
     /**
      * 是否存在相同的模块
-     * @param unknown_type $sign
-     * @return boolean
+     * @param  unknown_type $sign
+     * @return bool
      */
     public function checkHasWidget($sign)
     {
         $map['pluginId'] = $sign;
         $count = $this->where($map)->count();
-        return $count>0?true:false;
+
+        return $count > 0 ? true : false;
     }
 }

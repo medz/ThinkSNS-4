@@ -2,21 +2,20 @@
 
 class SelectFriendsAction extends Action
 {
-
     public function getOne()
     {
         $name = t(urldecode($_GET['name']));
         $db_prefix = C('DB_PREFIX');
         $Model = M('');
         if ($name) {
-            //从我关注的人中找				
+            //从我关注的人中找
             $followings = $Model->field('follow.fid AS fuid,user.uname AS funame')
                                 ->table("{$db_prefix}user_follow AS follow LEFT JOIN {$db_prefix}user AS user ON follow.fid=user.uid")
                                 ->where("follow.uid={$this->mid} AND user.uname LIKE '%{$name}%'")
                                 ->order('follow.follow_id DESC')
                                 ->limit(10)
                                 ->findAll();
-            //从我的粉丝中找	
+            //从我的粉丝中找
             $followers = $Model->field('follow.uid AS fuid,user.uname AS funame')
                                ->table("{$db_prefix}user_follow AS follow LEFT JOIN {$db_prefix}user AS user ON follow.uid=user.uid")
                                ->where("follow.fid={$this->mid} AND user.uname LIKE '%{$name}%'")
@@ -25,8 +24,8 @@ class SelectFriendsAction extends Action
                                ->findAll();
         }
         //合并，并过滤重复
-        is_array($followings) || $followings=array();//查询返回空时，不为数组，则需转为空数组
-        is_array($followers) || $followers=array();
+        is_array($followings) || $followings = array(); //查询返回空时，不为数组，则需转为空数组
+        is_array($followers) || $followers = array();
         $follow = $this->unique_arr(array_merge($followings, $followers));
         foreach ($follow as $k => $v) {
             $out[$k]['fUid'] = $v['0'];
@@ -41,7 +40,7 @@ class SelectFriendsAction extends Action
     {
         $typeId = intval($_GET['typeId']);
         empty($typeId) && $typeId = 2;
-        $db_prefix  =  C('DB_PREFIX');
+        $db_prefix = C('DB_PREFIX');
         if ($typeId == 2) {
             $follow = M('')->field('follow.fid AS fuid,user.uname AS funame')
                            ->table("{$db_prefix}user_follow AS follow LEFT JOIN {$db_prefix}user AS user ON follow.fid=user.uid")
@@ -65,7 +64,6 @@ class SelectFriendsAction extends Action
 
                 //$follow = M('User')->field('uid AS fuid,uname AS funame')->where("uid IN (SELECT uid FROM {$db_prefix}user_follow WHERE fid={$this->mid}) AND uid IN (SELECT fid FROM {$db_prefix}user_follow WHERE uid={$this->mid})")->findPage(15);
 
-            
                 //$follow = M('')->query("SELECT follow.fid AS fuid,user.uname AS funame FROM {$db_prefix}user_follow AS follow LEFT JOIN {$db_prefix}user AS user ON follow.fid=user.uid WHERE follow.uid={$this->mid} AND follow.type={$typeId}");
         }
 
@@ -85,8 +83,8 @@ class SelectFriendsAction extends Action
             $typeId = array(
                 //互粉的人性能有问题，不显示这个列表的用户了
                             //array('id'=>1,'name'=>L('follow_each_other')),
-                            array('id'=>2,'name'=>'我关注的'),
-                            array('id'=>3,'name'=>'我的粉丝'),
+                            array('id' => 2, 'name' => '我关注的'),
+                            array('id' => 3, 'name' => '我的粉丝'),
                           );
         echo json_encode($typeId);
     }
@@ -97,10 +95,10 @@ class SelectFriendsAction extends Action
             //echo $this->api->friend_getFriNum($this->mid,$gid);
             $typeId = intval($_GET['typeId']);
         empty($typeId) && $typeId = 2;
-        $db_prefix  =  C('DB_PREFIX');
-        if ($typeId==2) {
+        $db_prefix = C('DB_PREFIX');
+        if ($typeId == 2) {
             $followNum = M('')->field('follow.fid AS fuid,user.uname AS funame')->table("{$db_prefix}user_follow AS follow LEFT JOIN {$db_prefix}user AS user ON follow.fid=user.uid")->where("follow.uid={$this->mid}")->order('follow.follow_id DESC')->count();
-        } elseif ($typeId==3) {
+        } elseif ($typeId == 3) {
             $followNum = M('')->field('follow.uid AS fuid,user.uname AS funame')->table("{$db_prefix}user_follow AS follow LEFT JOIN {$db_prefix}user AS user ON follow.uid=user.uid")->where("follow.fid={$this->mid}")->order('follow.follow_id DESC')->count();
         } else {
             //默认显示互粉
@@ -113,11 +111,11 @@ class SelectFriendsAction extends Action
     public function unique_arr($array2D)
     {
         foreach ($array2D as &$v) {
-            $v = join(",", $v);  //降维,也可以用implode,将一维数组转换为用逗号连接的字
+            $v = implode(',', $v);  //降维,也可以用implode,将一维数组转换为用逗号连接的字
         }
-        $array2D = array_unique($array2D);    //去掉重复的字符串,也就是重复的一维数组  
+        $array2D = array_unique($array2D);    //去掉重复的字符串,也就是重复的一维数组
         foreach ($array2D as &$v) {
-            $v = explode(",", $v);   //再将拆开的数组重新组装  
+            $v = explode(',', $v);   //再将拆开的数组重新组装
         }
 
         return $array2D;

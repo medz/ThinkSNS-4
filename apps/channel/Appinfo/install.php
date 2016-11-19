@@ -19,6 +19,6 @@ if (!empty($res)) {
     echo '<br />';
     echo $res['error_sql'];
     // 清除已导入的数据
-    include_once(APPS_PATH.'/channel/Appinfo/uninstall.php');
+    include_once APPS_PATH.'/channel/Appinfo/uninstall.php';
     exit;
 }

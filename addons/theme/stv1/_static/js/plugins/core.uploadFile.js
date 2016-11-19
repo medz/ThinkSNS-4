@@ -110,7 +110,6 @@ core.uploadFile = {
 
 				//取消原来的
 				$(_this.parentModel).parent().find('.input-content').each(function(){
-
 					if( $(this).attr('uploadcontent').length>0 ){
 						if( $(this).attr('uploadcontent') != _this.type){
 							_this.filehash = new Array();
@@ -146,7 +145,8 @@ core.uploadFile = {
 				$(_this.parentForm).ajaxSubmit({ 
 					dataType:'json',
 			        success: function (data) {
-			        	core.uploadFile.afterUpload(data.data,data.status,uploadTimes,callback,filelist);
+								$(obj).val('');
+								core.uploadFile.afterUpload(data.data,data.status,uploadTimes,callback,filelist);
 			        }  
 			    });
 				
@@ -184,7 +184,6 @@ core.uploadFile = {
 		},
 		//afterUpload private 
 		afterUpload:function(data,status,times,callback,filelist){
-		
 			if(times != this.uploadTimes){
 				return false;
 			}

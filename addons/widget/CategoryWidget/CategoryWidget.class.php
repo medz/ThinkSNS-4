@@ -2,13 +2,12 @@
 /**
  * 分类 widget
  * @example W('Category',array('app_name'=>'support','model_name'=>'SupportCategory','method'=>'getEnCate','tpl'=>'select','id'=>4,'inputname'=>'category_en'))
- * @author Jason 
+ * @author Jason
  * @version TS3.0
  */
 class CategoryWidget extends Widget
 {
-    
-    /**
+    /*
       * @param app_name 此分类所在的应用名称
       * @param model_name 分类model名称
       * @param method 分类model中根据某个id获取对应分类信息的函数
@@ -31,10 +30,10 @@ class CategoryWidget extends Widget
                 break;
             case 'menu':
                 return $this->menu($var);
-                break;	
+                break;
             case 'two':
                 return $this->two($var);
-                break;	
+                break;
             case 'twochecked':
                 return $this->twochecked($var);
                 break;
@@ -47,17 +46,17 @@ class CategoryWidget extends Widget
         }
     }*/
 
-    /**
+    /*
      * 选择分类
      */
 /*	private function select($data){
         $model = D(ucfirst($data['model_name']),$data['app_name']);
         $data['catePath'] = $model->getCatePathById($data['id'],$data['method']);
         $content = $this->renderFile (dirname(__FILE__)."/".$data['tpl'].'.html', $data );
-        return $content;	 
+        return $content;
     }*/
 
-    /**
+    /*
      * 收藏分类
      */
 /*	private function menu($data){
@@ -70,7 +69,7 @@ class CategoryWidget extends Widget
 
         $data['pid'] = $pid = $list['pid'];
 
-        $pInfo[] = array('id'=>0,'name'=>$data['title'],'pid'=>0);	
+        $pInfo[] = array('id'=>0,'name'=>$data['title'],'pid'=>0);
         $childInfo = array();
 
         if($pid == 0){
@@ -82,7 +81,7 @@ class CategoryWidget extends Widget
             }else{
                 $list = $model->$data['method'](0,true);
                 foreach($list['child'] as $k=>$v){
-                    $childInfo[] = array('id'=>$k,'name'=>$v,'pid'=>0);	
+                    $childInfo[] = array('id'=>$k,'name'=>$v,'pid'=>0);
                 }
             }
         }else{
@@ -98,7 +97,7 @@ class CategoryWidget extends Widget
                     $childInfo[] = array('id'=>$k,'name'=>$v,'pid'=>$pdepart['pid']);
                 }
             }
-            
+
         }
 
         $data['pInfo'] = $pInfo;
@@ -108,17 +107,17 @@ class CategoryWidget extends Widget
         return $content;
     }*/
 
-    /**
+    /*
      * 两级分类
      */
 /*	private function two($data){
         $model = D(ucfirst($data['model_name']),$data['app_name']);
         $data['cateList'] = $model->$data['method'](0);
         $content = $this->renderFile (dirname(__FILE__)."/".$data['tpl'].'.html', $data );
-        return $content;	 
+        return $content;
     }
 */
-    /**
+    /*
      * 弹出窗
      */
 /*	public function selectBox(){
@@ -135,7 +134,7 @@ class CategoryWidget extends Widget
         return $content;
     }*/
 
-    /**
+    /*
      * 获取某级下面的子集
      */
 /*	public function getChild(){
@@ -150,7 +149,7 @@ class CategoryWidget extends Widget
         exit();
     }*/
 
-    /**
+    /*
      * getCatePathById方法不存在？？？
      * @return 分类地址
      */
@@ -162,7 +161,7 @@ class CategoryWidget extends Widget
         die();
     }*/
 
-    /**
+    /*
      * 两级分类选择模板
      */
 /*	private function twochecked($data) {
@@ -173,7 +172,7 @@ class CategoryWidget extends Widget
         return $content;
     }*/
 
-    /**
+    /*
      * 两级分类带统计数目
      */
 /*	private function twonums($data) {
@@ -182,10 +181,10 @@ class CategoryWidget extends Widget
         $model = D(ucfirst($data['model_name']),$data['app_name']);
         $data['cateList'] = $model->$data['method']($cid);
         $content = $this->renderFile(dirname(__FILE__)."/".$data['tpl'].'.html', $data);
-        return $content;		
+        return $content;
     }*/
 
-    /**
+    /*
      * 浮动两级分类模板
      */
 /*	private function twofloat($data) {
@@ -195,7 +194,7 @@ class CategoryWidget extends Widget
         return $content;
     }*/
 
-    /**
+    /*
      * 数据安全过滤
      */
 /*	private function getData($data = null){
@@ -205,8 +204,8 @@ class CategoryWidget extends Widget
             $data = $_GET;
         foreach ($data as $key => $value) {
             if(preg_match('/^[a-zA-Z0-9_]+$/i',$value)){
-                $cleandata[$key] = t($value);			
-            }	
+                $cleandata[$key] = t($value);
+            }
         }
         return $cleandata;
     }*/

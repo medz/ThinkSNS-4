@@ -6,10 +6,9 @@
  */
 class WeibaUserInformationWidget extends Widget
 {
-
     /**
      * 模板渲染
-     * @param array $data 相关数据
+     * @param  array  $data 相关数据
      * @return string 用户身份选择模板
      */
     public function render($data)
@@ -33,7 +32,7 @@ class WeibaUserInformationWidget extends Widget
         $var['userGroupData'] = $userGroupData;
         //获取相关的统计数目
         $weiba_arr = getSubByKey(D('weiba')->where('is_del=0 and status=1')->field('weiba_id')->findAll(), 'weiba_id');  //未删除且通过审核的微吧
-        $map['weiba_id'] = array('in',$weiba_arr);
+        $map['weiba_id'] = array('in', $weiba_arr);
         $map['is_del'] = 0;
 
         //获取关注的微吧数
@@ -52,13 +51,13 @@ class WeibaUserInformationWidget extends Widget
         //获取回复帖子数
         $r_map = $map;
         $myreply = D('weiba_reply')->where('uid='.$this->mid)->findAll();
-        $r_map['post_id'] = array('in',array_unique(getSubByKey($myreply, 'post_id')));
+        $r_map['post_id'] = array('in', array_unique(getSubByKey($myreply, 'post_id')));
         $reply_count = D('weiba_post')->where($r_map)->count();
         $var['userData']['reply_count'] = $reply_count;
         //获取收藏帖子数
         $f_map = $map;
         $myFavorite = D('weiba_favorite')->where('uid='.$this->mid)->order('favorite_time desc')->findAll();
-        $f_map['post_id'] = array('in',getSubByKey($myFavorite, 'post_id'));
+        $f_map['post_id'] = array('in', getSubByKey($myFavorite, 'post_id'));
         $favorite_count = D('weiba_post')->where($f_map)->order('post_time desc')->count();
         $var['userData']['favorite_count'] = $favorite_count;
 
@@ -83,19 +82,20 @@ class WeibaUserInformationWidget extends Widget
         $GLOBALS['ts']['mid'] != $var['uid'] && $var['follow_state'] = model('Follow')->getFollowState($GLOBALS['ts']['mid'], $var['uid']);
 
         // 渲染模版
-        $content = $this->renderFile(dirname(__FILE__)."/".$var['tpl'].".html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$var['tpl'].'.html', $var);
         // 输出数据
         return $content;
     }
 
     /**
      * 将统计数据限定指定的数目
-     * @param integer $nums 指定的数目
-     * @param integer $limit 限定的数目
+     * @param int $nums  指定的数目
+     * @param int $limit 限定的数目
      */
     private function limitedNumbers($nums, $limit = 99999)
     {
         $nums > $limit && $nums = $limit.'+';
+
         return $nums;
     }
 }

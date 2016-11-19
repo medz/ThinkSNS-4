@@ -9,20 +9,18 @@ class ManageAction extends Action
 
     /**
      * 模块初始化,获取当前用户管理的应用
-     * @return void
      */
     public function _initialize()
     {
         $this->appList = model('App')->getManageApp($this->mid);
-    
+
         if (empty($this->appList)) {
             $this->error(L('PUBLIC_NO_FRONTPLATFORM_PERMISSION'));
         }
     }
-    
+
     /**
      * 展示用户管理的应用
-     * @return void
      */
     public function index()
     {

@@ -12,7 +12,6 @@ use Exception;
  **/
 class Controller
 {
-
     /**
      * 定义控制器中动作的后缀
      *
@@ -63,13 +62,12 @@ class Controller
     protected static $controllerClass = array(
         'Ts-2016' => 'App\\%s\\Controller\\%s',
         'Ts-2015' => 'Apps\\%s\\Controller\\%s',
-        'Ts-old'  => '%sAction'
+        'Ts-old' => '%sAction',
     );
 
     /**
-     * 构建需要的对象 
+     * 构建需要的对象
      *
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     protected function build($oldControllerName = false)
@@ -77,20 +75,18 @@ class Controller
         $className = null;
         foreach (self::$controllerClass as $key => $value) {
             if (
-                $key == 'Ts-2016' && 
+                $key == 'Ts-2016' &&
                 class_exists($className = sprintf($value, ucfirst($this->appName), ucfirst($this->controllerName)))
             ) {
                 $this->setAction(sprintf('%s%s', $this->appAction, self::ACTION_SUFFIX));
                 break;
-
             } elseif (
-                $key == 'Ts-2015' && 
+                $key == 'Ts-2015' &&
                 class_exists($className = sprintf($value, $this->appName, ucfirst($this->controllerName)))
             ) {
                 break;
-
             } elseif (
-                $key == 'Ts-old' && 
+                $key == 'Ts-old' &&
                 class_exists($className = sprintf($value, ucfirst($this->controllerName)))
             ) {
                 break;
@@ -107,7 +103,7 @@ class Controller
         /* 如果不存在，就判断 None类 */
         } elseif (
             class_exists($className) === false &&
-            $oldControllerName       === false
+            $oldControllerName === false
         ) {
             $className = $this->controllerName;
             $this->setController('None');
@@ -117,8 +113,8 @@ class Controller
         /* 兼容旧系统的emptyAction */
         } elseif (
             class_exists($className) === false &&
-            $oldControllerName       !== false &&
-            $this->controllerName   != 'empty'
+            $oldControllerName !== false &&
+            $this->controllerName != 'empty'
         ) {
             $this->setController('empty');
 
@@ -137,7 +133,6 @@ class Controller
     /**
      * 设置运行的应用
      *
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     public function setApp($appName)
@@ -150,7 +145,6 @@ class Controller
     /**
      * 设置控制器名称
      *
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     public function setController($controllerName)
@@ -189,7 +183,6 @@ class Controller
     /**
      * 运行
      *
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     public function run()
@@ -199,10 +192,9 @@ class Controller
         return call_user_func_array(
             array(
                 $this->build(),
-                $this->appAction
-            ), 
+                $this->appAction,
+            ),
             $this->appParams
         );
     }
-
 } // END class Controller

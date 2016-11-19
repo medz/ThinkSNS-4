@@ -16,7 +16,7 @@
         <!-- logo -->
         <div class="nav">
           <ul>
-            <volist name='site_top_nav' id='st'>
+            <volist name='site_guest_nav' id='st'>
             <li id="sec-nav-{$st.navi_id}" <php> if(APP_NAME == $st['app_name'] || $_GET['page'] == $st['app_name']):</php> class="current" <php>endif;</php>>
               <a href="{$st.url}" target="{$st.target}"  <php> if(APP_NAME == $st['app_name'] || $_GET['page'] == $st['app_name']):</php> class="app" <php>endif;</php> >{$st.navi_name}</a>
             </li>                           
@@ -40,22 +40,6 @@
               <a href="{$st.url}" target="{$st.target}"  <php> if(APP_NAME == $st['app_name'] || $_GET['page'] == $st['app_name']):</php> class="app" <php>endif;</php> >{$st.navi_name}</a>
             </li>                           
           </volist>
-            <!-- <li class="{$navClass.square}"><a class="{$aClass.square}" href="{:U('square/index/index')}" >首页</a></li>
-            <li class="{$navClass.public_index}"><a class="{$aClass.public_index}" href="{:U('public/index/index')}">朋友圈</a></li>
-            <li class="{$navClass.weiba}"><a class="{$aClass.weiba}" href="{:U('weiba/index/index')}" >微吧</a></li>
-            <li class="{$navClass.people}"><a href="{:U('people/index/index')}"  class="app">找伙伴</a></li>
-            <li style="*z-index:100;" model-node="application">
-              <a href="javascript:;" rel="application-btn" class="app">更多</a>
-              <div model-node="drop_menu_list" class="dropmenu" style="width:370px;left:-26px;display:none;opacity:0;z-index:100;">
-                  <i class="arrow-mes"></i>
-                  <ul class="acc-list app-list clearfix">
-                      <volist name="site_nav_apps" id="li">
-                      <li style="height:auto;"><a href="{:U($li['app_name'])}"><img src="<php>echo empty($li['icon_url_large']) ? APPS_URL.'/'.$li['app_name'].'/Appinfo/icon_app_large.png':$li['icon_url_large'];</php>" width="50" height="50" />{$li.app_alias|getShort=4}</a></li>
-                      </volist>
-                      <!-<li style="height:auto;"><a href="{:U('public/App/addapp')}"><img src="__THEME__/image/more.png" width="50" height="50" />更多应用</a></li>
-                  </ul>
-              </div>
-            </li>-->
           </ul>
         </div>
         <eq name='user.is_init' value='0'>

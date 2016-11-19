@@ -17,12 +17,12 @@ class MedalAction extends Action
     {
         $type = $_GET['type'] ? intval($_GET['type']) : 1;
         $uid = $_GET['uid'] ? intval($_GET['uid']) : $GLOBALS['ts']['mid'];
-        
+
         if ($type == 1) {
             $user = model('User')->getUserInfo($uid);
             $medals = $user['medals'];
             if ($medals) {
-                $map['id'] = array( 'in' , getSubByKey($medals, 'id') );
+                $map['id'] = array('in', getSubByKey($medals, 'id'));
                 $list = model('Medal')->getList($map, 12);
             } else {
                 $list['count'] = 0;
@@ -36,12 +36,12 @@ class MedalAction extends Action
             $this->assign('uid', $user['uid']);
         } else {
             $list = model('Medal')->getList('', 12);
-            $list['all_count']  = $list['count'];
+            $list['all_count'] = $list['count'];
             /*用户的勋章数量*/
-            $user   = model('User')->getUserInfo($uid);
+            $user = model('User')->getUserInfo($uid);
             $medals = $user['medals'];
             if ($medals) {
-                $map['id'] = array( 'in' , getSubByKey($medals, 'id') );
+                $map['id'] = array('in', getSubByKey($medals, 'id'));
                 $list['user_count'] = model('Medal')->where($map)->count();
             } else {
                 $list['user_count'] = 0;
@@ -49,10 +49,10 @@ class MedalAction extends Action
         }
         $isme = $uid == $this->mid ? true : false;
         $this->assign('isme', $isme);
-        
+
         $lastpage = $list['nowPage'] - 1;
         $nextpage = $list['nowPage'] + 1;
-        
+
         $showlast = true;
         if ($lastpage <= 0) {
             $showlast = false;
@@ -93,7 +93,7 @@ class MedalAction extends Action
                 //炫耀卡片
                 $share_card_src = explode('|', $medal['share_card']);
                 $medal['share_card'] = getImageUrl($share_card_src[1]);
-                
+
                 $this->assign('medal', $medal);
                 $this->display();
             }
@@ -109,17 +109,17 @@ class MedalAction extends Action
         if ($id) {
             $map['id'] = $id;
             $medal = model('Medal')->where($map)->find();
-            
+
             if ($medal) {
                 $str .= '我获得了‘'.$medal['name'].'’勋章！也是个有身份有地位的人了。快来一起做任务吧。';
                 $str .= U('public/Task/index');
             }
-            
+
             $feedtype = 'post';
             //炫耀卡片
             $map['name'] = $medal['name'];
             $share_card = model('Medal')->where($map)->getField('share_card');
-            
+
             if ($share_card != null) {
                 $share_card = explode('|', $share_card);
                 $data['attach_id'] = $share_card[0];

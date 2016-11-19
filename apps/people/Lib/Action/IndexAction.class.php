@@ -87,7 +87,7 @@ class IndexAction extends Action
 
     /**
      * 获取指定父分类的树形结构
-     * @return integer $pid 父分类ID
+     * @return int   $pid 父分类ID
      * @return array 指定父分类的树形结构
      */
     public function getNetworkList()

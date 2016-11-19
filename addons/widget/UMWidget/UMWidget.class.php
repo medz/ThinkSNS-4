@@ -10,7 +10,7 @@ class UMWidget extends Widget
         $var['width'] = isset($data['width']) ? $data['width'] : 626;
         isset($data['tpl']) ? $tpl = $data['tpl'].'.html' : $tpl = 'um.html';
         $content = $this->renderFile(dirname(__FILE__).'/'.$tpl, $var);
-        
+
         return $content;
     }
 }

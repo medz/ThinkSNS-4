@@ -6,12 +6,11 @@
  */
 class RelatedDarenWidget extends Widget
 {
-    
     /**
      * 渲染可能感兴趣的人页面
      *
-     * @param array $data
-     *        	配置相关数据
+     * @param  array  $data
+     *                      配置相关数据
      * @return string 渲染页面的HTML
      */
     public function render($data)
@@ -27,11 +26,11 @@ class RelatedDarenWidget extends Widget
         $var ['limit'] = isset($data ['limit']) ? intval($data ['limit']) : 8;
         // 标题信息
         $var ['title'] = isset($data ['title']) ? t($data ['title']) : '推荐关注';
-        $content = $this->renderFile(dirname(__FILE__) . "/relatedDaren.html", $var);
-        
+        $content = $this->renderFile(dirname(__FILE__).'/relatedDaren.html', $var);
+
         return $content;
     }
-    
+
     /**
      * 换一换数据处理
      *
@@ -42,15 +41,15 @@ class RelatedDarenWidget extends Widget
         $data ['uid'] = intval($_POST ['uid']);
         $data ['limit'] = intval($_POST ['limit']);
         $var = $this->_getRelatedDaren($data);
-        $content = $this->renderFile(dirname(__FILE__) . "/_relatedDaren.html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/_relatedDaren.html', $var);
         exit(json_encode($content));
     }
-    
+
     /**
      * 获取用户的相关数据
      *
-     * @param array $data
-     *        	配置相关数据
+     * @param  array $data
+     *                     配置相关数据
      * @return array 显示所需数据
      */
     private function _getRelatedDaren($data)
@@ -61,15 +60,15 @@ class RelatedDarenWidget extends Widget
         $var ['limit'] = isset($data ['limit']) ? intval($data ['limit']) : 4;
         // 收藏达人的信息
 
-        $key = '_getRelatedDaren' . $var ['uid'] . '_' . $var ['limit'] . '_' . date('Ymd');
+        $key = '_getRelatedDaren'.$var ['uid'].'_'.$var ['limit'].'_'.date('Ymd');
         $var ['user'] = S($key);
         if ($var ['user'] === false || intval($_REQUEST ['rel']) == 1) {
             $sql = "select * from 
 			(SELECT DISTINCT uid FROM `ts_user_data` WHERE `key`='collect_total_count' ORDER BY `value` DESC LIMIT 100) as t
-			order by rand() limit " . $var ['limit'];
-            
+			order by rand() limit ".$var ['limit'];
+
             $list = M()->query($sql);
-            
+
             $uids = getSubByKey($list, 'uid');
             $userInfos = model('User')->getUserInfoByUids($uids);
             $userStates = model('Follow')->getFollowStateByFids($GLOBALS ['mid'], $uids);
@@ -81,10 +80,10 @@ class RelatedDarenWidget extends Widget
                 $arr [$key] ['info'] ['extendMsg'] = '';
             }
             $var ['user'] = $arr;
-            
+
             S($key, $var ['user'], 86400);
         }
-        
+
         return $var;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
 /**
  * 后台勋章管理类
@@ -23,15 +24,15 @@ class MedalAction extends AdministratorAction
     public function index()
     {
         $list = model('Medal')->getList();
-        $this->pageKeyList = array( 'id', 'name', 'desc', 'src', 'small_src', 'DOACTION');
+        $this->pageKeyList = array('id', 'name', 'desc', 'src', 'small_src', 'DOACTION');
         foreach ($list['data'] as &$v) {
             $v['src'] = '<img src="'.$v['src'].'" width="100px" height="100px"/>';
             $v['small_src'] = '<img src="'.$v['small_src'].'" />';
-            $v['DOACTION'] = '<a href="'.U('admin/Medal/editMedal', array('id'=>$v['id'])).'" >编辑</a>&nbsp;-&nbsp;';
+            $v['DOACTION'] = '<a href="'.U('admin/Medal/editMedal', array('id' => $v['id'])).'" >编辑</a>&nbsp;-&nbsp;';
             $v['DOACTION'] .= " <a href='javascript:void(0)' onclick='admin.deletemedal(".$v['id'].")'>删除</a>";
         }
-        $this->pageButton[] = array('title'=>'添加' , 'onclick' => "javascript:location.href='".U('admin/Medal/addMedal')."';");
-        $this->pageButton[] = array('title'=>'删除' , 'onclick' => "admin.deletemedal()");
+        $this->pageButton[] = array('title' => '添加', 'onclick' => "javascript:location.href='".U('admin/Medal/addMedal')."';");
+        $this->pageButton[] = array('title' => '删除', 'onclick' => 'admin.deletemedal()');
         $this->displayList($list);
     }
     /**
@@ -39,9 +40,9 @@ class MedalAction extends AdministratorAction
      */
     public function addMedal()
     {
-        $this->pageKeyList = array( 'name' , 'desc' , 'src' , 'share_card');
+        $this->pageKeyList = array('name', 'desc', 'src', 'share_card');
         $this->savePostUrl = U('admin/Medal/doAddMedal');
-        $this->notEmpty = array('name','src');
+        $this->notEmpty = array('name', 'src');
         $this->displayConfig();
     }
     /**
@@ -67,7 +68,6 @@ class MedalAction extends AdministratorAction
             } else {
                 $this->error('请上传大图');
             }
-
 
             //炫耀卡片
             if ($_POST['share_card']) {
@@ -101,7 +101,7 @@ class MedalAction extends AdministratorAction
     public function editMedal()
     {
         $id = intval($_GET['id']);
-        $this->pageKeyList = array( 'medal_id','name' , 'desc' , 'src', 'share_card' );
+        $this->pageKeyList = array('medal_id', 'name', 'desc', 'src', 'share_card');
         $medal = model('Medal')->where('id='.$id)->find();
         $src = explode('|', $medal['src']);
         $medal['medal_id'] = $id;
@@ -111,7 +111,7 @@ class MedalAction extends AdministratorAction
         $medal['share_card'] = $share_card_src[0];
         //$medal['pic_url'] = getImageUrl( $src[1] );
         $this->savePostUrl = U('admin/Medal/doEditMedal');
-        $this->notEmpty = array('name','src');
+        $this->notEmpty = array('name', 'src');
         $this->displayConfig($medal);
     }
     /**
@@ -150,7 +150,7 @@ class MedalAction extends AdministratorAction
                 $sharecard_src = model('Attach')->getAttachById($_POST['share_card']);
                 $_POST['share_card'] = $_POST['share_card'].'|'.$sharecard_src['save_path'].$sharecard_src['save_name'];
             }
-            
+
             $data = model('Medal')->create();
             $res = model('Medal')->where('id='.$id)->save($data);
             if ($res) {
@@ -169,23 +169,23 @@ class MedalAction extends AdministratorAction
     public function userMedal()
     {
         if ($_POST['user']) {
-            $map['uid'] = array( 'in' , explode(',', t($_POST['user'])) );
+            $map['uid'] = array('in', explode(',', t($_POST['user'])));
         }
         if ($_POST['medal']) {
-            $mearray = is_array($_POST['medal']) ? $_POST['medal'] : array( intval($_POST['medal']) );
-            $map['medal_id'] = array( 'in' , $mearray );
+            $mearray = is_array($_POST['medal']) ? $_POST['medal'] : array(intval($_POST['medal']));
+            $map['medal_id'] = array('in', $mearray);
         }
         $list = model('Medal')->getUserMedalList($map);
-        $this->pageKeyList = array( 'id' , 'uname' , 'medalname', 'medalsrc' , 'desc' , 'DOACTION');
+        $this->pageKeyList = array('id', 'uname', 'medalname', 'medalsrc', 'desc', 'DOACTION');
         foreach ($list['data'] as &$v) {
             $v['medalsrc'] = '<img src="'.getImageUrl($v['medalsrc']).'" width="100px" height="100px" />';
-            $v['DOACTION'] = '<a href="'.U('admin/Medal/editUserMedal', array('id'=>$v['id'])).'" >编辑</a>';
+            $v['DOACTION'] = '<a href="'.U('admin/Medal/editUserMedal', array('id' => $v['id'])).'" >编辑</a>';
 // 			$v['DOACTION'] .= " <a href='javascript:void(0)' onclick='admin.deleteusermedal(".$v['id'].")'>删除</a>";
         }
-        $this->pageButton[] = array( 'title' => '搜索' , 'onclick' => "admin.fold('search_form')" );
-        $this->pageButton[] = array( 'title' => '颁发勋章' , 'onclick' => "javascript:location.href='".U('admin/Medal/addUserMedal')."';" );
+        $this->pageButton[] = array('title' => '搜索', 'onclick' => "admin.fold('search_form')");
+        $this->pageButton[] = array('title' => '颁发勋章', 'onclick' => "javascript:location.href='".U('admin/Medal/addUserMedal')."';");
 // 		$this->pageButton[] = array( 'title' => '删除' , 'onclick' => "admin.deleteusermedal()" );
-        $this->searchKey = array( 'user' , 'medal' );
+        $this->searchKey = array('user', 'medal');
         $medals = model('Medal')->getAllMedal();
         $medals[0] = '不限';
         ksort($medals);
@@ -198,11 +198,11 @@ class MedalAction extends AdministratorAction
         $data = D('medal_user')->where('id='.$id)->find();
         $medals = model('Medal')->getAllMedal();
         $this->opt['medal_id'] = $medals;
-        $this->pageKeyList = array( 'id' , 'uid' , 'medal_id' , 'desc');
+        $this->pageKeyList = array('id', 'uid', 'medal_id', 'desc');
         $this->savePostUrl = U('admin/Medal/doEditUserMedal');
         $user = model('User')->getUserInfo($data['uid']);
         $data['uid'] = $user['uname'];
-        
+
         $this->displayConfig($data);
     }
     public function doEditUserMedal()
@@ -210,7 +210,7 @@ class MedalAction extends AdministratorAction
         $id = intval($_POST['id']);
         $data['medal_id'] = intval($_POST['medal_id']);
         $data['desc'] = t($_POST['desc']);
-        
+
         $res = D('medal_user')->where('id='.$id)->save($data);
         if ($res) {
             $this->assign('jumpUrl', U('admin/Medal/userMedal'));
@@ -224,15 +224,15 @@ class MedalAction extends AdministratorAction
      */
     public function addUserMedal()
     {
-        $this->pageKeyList = array( 'user' , 'medal' , 'attach_id' , 'attach_small' , 'medal_name' , 'medal_desc' , 'desc' );
-        
+        $this->pageKeyList = array('user', 'medal', 'attach_id', 'attach_small', 'medal_name', 'medal_desc', 'desc');
+
         $medals = model('Medal')->getAllMedal();
         $medals[0] = '添加勋章';
         ksort($medals);
         $this->opt['medal'] = $medals;
-        
+
         $this->savePostUrl = U('admin/Medal/doAddUserMedal');
-        $this->notEmpty = array('user','attach_id','attach_small','medal_name');
+        $this->notEmpty = array('user', 'attach_id', 'attach_small', 'medal_name');
         $data['type'] = 1;
         $this->displayConfig($data);
     }
@@ -240,14 +240,14 @@ class MedalAction extends AdministratorAction
     {
         $desc = t($_POST['desc']);
         $medalDao = model('Medal');
-        $medal =  intval($_POST['attach_id']);
+        $medal = intval($_POST['attach_id']);
         $medalsmall = intval($_POST['attach_small']);
-        
+
         $users = explode(',', $_POST['user']);
         if (!$users[0]) {
             $this->error('没有选择用户');
         }
-        
+
         if ($medal) {
             $data['name'] = t($_POST['medal_name']);
             if ($data['name']) {
@@ -259,7 +259,7 @@ class MedalAction extends AdministratorAction
                     $attach = model('Attach')->getAttachById($medal);
                     $src = $attach['save_path'].$attach['save_name'];
                     $data['src'] = $medal.'|'.$src;
-                    
+
                     //小图
                     if ($_POST['attach_small']) {
                         $attachsmall = model('Attach')->getAttachById($medalsmall);
@@ -268,7 +268,7 @@ class MedalAction extends AdministratorAction
                         $this->error('请上传勋章小图');
                     }
                     $data['small_src'] = $medalsmall.'|'.$smallsrc;
-                    
+
                     $medal_id = $medalDao->add($data);
                 }
             } else {
@@ -297,10 +297,10 @@ class MedalAction extends AdministratorAction
     public function doDeleteMedal()
     {
         $ids = t($_POST['id']);
-        $map['id'] = array( 'in' , explode(',', $ids) );
+        $map['id'] = array('in', explode(',', $ids));
         $res = model('Medal')->where($map)->delete();
         //删除用户勋章
-        $mu['medal_id'] = array( 'in' , explode(',', $ids) );
+        $mu['medal_id'] = array('in', explode(',', $ids));
         D('medal_user')->where($mu)->delete();
         if ($res) {
             $return['status'] = 1;
@@ -317,7 +317,7 @@ class MedalAction extends AdministratorAction
     public function doDeleteUserMedal()
     {
         $ids = t($_POST['id']);
-        $map['id'] = array( 'in' , explode(',', $ids) );
+        $map['id'] = array('in', explode(',', $ids));
         $res = D('medal_user')->where($map)->delete();
         if ($res) {
             $return['status'] = 1;

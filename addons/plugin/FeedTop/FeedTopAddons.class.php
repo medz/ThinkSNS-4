@@ -12,15 +12,15 @@ class FeedTopAddons extends NormalAddons
     protected $info = '分享置顶';
     protected $pluginName = '分享置顶';
     protected $sqlfile = '暂无';
-    protected $tsVersion = "3.0";
-    
+    protected $tsVersion = '3.0';
+
     /**
      * 获的改插件使用了那些钩子聚合类，那些钩子是需要进行排序的
-     * @return void
      */
     public function getHooksInfo()
     {
         $hooks['list'] = array('FeedTopHooks');
+
         return $hooks;
     }
     /**
@@ -31,6 +31,7 @@ class FeedTopAddons extends NormalAddons
     {
         $menu = array();
         $menu['config'] = '分享置顶管理';
+
         return $menu;
     }
     public function start()
@@ -49,6 +50,7 @@ class FeedTopAddons extends NormalAddons
 			  PRIMARY KEY  (`id`)
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
         D()->execute($sql);
+
         return true;
     }
     public function uninstall()
@@ -57,6 +59,7 @@ class FeedTopAddons extends NormalAddons
         $db_prefix = C('DB_PREFIX');
         $sql = "DROP TABLE `{$db_prefix}feed_top`;";
         D()->execute($sql);
+
         return true;
     }
 }

@@ -8,7 +8,7 @@ class UserListWidget extends Widget
 {
     /**
      * 模板渲染
-     * @param array $data 相关数据
+     * @param  array  $data 相关数据
      * @return string 用户展示列表
      */
     public function render($data)
@@ -30,7 +30,7 @@ class UserListWidget extends Widget
         $var['pid'] = intval($data['pid']);
         $var['userList'] = D('People', 'people')->getPeople($var, $var['type']);
         // 渲染模版
-        $content = $this->renderFile(dirname(__FILE__)."/".$template.".html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$template.'.html', $var);
         // 输出数据
         return $content;
     }

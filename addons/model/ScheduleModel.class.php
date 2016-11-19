@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------
 // | ThinkSNS
 // +----------------------------------------------------------------------
@@ -24,13 +25,13 @@
 
 class ScheduleModel extends Model
 {
-    private $MONTH_ARRAY    = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
-    private $WEEK_ARRAY    = array('Mon','Tue','Wed','Thu','Fri','Sat','Sun');
-    
+    private $MONTH_ARRAY = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+    private $WEEK_ARRAY = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
+
     private $model;
-    private $schedule        = array();
-    private $scheduleList    = array();
-    
+    private $schedule = array();
+    private $scheduleList = array();
+
     //	task_to_run 	要执行任务的url
     //	schedule_type 	计划类型：NOCE/MINUTE/HOURLY/DAILY/WEEKLY/MONTHLY
     //	modifier 		计划频率
@@ -73,7 +74,7 @@ class ScheduleModel extends Model
                 return false;
         }
     }
-    
+
     //执行计划任务列表
     public function runScheduleList($scheduleList)
     {
@@ -86,9 +87,10 @@ class ScheduleModel extends Model
                 continue;
             }
         }
+
         return true;
     }
-    
+
     //执行任务计划
     public function runSchedule($schedule)
     {
@@ -98,6 +100,7 @@ class ScheduleModel extends Model
         if (!in_array($schedule['task_to_run'], $checkScheduleList)) {
             $str_log = "schedule_id = {$schedule['id']} 的任务不合法。";
             $this->_log($str_log);
+
             return false;
         }
         //解析task类型, 并运行task
@@ -105,16 +108,16 @@ class ScheduleModel extends Model
 
         if ($task_to_run[0] == 'addons') {
             //组装执行代码 - 执行addons下的model
-            $str = "model({$task_to_run[1]})->{$task_to_run[2]}(" . $this->fill_params($task_to_run['params']) . ');';
+            $str = "model({$task_to_run[1]})->{$task_to_run[2]}(".$this->fill_params($task_to_run['params']).');';
             eval($str);
         } elseif ($task_to_run['type'] == 'model') {
             //组装执行代码
-            $str = "D({$task_to_run[1]}, {$task_to_run[0]})->{$task_to_run[2]}(" . $this->fill_params($task_to_run['params']) . ');';
+            $str = "D({$task_to_run[1]}, {$task_to_run[0]})->{$task_to_run[2]}(".$this->fill_params($task_to_run['params']).');';
             eval($str);
         } elseif ($task_to_run['type'] == 'url') {
             //;
         }
-        
+
         if (strtoupper($schedule['schedule_type']) == 'ONCE') {
             //ONCE类型的计划任务，将end_datetime设置为当前时间
             $schedule['end_datetime'] = date('Y-m-d H:i:s');
@@ -127,17 +130,17 @@ class ScheduleModel extends Model
                 //将last_run_time设置为当前日期+预定时间
                 $now_date = date('Y-m-d');
                 $fixed_time = date('H:i:s', strtotime($schedule['start_datetime']));
-                $schedule['last_run_time'] = $now_date . ' ' . $fixed_time;
+                $schedule['last_run_time'] = $now_date.' '.$fixed_time;
             }
         }
         $this->saveSchedule($schedule);
         $str_log = "schedule_id = {$schedule['id']} 的任务已运行。";
         if (C('APP_DEBUG')) {
-            $str_log  .= "任务url为: {$schedule['task_to_run']} ，任务描述为: {$schedule['info']} 。";
+            $str_log .= "任务url为: {$schedule['task_to_run']} ，任务描述为: {$schedule['info']} 。";
         }
         $this->_log($str_log);
     }
-    
+
     //组装参数
     private function fill_params($params = '')
     {
@@ -146,15 +149,16 @@ class ScheduleModel extends Model
             $flag = true;
             foreach ($params as $k => $v) {
                 if ($flag == true) {
-                    $result = $result . $this->format_params($v);
+                    $result = $result.$this->format_params($v);
                     $flag = false;
                 } else {
-                    $result = $result . ',' . $this->format_params($v);
+                    $result = $result.','.$this->format_params($v);
                 }
             }
         } else {
             $result = $params;
         }
+
         return $result;
     }
 
@@ -164,12 +168,13 @@ class ScheduleModel extends Model
         if (is_array($params)) {
             $result = 'Array(';
             foreach ($params as $k => $v) {
-                $result = $result . "'$k'=>'$v',";
+                $result = $result."'$k'=>'$v',";
             }
             $result .= ')';
+
             return $result;
         } else {
-            return '\'' . $params . '\'';
+            return '\''.$params.'\'';
         }
     }
 
@@ -181,6 +186,7 @@ class ScheduleModel extends Model
         $res = model('Schedule')->where($map)->delete();
         if ($res) {
             $this->cleanCache();
+
             return true;
         } else {
             return false;
@@ -199,12 +205,13 @@ class ScheduleModel extends Model
             $schedule['start_datetime'] = date('Y-m-d H:i:s', $this->setSecondToZero($schedule['start_datetime']));
             $res = $this->add($schedule);
             $this->cleanCache();
+
             return $res;
         } else {
             return false;
         }
     }
-    
+
     //更新一条任务计划
     public function saveSchedule($schedule = '')
     {
@@ -217,6 +224,7 @@ class ScheduleModel extends Model
             $map['id'] = $schedule['id'];
             $res = $this->where($map)->save($data);
             $this->cleanCache();
+
             return $res;
         } else {
             return false;
@@ -232,6 +240,7 @@ class ScheduleModel extends Model
             $this->scheduleList = $this->order('id')->findAll();
             S('getScheduleList', $this->scheduleList); // 缓存一周
         }
+
         return $this->scheduleList;
     }
 
@@ -240,7 +249,7 @@ class ScheduleModel extends Model
     public function calculateNextRunTime($schedule)
     {
         //已过期
-        if ((strtotime($schedule['end_datetime'])>0) && (strtotime($schedule['end_datetime']) < strtotime(date('Y-m-d H:i:s')))) {
+        if ((strtotime($schedule['end_datetime']) > 0) && (strtotime($schedule['end_datetime']) < strtotime(date('Y-m-d H:i:s')))) {
             return false;
         }
         //还未启动
@@ -251,29 +260,30 @@ class ScheduleModel extends Model
         if (strtotime($schedule['last_run_time']) > strtotime(date('Y-m-d H:i:s'))) {
             return false;
         }
-        
+
         switch (strtoupper($schedule['schedule_type'])) {
             case 'ONCE':
-                $datetime =  $this->_calculateONCE($schedule);
+                $datetime = $this->_calculateONCE($schedule);
                 break;
             case 'MINUTE':
-                $datetime =  $this->_calculateMINUTE($schedule);
+                $datetime = $this->_calculateMINUTE($schedule);
                 break;
             case 'HOURLY':
-                $datetime =  $this->_calculateHOURLY($schedule);
+                $datetime = $this->_calculateHOURLY($schedule);
                 break;
             case 'DAILY':
-                $datetime =  $this->_calculateDAILY($schedule);
+                $datetime = $this->_calculateDAILY($schedule);
                 break;
             case 'WEEKLY':
-                $datetime =  $this->_calculateWEEKLY($schedule);
+                $datetime = $this->_calculateWEEKLY($schedule);
                 break;
             case 'MONTHLY':
-                $datetime =  $this->_calculateMONTHLY($schedule);
+                $datetime = $this->_calculateMONTHLY($schedule);
                 break;
             default:
                 return false;
         }
+
         return date('Y-m-d H:i:s', $datetime);
     }
 
@@ -286,9 +296,10 @@ class ScheduleModel extends Model
         if (!is_dir($logPath)) {
             @mkdir($logPath, 0777);
         }
+
         return $logPath;
     }
-    
+
     public function getSchedule()
     {
         return $this->schedule;
@@ -298,6 +309,7 @@ class ScheduleModel extends Model
     {
         if ($this->isValidSchedule($schedule)) {
             $this->schedule = $schedule;
+
             return  true;
         } else {
             return false;
@@ -349,39 +361,39 @@ class ScheduleModel extends Model
     protected function _checkONCE($schedule)
     {
         if (!empty($schedule['start_datetime'])) {
-            return (bool)strtotime($schedule['start_datetime']);
+            return (bool) strtotime($schedule['start_datetime']);
         } else {
             return false;
         }
     }
-    
+
     protected function _checkMINUTE($schedule)
     {
         if (!empty($schedule['modifier']) && is_numeric($schedule['modifier'])) {
-            return (($schedule['modifier'] >= 1) && ($schedule['modifier'] <= 1439));
+            return ($schedule['modifier'] >= 1) && ($schedule['modifier'] <= 1439);
         }
 
         return true;
     }
-    
+
     protected function _checkHOURLY($schedule)
     {
         if (!empty($schedule['modifier'])) {
-            return (is_numeric($schedule['modifier']) && ($schedule['modifier'] >= 1) && ($schedule['modifier'] <= 23));
+            return is_numeric($schedule['modifier']) && ($schedule['modifier'] >= 1) && ($schedule['modifier'] <= 23);
         }
 
         return true;
     }
-    
+
     protected function _checkDAILY($schedule)
     {
         if (!empty($schedule['modifier'])) {
-            return (is_numeric($schedule['modifier']) && ($schedule['modifier'] >= 1) && ($schedule['modifier'] <= 365));
+            return is_numeric($schedule['modifier']) && ($schedule['modifier'] >= 1) && ($schedule['modifier'] <= 365);
         }
 
         return true;
     }
-    
+
     protected function _checkWEEKLY($schedule)
     {
         $flag = true;
@@ -405,9 +417,10 @@ class ScheduleModel extends Model
                 }//End foreach
             }//End else
         }
+
         return $flag;
     }
-    
+
     protected function _checkMONTHLY($schedule)
     {
         // modifier为LASTDAY时month必须，否则可选
@@ -422,7 +435,6 @@ class ScheduleModel extends Model
             } elseif (in_array(strtoupper($schedule['modifier']), array('FIRST', 'SECOND', 'THIRD', 'FOURTH', 'LAST'))) {
                 //modifier为FIRST,SECOND,THIRD,FOURTH,LAST之一时，dirlist必须在MON～SUN、*中
                 if ($schedule['dirlist'] == '*') {
-                    ;
                 } else {
                     $flag = true;
                     $dirlist = explode(',', str_replace(' ', '', $schedule['dirlist']));
@@ -447,12 +459,13 @@ class ScheduleModel extends Model
                         }
                     }//End foreach
                 }
+
                 return true;
             } else {
                 //modifier错误
                 return false;
             }
-            
+
             //month的有效值为JAN～DEC和*(每个月).默认为*
             if (!empty($schedule['month'])) {
                 if ($schedule['month'] == '*') {
@@ -472,6 +485,7 @@ class ScheduleModel extends Model
             //modifier必须
             return false;
         }
+
         return true;
     }
 
@@ -494,7 +508,7 @@ class ScheduleModel extends Model
         } else {
             $date = $this->_getStartDateTime($schedule);
         }
-        
+
         return mktime(date('H', $date), date('i', $date) + $modifier, date('s', $date), date('m', $date), date('d', $date), date('Y', $date));
     }
 
@@ -509,7 +523,7 @@ class ScheduleModel extends Model
         } else {
             $date = $this->_getStartDateTime($schedule);
         }
-        
+
         return mktime(date('H', $date) + $modifier, date('i', $date), date('s', $date), date('m', $date), date('d', $date), date('Y', $date));
     }
 
@@ -524,7 +538,7 @@ class ScheduleModel extends Model
         } else {
             $date = $this->_getStartDateTime($schedule);
         }
-        
+
         return mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) + $modifier, date('Y', $date));
     }
 
@@ -541,7 +555,7 @@ class ScheduleModel extends Model
             $date = $this->_getStartDateTime($schedule);
             $base_time_type = 'start_datetime';
         }
-                
+
         //判断当前日期是否符合周数要求
         //计算方法：((当前日期的周数 - 基准日期的周数) % modifier == 0)
         if ((($this->_getWeekID() - $this->_getWeekID($date)) % $schedule['modifier']) == 0) {
@@ -559,7 +573,6 @@ class ScheduleModel extends Model
             if (in_array(date('D'), $schedule['dirlist'])) {
                 //判断今天是否已经执行过当前计划。如果否，根据基准时间计算执行时间（DATE为今天，TIME来自基准时间）
                 if (($base_time_type == 'last_run_time') && (date('Y-m-d', $date) == date('Y-m-d'))) {
-                    ;
                 } else {
                     return mktime(date('H', $date), date('i', $date), date('s', $date), date('m'), date('d'), date('Y'));
                 }
@@ -579,22 +592,21 @@ class ScheduleModel extends Model
             $date = $this->_getStartDateTime($schedule);
             $base_time_type = 'start_datetime';
         }
-        
+
         //设置month数组
         if (empty($schedule['month']) || $schedule['month'] == '*') {
             $schedule['month'] = $this->MONTH_ARRAY;
         } else {
             $schedule['month'] = explode(',', str_replace(' ', '', $schedule['month']));
         }
-        
+
         //modifier为LASTDAY时
         if (strtoupper($schedule['modifier']) == 'LASTDAY') {
-                        
+
             //判断月份是否符合要求、且当前日期为月的最后一天
             if (in_array(date('M'), $schedule['month']) && $this->_isLastDayOfMonth()) {
                 //判断今天是否已经执行过当前计划。如果否，根据基准时间计算执行时间（DATE为今天，TIME来自基准时间）
                 if (($base_time_type == 'last_run_time') && (date('Y-m-d', $date) == date('Y-m-d'))) {
-                    ;
                 } else {
                     return mktime(date('H', $date), date('i', $date), date('s', $date), date('m'), date('d'), date('Y'));
                 }
@@ -609,14 +621,13 @@ class ScheduleModel extends Model
                 } else {
                     $schedule['dirlist'] = explode(',', str_replace(' ', '', $schedule['dirlist']));
                 }
-                
+
                 //判断星期是否符合要求
                 if (in_array(date('D'), $schedule['dirlist'])) {
                     //判断第x个是否符合要求
                     if ($this->_isDayIDOfMonth($schedule['modifier'])) {
                         //判断今天是否已经执行过当前计划。如果否，根据基准时间计算执行时间（DATE为今天，TIME来自基准时间）
                         if (($base_time_type == 'last_run_time') && (date('Y-m-d', $date) == date('Y-m-d'))) {
-                            ;
                         } else {
                             return mktime(date('H', $date), date('i', $date), date('s', $date), date('m'), date('d'), date('Y'));
                         }
@@ -638,14 +649,13 @@ class ScheduleModel extends Model
                 if (in_array(date('d'), $schedule['dirlist']) || in_array(date('j'), $schedule['dirlist'])) {
                     //判断今天是否已经执行过当前计划。如果否，根据基准时间计算执行时间（DATE为今天，TIME来自基准时间）
                     if (($base_time_type == 'last_run_time') && (date('Y-m-d', $date) == date('Y-m-d'))) {
-                        ;
                     } else {
                         return mktime(date('H', $date), date('i', $date), date('s', $date), date('m'), date('d'), date('Y'));
                     }
                 }
             }
         }
-        
+
         //如果当前日期不符合月份/星期/日期的要求、或今天已经执行过，返回明天的同一时间（保证该条计划任务现在不被执行）
         return mktime(date('H', $date), date('i', $date), date('s', $date), date('m'), date('d') + 1, date('Y'));
     }
@@ -660,7 +670,7 @@ class ScheduleModel extends Model
             return false;
         }
     }
-    
+
     //判断当前日期是否为当前月的最后一天
     protected function _isLastDayOfMonth($date = '')
     {
@@ -668,9 +678,10 @@ class ScheduleModel extends Model
             $date = strtotime(date('Y-m-d H:i:s'));
         }
         $date = is_string($date) ? strtotime($date) : $date;
-        return (date('m', $date) != date('m', mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) + 1, date('Y', $date))));
+
+        return date('m', $date) != date('m', mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) + 1, date('Y', $date)));
     }
-    
+
     //判断当前日期是否为当前月的第x个星期x
     protected function _isDayIDOfMonth($key, $date = '')
     {
@@ -678,7 +689,7 @@ class ScheduleModel extends Model
             $date = strtotime(date('Y-m-d H:i:s'));
         }
         $date = is_string($date) ? strtotime($date) : $date;
-        
+
         $index = 0;
         switch (strtoupper($key)) {
             case 'FIRST':
@@ -700,49 +711,50 @@ class ScheduleModel extends Model
                 return false;
         }
         if ($index != 0) {
-            return ((date('m', $date) == date('m', mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) - (7 * ($index-1)), date('Y', $date)))) &&
-            (date('m', $date) != date('m', mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) - (7 * ($index)), date('Y', $date)))));
+            return (date('m', $date) == date('m', mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) - (7 * ($index - 1)), date('Y', $date)))) &&
+            (date('m', $date) != date('m', mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) - (7 * ($index)), date('Y', $date))));
         } else {
-            return (date('m', $date) != date('m', mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) + 7, date('Y', $date))));
+            return date('m', $date) != date('m', mktime(date('H', $date), date('i', $date), date('s', $date), date('m', $date), date('d', $date) + 7, date('Y', $date)));
         }
     }
 
     //返回自2007年01月01日来的周数
     protected function _getWeekID($date = '')
     {
-        $date_base = strtotime('2007-01-01');//2007-01-01为周一，定为第一周
+        $date_base = strtotime('2007-01-01'); //2007-01-01为周一，定为第一周
         //输入日期为空时，使用当前时间
         if (empty($date)) {
             $date = strtotime(date('Y-m-d'));
         } else {
             $date = is_string($date) ? strtotime($date) : $date;
         }
-        return (int)floor(($date - $date_base)/3600/24/7) + 1;
+
+        return (int) floor(($date - $date_base) / 3600 / 24 / 7) + 1;
     }
-    
+
     //返回自2007年01月01日来的月数
     protected function _getMonthDif($date1, $date2 = '')
     {
         $date1 = is_string($date1) ? strtotime($date1) : $date1;
         $date2 = empty($date2) ? date('Y-m-d') : $date2;
         $date2 = is_string($date2) ? strtotime($date2) : $date2;
-        
-        return ((date('Y', $date2) - date('Y', $date1)) * 12 + (date('n', $date2) - date('n', $date1)));
+
+        return (date('Y', $date2) - date('Y', $date1)) * 12 + (date('n', $date2) - date('n', $date1));
     }
-    
+
     //知识文件
     protected function _log($str)
     {
-        $filename = $this->getLogPath() . '/schedule_' . date('Y-m-d') . '.log';
-        
-        $str = '[' . date('Y-m-d H:i:s') . '] ' . $str;
+        $filename = $this->getLogPath().'/schedule_'.date('Y-m-d').'.log';
+
+        $str = '['.date('Y-m-d H:i:s').'] '.$str;
         $str .= "\r\n";
-        
+
         $handle = fopen($filename, 'a');
         fwrite($handle, $str);
         fclose($handle);
     }
-    
+
     //将给定时间的秒数置为0; 参数为空时，使用当前时间
     protected function setSecondToZero($date_time = null)
     {
@@ -750,6 +762,7 @@ class ScheduleModel extends Model
             $date_time = date('Y-m-d H:i:s');
         }
         $date_time = is_string($date_time) ? strtotime($date_time) : $date_time;
+
         return mktime(date('H', $date_time),
                       date('i', $date_time),
                       0,
@@ -762,9 +775,9 @@ class ScheduleModel extends Model
     public function run()
     {
         //锁定自动执行 修正一下
-        $lockfile = $this->getLogPath() . '/schedule.lock';
+        $lockfile = $this->getLogPath().'/schedule.lock';
         //锁定未过期 - 返回
-        if (file_exists($lockfile) && ((filemtime($lockfile))+60 > $_SERVER['REQUEST_TIME'])) {
+        if (file_exists($lockfile) && ((filemtime($lockfile)) + 60 > $_SERVER['REQUEST_TIME'])) {
             return ;
         } else {
             //重新生成锁文件
@@ -774,17 +787,17 @@ class ScheduleModel extends Model
         //忽略中断\忽略过期
         set_time_limit(0);
         ignore_user_abort(true);
-        
+
         //执行计划任务
         $this->runScheduleList($this->getScheduleList());
-        
+
         //解除锁定
         unlink($lockfile);
+
         return ;
     }
     /**
      * 清除缓存
-     * @return void
      */
     public function cleanCache()
     {

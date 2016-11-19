@@ -8,7 +8,7 @@ class ContentWidget extends Widget
 {
     /**
      * 模板渲染
-     * @param array $data 相关数据
+     * @param  array  $data 相关数据
      * @return string 频道内容渲染入口
      */
     public function render($data)
@@ -23,7 +23,7 @@ class ContentWidget extends Widget
         $var['cid'] = intval($data['cid']);
         $var['order'] = intval($_REQUEST['order']);
         // 获取分享数据
-        if ($template == 'list'||true) {
+        if ($template == 'list' || true) {
             $var['list'] = $this->getListData($var['cid']);
             // 分享配置
             $weiboSet = model('Xdata')->get('admin_Config:feed');
@@ -33,14 +33,15 @@ class ContentWidget extends Widget
             $var['categoryJson'] = json_encode($data['channelCategory']);
         }
         $var['cancomment_old_type'] = array(
-            'post','repost','postimage','postfile',
-            'weiba_post','weiba_repost',
+            'post', 'repost', 'postimage', 'postfile',
+            'weiba_post', 'weiba_repost',
             'blog_post', 'blog_repost',
             'event_post', 'event_repost',
             'vote_post', 'vote_repost',
-            'photo_post', 'photo_repost');
-        
-        $content = $this->renderFile(dirname(__FILE__)."/".$template.".html", $var);
+            'photo_post', 'photo_repost', );
+
+        $content = $this->renderFile(dirname(__FILE__).'/'.$template.'.html', $var);
+
         return $content;
     }
 
@@ -80,7 +81,7 @@ class ContentWidget extends Widget
         // 分页的设置
         if (!empty($list['data'])) {
             $content['firstId'] = $var['firstId'] = $list['data'][0]['feed_channel_link_id'];
-            $content['lastId'] = $list['data'][(count($list['data'])-1)]['feed_channel_link_id'];
+            $content['lastId'] = $list['data'][(count($list['data']) - 1)]['feed_channel_link_id'];
             $var['data'] = $this->_formatContent($list['data']);
             // 分享配置
             $weiboSet = model('Xdata')->get('admin_Config:feed');
@@ -95,7 +96,7 @@ class ContentWidget extends Widget
 
     /**
      * 处理分享附件数据
-     * @param array $data 频道关联数组信息
+     * @param  array $data 频道关联数组信息
      * @return array 处理后的分享数据
      */
     private function _formatContent($data)
@@ -120,9 +121,9 @@ class ContentWidget extends Widget
                     $value['body'] = replaceUrl($feedData['body']);
                     if ($feedData['video_id']) {
                         $value['flashimg'] = SITE_URL.$feedData['image_path'];
-                        $image_info  = getimagesize($value['flashimg']);
+                        $image_info = getimagesize($value['flashimg']);
                         $value['width'] = 236;
-                        $value['height'] = $image_info[1]/($image_info[0]/236);
+                        $value['height'] = $image_info[1] / ($image_info[0] / 236);
                     } else {
                         $value['flashimg'] = $feedData['flashimg'];
                     }
@@ -136,7 +137,7 @@ class ContentWidget extends Widget
                                 'name' => $val['name'],
                                 'attach_url' => getImageUrl($val['save_path'].$val['save_name'], '236'),
                                 'extension' => $val['extension'],
-                                'size' => $val['size']
+                                'size' => $val['size'],
                             );
                         $value['attachInfo'][] = $_attach;
                     }
@@ -149,7 +150,7 @@ class ContentWidget extends Widget
                     break;
                 case 'weiba_post':
                     $feedData = unserialize($value['feed_data']);
-                    $post_url = '<a class="ico-details" target="_blank" href="'.U('weiba/Index/postDetail', array('post_id'=>$value['app_row_id'])).'"></a>';
+                    $post_url = '<a class="ico-details" target="_blank" href="'.U('weiba/Index/postDetail', array('post_id' => $value['app_row_id'])).'"></a>';
                     $value['body'] = preg_replace('/\<a href="javascript:void\(0\)" class="ico-details"(.*)\>(.*)\<\/a\>/', $post_url, $value['body']);
                     if ($value['api_source']['pic_url']) {
                         $url = parse_url($value['api_source']['pic_url']);
@@ -162,7 +163,7 @@ class ContentWidget extends Widget
                         } else {
                             $img_info = myGetImageSize($value['api_source']['pic_url']);
                             $width = $img_info['width'];
-                            $value['api_source']['pic_height'] = 236/$width*$img_info['height'];
+                            $value['api_source']['pic_height'] = 236 / $width * $img_info['height'];
                         }
                     }
                     break;
@@ -174,7 +175,7 @@ class ContentWidget extends Widget
 
     /**
      * 获取频道分类列表数据
-     * @param integer $cid 频道分类ID
+     * @param  int   $cid 频道分类ID
      * @return array 频道分类列表数据
      */
     public function getListData($cid)
@@ -209,7 +210,7 @@ class ContentWidget extends Widget
             $value['digg_count'] = $feedInfos[$value['feed_id']]['digg_count'];
             $value['categoryInfo'] = $categoryInfos[$value['feed_id']];
         }
-        
+
         return $list;
     }
 }

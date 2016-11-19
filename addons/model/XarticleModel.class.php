@@ -6,14 +6,13 @@
  */
 class XarticleModel extends Model
 {
-
     protected $tableName = 'x_article';
-    protected $fields = array('id','title','uid','mtime','sort','content','attach','type');
+    protected $fields = array('id', 'title', 'uid', 'mtime', 'sort', 'content', 'attach', 'type');
 
     /**
      * 保存公告数据
-     * @param array $data 公告相关数据
-     * @return boolean|integer 若成功返回公告ID，失败返回false
+     * @param  array    $data 公告相关数据
+     * @return bool|int 若成功返回公告ID，失败返回false
      */
     public function saveArticle($data)
     {
@@ -24,7 +23,7 @@ class XarticleModel extends Model
         $add['attach'] = $save['attach'] = trim(t($data['attach_ids']), '|');    // 附件ID
         $add['mtime'] = $save['mtime'] = time();
         $add['type'] = $save['type'] = intval($data['type']);
-        
+
         if (empty($add['title'])) {
             $this->error = L('PUBLIC_COMMENT_MAIL_TITLE');            // 标题不可为空
             return false;
@@ -37,11 +36,13 @@ class XarticleModel extends Model
         if (!empty($data['id'])) {
             // 编辑操作
             $map['id'] = $data['id'];
+
             return $this->where($map)->save($save);
         } else {
             // 添加操作
             if ($id = $this->add($add)) {
                 $edit['sort'] = $id;
+
                 return $this->where('id='.$id)->save($edit);
             }
         }
@@ -49,8 +50,8 @@ class XarticleModel extends Model
 
     /**
      * 删除指定公告操作
-     * @param integer $id 公告ID
-     * @return integer 0表示删除失败，1表示删除成功
+     * @param  int $id 公告ID
+     * @return int 0表示删除失败，1表示删除成功
      */
     public function delArticle($id)
     {
@@ -59,6 +60,7 @@ class XarticleModel extends Model
             return false;
         }
         $map['id'] = is_array($id) ? array('IN', $id) : intval($id);
+
         return $this->where($map)->delete();
     }
 }

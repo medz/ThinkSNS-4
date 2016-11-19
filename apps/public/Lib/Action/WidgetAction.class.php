@@ -15,7 +15,7 @@ class WidgetAction extends Action
                 exit;
             }
         }
-        $_REQUEST['name']  = t($_REQUEST['name']);
+        $_REQUEST['name'] = t($_REQUEST['name']);
         $_REQUEST['param'] = unserialize(urldecode($_REQUEST['param']));
         send_http_header('utf8');
         echo empty($_REQUEST['name']) ? 'Invalid Param.' : W(t($_REQUEST['name']), t($_REQUEST['param']));
@@ -34,7 +34,7 @@ class WidgetAction extends Action
         $param['res'] = &$result;
         $param['type'] = $_REQUEST['type'];
         Addons::addonsHook(t($_GET['addon']), t($_GET['hook']), $param);
-        isset($result['url']) && $this->assign("jumpUrl", $result['url']);
+        isset($result['url']) && $this->assign('jumpUrl', $result['url']);
         isset($result['title']) && $this->setTitle($result['title']);
         isset($result['jumpUrl']) && $this->assign('jumpUrl', $result['jumpUrl']);
         if (isset($result['status']) && !$result['status']) {
@@ -57,7 +57,7 @@ class WidgetAction extends Action
 
         // 解析模板(统一使用模板的body字段)
         $_REQUEST['data'] = unserialize(urldecode($_REQUEST['data']));
-        $content = model('Template')->parseTemplate(t($_REQUEST['tpl_name']), array($active_field=>$_REQUEST['data']));
+        $content = model('Template')->parseTemplate(t($_REQUEST['tpl_name']), array($active_field => $_REQUEST['data']));
         // 设置分享发布框的权限
         $type = array('at', 'image', 'video', 'file', 'contribute');
         $actions = array();
@@ -90,14 +90,14 @@ class WidgetAction extends Action
             $imageInfo = getimagesize($pic_url);
             $imageType = strtolower(substr(image_type_to_extension($imageInfo[2]), 1));
             if ('bmp' != $imageType) { // 禁止BMP格式的图片
-                $save_path = SITE_PATH . '/data/uploads/temp'; // 临时图片地址
-                $filename  = md5($pic_url) . '.' . $imageType; // 重复刷新时, 生成的文件名应一致
-                $img       = file_get_contents($pic_url);
-                $filepath  = $save_path.'/'.$filename;
-                $result    = file_put_contents($filepath, $img);
+                $save_path = SITE_PATH.'/data/uploads/temp'; // 临时图片地址
+                $filename = md5($pic_url).'.'.$imageType; // 重复刷新时, 生成的文件名应一致
+                $img = file_get_contents($pic_url);
+                $filepath = $save_path.'/'.$filename;
+                $result = file_put_contents($filepath, $img);
                 if ($result) {
-                    $data['type']       = 1;
-                    $data['type_data'] = 'temp/' . $filename;
+                    $data['type'] = 1;
+                    $data['type_data'] = 'temp/'.$filename;
                 }
             }
         }
@@ -167,7 +167,7 @@ class WidgetAction extends Action
             $title = $title[1];
             // 拼装分享内容
             $weibo_content = array(
-                'content' => $title . ' ' . $url,
+                'content' => $title.' '.$url,
             );
             // // 评论箱UID
             // $uid = 10315;
@@ -178,7 +178,7 @@ class WidgetAction extends Action
             // }
             // 保存信息
             $webpage_info = array(
-                'url'  => $url,
+                'url' => $url,
                 'hash' => $hash,
                 'title' => t($title),
             );
@@ -190,8 +190,8 @@ class WidgetAction extends Action
         }
 
         // 分享秀样式
-        $data['style']['width']  = $_GET['width'] < 190 ? 190 : ($_GET['width'] > 1024 ? 1024 : intval($_GET['width']));
-        $data['style']['skin']   = t($_GET['skin']);
+        $data['style']['width'] = $_GET['width'] < 190 ? 190 : ($_GET['width'] > 1024 ? 1024 : intval($_GET['width']));
+        $data['style']['skin'] = t($_GET['skin']);
 
         $this->assign('webpage_info', $webpage_info);
         $this->assign($data);
@@ -245,7 +245,7 @@ class WidgetAction extends Action
             $d['body'] = $data['content'];
             $d['source_url'] = '';
             // 滤掉话题两端的空白
-            $d['body'] = preg_replace("/#[\s]*([^#^\s][^#]*[^#^\s])[\s]*#/is", '#'.trim("\${1}").'#', $d['body']);
+            $d['body'] = preg_replace("/#[\s]*([^#^\s][^#]*[^#^\s])[\s]*#/is", '#'.trim('${1}').'#', $d['body']);
             // 发送分享的类型
             $type = 'post';
             // 所属应用名称
@@ -310,8 +310,8 @@ class WidgetAction extends Action
         $user_list = array_diff($_user_list, $uids);
 
         // 分享秀样式
-        $data['style']['width']  = $_GET['width'] < 190 ? 190 : ($_GET['width'] > 1024 ? 1024 : intval($_GET['width']));
-        $data['style']['skin']   = t($_GET['skin']);
+        $data['style']['width'] = $_GET['width'] < 190 ? 190 : ($_GET['width'] > 1024 ? 1024 : intval($_GET['width']));
+        $data['style']['skin'] = t($_GET['skin']);
 
         $this->assign('user_list', $user_list);
         $this->assign($data);

@@ -1,4 +1,5 @@
 <?php
+
 class DiySendFrame extends TagsAbstract
 {
     /**
@@ -6,7 +7,7 @@ class DiySendFrame extends TagsAbstract
      * @var unknown_type
      */
     public static $TAG_CLOSED = false;
-    
+
     public function getTagStatus()
     {
         return self::$TAG_CLOSED;

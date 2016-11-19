@@ -1,10 +1,10 @@
-<?php 
+<?php
+
 class MyloveAction extends Action
 {
-
     public function _initialize()
     {
-        header("Content-Type:text/html; charset=UTF8");
+        header('Content-Type:text/html; charset=UTF8');
     }
     public function index()
     {

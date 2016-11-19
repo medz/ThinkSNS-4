@@ -1,16 +1,19 @@
-<include file="__THEME__/header" />
+<include file="__THEME__/public_header" />
 
 <link href="__APP__/weiba.css" rel="stylesheet" type="text/css" />
-<link href="__THEME__/public/account.css" rel="stylesheet" type="text/css" />
+<style>
+  input.text{width: 238px;border: 1px solid #ccc;color: #888;font-size: 100%;font-family: inherit;height: 20px;line-height: 20px;padding: 5px;margin: 0 10px 0 0;}
+  textarea.text{width: 238px;border: 1px solid #ccc;color: #888;font-size: 100%;font-family: inherit;line-height: 20px;padding: 10px;margin: 0 10px 0 0;font-size: 14px; border-radius: 5px;}
+</style>
 <script type="text/javascript" src="__APP__/weiba.js"></script>
 <script>
-var UPLOAD_URL ='{:UPLOAD_URL}';
-</script>    
-<div class="content_holder">
-   <div class="content no_bg">
-       <div class="mno_l"> 
+  var UPLOAD_URL ='{:UPLOAD_URL}';
+</script>
+<div class="content_holder" id="page-wrap">
+   <div class="content no_bg" id="main-wrap">
+       <div class="mno_l st-bg"> 
             <p class="weiba-location"><a href="{:U('weiba/Index/index')}">微吧</a>&nbsp;<span class="f8">></span>&nbsp;<span class="f-red">申请微吧</span></p>
-             <div class="weiba-manage">
+             <div class="weiba-manage weiba-box">
                <div class="boxL" style="width:100%;">                    
                 <!-- <form method="post" action="{:U('weiba/Manage/doWeibaEdit')}" id="weibaInfo"> -->
                     <ul class="add_group">
@@ -30,7 +33,7 @@ var UPLOAD_URL ='{:UPLOAD_URL}';
                         </li>
                         <li>
                             <div class="c1"><font color="red"> * </font>简介：</div>
-                            <div class="c2"><textarea  class="text" rows="3" style="width:610px;" name="intro"></textarea><br /></div>
+                            <div class="c2"><textarea  class="text" rows="6" style="width:610px;" name="intro"></textarea><br /></div>
                         </li>
                         <li>
                             <div class="c1">发帖权限：</div>
@@ -60,7 +63,7 @@ var UPLOAD_URL ='{:UPLOAD_URL}';
                         <li>
                             <div class="c1"></div>
                             <div class="c2">
-                                <a href="javascript:void(0);" class="btn_b"  onclick="dosubmit()">确定</a>
+                                <a href="javascript:void(0);" class="btn-green-big"  onclick="dosubmit()"><span>确定</span></a>
                             </div>
                         </li>
                   </ul>

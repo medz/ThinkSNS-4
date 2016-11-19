@@ -6,19 +6,17 @@
  */
 class MessageModel extends Model
 {
-
-    const ONE_ON_ONE_CHAT  = 1;         // 1对1聊天
+    const ONE_ON_ONE_CHAT = 1;         // 1对1聊天
     const MULTIPLAYER_CHAT = 2;         // 多人聊天
-    const SYSTEM_NOTIFY    = 3;         // 系统私信
+    const SYSTEM_NOTIFY = 3;         // 系统私信
 
     protected $tableName = 'message_content';
-    protected $fields = array(0=>'message_id', 1=>'list_id', 2=>'from_uid', 3=>'content', 4=>'is_del', 5=>'mtime', '_pk'=>'message_id');
+    protected $fields = array(0 => 'message_id', 1 => 'list_id', 2 => 'from_uid', 3 => 'content', 4 => 'is_del', 5 => 'mtime', '_pk' => 'message_id');
 
     private $reversible_type = array();
 
     /**
      * 初始化方法，
-     * @return void
      */
     public function _initialize()
     {
@@ -27,11 +25,11 @@ class MessageModel extends Model
 
     /**
      * 获取消息列表 - 分页型
-     * @param array $map 查询条件
-     * @param string $field 显示字段，默认为*
-     * @param string $order 排序条件，默认为message_id DESC
-     * @param integer $limit 结果集数目，默认为20
-     * @return array 消息列表信息
+     * @param  array  $map   查询条件
+     * @param  string $field 显示字段，默认为*
+     * @param  string $order 排序条件，默认为message_id DESC
+     * @param  int    $limit 结果集数目，默认为20
+     * @return array  消息列表信息
      */
     // public function getMessageByMap($map = array(), $field = '*', $order = 'message_id DESC', $limit = 20) {
     //     $list = $this->where($map)->field($field)->order($order)->findPage($limit);
@@ -40,8 +38,8 @@ class MessageModel extends Model
 
     /**
      * 获取私信列表 - 分页型
-     * @param integer $uid 用户UID
-     * @param integer $type 私信类型，1表示一对一私信，2表示多人聊天，默认为1
+     * @param  int   $uid  用户UID
+     * @param  int   $type 私信类型，1表示一对一私信，2表示多人聊天，默认为1
      * @return array 私信列表信息
      */
     public function getMessageListByUid($uid, $type = 1, $limit = 20)
@@ -61,8 +59,8 @@ class MessageModel extends Model
 
     /**
      * 格式化，私信列表数据
-     * @param array $list 私信列表数据
-     * @param integer $current_uid ???
+     * @param  array $list        私信列表数据
+     * @param  int   $current_uid ???
      * @return array 返回格式化后的私信列表数据
      */
     private function _parseMessageList(&$list, $current_uid)
@@ -77,9 +75,9 @@ class MessageModel extends Model
 
     /**
      * 获取私信详细内容
-     * @param integer $uid 用户UID
-     * @param integer $id 私信ID
-     * @param boolean $show_cascade 是否获取回话内容
+     * @param  int   $uid          用户UID
+     * @param  int   $id           私信ID
+     * @param  bool  $show_cascade 是否获取回话内容
      * @return array 私信详细内容
      */
     public function getDetailById($uid, $id, $show_cascade = true)
@@ -97,6 +95,7 @@ class MessageModel extends Model
             foreach ($res as $r_k => $r_v) {
                 $res[$r_k]['user_info'] = model('User')->getUserInfo($r_v['from_uid']);
             }
+
             return $res;
         } else {
             // `mb`.`member`={$uid} 可验证当前用户是否依然为该私信成员
@@ -109,27 +108,28 @@ class MessageModel extends Model
 
     /**
      * 获取所有私信内容的列表
-     * @param array $map 查询条件
-     * @param integer $limit 结果集数目，默认为20
-     * @param string $order 排序条件，默认为a.message_id DESC
-     * @return [type]         [description]
+     * @param  array  $map   查询条件
+     * @param  int    $limit 结果集数目，默认为20
+     * @param  string $order 排序条件，默认为a.message_id DESC
+     * @return [type] [description]
      */
-    public function getDetailList($map, $limit=20, $order = 'a.message_id DESC')
+    public function getDetailList($map, $limit = 20, $order = 'a.message_id DESC')
     {
         $field = 'a.*, a.from_uid AS fuid, b.type, b.min_max';
         $table = '`'.$this->tablePrefix.'message_content` AS a LEFT JOIN `'.$this->tablePrefix.'message_list` AS b ON a.list_id = b.list_id LEFT JOIN `'.$this->tablePrefix.'message_member` AS c ON a.list_id = c.list_id';
         $count = count($this->table($table)->where($map)->field('a.message_id')->group('a.message_id')->order($order)->findAll());
         $list = $this->table($table)->where($map)->field($field)->group('a.message_id')->order($order)->findPage($limit, $count);
+
         return $list;
     }
 
     /**
      * 获取指定私信列表中的私信内容
-     * @param integer $list_id 私信列表ID
-     * @param integer $uid 用户ID
-     * @param integer $since_id 最早会话ID
-     * @param integer $max_id 最新会话ID
-     * @param integer $count 旧会话加载条数，默认为20
+     * @param  int   $list_id  私信列表ID
+     * @param  int   $uid      用户ID
+     * @param  int   $since_id 最早会话ID
+     * @param  int   $max_id   最新会话ID
+     * @param  int   $count    旧会话加载条数，默认为20
      * @return array 指定私信列表中的私信内容
      */
     public function getMessageByListId($list_id, $uid, $since_id = null, $max_id = null, $count = 20)
@@ -155,7 +155,7 @@ class MessageModel extends Model
             // 多查询一条验证，是否还有后续信息
             $limit = intval($count) + 1;
         }
-        $res['data']  = D('message_content')->where($where)->order('message_id DESC')->limit($limit)->findAll();
+        $res['data'] = D('message_content')->where($where)->order('message_id DESC')->limit($limit)->findAll();
 
         foreach ($res['data'] as $r_d_k => $r_d_v) {
             $res['data'][$r_d_k]['user_info'] = model('User')->getUserInfo($r_d_v['from_uid']);
@@ -217,9 +217,9 @@ class MessageModel extends Model
 
     /**
      * 获取指定用户未读的私信数目
-     * @param integer $uid 用户ID
-     * @param integer $type 私信类型，1表示一对一私信，2表示多人聊天，默认为1
-     * @return integer 指定用户未读的私信数目
+     * @param  int $uid  用户ID
+     * @param  int $type 私信类型，1表示一对一私信，2表示多人聊天，默认为1
+     * @return int 指定用户未读的私信数目
      */
     public function getUnreadMessageCount($uid, $type)
     {
@@ -228,22 +228,23 @@ class MessageModel extends Model
         $type && $map['b.type'] = array('IN', $type);
         $table = $this->tablePrefix.'message_member AS a LEFT JOIN '.$this->tablePrefix.'message_list AS b ON a.list_id = b.list_id';
         $unread = $this->table($table)->where($map)->count();
+
         return intval($unread);
     }
-    
+
     /**
      * 发送私信
-     * @param array $data 私信信息，包括to接受对象、title私信标题、content私信正文
-     * @param integer $from_uid 发送私信的用户ID
-     * @param boolean $send_email 是否同时发送邮件，默认为false
-     * @return boolean 是否发送成功
+     * @param  array $data       私信信息，包括to接受对象、title私信标题、content私信正文
+     * @param  int   $from_uid   发送私信的用户ID
+     * @param  bool  $send_email 是否同时发送邮件，默认为false
+     * @return bool  是否发送成功
      */
     public function postMessage($data, $from_uid, $send_email = false)
     {
         $from_uid = intval($from_uid);
         $data['to'] = is_array($data['to']) ? $data['to'] : explode(',', $data['to']);
         $data['member'] = array_filter(array_merge(array($from_uid), $data['to']));     // 私信成员
-        $data['mtime']  = time();       // 发起时间
+        $data['mtime'] = time();       // 发起时间
 
         if ($data['type'] != self::SYSTEM_NOTIFY && $from_uid > 1) {
             // 判断接受者能否接受私信
@@ -262,19 +263,19 @@ class MessageModel extends Model
             $this->error = L('PUBLIC_PRIVATE_MESSAGE_SEND_FAIL');                   // 私信发送失败
             return false;
         }
-  
+
         // 存储私信成员
         if (false === $this->_addMessageMember($data, $from_uid)) {
             $this->error = L('PUBLIC_PRIVATE_MESSAGE_SEND_FAIL');                   // 私信发送失败
             return false;
         }
-       
+
         // 存储内容
         if (false == $this->_addMessage($data, $from_uid)) {
             $this->error = L('PUBLIC_PRIVATE_MESSAGE_SEND_FAIL');                  // 私信发送失败
             return false;
         }
-        
+
         $author = model('User')->getUserInfo($from_uid);
         $config['name'] = $author['uname'];
         $config['space_url'] = $author['space_url'];
@@ -288,14 +289,14 @@ class MessageModel extends Model
 
         return $data['list_id'];
     }
-    
+
     /**
      * 回复私信
-     * @param integer $list_id 回复的私信list_id
-     * @param string $content 回复内容
-     * @param integer $from_uid 回复者ID
-     * @param array $attach_ids 附件ID数组
-     * @return mix 回复失败返回false，回复成功返回本条新回复的message_id
+     * @param  int    $list_id    回复的私信list_id
+     * @param  string $content    回复内容
+     * @param  int    $from_uid   回复者ID
+     * @param  array  $attach_ids 附件ID数组
+     * @return mix    回复失败返回false，回复成功返回本条新回复的message_id
      */
     public function replyMessage($list_id, $content, $from_uid, $attach_ids)
     {
@@ -324,7 +325,7 @@ class MessageModel extends Model
             return false;
         } else {
             $list_data['list_id'] = $list_id;
-            $list_data['last_message'] = serialize(array('from_uid'=>$from_uid, 'content'=>t($content)));
+            $list_data['last_message'] = serialize(array('from_uid' => $from_uid, 'content' => t($content)));
             if (1 == $list_info['type']) {
                 // 一对一
                 $list_data['member_num'] = 2;
@@ -335,7 +336,7 @@ class MessageModel extends Model
                     $member_data = array(
                         'list_id' => $list_id,
                         'member' => array_diff(explode('_', $list_info['min_max']), array($from_uid)),
-                        'mtime' => $time
+                        'mtime' => $time,
                     );
                     $this->_addMessageMember($member_data, $from_uid);
                 } else {
@@ -382,12 +383,12 @@ class MessageModel extends Model
 
     /**
      * 设置指定用户指定私信为已读
-     * @param array $list_ids 私信列表ID数组 
+     * @param array  $list_ids   私信列表ID数组
      * @param [type] $member_uid 成员用户ID
-     * @param integer val 要设置的值
-     * @return boolean 是否设置成功
+     * @param int val 要设置的值
+     * @return bool 是否设置成功
      */
-    public function setMessageIsRead($list_ids = null, $member_uid, $val=0)
+    public function setMessageIsRead($list_ids = null, $member_uid, $val = 0)
     {
         if (!$member_uid) {
             return false;
@@ -400,13 +401,14 @@ class MessageModel extends Model
             $map['new'] = 2;
         }
         $map['member_uid'] = intval($member_uid);
+
         return false !== D('message_member')->where($map)->setField('new', $val);
     }
 
     /**
      * 设置指定用户所有的私信为已读
-     * @param integer $member_uid 用户ID
-     * @return boolean 是否设置成功
+     * @param  int  $member_uid 用户ID
+     * @return bool 是否设置成功
      */
     public function setAllIsRead($member_uid)
     {
@@ -415,14 +417,15 @@ class MessageModel extends Model
             return false;
         }
         $map['member_uid'] = $member_uid;
+
         return D('message_member')->where($map)->setField('new', 0);
     }
-   
+
     /**
      * 指定用户删除指定的私信列表
-     * @param integer $member_uid 用户ID
-     * @param array $list_ids 私信列表ID
-     * @return boolean 是否删除成功
+     * @param  int   $member_uid 用户ID
+     * @param  array $list_ids   私信列表ID
+     * @return bool  是否删除成功
      */
     public function deleteMessageByListId($member_uid, $list_ids)
     {
@@ -434,7 +437,7 @@ class MessageModel extends Model
         if (!$list_ids || !$member_uid) {
             return false;
         }
-        
+
         $member_map['list_id'] = array('IN', $list_ids);
         $member_map['member_uid'] = intval($member_uid);
         $save['message_num'] = 0;
@@ -452,8 +455,8 @@ class MessageModel extends Model
 
     /**
      * 直接删除私信列表，管理员操作
-     * @param array $list_ids 私信列表ID数组
-     * @return boolean 是否删除成功
+     * @param  array $list_ids 私信列表ID数组
+     * @return bool  是否删除成功
      */
     public function deleteMessageList($list_ids)
     {
@@ -461,6 +464,7 @@ class MessageModel extends Model
             return false;
         }
         $map['list_id'] = array('IN', $list_ids);
+
         return false !== D('message_content')->where($map)->delete()
                && false !== D('message_member')->where($map)->delete()
                && false !== D('message_list')->where($map)->delete();
@@ -468,14 +472,14 @@ class MessageModel extends Model
 
     /**
      * 指定用户删除指定会话
-     * @param integer $member_uid 用户ID
-     * @param array $message_ids 会话ID数组
-     * @return boolean 是否删除成功
+     * @param  int   $member_uid  用户ID
+     * @param  array $message_ids 会话ID数组
+     * @return bool  是否删除成功
      */
     public function deleteSessionById($member_uid, $message_ids)
     {
         $message_ids = intval($message_ids);
-        $member_uid  = intval($member_uid);
+        $member_uid = intval($member_uid);
         if (!$message_ids || !$member_uid) {
             return false;
         }
@@ -495,8 +499,8 @@ class MessageModel extends Model
 
     /**
      * 直接删除会话操作，管理员操作
-     * @param array $message_ids 会话ID数组
-     * @return boolean 是否删除成功
+     * @param  array $message_ids 会话ID数组
+     * @return bool  是否删除成功
      */
     public function deleteSessionByAdmin($message_ids)
     {
@@ -518,9 +522,9 @@ class MessageModel extends Model
 
     /**
      * 获取指定私信列表中的成员信息
-     * @param integer $list_id 私信列表ID
-     * @param string $field 私信成员表中的字段
-     * @return array 指定私信列表中的成员信息
+     * @param  int    $list_id 私信列表ID
+     * @param  string $field   私信成员表中的字段
+     * @return array  指定私信列表中的成员信息
      */
     public function getMessageMembers($list_id, $field = null)
     {
@@ -539,9 +543,9 @@ class MessageModel extends Model
 
     /**
      * 验证指定用户是否是指定私信列表的成员
-     * @param integer $list_id 私信列表ID
-     * @param integer $uid 用户ID 
-     * @param boolean $show_detail 是否显示详细，默认为false
+     * @param  int   $list_id     私信列表ID
+     * @param  int   $uid         用户ID
+     * @param  bool  $show_detail 是否显示详细，默认为false
      * @return array 如果是成员返回相关信息，不是则返回空数组
      */
     public function isMember($list_id, $uid, $show_detail = false)
@@ -552,7 +556,7 @@ class MessageModel extends Model
         static $_is_member = array();
 
         if (!isset($_is_member[$list_id][$uid][$show_detail])) {
-            $map['list_id']    = $list_id;
+            $map['list_id'] = $list_id;
             $map['member_uid'] = $uid;
             if ($show_detail) {
                 $_is_member[$list_id][$uid][$show_detail] = D('message_member')->where($map)->find();
@@ -566,16 +570,16 @@ class MessageModel extends Model
 
     /**
      * 添加新的私信列表
-     * @param array $data 私信列表相关数据
-     * @param integer $from_uid 发布人ID
-     * @return mix 添加失败返回false，成功返回新的私信列表ID
+     * @param  array $data     私信列表相关数据
+     * @param  int   $from_uid 发布人ID
+     * @return mix   添加失败返回false，成功返回新的私信列表ID
      */
     private function _addMessageList($data, $from_uid)
     {
         if (!$data['content'] || !is_array($data['member']) || !$from_uid) {
             return false;
         }
-        
+
         $list['from_uid'] = $from_uid;
         $list['title'] = $data['title'] ? t($data['title']) : t(getShort($data['content'], 20));
         $list['member_num'] = count($data['member']);
@@ -584,7 +588,7 @@ class MessageModel extends Model
         $list['mtime'] = $data['mtime'];
         $list['last_message'] = serialize(array(
             'from_uid' => $from_uid,
-            'content' => h($data['content'])
+            'content' => h($data['content']),
         ));
 
         $list_map['type'] = $list['type'];
@@ -597,15 +601,15 @@ class MessageModel extends Model
         } else {
             $list_id = D('message_list')->data($list)->add();
         }
-        
+
         return $list_id;
     }
 
     /**
      * 添加私信列表的成员
-     * @param array $data 添加私信成员相关信息；私信列表ID：list_id，私信成员ID数组：member，当前时间：mtime
-     * @param integer $from_uid 发布人ID
-     * @return mix 添加成功返回新的私信成员表ID，添加失败返回false
+     * @param  array $data     添加私信成员相关信息；私信列表ID：list_id，私信成员ID数组：member，当前时间：mtime
+     * @param  int   $from_uid 发布人ID
+     * @return mix   添加成功返回新的私信成员表ID，添加失败返回false
      */
     private function _addMessageMember($data, $from_uid)
     {
@@ -637,9 +641,9 @@ class MessageModel extends Model
 
     /**
      * 添加会话
-     * @param array $data 会话相关数据
-     * @param integer $from_uid 发布人ID
-     * @return mix 添加失败返回false，添加成功返回新的会话ID
+     * @param  array $data     会话相关数据
+     * @param  int   $from_uid 发布人ID
+     * @return mix   添加失败返回false，添加成功返回新的会话ID
      */
     private function _addMessage($data, $from_uid)
     {
@@ -649,31 +653,33 @@ class MessageModel extends Model
         if (!$data['attach_ids'] && !$data['content']) {
             return false;
         }
-        $message['list_id']  = $data['list_id'];
+        $message['list_id'] = $data['list_id'];
         $message['from_uid'] = $from_uid;
-        $message['content']  = $data['content'];
+        $message['content'] = $data['content'];
         $message['attach_ids'] = serialize($data['attach_ids']);
-        $message['is_del']   = 0;
-        $message['mtime']    = $data['mtime'];
+        $message['is_del'] = 0;
+        $message['mtime'] = $data['mtime'];
+
         return D('message_content')->data($message)->add();
     }
 
     /**
      * 输出从小到大用“_”连接的字符串
-     * @param array $uids 用户ID数组
+     * @param  array  $uids 用户ID数组
      * @return string 从小到大用“_”连接的字符串
      */
     private function _getUidMinMax($uids)
     {
         sort($uids);
+
         return implode('_', $uids);
     }
 
     /**
      * 格式化用户数组，去除指定用户
-     * @param string $min_max_uids 从小到大用“_”的用户ID字符串
-     * @param integer $from_uid 指定用户ID
-     * @return array 用户数组，去除指定用户
+     * @param  string $min_max_uids 从小到大用“_”的用户ID字符串
+     * @param  int    $from_uid     指定用户ID
+     * @return array  用户数组，去除指定用户
      */
     private function _parseToUidByMinMax($min_max_uids, $from_uid)
     {
@@ -684,19 +690,19 @@ class MessageModel extends Model
 
     /**
      * 编辑会话，彻底删除，假删除，恢复
-     * @param integer $message_id 会话ID
-     * @param string $type 操作类型，彻底删除：deleteMessage，假删除：delMessage，恢复：其他字符串
-     * @param string $title 知识内容，功能待完成
-     * @return array 返回操作后的信息数据
+     * @param  int    $message_id 会话ID
+     * @param  string $type       操作类型，彻底删除：deleteMessage，假删除：delMessage，恢复：其他字符串
+     * @param  string $title      知识内容，功能待完成
+     * @return array  返回操作后的信息数据
      */
     public function doEditMessage($message_id, $type, $title)
     {
-        $return = array('status'=>'0','data'=>L('PUBLIC_ADMIN_OPRETING_ERROR'));            // 操作失败
+        $return = array('status' => '0', 'data' => L('PUBLIC_ADMIN_OPRETING_ERROR'));            // 操作失败
         if (empty($message_id)) {
             $return['data'] = L('PUBLIC_WRONG_DATA');           // 错误的参数
         } else {
             $map['message_id'] = is_array($message_id) ? array('IN', $message_id) : intval($message_id);
-            $save['is_del'] = $type =='delMessage' ? 1 : 0;
+            $save['is_del'] = $type == 'delMessage' ? 1 : 0;
             if ($type == 'deleteMessage') {
                 // 彻底删除操作
                 $res = $this->where($map)->delete();
@@ -707,7 +713,7 @@ class MessageModel extends Model
             }
             if ($res) {
                 // TODO:是否记录知识,以及后期缓存处理
-                $return = array('status'=>1,'data'=>L('PUBLIC_ADMIN_OPRETING_SUCCESS'));
+                $return = array('status' => 1, 'data' => L('PUBLIC_ADMIN_OPRETING_SUCCESS'));
             }
         }
 
@@ -716,8 +722,7 @@ class MessageModel extends Model
 
     /**
      * 删除私信后的数据处理操作
-     * @param integer|array $message_id 删除的私信ID
-     * @return void
+     * @param int|array $message_id 删除的私信ID
      */
     private function _afterDeleteMessage($message_id)
     {
@@ -744,9 +749,9 @@ class MessageModel extends Model
 
     /**
      * 获取指定私信列表，指定结果集的最早会话ID，用于动态加载
-     * @param integer $list_id 私信列表ID
-     * @param integer $nums 结果集数目
-     * @return integer 最早会话ID
+     * @param  int $list_id 私信列表ID
+     * @param  int $nums    结果集数目
+     * @return int 最早会话ID
      */
     public function getSinceMessageId($list_id, $nums)
     {
@@ -763,14 +768,14 @@ class MessageModel extends Model
     /*** API使用 ***/
     /**
      * 私信列表，API专用
-     * @param integer $uid 用户ID
-     * @param string $type all:全部消息,is_read:阅读过的,is_unread:为阅读  默认'all'
-     * @param integer $since_id 范围起始ID，默认0
-     * @param integer $max_id 范围结束ID，默认0
-     * @param integer $count 单页读取条数，默认20
-     * @param integer $page 页码，默认1
-     * @param string $order 排序，默认以消息ID倒叙排列
-     * @return array 私信列表数据
+     * @param  int    $uid      用户ID
+     * @param  string $type     all:全部消息,is_read:阅读过的,is_unread:为阅读  默认'all'
+     * @param  int    $since_id 范围起始ID，默认0
+     * @param  int    $max_id   范围结束ID，默认0
+     * @param  int    $count    单页读取条数，默认20
+     * @param  int    $page     页码，默认1
+     * @param  string $order    排序，默认以消息ID倒叙排列
+     * @return array  私信列表数据
      */
     public function getMessageListByUidForAPI($uid, $type = 1, $since_id = 0, $max_id = 0, $count = 20, $page = 1, $order = '`mb`.`new` DESC,`mb`.`list_id` DESC')
     {
@@ -793,7 +798,7 @@ class MessageModel extends Model
         $this->_parseMessageList($list, $uid); // 引用
         foreach ($list as &$_l) {
             $_l['from_uid'] = $_l['last_message']['from_uid'];
-            $_l['content']  = $_l['last_message']['content'];
+            $_l['content'] = $_l['last_message']['content'];
         }
 
         return $list;
@@ -801,14 +806,14 @@ class MessageModel extends Model
 
     /**
      * 未读私信列表，API专用
-     * @param integer $uid 用户ID
-     * @param string $type all:全部消息,is_read:阅读过的,is_unread:为阅读  默认'all'
-     * @param integer $since_id 范围起始ID，默认0
-     * @param integer $max_id 范围结束ID，默认0
-     * @param integer $count 单页读取条数，默认20
-     * @param integer $page 页码，默认1
-     * @param string $order 排序，默认以消息ID倒叙排列
-     * @return array 未读私信列表数据
+     * @param  int    $uid      用户ID
+     * @param  string $type     all:全部消息,is_read:阅读过的,is_unread:为阅读  默认'all'
+     * @param  int    $since_id 范围起始ID，默认0
+     * @param  int    $max_id   范围结束ID，默认0
+     * @param  int    $count    单页读取条数，默认20
+     * @param  int    $page     页码，默认1
+     * @param  string $order    排序，默认以消息ID倒叙排列
+     * @return array  未读私信列表数据
      */
     public function getMessageListByUidForAPIUnread($uid, $type = 1, $since_id = 0, $max_id = 0, $count = 20, $page = 1, $order = '`mb`.`new` DESC,`mb`.`list_id` DESC')
     {
@@ -833,13 +838,13 @@ class MessageModel extends Model
             $_l['content'] = $_l['last_message']['content'];
             $_l['mtime'] = $_l['list_ctime'];
         }
-    
+
         return $list;
     }
-    
+
     /**
      * 获取用户的最后一条私信，API专用
-     * @param integer 用户UID
+     * @param int 用户UID
      * @return array 用户的最后一条私信数据
      */
     public function getLastMessageByUidForAPI($uid)
@@ -853,7 +858,6 @@ class MessageModel extends Model
 
     /**
      * 发送提醒邮件接口 - 计划任务使用
-     * @return void
      */
     public function doSendFeedMail()
     {
@@ -900,7 +904,7 @@ class MessageModel extends Model
             // 未读评论数目
             $unread_comment = intval($user_data['unread_comment']);
             // 未读短信息数目
-            $unread_message = (int)model('Message')->getUnreadMessageCount($v['uid'], array(MessageModel::ONE_ON_ONE_CHAT, MessageModel::MULTIPLAYER_CHAT));
+            $unread_message = (int) model('Message')->getUnreadMessageCount($v['uid'], array(MessageModel::ONE_ON_ONE_CHAT, MessageModel::MULTIPLAYER_CHAT));
             // 新的关注数目
             $new_folower_count = intval($user_data['new_folower_count']);
             // 添加判断，若没有消息，将不发送邮件提醒
@@ -909,7 +913,7 @@ class MessageModel extends Model
                 continue;
             }
             // 设置邮件发送模板
-            $config['uname'] = '<a href="'.U('public/Profile/index', array('uid'=>$v['uid'])).'" style="color:#0000ff;text-decoration:none;">'.$v['uname'].'</a>';
+            $config['uname'] = '<a href="'.U('public/Profile/index', array('uid' => $v['uid'])).'" style="color:#0000ff;text-decoration:none;">'.$v['uname'].'</a>';
             $config['website'] = '<a style="text-decoration:none;color:#3366cc" href="'.SITE_URL.'">'.$GLOBALS['ts']['site']['site_name'].'</a>';
             $config['unread_atme'] = $unread_atme;
             $config['unread_comment'] = $unread_comment;
@@ -933,10 +937,10 @@ class MessageModel extends Model
             // 原始模板，屏蔽，保留，参考
 /*    		$body = 'Hi , <a href="'.U('public/Profile/index',array('uid'=>$v['uid'])).'" style="color:#0000ff;text-decoration:none;">'.$v['uname'].'</a><br /><br />自从您上次登录<a style="text-decoration:none;color:#3366cc" href="'.SITE_URL.'">'.
                     $GLOBALS['ts']['site']['site_name']."</a>以后，发生了很多事：<br /><br />您共收到";
-                
+
 
             $body.=$unread_atme.'条@提到你的、'.$unread_comment.'条新的评论、'.$unread_message.'条私信，<br /><br />共有'.$new_folower_count.'人关注了你。<br/><br/><a href="'.SITE_URL.'" style="background:#0f8ca8;width:80px;display:block;padding:5px 10px;color:#fff;text-align:center;font-size:12px;text-decoration:none;">快去看看吧</a>';
-                
+
             $mailtitle = '您有新的动态';
             $mailbody = '<style>a.email_btn,a.email_btn:link,a.email_btn:visited{background:#0F8CA8;padding:5px 10px;color:#fff;width:80px;text-align:center;}</style><div style="width:540px;border:#0F8CA8 solid 2px;margin:0 auto"><div style="color:#bbb;background:#0f8ca8;padding:5px;overflow:hidden;zoom:1"><div style="float:right;height:15px;line-height:15px;padding:10px 0;display:none">2012年07月15日</div>
                     <div style="float:left;overflow:hidden;position:relative"><a><img style="border:0 none" src="'.$GLOBALS['ts']['site']['logo'].'"></a></div></div>
@@ -948,7 +952,7 @@ class MessageModel extends Model
                     </div></div>';*/
             // 更新邮件发送时间
             model('User')->setField('send_email_time', $time, 'uid='.$v['uid']);
-                
+
             model('Mail')->send_email($v['email'], $mailtitle, $mailbody);
         }
     }

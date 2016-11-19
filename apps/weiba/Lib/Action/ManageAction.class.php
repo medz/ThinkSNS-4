@@ -1,12 +1,11 @@
 <?php
 /**
  * 前台微吧管理控制器
- * @author 
+ * @author
  * @version TS3.0
  */
 class ManageAction extends Action
 {
-
     /**
      * 初始化，验证当前登录用户权限
      */
@@ -16,14 +15,14 @@ class ManageAction extends Action
             $this->error('参数错误!');
         }
         if (!CheckPermission('core_admin', 'admin_login')) {
-            if (D('weiba_follow')->where('follower_uid='.$this->mid.' and weiba_id='.intval($_REQUEST['weiba_id']))->getField('level')<2) {
+            if (D('weiba_follow')->where('follower_uid='.$this->mid.' and weiba_id='.intval($_REQUEST['weiba_id']))->getField('level') < 2) {
                 $this->error('您没有访问权限');
             }
         }
         $this->assign('weiba_id', intval($_REQUEST['weiba_id']));
         //超级圈主
         $this->assign('weiba_super_admin', D('weiba_follow')->where('level=3 and weiba_id='.intval($_REQUEST['weiba_id']))->getField('follower_uid'));
-        $this->assign('weiba_admin', getSubByKey(D('weiba_follow')->where(array('weiba_id'=>intval($_REQUEST['weiba_id']), 'level'=>array('in', '2,3')))->order('level desc')->field('follower_uid,level')->findAll(), 'follower_uid'));
+        $this->assign('weiba_admin', getSubByKey(D('weiba_follow')->where(array('weiba_id' => intval($_REQUEST['weiba_id']), 'level' => array('in', '2,3')))->order('level desc')->field('follower_uid,level')->findAll(), 'follower_uid'));
         $weiba_name = D('weiba')->where('weiba_id='.intval($_REQUEST['weiba_id']))->getField('weiba_name');
         $this->assign('weiba_name', $weiba_name);
         //dump($weiba_name);exit;
@@ -31,7 +30,6 @@ class ManageAction extends Action
 
     /**
      * 微吧管理首页-修改微吧信息
-     * @return void
      */
     public function index()
     {
@@ -50,7 +48,6 @@ class ManageAction extends Action
 
     /**
      * 执行编辑微吧
-     * @return void
      */
     public function doWeibaEdit()
     {
@@ -107,14 +104,13 @@ class ManageAction extends Action
 
     /**
      * 微吧成员管理
-     * @return void
      */
     public function member()
     {
         $weiba_id = intval($_GET['weiba_id']);
         if ($_GET['type'] == 'apply') {
             if (!CheckPermission('core_admin', 'admin_login')) {
-                if (D('weiba_follow')->where('follower_uid='.$this->mid.' and weiba_id='.intval($_REQUEST['weiba_id']))->getField('level')<3) {
+                if (D('weiba_follow')->where('follower_uid='.$this->mid.' and weiba_id='.intval($_REQUEST['weiba_id']))->getField('level') < 3) {
                     $this->error('您没有访问权限');
                 }
             }
@@ -122,7 +118,7 @@ class ManageAction extends Action
             $this->assign('on', 'apply');
         } elseif ($_GET['type'] == 'lock') {
             $weiba_member = M('weiba_blacklist')->where('weiba_id='.$weiba_id)->order('uid desc')->findPage(20);
-            foreach ($weiba_member['data'] as $k=>$v) {
+            foreach ($weiba_member['data'] as $k => $v) {
                 $weiba_member['data'][$k]['follower_uid'] = $v['uid'];
             }
             //$weiba_member = D('weiba_follow')->where($smap)->order('uid desc')->findPage(20);
@@ -130,14 +126,14 @@ class ManageAction extends Action
             //dump($weiba_member);exit;
             $this->assign('on', 'lock');
         } else {
-            $weiba_member = D('weiba_follow')->where('weiba_id='.$weiba_id)->order('level desc')->findPage(20);
+            $weiba_member = D('weiba_follow')->where('weiba_id='.$weiba_id)->order('level desc,id desc')->findPage(20);
             $this->assign('on', 'all');
         }
-        foreach ($weiba_member['data'] as $k=>$v) {
+        foreach ($weiba_member['data'] as $k => $v) {
             // 获取用户用户组信息
             $userGids = model('UserGroupLink')->getUserGroup($v['follower_uid']);
             $is_lock = M('weiba_blacklist')->where('weiba_id='.$weiba_id.' and uid='.$v['follower_uid'])->find();
-            $weiba_member['data'][$k]['is_lock'] = $is_lock ? '1':'0';
+            $weiba_member['data'][$k]['is_lock'] = $is_lock ? '1' : '0';
             $userGroupData = model('UserGroup')->getUserGroupByGids($userGids[$v['follower_uid']]);
             foreach ($userGroupData as $key => $value) {
                 if ($value['user_group_icon'] == -1) {
@@ -161,7 +157,6 @@ class ManageAction extends Action
 
     /**
      * 设置微吧成员等级
-     * @return void
      */
     public function editLevel()
     {
@@ -190,7 +185,7 @@ class ManageAction extends Action
 
                     //添加积分
                     model('Credit')->setUserCredit(intval($_POST['follower_uid']), 'unappointed_weiba');
-                    
+
                     break;
                 case '2':
                     $content = '将用户'.$user_info[$map['follower_uid']]['space_link'].'设为小主';
@@ -206,7 +201,7 @@ class ManageAction extends Action
                     break;
             }
             $return['status'] = 1;
-            $return['data']   = '设置成功';
+            $return['data'] = '设置成功';
         }
         echo json_encode($return);
         exit();
@@ -214,14 +209,13 @@ class ManageAction extends Action
 
     /**
      * 移出成员
-     * @return void
      */
     public function moveOut()
     {
         !is_array($_POST['follower_uid']) && $_POST['follower_uid'] = array($_POST['follower_uid']);
         $map['weiba_id'] = intval($_POST['weiba_id']);
         $followerUid = array_map('intval', $_POST['follower_uid']);
-        $map['follower_uid'] = array('in',$followerUid);
+        $map['follower_uid'] = array('in', $followerUid);
         $result = D('weiba_follow')->where($map)->delete();
         if (!$result) {
             $return['status'] = 0;
@@ -233,7 +227,7 @@ class ManageAction extends Action
             D('log')->writeLog($map['weiba_id'], $this->mid, $content, 'member');
             D('weiba')->where('weiba_id='.$map['weiba_id'])->setDec('follower_count', '', count($_POST['follower_uid']));
             $return['status'] = 1;
-            $return['data']   = '移出成功';
+            $return['data'] = '移出成功';
         }
         echo json_encode($return);
         exit();
@@ -241,7 +235,6 @@ class ManageAction extends Action
 
     /**
      * 加入黑名单
-     * @return void
      */
     public function moveTo()
     {
@@ -256,7 +249,7 @@ class ManageAction extends Action
                 $return['data'] = '加入黑名单失败';
             } else {
                 $return['status'] = 1;
-                $return['data']   = '加入黑名单成功';
+                $return['data'] = '加入黑名单成功';
             }
         } else {
             $return['status'] = 0;
@@ -265,10 +258,9 @@ class ManageAction extends Action
         echo json_encode($return);
         exit();
     }
-    
+
     /**
      * 移除黑名单
-     * @return void
      */
     public function moveOutTo()
     {
@@ -282,7 +274,7 @@ class ManageAction extends Action
                 $return['data'] = '移除黑名单移除';
             } else {
                 $return['status'] = 1;
-                $return['data']   = '移除黑名单成功';
+                $return['data'] = '移除黑名单成功';
             }
         } else {
             $return['status'] = 0;
@@ -291,7 +283,7 @@ class ManageAction extends Action
         echo json_encode($return);
         exit();
     }
-    
+
     /**
      * 处理用户申请圈主或小主
      */
@@ -304,9 +296,9 @@ class ManageAction extends Action
         $actor = model('User')->getUserInfo($this->mid);
         $config['name'] = $actor['space_link'];
         $config['weiba_name'] = $weiba['weiba_name'];
-        $config['source_url'] = U('weiba/Index/detail', array('weiba_id'=>$map['weiba_id']));
+        $config['source_url'] = U('weiba/Index/detail', array('weiba_id' => $map['weiba_id']));
         if ($value != -1) {
-            if ($value==3) {
+            if ($value == 3) {
                 if (D('weiba_follow')->where('level=3 AND weiba_id='.$map['weiba_id'])->find()) {
                     $return['status'] = 0;
                     $return['data'] = '只能设置一个圈主';
@@ -316,16 +308,16 @@ class ManageAction extends Action
             }
             $res = D('weiba_follow')->where($map)->setField('level', $value);
             if ($res) {
-                if ($value==3) {
+                if ($value == 3) {
                     D('weiba')->where('weiba_id='.$map['weiba_id'])->setField('admin_uid', $_POST['uid']);
                 }
                 D('weiba_apply')->where($map)->delete();
                 model('Notify')->sendNotify($_POST['uid'], 'weiba_apply_ok', $config);
                 $return['status'] = 1;
-                $return['data']   = '操作成功';
+                $return['data'] = '操作成功';
             } else {
                 $return['status'] = 0;
-                $return['data']   = '操作失败';
+                $return['data'] = '操作失败';
             }
         } else {
             D('weiba_apply')->where($map)->delete();
@@ -339,7 +331,6 @@ class ManageAction extends Action
 
     /**
      * 公告发布
-     * @return void
      */
     public function notify()
     {
@@ -356,7 +347,6 @@ class ManageAction extends Action
 
     /**
      * 修改公告
-     * @return void
      */
     public function doNotify()
     {
@@ -366,7 +356,7 @@ class ManageAction extends Action
             $this->error('公告内容不能为空');
         }*/
         preg_match_all('/./us', $notify, $match);
-        if (count($match[0])>200) {     //汉字和字母都为一个字
+        if (count($match[0]) > 200) {     //汉字和字母都为一个字
             $this->error('公告内容不能超过200个字');
         }
         $data['notify'] = $notify;
@@ -381,11 +371,10 @@ class ManageAction extends Action
 
     /**
      * 微吧管理知识
-     * @return void
      */
     public function log()
     {
-        $map['weiba_id']  = intval($_GET['weiba_id']);
+        $map['weiba_id'] = intval($_GET['weiba_id']);
         if ($_GET['type']) {
             $map['type'] = $_GET['type'];
         }

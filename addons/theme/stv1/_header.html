@@ -5,10 +5,10 @@
 <title><neq name= '_title' value=''>{$_title} - {$site.site_name}<else />{$site.site_name} - {$site.site_slogan}</neq></title>
 <meta content="<neq name= '_keywords' value=''>{$_keywords}<else />{$site.site_header_keywords}</neq>" name="keywords">
 <meta content="<neq name= '_description' value=''>{$_description}<else />{$site.site_header_description}</neq>" name="description">
+<meta property="qc:admins" content="345471037076401633636375" />
 {:Addons::hook('public_meta')}
 <link href="favicon.ico?v={$site.sys_version}" type="image/x-icon" rel="shortcut icon">
 <link href="__THEME__/css/css.php?t=css&f=global.css,module.css,menu.css,form.css,message.css,jquery.atwho.css&v={$site.sys_version}.css" rel="stylesheet" type="text/css" />
-
 <link rel="stylesheet" href="__THEME__/js/uploadify/uploadify.css?v={$site.sys_version}" type="text/css">
 
 <php>if(!empty($appCssList)):</php>
@@ -53,6 +53,7 @@ var LANG = new Array();
 <script src="__THEME__/js/plugins/core.digg.js?v={$site.sys_version}"></script>
 <script src="__THEME__/js/plugins/core.comment.js?v={$site.sys_version}"></script>
 <script src="__THEME__/js/plugins/core.digg.js?v={$site.sys_version}"></script>
+
 <?php if (empty($mid)) { ?>
 <style type="text/css">
 body, #header { padding-right: 0; }

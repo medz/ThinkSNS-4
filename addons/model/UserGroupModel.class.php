@@ -6,14 +6,13 @@
  */
 class UserGroupModel extends Model
 {
-
     protected $tableName = 'user_group';
-    protected $fields = array(0=>'user_group_id',1=>'user_group_name',2=>'ctime',3=>'user_group_icon',4=>'user_group_type',5=>'app_name',6=>'is_authenticate');
+    protected $fields = array(0 => 'user_group_id', 1 => 'user_group_name', 2 => 'ctime', 3 => 'user_group_icon', 4 => 'user_group_type', 5 => 'app_name', 6 => 'is_authenticate');
 
     /**
      * 添加或修改用户组信息
-     * @param array $d 相关用户组信息
-     * @return integer 相关用户组ID
+     * @param  array $d 相关用户组信息
+     * @return int   相关用户组ID
      */
     public function addUsergroup($d)
     {
@@ -39,8 +38,8 @@ class UserGroupModel extends Model
 
     /**
      * 删除指定的用户组
-     * @param integer $gid 用户组ID
-     * @return boolean 是否删除成功
+     * @param  int  $gid 用户组ID
+     * @return bool 是否删除成功
      */
     public function delUsergroup($gid)
     {
@@ -69,6 +68,7 @@ class UserGroupModel extends Model
             //删除认证用户表数据
             model('UserVerified')->rmVerifiedGroup($gid);
             $this->cleanCache();
+
             return true;
         }
 
@@ -77,7 +77,7 @@ class UserGroupModel extends Model
 
     /**
      * 返回用户组信息
-     * @param integer $gid 用户组ID，默认为空字符串 - 显示全部用户组信息
+     * @param  int   $gid 用户组ID，默认为空字符串 - 显示全部用户组信息
      * @return array 用户组信息
      */
     public function getUserGroup($gid = '')
@@ -99,6 +99,7 @@ class UserGroupModel extends Model
                 foreach ($gid as $v) {
                     $r[$v] = $data[$v];
                 }
+
                 return $r;
             } else {
                 return $data[$gid];
@@ -108,9 +109,9 @@ class UserGroupModel extends Model
 
     /**
      * 获取用户组的Hash数组
-     * @param string $k Hash数组的Key值字段
-     * @param string $v Hash数组的Value值字段
-     * @return array 用户组的Hash数组
+     * @param  string $k Hash数组的Key值字段
+     * @param  string $v Hash数组的Value值字段
+     * @return array  用户组的Hash数组
      */
     public function getHashUsergroup($k = 'user_group_id', $v = 'user_group_name')
     {
@@ -125,9 +126,9 @@ class UserGroupModel extends Model
 
     /**
      * 获取非认证用户组Hash数组
-     * @param string $k Hash数组的Key值字段
-     * @param string $v Hash数组的Value值字段
-     * @return array 非认证用户组Hash数组
+     * @param  string $k Hash数组的Key值字段
+     * @param  string $v Hash数组的Value值字段
+     * @return array  非认证用户组Hash数组
      */
     public function getHashUsergroupNoncertified($k = 'user_group_id', $v = 'user_group_name')
     {
@@ -142,9 +143,9 @@ class UserGroupModel extends Model
 
     /**
      * 获取认证用户组Hash数组
-     * @param string $k Hash数组的Key值字段
-     * @param string $v Hash数组的Value值字段
-     * @return array 认证用户组Hash数组
+     * @param  string $k Hash数组的Key值字段
+     * @param  string $v Hash数组的Value值字段
+     * @return array  认证用户组Hash数组
      */
     public function getHashUserGroupVertified($k = 'user_group_id', $v = 'user_group_name')
     {
@@ -159,7 +160,6 @@ class UserGroupModel extends Model
 
     /**
      * 清除用户组缓存
-     * @return void
      */
     public function cleanCache($param)
     {
@@ -168,8 +168,8 @@ class UserGroupModel extends Model
 
     /**
      * 通过指定用户组ID获取用户组信息
-     * @param string|array $gids 用户组ID
-     * @return array 指定用户组ID获取用户组信息
+     * @param  string|array $gids 用户组ID
+     * @return array        指定用户组ID获取用户组信息
      */
     public function getUserGroupByGids($gids)
     {
@@ -181,10 +181,11 @@ class UserGroupModel extends Model
             return false;
         }
         !is_array($gids) && $gids = explode(',', $gids);
-        
+
         $map['user_group_id'] = array('IN', $gids);
         $data = $this->where($map)->findAll();
         S('UserGroupByGid'.implode(',', $gids), $data);
+
         return $data;
     }
     /**
@@ -194,6 +195,7 @@ class UserGroupModel extends Model
     public function isAdmin($uid)
     {
         $res = model('UserGroupLink')->where('uid='.$uid.' and user_group_id=1')->getField('uid');
+
         return $res;
     }
     /**
@@ -206,40 +208,41 @@ class UserGroupModel extends Model
         foreach ($list as $v) {
             $idkeylist[$v['user_group_id']] = $v['user_group_name'];
         }
+
         return $idkeylist;
     }
 
-     /**
+    /**
      * 获取指定用户的用户组图标
-     * 
-     * @param int $uid 用户ID
-     * @return string  返回用户组图标的img标签
+     *
+     * @param  int    $uid 用户ID
+     * @return string 返回用户组图标的img标签
      */
     public function getUserGroupIcon($uid)
     {
-        $user_group      = $this->getAllUserGroup();
+        $user_group = $this->getAllUserGroup();
         $user_group_link = $this->getAllUserGroupLink();
         $user_group_link = $user_group_link[$uid];
-        
+
         $html = '';
 
         foreach ($user_group_link as $v) {
             if ($user_group[$v['user_group_id']]['icon']) {
-                $html .= "<img class='ts_icon' src=".THEME_URL."/images/".$user_group[$v['user_group_id']]['icon']." title=".$user_group[$v['user_group_id']]['title'].">";
+                $html .= "<img class='ts_icon' src=".THEME_URL.'/images/'.$user_group[$v['user_group_id']]['icon'].' title='.$user_group[$v['user_group_id']]['title'].'>';
             }
         }
-        
+
         return $html;
     }
-    
+
     /**
      * 兼容2.8版块函数
      * 按照查询条件获取用户组
      *
-     * @param array  $map   查询条件
-     * @param string $field 字段 默认*
-     * @param string $order 排序 默认 以用户组ID升序排列
-     * @return array 用户组信息
+     * @param  array  $map   查询条件
+     * @param  string $field 字段 默认*
+     * @param  string $order 排序 默认 以用户组ID升序排列
+     * @return array  用户组信息
      */
     public function getUserGroupByMap($map = '', $field = '*', $order = 'user_group_id ASC')
     {

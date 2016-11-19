@@ -2,7 +2,6 @@
 
 class ReplyDiggWidget extends Widget
 {
-
     public function render($data)
     {
         $var['row_id'] = intval($data['row_id']);
@@ -10,6 +9,7 @@ class ReplyDiggWidget extends Widget
         $var['diggArr'] = (array) $data['diggArr'];
         $var['diggId'] = empty($data['diggId']) ? 'digg' : t($data['diggId']);
         $var['tpl'] = empty($data['tpl']) ? 'default' : t($data['tpl']);
+
         return $this->renderData($var);
     }
 
@@ -27,8 +27,6 @@ class ReplyDiggWidget extends Widget
         exit(json_encode($res));
     }
 
-
-    
     public function delDigg()
     {
         $row_id = intval($_POST['row_id']);
@@ -43,7 +41,6 @@ class ReplyDiggWidget extends Widget
         exit(json_encode($res));
     }
 
-    
     private function renderData($var)
     {
         extract($var, EXTR_OVERWRITE);
@@ -71,7 +68,8 @@ class ReplyDiggWidget extends Widget
                 }
             }
         }
-        $html .= "</span>";
+        $html .= '</span>';
+
         return $html;
     }
 }

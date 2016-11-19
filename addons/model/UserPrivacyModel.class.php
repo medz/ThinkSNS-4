@@ -6,13 +6,12 @@
  */
 class UserPrivacyModel extends Model
 {
-
     protected $tableName = 'user_privacy';
-    protected $fields = array(0=>'uid',1=>'key',2=>'value');
-    
+    protected $fields = array(0 => 'uid', 1 => 'key', 2 => 'value');
+
     /**
      * 获取指定用户的隐私设置
-     * @param integer $uid 用户UID
+     * @param  int   $uid 用户UID
      * @return array 指定用户的隐私设置信息
      */
     public function getUserSet($uid)
@@ -20,22 +19,22 @@ class UserPrivacyModel extends Model
         $set = $this->_defaultSet();
 
         $uid = intval($uid);
-        
+
         $userPrivacy = $this->where('uid='.$uid)->field('`key`,`value`')->findAll();
         if ($userPrivacy) {
             foreach ($userPrivacy as $k => $v) {
                 $set[$v['key']] = $v['value'];
             }
         }
-        
+
         return $set;
     }
 
     /**
      * 保存指定用户的隐私配置
-     * @param integer $uid 用户UID
-     * @param array $data 隐私配置相关数据
-     * @return boolean 是否保存成功
+     * @param  int   $uid  用户UID
+     * @param  array $data 隐私配置相关数据
+     * @return bool  是否保存成功
      */
     public function dosave($uid, $data)
     {
@@ -46,14 +45,14 @@ class UserPrivacyModel extends Model
         $map = array();
         $map['uid'] = $uid;
         $this->where($map)->delete();
-        foreach ($data as $key=>$value) {
+        foreach ($data as $key => $value) {
             $key = t($key);
             $value = intval($value);
             $sql[] = "($uid,'{$key}',{$value})";
         }
         $sql = "INSERT INTO {$this->tablePrefix}user_privacy (uid,`key`,`value`) VALUES ".implode(',', $sql);
         $res = $this->query($sql);
-        
+
         $this->error = L('PUBLIC_SAVE_SUCCESS');            // 保存成功
 
         return true;
@@ -61,13 +60,13 @@ class UserPrivacyModel extends Model
 
     /**
      * 获取A用户针对B用户的隐私设置情况
-     * @param integer $mid B用户UID
-     * @param integer $uid A用户UID
-     * @return integer 隐私状态，0表示不限制；1表示限制，不可以发送
+     * @param  int $mid B用户UID
+     * @param  int $uid A用户UID
+     * @return int 隐私状态，0表示不限制；1表示限制，不可以发送
      */
     public function getPrivacy($mid, $uid)
     {
-        $data  = $this->getUserSet($uid);
+        $data = $this->getUserSet($uid);
         // $mid为0表示系统
         if ($mid != $uid && $mid != 0) {
             if ($this->isInBlackList($mid, $uid)) {
@@ -106,14 +105,13 @@ class UserPrivacyModel extends Model
             'comment_email' => 0,                // 接收系统邮件
             'message_email' => 0,                // 接收系统邮件
 
-
         );
     }
 
     /**
      * 判断用户是否是黑名单关系
-     * @param  integer  $mid B用户UID
-     * @param  integer  $uid A用户UID
+     * @param  int   $mid B用户UID
+     * @param  int   $uid A用户UID
      * @return array
      */
     public function isInBlackList($mid, $uid)
@@ -121,6 +119,7 @@ class UserPrivacyModel extends Model
         $uid = intval($uid);
         $mid = intval($mid);
         $result = D('user_blacklist')->where("uid=$uid AND fid=$mid")->find();
+
         return    $result;
     }
 }

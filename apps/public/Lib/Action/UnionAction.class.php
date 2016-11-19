@@ -15,7 +15,7 @@ class UnionAction extends Action
     {
         $this->_union_model = model('Union');
     }
-    
+
     /**
      * 添加联盟操作
      *
@@ -28,7 +28,7 @@ class UnionAction extends Action
         $res = $this->_union_model->doUnion($this->mid, intval($fid));
         $this->ajaxReturn($res, $this->_union_model->getError(), false !== $res);
     }
-    
+
     /**
      * 取消联盟操作
      *
@@ -52,14 +52,14 @@ class UnionAction extends Action
         // 安全过滤
         $fid = intval($_POST ['uid']);
         $res = $this->_union_model->doUnion($this->mid, $fid);
-        
+
         // 自动相互关注
         $fids [] = $fid;
         model('Follow')->eachDoFollow($this->mid, $fids);
-        
+
         $this->ajaxReturn($res, $this->_union_model->getError(), false !== $res);
     }
-    
+
     /**
      * 取消联盟操作
      *
@@ -72,7 +72,7 @@ class UnionAction extends Action
         $res = $this->_union_model->unUnion($fid, $this->mid);
         $this->ajaxReturn($res, $this->_union_model->getError(), false !== $res);
     }
-    
+
     /**
      * 批量添加联盟操作
      *

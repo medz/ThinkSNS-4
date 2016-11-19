@@ -52,18 +52,18 @@ class AppInstall
     {
         self::$appName = strtolower($appName);
         if (
-            !isset(self::$instances[self::$appName]) || 
+            !isset(self::$instances[self::$appName]) ||
             !(self::$instances[self::$appName] instanceof self)
         ) {
             self::$instances[self::$appName] = new self;
         }
+
         return self::$instances[self::$appName];
     }
 
     /**
      * 构造方法
      *
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     protected function __construct()
@@ -74,14 +74,14 @@ class AppInstall
         $handle = opendir(TS_APPLICATION);
         while (($file = readdir($handle)) !== false) {
             if (strtolower($file) == self::$appName) {
-                self::$applicationDir = TS_APPLICATION . Ts::DS . $file;
+                self::$applicationDir = TS_APPLICATION.Ts::DS.$file;
                 break;
             }
         }
         closedir($handle);
-        $manageFile = self::$applicationDir . Ts::DS . 'manage.json';
+        $manageFile = self::$applicationDir.Ts::DS.'manage.json';
         if (!self::$applicationDir) {
-            throw new Exception('应用：“' . self::$appName . '”不存在！', 1);
+            throw new Exception('应用：“'.self::$appName.'”不存在！', 1);
         } elseif (!Filesystem::exists($manageFile)) {
             throw new Exception(sprintf('不存在应用配置文件：“%s”', $manageFile));
         }
@@ -93,7 +93,7 @@ class AppInstall
     }
 
     /**
-     * 复制应用的公开静态资源 
+     * 复制应用的公开静态资源
      * @return self
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
@@ -110,7 +110,6 @@ class AppInstall
     /**
      * 移动Ts中应用中所有的静态资源
      *
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     public static function moveAllApplicationResources()
@@ -122,7 +121,7 @@ class AppInstall
             }
             $manageFile = sprintf('%s/%s/manage.json', TS_APPLICATION, $file);
             if (
-                !file_exists($manageFile) || 
+                !file_exists($manageFile) ||
                 !($manageInfo = json_decode(file_get_contents($manageFile), true))
             ) {
                 continue;
@@ -136,5 +135,4 @@ class AppInstall
         }
         closedir($handle);
     }
-
 } // END class AppInstall

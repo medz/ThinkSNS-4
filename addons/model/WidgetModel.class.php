@@ -6,9 +6,8 @@
  */
 class WidgetModel extends Model
 {
-    
     protected $tableName = 'widget';
-    protected $fields = array(0=>'id',1=>'name',2=>'desc',3=>'attrs',4=>'diyattrs',5=>'appname','_autoinc'=>true,'_pk'=>'id');
+    protected $fields = array(0 => 'id', 1 => 'name', 2 => 'desc', 3 => 'attrs', 4 => 'diyattrs', 5 => 'appname', '_autoinc' => true, '_pk' => 'id');
 
     /**
      * 获取自定义Widget列表 - 未分页型
@@ -17,6 +16,7 @@ class WidgetModel extends Model
     public function getDiyList()
     {
         $list = $this->table($this->tablePrefix.'Widget_diy')->findAll();
+
         return $list;
     }
 
@@ -27,12 +27,13 @@ class WidgetModel extends Model
     public function getWidgetList()
     {
         $list = $this->table($this->tablePrefix.'widget')->findAll();
+
         return $list;
     }
 
     /**
      * 获取指定自定义Widget下的Diy数据
-     * @param integer $id 自定义Widget下的DiyID
+     * @param  int                            $id 自定义Widget下的DiyID
      * @return 自定义Widget下的Diy数据
      */
     public function getDiyWidgetById($id)
@@ -52,10 +53,10 @@ class WidgetModel extends Model
 
     /**
      * 保存用户自定义Widget下的Diy数据
-     * @param integer $diyId 自定义Widget下的DiyID
-     * @param integer $uid 用户ID
-     * @param array $targetList 目标Widget名称列表，[应用名:Widget名称]
-     * @return boolean 是否保存成功
+     * @param  int   $diyId      自定义Widget下的DiyID
+     * @param  int   $uid        用户ID
+     * @param  array $targetList 目标Widget名称列表，[应用名:Widget名称]
+     * @return bool  是否保存成功
      */
     public function saveUserWigdet($diyId, $uid, $targetList)
     {
@@ -64,12 +65,12 @@ class WidgetModel extends Model
         }
         $targetList = explode(',', trim($targetList));
         $targetList = array_unique($targetList);
-        
+
         $wl = $wattr = array();
         foreach ($widget_list['widget_list'] as $k => $v) {
             if (in_array($v['appname'].':'.$v['name'], $targetList)) {
                 // 已经存在
-                $wl[] = array('name'=>$v['name'], 'appname'=>$v['appname']);
+                $wl[] = array('name' => $v['name'], 'appname' => $v['appname']);
                 $wattr[$v['appname'].':'.$v['name']] = $widget_list['widget_diyatts'][$v['appname'].':'.$v['name']];
                 $key = array_search($v['appname'].':'.$v['name'], $targetList);
                 unset($targetList[$key]);
@@ -81,7 +82,7 @@ class WidgetModel extends Model
                 continue;
             }
             $info = $this->getWidget($v);
-            $wl[] = array('name'=>$info['name'], 'appname'=>$info['appname']);
+            $wl[] = array('name' => $info['name'], 'appname' => $info['appname']);
             $wattr[$info['appname'].':'.$info['name']] = unserialize($info['diyattrs']);
         }
 
@@ -91,6 +92,7 @@ class WidgetModel extends Model
         $save['widget_diyatts'] = serialize($wattr);
         if (D('')->table($this->tablePrefix.'widget_user')->where($map)->save($save)) {
             model('Cache')->rm('User_Widget_'.$diyId.'_'.$uid);
+
             return true;
         } else {
             return false;
@@ -99,23 +101,23 @@ class WidgetModel extends Model
 
     /**
      * 添加自定义Widget
-     * @param array $add 自定义Widget相关数据
-     * @return mix 添加失败返回false，添加成功返回新的Widget的ID
+     * @param  array $add 自定义Widget相关数据
+     * @return mix   添加失败返回false，添加成功返回新的Widget的ID
      */
     public function addDiyWidget($add)
     {
         $add['desc'] = t($add['desc']);
         empty($add['widget_list']) && $add['widget_list'] = array();
         $add['widget_list'] = serialize($add['widget_list']);
+
         return D('widget_diy')->add($add);
     }
 
     /**
      * 自定义Widget排序
-     * @param integer $id 
-     * @param integer $uid 用户ID
+     * @param int    $id
+     * @param int    $uid    用户ID
      * @param string $target 目标Widget名称，[应用名:Widget名称]
-     * @return void
      */
     public function dosort($id, $uid, $target)
     {
@@ -123,7 +125,7 @@ class WidgetModel extends Model
         $s = array();
         foreach ($target as $v) {
             $t = explode(':', $v);
-            $s[] = array('name'=>$t[1], 'appname'=>$t[0]);
+            $s[] = array('name' => $t[1], 'appname' => $t[0]);
         }
         $save['widget_list'] = serialize($s);
         $map['uid'] = $uid;
@@ -134,11 +136,11 @@ class WidgetModel extends Model
 
     /**
      * 用户主动更新某个位置的某个Widget属性
-     * @param integer $diyId 用户自定义Widget的DiyID
-     * @param integer $uid 用户ID
-     * @param string $target 目标Widget名称，[应用名:Widget名称]
-     * @param array $data 更新的相关数据
-     * @return boolean 是否更新成功
+     * @param  int    $diyId  用户自定义Widget的DiyID
+     * @param  int    $uid    用户ID
+     * @param  string $target 目标Widget名称，[应用名:Widget名称]
+     * @param  array  $data   更新的相关数据
+     * @return bool   是否更新成功
      */
     public function updateUserWidget($diyId, $uid, $target, $data)
     {
@@ -161,6 +163,7 @@ class WidgetModel extends Model
         $map['uid'] = $uid;
         if (D('')->table($this->tablePrefix.'widget_user')->where($map)->save($save)) {
             model('Cache')->rm('User_Widget_'.$diyId.'_'.$uid);
+
             return true;
         } else {
             return false;
@@ -169,10 +172,10 @@ class WidgetModel extends Model
 
     /**
      * 从指定的Diy中删除指定的Widget
-     * @param integer $diyId 自定义Widget的DiyID
-     * @param integer $uid 用户ID
-     * @param string $target 目标Widget名称，[应用名:Widget名称]
-     * @return boolean 是否删除成功
+     * @param  int    $diyId  自定义Widget的DiyID
+     * @param  int    $uid    用户ID
+     * @param  string $target 目标Widget名称，[应用名:Widget名称]
+     * @return bool   是否删除成功
      */
     public function deleteUserWidget($diyId, $uid, $target)
     {
@@ -183,7 +186,7 @@ class WidgetModel extends Model
         $wl = array();
         foreach ($widget_list['widget_list'] as $k => $v) {
             if ($v['appname'].':'.$v['name'] != $target) {
-                $wl[] = array('name'=>$v['name'], 'appname'=>$v['appname']);
+                $wl[] = array('name' => $v['name'], 'appname' => $v['appname']);
             }
         }
 
@@ -197,9 +200,10 @@ class WidgetModel extends Model
         $save['widget_diyatts'] = serialize($widget_list['widget_diyatts']);
         $map['diy_id'] = $diyId;
         $map['uid'] = $uid;
-        
+
         if (D('')->table($this->tablePrefix.'widget_user')->where($map)->save($save)) {
             model('Cache')->rm('User_Widget_'.$diyId.'_'.$uid);
+
             return true;
         } else {
             return false;
@@ -208,13 +212,13 @@ class WidgetModel extends Model
 
     /**
      * 获取指定Widget的具体内容
-     * @param string $target 目标Widget名称，[应用名:Widget名称]
-     * @return array 指定自定义Widget的具体内容
+     * @param  string $target 目标Widget名称，[应用名:Widget名称]
+     * @return array  指定自定义Widget的具体内容
      */
     public function getWidget($target)
     {
         if (($info = model('Cache')->get('widget_'.$target)) === false) {
-            $v = explode(":", $target);
+            $v = explode(':', $target);
             $map['appname'] = $v[0];
             $map['name'] = $v[1];
             $info = D('')->table($this->tablePrefix.'widget')->where($map)->find();
@@ -226,8 +230,8 @@ class WidgetModel extends Model
 
     /**
      * 获取指定用户指定自定义的Widget具体内容
-     * @param integer $diyId 自定义Widget的DiyId
-     * @param integer $uid 用户ID
+     * @param  int   $diyId 自定义Widget的DiyId
+     * @param  int   $uid   用户ID
      * @return array 指定用户指定自定义的Widget具体内容
      */
     public function getUserWidget($diyId, $uid)
@@ -239,7 +243,7 @@ class WidgetModel extends Model
             return false;
         }
 
-        if (($info  = model('Cache')->get('User_Widget_'.$diyId.'_'.$uid)) === false) {
+        if (($info = model('Cache')->get('User_Widget_'.$diyId.'_'.$uid)) === false) {
             $map['diy_id'] = $diyId;
             $map['uid'] = $uid;
             if (!$info = $this->table($this->tablePrefix.'widget_user')->where($map)->find()) {
@@ -257,7 +261,7 @@ class WidgetModel extends Model
                 $attrDesc = unserialize($attrs['attrs']);
                 $diy = unserialize($attrs['diyattrs']);
                 empty($attrDesc) && $attrDesc = array();
-                empty($diy)    && $diy = array();        // 默认
+                empty($diy) && $diy = array();        // 默认
 
                 $userset = isset($info['widget_diyatts'][$v['appname'].':'.$v['name']]) ? $info['widget_diyatts'][$v['appname'].':'.$v['name']] : array();
                 $attr = array_merge($diy, $userset);
@@ -274,9 +278,9 @@ class WidgetModel extends Model
     /*** 后台操作 ***/
     /**
      * 后台配置单个Widget
-     * @param integer $id 自定义Widget的DiyId
-     * @param array $targetList 目标Widget名称列表，[应用名:Widget名称]
-     * @return boolean 后台配置单个Widget是否成功
+     * @param  int   $id         自定义Widget的DiyId
+     * @param  array $targetList 目标Widget名称列表，[应用名:Widget名称]
+     * @return bool  后台配置单个Widget是否成功
      */
     public function configWidget($id, $targetList)
     {
@@ -289,20 +293,21 @@ class WidgetModel extends Model
                 continue;
             }
             $v = explode(':', $v);
-            $t[] = array('name'=>$v[1],'appname'=>$v[0]);
+            $t[] = array('name' => $v[1], 'appname' => $v[0]);
         }
         $map['id'] = $id;
         $save['widget_list'] = serialize($t);
         if (D('')->table($this->tablePrefix.'widget_diy')->where($map)->save($save)) {
             model('Cache')->rm('Diy_Widget_'.$id);
+
             return true;
         }
+
         return false;
     }
 
     /**
      * 后台更新Widget，包含核心Widget与应用Widget
-     * @return void
      */
     public function updateWidget()
     {
@@ -313,7 +318,6 @@ class WidgetModel extends Model
     /**
      * 更新应用下的Widget
      * @param string $app 应用名称，默认为空，即更新所有的应用的Widget
-     * @return void
      */
     public function updateAppWidget($app = '')
     {
@@ -332,7 +336,6 @@ class WidgetModel extends Model
     /**
      * 更新Widget操作
      * @param string $path Widget路径
-     * @return void
      */
     private function _doupdate($path)
     {
@@ -343,17 +346,17 @@ class WidgetModel extends Model
             if (!file_exists($info['pathname'].'/info.php')) {
                 continue;
             }
-            $data = include($info['pathname'].'/info.php');
+            $data = include $info['pathname'].'/info.php';
             if (empty($data['name']) || empty($data['appname'])) {
                 continue;
             }
             empty($data['attrs']) && $data['attrs'] = array();
             empty($data['diyattrs']) && $data['diyattrs'] = array();
-            
+
             $attrs = serialize($data['attrs']);
             $diyattrs = serialize($data['diyattrs']);
 
-            $sql = " REPLACE INTO ".$this->tablePrefix."widget (`name`,`desc`,`attrs`,`diyattrs`,`appname` )
+            $sql = ' REPLACE INTO '.$this->tablePrefix."widget (`name`,`desc`,`attrs`,`diyattrs`,`appname` )
 					 VALUES ('{$data['name']}','{$data['desc']}','{$attrs}','{$diyattrs}','{$data['appname']}') ";
             $this->query($sql);
         }

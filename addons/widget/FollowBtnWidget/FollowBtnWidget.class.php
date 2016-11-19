@@ -7,7 +7,6 @@
  */
 class FollowBtnWidget extends Widget
 {
-
     /**
      * 渲染关注按钮模板
      * @example
@@ -15,7 +14,7 @@ class FollowBtnWidget extends Widget
      * $data['uname'] string 目标用户的昵称
      * $data['follow_state'] array 当前用户与目标用户的关注状态，array('following'=>1,'follower'=>0)
      * $data['isrefresh'] integer 操作成功后是否刷新页面
-     * @param array $data 渲染的相关配置参数
+     * @param  array  $data 渲染的相关配置参数
      * @return string 渲染后的模板数据
      */
     public function render($data)
@@ -24,7 +23,7 @@ class FollowBtnWidget extends Widget
         $var['type'] = isset($data['type']) ? $data['type'] : 'normal';
         is_array($data) && $var = array_merge($var, $data);
         // 渲染模版
-        $content = $this->renderFile(dirname(__FILE__) . "/{$var['type']}.html", $var);
+        $content = $this->renderFile(dirname(__FILE__)."/{$var['type']}.html", $var);
         unset($var, $data);
         // 输出数据
         return $content;

@@ -1,25 +1,24 @@
 <?php
 /**
  * 微吧模型 - 数据对象模型
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 class WeibaReplyModel extends Model
 {
-
     protected $tableName = 'weiba_reply';
     protected $error = '';
     protected $fields = array(
-                            0 =>'reply_id',1=>'weiba_id',2=>'post_id',3=>'post_uid',4=>'uid',5=>'ctime',
-                            6=>'content',7=>'is_del',8=>'comment_id',9=>'storey',10=>'attach_id','_autoinc'=>true,'_pk'=>'post_id'
+                            0 => 'reply_id', 1 => 'weiba_id', 2 => 'post_id', 3 => 'post_uid', 4 => 'uid', 5 => 'ctime',
+                            6 => 'content', 7 => 'is_del', 8 => 'comment_id', 9 => 'storey', 10 => 'attach_id', '_autoinc' => true, '_pk' => 'post_id',
                         );
 
     /**
      * 获取回复列表
-     * @param array $map 查询条件
-     * @param string $order 排序条件，默认为comment_id ASC
-     * @param integer $limit 结果集数目，默认为10
-     * @return array 评论列表信息
+     * @param  array  $map   查询条件
+     * @param  string $order 排序条件，默认为comment_id ASC
+     * @param  int    $limit 结果集数目，默认为10
+     * @return array  评论列表信息
      */
     public function getReplyList($map = null, $order = 'reply_id desc', $limit = 10)
     {
@@ -36,17 +35,18 @@ class WeibaReplyModel extends Model
                 $v['attach_info']['attach_url'] = getImageUrl($v['attach_info']['save_path'].$v['attach_info']['save_name'], 590);
             }
         }
+
         return $data;
     }
 
     /**
      * 获取回复列表forapi
-     * @param array $map 查询条件
-     * @param string $order 排序条件，默认为comment_id ASC
-     * @param integer $limit 结果集数目，默认为10
-     * @return array 评论列表信息
+     * @param  array  $map   查询条件
+     * @param  string $order 排序条件，默认为comment_id ASC
+     * @param  int    $limit 结果集数目，默认为10
+     * @return array  评论列表信息
      */
-    public function getReplyListForApi($map=null, $order='reply_id desc', $limit=20, $page=1)
+    public function getReplyListForApi($map = null, $order = 'reply_id desc', $limit = 20, $page = 1)
     {
         !isset($map['is_del']) && ($map['is_del'] = 0);
         $limit = intval($limit);
@@ -55,19 +55,20 @@ class WeibaReplyModel extends Model
         $end = $limit;
         $data = $this->where($map)->limit("{$start},{$end}")->order($order)->findAll();
         // TODO:后续优化
-        foreach ($data as $k=>$v) {
+        foreach ($data as $k => $v) {
             $data[$k]['author_info'] = model('User')->getUserInfo($v['uid']);
             $data[$k]['storey'] = $start + $k + 1;
         }
+
         return $data;
     }
 
     /**
      * 添加帖子评论forApi
-     * @param integer post_id 帖子ID
-     * @param integer content 帖子内容
-     * @param integer uid 评论者UID
-     * @return boolean 是否评论成功
+     * @param int post_id 帖子ID
+     * @param int content 帖子内容
+     * @param int uid 评论者UID
+     * @return bool 是否评论成功
      */
     public function addReplyForApi($post_id, $content, $uid)
     {
@@ -110,6 +111,7 @@ class WeibaReplyModel extends Model
                 }
                 model('Feed')->cleanCache($datas['row_id']);
             }
+
             return true;
         } else {
             return false;
@@ -118,10 +120,10 @@ class WeibaReplyModel extends Model
 
     /**
      * 添加评论回复forApi
-     * @param integer reply_id 评论ID
-     * @param integer content 回复内容
-     * @param integer uid 回复者UID
-     * @return boolean 是否回复成功
+     * @param int reply_id 评论ID
+     * @param int content 回复内容
+     * @param int uid 回复者UID
+     * @return bool 是否回复成功
      */
     public function addReplyToCommentForApi($reply_id, $content, $uid)
     {
@@ -161,6 +163,7 @@ class WeibaReplyModel extends Model
                 }
                 model('Feed')->cleanCache($datas['row_id']);
             }
+
             return true;
         } else {
             return false;
@@ -170,13 +173,14 @@ class WeibaReplyModel extends Model
     /**
      * 删除评论forapi
      * @param reply_id 评论ID
-     * @return boolean 是否回复成功
+     * @return bool 是否回复成功
      */
     public function delReplyForApi($reply_id)
     {
         $comment_id = $this->where('reply_id='.$reply_id)->getField('comment_id');
         //echo $comment_id;exit;
         D('comment')->where('comment_id='.$comment_id)->delete();
+
         return $this->where('reply_id='.$reply_id)->delete();
     }
 }

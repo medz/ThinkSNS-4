@@ -1,13 +1,14 @@
 <?php
+
 if (!defined('THINKSNS_INSTALL')) {
     exit('Access Denied');
 }
 
-$i_message['install_lock'] = '您已安装过ThinkSNS ' . $_TSVERSION . '，如果需要重新安装，请先删除data目录下的install.lock文件';
-$i_message['install_title'] = 'ThinkSNS ' . $_TSVERSION . ' 安装向导';
+$i_message['install_lock'] = '您已安装过ThinkSNS '.$_TSVERSION.'，如果需要重新安装，请先删除data目录下的install.lock文件';
+$i_message['install_title'] = 'ThinkSNS '.$_TSVERSION.' 安装向导';
 $i_message['install_wizard'] = '安装向导';
 $i_message['install_warning'] = '<strong>注意 </strong>这个安装程序仅仅用在你首次安装ThinkSNS。如果你已经在使用 ThinkSNS 或者要更新到一个新版本，请不要运行这个安装程序。';
-$i_message['install_intro'] = '<h4>安装须知</h4><p>一、运行环境需求：PHP(5.3.12+)+MYSQL(5.5.12+)</p><p>二、安装步骤：<br /><br />1、使用ftp工具以二进制模式，将该软件包里的 thinksns 目录及其文件上传到您的空间，假设上传后目录仍旧为 thinksns。<br /><br />2、如果您使用的是Linux 或 Freebsd 服务器，先确认以下目录或文件属性为 (777) 可写模式。<br /><br />目录: data<br />目录: _runtime<br />目录: install<br />目录: config<br />3、运行 http://yourwebsite/thinksns/install/install.php 安装程序，填入安装相关信息与资料，完成安装！<br />4、运行 http://yourwebsite/thinksns/cleancache.php 清除系统缓存文件！<br />5、运行 http://yourwebsite/thinksns/index.php 开始体验ThinkSNS！</p>';
+$i_message['install_intro'] = '<h4>安装须知</h4><p>一、运行环境需求：PHP(5.3.12+)+MYSQL(5.5.12+)</p><p>二、安装步骤：<br /><br />1、使用ftp工具以二进制模式，将该软件包里的 thinksns 目录及其文件上传到您的空间，假设上传后目录仍旧为 thinksns。<br /><br />2、如果您使用的是Linux 或 Freebsd 服务器，先确认以下目录或文件属性为 (777) 可写模式。<br /><br />目录: data<br />目录: stroage/temp/<br />目录: install<br />目录: config<br />3、运行 http://yourwebsite/thinksns/install/install.php 安装程序，填入安装相关信息与资料，完成安装！<br />4、运行 http://yourwebsite/thinksns/cleancache.php 清除系统缓存文件！<br />5、运行 http://yourwebsite/thinksns/index.php 开始体验ThinkSNS！</p>';
 $i_message['install_start'] = '开始安装ThinkSNS';
 $i_message['install_license_title'] = '安装许可协议';
 $i_message['install_license'] = '版权所有 (C) 2008-'.date('Y').'，ThinkSNS.com 保留所有权利。
@@ -53,7 +54,7 @@ $i_message['php_os'] = '操作系统';
 $i_message['php_version'] = 'PHP版本';
 $i_message['php_memory'] = '内存限制';
 $i_message['php_session'] = 'SESSION支持';
-$i_message['php_session_error']    = 'SESSION目录不可写';
+$i_message['php_session_error'] = 'SESSION目录不可写';
 $i_message['file_upload'] = '附件上传';
 $i_message['support'] = '支持';
 $i_message['unsupport'] = '不支持';
@@ -95,8 +96,8 @@ $i_message['founder_invalid_configure'] = '错误:超级管理员信息不完整
 $i_message['founder_invalid_password'] = '错误:密码长度必须大于6位';
 $i_message['founder_invalid_rpassword'] = '错误:两次输入的密码不一致';
 $i_message['founder_intro'] = '网站创始人，拥有最高权限';
-$i_message['config_log_success']    = '数据库配置信息写入完成';
-$i_message['define_log_success']    = '网站全局配置信息写入完成';
+$i_message['config_log_success'] = '数据库配置信息写入完成';
+$i_message['define_log_success'] = '网站全局配置信息写入完成';
 $i_message['config_read_failed'] = '错误:数据库配置文件写入错误，请检查config.inc.php文件是否存在或属性是否为777';
 $i_message['define_read_failed'] = '错误:网站全局配置文件写入错误，请检查define.inc.php文件是否存在或属性是否为777';
 $i_message['error'] = '错误';
@@ -114,9 +115,9 @@ $i_message['import_processing_error'] = '错误:导入数据库失败';
 $i_message['create_table'] = '创建表';
 $i_message['create_founder'] = '创建超级管理员帐户';
 $i_message['create_founder_success'] = '超级管理员帐户创建成功';
-$i_message['create_founder_error']    = '超级管理员帐户创建失败';
+$i_message['create_founder_error'] = '超级管理员帐户创建失败';
 $i_message['create_founderpower_success'] = '超级管理员权限设置成功';
-$i_message['create_founderpower_error']    = '超级管理员权限设置失败';
+$i_message['create_founderpower_error'] = '超级管理员权限设置失败';
 $i_message['create_cache'] = '创建缓存';
 $i_message['create_cache_success'] = '创建缓存成功';
 $i_message['auto_increment'] = '用户的起始ID';

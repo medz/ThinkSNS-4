@@ -1,10 +1,10 @@
-<?php 
+<?php
+
 class TestAction extends Action
 {
-
     public function _initialize()
     {
-        header("Content-Type:text/html; charset=UTF8");
+        header('Content-Type:text/html; charset=UTF8');
     }
 
     public function show()
@@ -22,7 +22,7 @@ class TestAction extends Action
     {
         set_time_limit(0);
         // user list
-        $sql = "select a.uid, a.user_group_id from ts_user_group_link as a left join ts_user_group_link as b on a.uid = b.uid and a.user_group_id = b.user_group_id where a.id != b.id order by a.id asc;";
+        $sql = 'select a.uid, a.user_group_id from ts_user_group_link as a left join ts_user_group_link as b on a.uid = b.uid and a.user_group_id = b.user_group_id where a.id != b.id order by a.id asc;';
         $list = D()->query($sql);
         $uids = getSubByKey($list, 'uid');
         $uids = array_unique($uids);
@@ -38,7 +38,7 @@ class TestAction extends Action
         // $demo = model('User')->getUserInfo($this->mid);
         // dump($demo);
     }
-    
+
     public function mylove()
     {
         $str = 'alipay_jilu:;atme:;attach:;attach_t:;blog:;blog_category:;channel:;channel_follow:;check_info:;collection:;comment:app_uid;comment:;comment:to_uid;credit_user:;denounce:;denounce:fuid;develop:;diy_page:;diy_widget:;document:deleteUid;document_attach:;document_draft:;document_lock:;event:;event_photo:;event_user:;feed:;feedback:;find_password:;group:;group_atme:;group_attachment:;group_comment:app_uid;group_comment:;group_comment:to_uid;group_feed:;group_invite_verify:;group_log:;group_member:;group_post:;group_topic:;group_user_count:;invite_code:inviter_uid;invite_code:receiver_uid;login:;login_logs:;login_record:;medal_user:;message_content:from_uid;message_list:from_uid;message_member:member_uid;notify_email:;notify_message:;online:;online_logs:;online_logs_bak:;poppk:cUid;poppk_vote:;poster:;sitelist_site:;survey_answer:;task_receive:;task_user:;template_record:;tipoff:;tipoff:bonus_uid;tipoff_log:;tips:;user_app:;user_blacklist:;user_category_link:;user_change_style:;user_count:;user_credit_history:;user_data:;user_department:;user_follow:;user_follow_group:;user_follow_group_link:;user_group_link:;user_official:;user_online:;user_privacy:;user_profile:;user_verified:;vote:;vote_user:;vtask:assigner_uid;vtask:deal_uid;vtask_log:;vtask_process:assigner_uid;vtask_process:deal_uid;weiba:;weiba:admin_uid;weiba_apply:follower_uid;weiba_apply:manager_uid;weiba_favorite:;weiba_favorite:post_uid;weiba_follow:follower_uid;weiba_log:;weiba_post:post_uid;weiba_post:last_reply_uid;weiba_reply:post_uid;weiba_reply:;weiba_reply:to_uid;x_article:;x_logs:';
@@ -47,11 +47,11 @@ class TestAction extends Action
             $info = explode(':', $v);
             $table = C('DB_PREFIX').$info[0];
             $field = empty($info[1]) ? 'uid' : $info[1];
-            
+
             $sql = 'DELETE FROM '.$table.' WHERE '.$field.' NOT IN (SELECT uid FROM ts_user) ';
             M()->execute($sql);
         }
-                
+
 /* 		$sql = "SELECT TABLE_NAME,COLUMN_NAME FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='uat_sociax' AND COLUMN_NAME LIKE '%uid%' AND DATA_TYPE='int'";
         $list = M()->query($sql);
         $str = '';
@@ -62,7 +62,7 @@ class TestAction extends Action
             }else{
                 $str .= $vo['COLUMN_NAME'].';';
             }
-            
+
         }
         echo($str); */
     }
@@ -110,19 +110,18 @@ class TestAction extends Action
         $sql = "update ts_feed set app_row_table='weiba_post' where app='weiba' AND type='weiba_post' AND app_row_table='feed'";
         $result = D()->execute($sql);
         if (!$result) {
-            dump("update weiba_post : false");
+            dump('update weiba_post : false');
             echo '<hr />';
         }
-        
 
         $sql = "select * from ts_feed where app='weiba' AND type='repost' AND app_row_table='feed' LIMIT 100";
         $result = D()->query($sql);
         if ($result) {
-            dump("update weiba_repost : ");
+            dump('update weiba_repost : ');
             dump($result);
             echo '<hr />';
         } else {
-            dump("update weiba_repost : OK");
+            dump('update weiba_repost : OK');
         }
         // $sql = "update ts_feed as a set a.app_row_table='weiba_post',a.app='weiba',a.type='weiba_repost',a.app_row_id=(select app_row_id from ts_feed as b where b.feed_id=a.app_row_id) where app='weiba' AND type='repost';";
         // $result = D()->execute($sql);
@@ -175,7 +174,7 @@ class TestAction extends Action
 
     public function at($data)
     {
-        $html = "@{uid=14983|yangjiasheng}";
+        $html = '@{uid=14983|yangjiasheng}';
         echo parse_html($html);
     }
 
@@ -186,30 +185,30 @@ class TestAction extends Action
 
     public function cut()
     {
-        getThumbImage("./data/upload/2012/0604/19/4fcc9b2f67d34.jpg", '300', 'auto', false);
+        getThumbImage('./data/upload/2012/0604/19/4fcc9b2f67d34.jpg', '300', 'auto', false);
         echo '<img src="./data/upload/2012/0604/19/4fcc9b2f67d34_300_auto.jpg">';
         echo 11;
     }
 
     public function data()
     {
-        $nums = 1000;//测试数
+        $nums = 1000; //测试数
         $add = array();
-        $add['version']        = 1;
-        $add['language']        = 'all';
-        $add['source_faq_id']    = 0;
-        $add['creator_uid']    = $this->mid;
-        $add['create_time']    = time();
-        $add['comment_count']   = 0;
-        for ($i=0;$i<$nums;$i++) {
+        $add['version'] = 1;
+        $add['language'] = 'all';
+        $add['source_faq_id'] = 0;
+        $add['creator_uid'] = $this->mid;
+        $add['create_time'] = time();
+        $add['comment_count'] = 0;
+        for ($i = 0; $i < $nums; $i++) {
             $add['status'] = rand(0, 2);
             $add['active'] = rand(0, 1);
             $add['category_id'] = rand(1, 4);
-            $add['tags']        ='测试tag'.$i;
+            $add['tags'] = '测试tag'.$i;
             $add['question_cn'] = '这里是测试的问题中文'.$i;
             $add['question_en'] = 'here is  test question english'.$i;
-            $add['answer_cn']    = '这里是测试的答案'.$i;
-            $add['answer_en']    = 'here is test answer english'.$i;
+            $add['answer_cn'] = '这里是测试的答案'.$i;
+            $add['answer_en'] = 'here is test answer english'.$i;
             D('')->table('sociax_support')->add($add);
         }
     }
@@ -229,25 +228,23 @@ class TestAction extends Action
 
         //  - model-
         // $filePath[] = ADDON_PATH.'/model';
-        // 
+        //
         // - view -
 //		$filePath[] = ADDON_PATH.'/theme/stv1/public';
 //		$filePath[] = ADDON_PATH.'/theme/stv1/task';
 //		$filePath[] = ADDON_PATH.'/theme/stv1/support';
 //		$filePath[] = ADDON_PATH.'/theme/stv1/contact';
 //		$filePath[] = ADDON_PATH.'/theme/stv1/admin';
-        // 
+        //
         // - app -
- $filePath[] = SITE_PATH."/apps/public";
-        $filePath[] = SITE_PATH."/apps/support";
-        $filePath[] = SITE_PATH."/apps/contact";
-        $filePath[] = SITE_PATH."/apps/admin";
-        $filePath[] = SITE_PATH."/apps/task";
+ $filePath[] = SITE_PATH.'/apps/public';
+        $filePath[] = SITE_PATH.'/apps/support';
+        $filePath[] = SITE_PATH.'/apps/contact';
+        $filePath[] = SITE_PATH.'/apps/admin';
+        $filePath[] = SITE_PATH.'/apps/task';
 
-
-        
-        $filelist    = array();
-        require_once ADDON_PATH . '/library/io/Dir.class.php';
+        $filelist = array();
+        require_once ADDON_PATH.'/library/io/Dir.class.php';
 
         foreach ($filePath as $v) {
             $filelist[$v] = $this->getDir($v);
@@ -257,11 +254,11 @@ class TestAction extends Action
 
         foreach ($filelist as $vlist) {
             foreach ($vlist as $v) {
-                $ext = substr($v, strrpos($v, '.')+1, strlen($v));
+                $ext = substr($v, strrpos($v, '.') + 1, strlen($v));
                 $data = file_get_contents($v);
 
-                if ($ext == 'php' || $ext=='js') {
-                    $data = preg_replace("!((/\*)[\s\S]*?(\*/))|(//.*)!", '', $data);//去掉注释里的中文
+                if ($ext == 'php' || $ext == 'js') {
+                    $data = preg_replace("!((/\*)[\s\S]*?(\*/))|(//.*)!", '', $data); //去掉注释里的中文
                 }
                 preg_match_all('/([\x{4e00}-\x{9fa5}])+/u', $data, $result);
                 if (!empty($result[0])) {
@@ -273,8 +270,8 @@ class TestAction extends Action
     }
     public function getDir($dir, $list = array())
     {
-        $dirs    = new Dir($dir);
-        $dirs    = $dirs->toArray();
+        $dirs = new Dir($dir);
+        $dirs = $dirs->toArray();
         foreach ($dirs as $v) {
             if ($v['isDir']) {
                 $list = $this->getDir($v['pathname'], $list);
@@ -284,6 +281,7 @@ class TestAction extends Action
                 continue;
             }
         }
+
         return $list;
     }
     //下面是一些demo
@@ -318,16 +316,15 @@ class TestAction extends Action
         $this->display();
     }
 
-
     public function tree()
     {
         $category = array(
-            array('id'=>1, 'name'=>'A1', 'pid'=>0 ),
-            array('id'=>2, 'name'=>'A2', 'pid'=>1 ),
-            array('id'=>3, 'name'=>'A3', 'pid'=>1 ),
-            array('id'=>4, 'name'=>'A4', 'pid'=>2 ),
-            array('id'=>5, 'name'=>'A5', 'pid'=>4 ),
-            array('id'=>6, 'name'=>'A6', 'pid'=>3 ),
+            array('id' => 1, 'name' => 'A1', 'pid' => 0),
+            array('id' => 2, 'name' => 'A2', 'pid' => 1),
+            array('id' => 3, 'name' => 'A3', 'pid' => 1),
+            array('id' => 4, 'name' => 'A4', 'pid' => 2),
+            array('id' => 5, 'name' => 'A5', 'pid' => 4),
+            array('id' => 6, 'name' => 'A6', 'pid' => 3),
         );
 
         print_r($this->_tree($category));
@@ -335,7 +332,7 @@ class TestAction extends Action
 
     public function _tree($data)
     {
-            
+
             //所有节点的子节点
             $child = array();
             //hash缓存数组
@@ -359,9 +356,9 @@ class TestAction extends Action
     public function autotag()
     {
         //需要提取的文本
-        $text = " 这里asxasx C++ ,test我也有很多T恤衣服！！！";
+        $text = ' 这里asxasx C++ ,test我也有很多T恤衣服！！！';
         //获取model
-        $tagX = model("Tag");
+        $tagX = model('Tag');
         //设置text
         $tagX->setText($text);
         //获取前10个标签
@@ -390,7 +387,6 @@ class TestAction extends Action
 
     /**
      * 生成语言文件
-     * @return void
      */
     public function createLangPhpFile()
     {
@@ -422,11 +418,10 @@ class TestAction extends Action
 
     /**
      * 获取生成的语言文件内容
-     * @return void
      */
     public function getzLang()
     {
-        $a = include(LANG_PATH.'/langForLoadUpadte.php');
+        $a = include LANG_PATH.'/langForLoadUpadte.php';
         dump($a);
     }
 
@@ -440,12 +435,12 @@ class TestAction extends Action
 
     public function initLangPHP()
     {
-        $lang = include(CONF_PATH.'/lang/ask_zh-cn2.php');
-        $sql = "insert into sociax_lang (`key`,`appname`,`filetype`,`zh-cn`) VALUES ";
-        foreach ($lang as $k=>$v) {
+        $lang = include CONF_PATH.'/lang/ask_zh-cn2.php';
+        $sql = 'insert into sociax_lang (`key`,`appname`,`filetype`,`zh-cn`) VALUES ';
+        foreach ($lang as $k => $v) {
             $k = trim($k);
             $v = trim($v);
-            $sqlArr[] =" ('{$k}','ASK','0','{$v}') ";
+            $sqlArr[] = " ('{$k}','ASK','0','{$v}') ";
         }
         $sql = $sql.implode(',', $sqlArr).';';
         D('')->query($sql);
@@ -471,7 +466,7 @@ class TestAction extends Action
         // 	$map['filetype'] = 1;
         // 	$map['key'] = $k;
         // 	$save['en'] = $v;
-        // 	D('')->table('sociax_lang')->where($map)->save($save);			
+        // 	D('')->table('sociax_lang')->where($map)->save($save);
         // }
 
         // $lang = include(CONF_PATH.'/lang/public_zh-cn.js-');
@@ -480,7 +475,7 @@ class TestAction extends Action
         // 	$map['filetype'] = 1;
         // 	$map['key'] = $k;
         // 	$save['zh-cn'] = $v;
-        // 	D('')->table('sociax_lang')->where($map)->save($save);			
+        // 	D('')->table('sociax_lang')->where($map)->save($save);
         // }
 
         // $lang = include(CONF_PATH.'/lang/public_zh-tw.js');
@@ -492,8 +487,8 @@ class TestAction extends Action
         // 	D('')->table('sociax_lang')->where($map)->save($save);
         // }
 
-        $lang = include(CONF_PATH.'/lang/ask_en.php');
-        foreach ($lang as $k=>$v) {
+        $lang = include CONF_PATH.'/lang/ask_en.php';
+        foreach ($lang as $k => $v) {
             $map = $save = array();
             $map['filetype'] = 0;
             $map['key'] = $k;
@@ -501,8 +496,8 @@ class TestAction extends Action
             D('')->table('sociax_lang')->where($map)->save($save);
         }
 
-        $lang = include(CONF_PATH.'/lang/ask_zh-tw.php');
-        foreach ($lang as $k=>$v) {
+        $lang = include CONF_PATH.'/lang/ask_zh-tw.php';
+        foreach ($lang as $k => $v) {
             $map = $save = array();
             $map['filetype'] = 0;
             $map['key'] = $k;
@@ -513,8 +508,8 @@ class TestAction extends Action
 
     public function langEdit()
     {
-        $data = include(CONF_PATH.'/lang/tt.php');
-        foreach ($data as $k=>$v) {
+        $data = include CONF_PATH.'/lang/tt.php';
+        foreach ($data as $k => $v) {
             $key = trim($k);
             $value = trim($v);
             $map['key'] = $key;
@@ -529,12 +524,11 @@ class TestAction extends Action
         !empty($stable) && model('CategoryTree')->setTable($stable)->updateSort();
     }
 
-
     public function tt()
     {
         // $file = fopen(CONF_PATH.'/lang/t.php','r');
         // while(!feof($file)){
-        // 	$d = fgets($file,'4096'); 
+        // 	$d = fgets($file,'4096');
         // 	$data[] = trim($d)."',";
         // }
         // fclose($file);
@@ -608,7 +602,6 @@ class TestAction extends Action
 
     /**
      * 插入Ts2.8用户信息
-     * @return void
      */
     public function insertTsUser()
     {
@@ -701,7 +694,7 @@ class TestAction extends Action
 
     public function updataStorey()
     {
-        $map['data'] = array('neq','N;');
+        $map['data'] = array('neq', 'N;');
         $commentlist = D('comment')->where($map)->findAll();
         foreach ($commentlist as $v) {
             $data = unserialize($v['data']);
@@ -722,18 +715,19 @@ class TestAction extends Action
         curl_setopt($ch, CURLOPT_POSTFIELDS, "&hl=zh-CN&sl={$sl}&ie={$ie}&tl={$tl}&text=".urlencode($text));
         $html = curl_exec($ch);
         preg_match('#<span id=result_box class="short_text">(.*?)</span></div>#', $html, $doc);
+
         return strip_tags($doc['1'], '<br>');
     }
 
     public function translateLang()
     {
         set_time_limit(0);
-        $sql = "SELECT `lang_id` ,`zh-cn` FROM `".C('DB_PREFIX')."lang` WHERE  appname = 'PUBLIC' AND `en` = '==**==' AND `zh-tw` LIKE '%ts3/apps/%' ORDER BY lang_id ASC;";
+        $sql = 'SELECT `lang_id` ,`zh-cn` FROM `'.C('DB_PREFIX')."lang` WHERE  appname = 'PUBLIC' AND `en` = '==**==' AND `zh-tw` LIKE '%ts3/apps/%' ORDER BY lang_id ASC;";
         $data = D()->query($sql);
         foreach ($data as $value) {
             $en = $this->translatorGoogleAPI($value['zh-cn'], 'en');
             $tw = $this->translatorGoogleAPI($value['zh-cn'], 'zh-TW');
-            $insert_sql = "UPDATE `".C('DB_PREFIX')."lang` SET `en` = '".$en."', `zh-tw` = '".$tw."' WHERE `lang_id` = '".$value['lang_id']."' LIMIT 1;";
+            $insert_sql = 'UPDATE `'.C('DB_PREFIX')."lang` SET `en` = '".$en."', `zh-tw` = '".$tw."' WHERE `lang_id` = '".$value['lang_id']."' LIMIT 1;";
             // dump($insert_sql);
             D()->execute($insert_sql);
             // dump($en);
@@ -747,7 +741,7 @@ class TestAction extends Action
         $count = 10;
         $limit = ($p - 1) * $count.', '.$count;
         $list = model('User')->limit($limit)->getAsFieldArray('uid');
-        
+
         if (empty($list)) {
             dump('OK');
             exit;
@@ -771,22 +765,21 @@ class TestAction extends Action
                 $sql = 'SELECT count(follow_id) as total FROM '.C('DB_PREFIX').'user_follow where uid ='.$uid;
                 $vo = M()->query($sql);
                 $res['following_count'] = intval($vo[0]['total']);
-                
+
                 // 粉丝数目
                 $sql = 'SELECT count(follow_id) as total FROM '.C('DB_PREFIX').'user_follow where fid ='.$uid;
                 $vo = M()->query($sql);
                 $res['follower_count'] = intval($vo[0]['total']);
 
-                
                 $map['uid'] = $uid;
                 $map['key'] = array('in', array('feed_count', 'weibo_count', 'favorite_count', 'following_count', 'follower_count'));
                 M('UserData')->where($map)->delete();
-            
+
                 $sql = 'INSERT INTO '.C('DB_PREFIX').'user_data (`uid`,`key`,`value`) values';
                 $data['uid'] = $uid;
                 $k = 0;
-                foreach ($res as $key=>$val) {
-                    if ($k==0) {
+                foreach ($res as $key => $val) {
+                    if ($k == 0) {
                         $sql .= " ($uid,'$key','$val')";
                     } else {
                         $sql .= " , ($uid,'$key','$val')";
@@ -798,7 +791,7 @@ class TestAction extends Action
                 $sql = '';
                 // 清掉该用户的缓存
                 model('Cache')->rm('UserData_'.$uid);
-                
+
                 if ($rr) {
                     echo $uid.' -- done -- <br />';
                 } else {
@@ -807,12 +800,11 @@ class TestAction extends Action
             }
 
             $p += 1;
-            echo '<script>window.location.href="'.U('public/Test/upUserData', array('p'=>$p)).'";</script>';
+            echo '<script>window.location.href="'.U('public/Test/upUserData', array('p' => $p)).'";</script>';
         }
     }
     /**
      * 转移2.8头像为3.0头像地址
-     * @return void
      */
     public function upFacePath()
     {
@@ -821,7 +813,7 @@ class TestAction extends Action
         $count = 1000;
         $limit = ($p - 1) * $count.', '.$count;
         $list = model('User')->limit($limit)->getAsFieldArray('uid');
-        
+
         if (empty($list)) {
             dump('OK');
             exit;
@@ -830,7 +822,7 @@ class TestAction extends Action
                 if (empty($uid)) {
                     continue;
                 }
-                
+
                 $oldPath = UPLOAD_PATH.'/avatar/'.$uid.'/big.jpg';
                 if (!file_exists($oldPath)) {
                     continue;
@@ -839,22 +831,19 @@ class TestAction extends Action
                 // $uid = 10045;
                 $path = UPLOAD_PATH.'/avatar'.model('Avatar')->convertUidToPath($uid);
                 $this->_createFolder($path);
-                
+
                 $res = copy($oldPath, $path.'/original.jpg');
-                echo($oldPath.'  =>  '.$path.'/original.jpg'.'  '.$res.'<br/>');
+                echo $oldPath.'  =>  '.$path.'/original.jpg'.'  '.$res.'<br/>';
             }
-            
+
             $p += 1;
-            echo '<script>window.location.href="'.U('public/Test/upFacePath', array('p'=>$p)).'";</script>';
+            echo '<script>window.location.href="'.U('public/Test/upFacePath', array('p' => $p)).'";</script>';
         }
     }
 
-    
-    
     /**
      * 创建多级文件目录
      * @param string $path 路径名称
-     * @return void
      */
     private function _createFolder($path)
     {
@@ -891,49 +880,49 @@ class TestAction extends Action
             $arr = 'array(';
             if ($val['value']['key']) {
                 $arr .= '\'key\'=>array(';
-                foreach ($val['value']['key'] as $k0=>$v0) {
+                foreach ($val['value']['key'] as $k0 => $v0) {
                     $arr .= '\''.$k0.'\'=>\''.htmlspecialchars($v0, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val['value']['key_name']) {
                 $arr .= '\'key_name\'=>array(';
-                foreach ($val['value']['key_name'] as $k1=>$v1) {
+                foreach ($val['value']['key_name'] as $k1 => $v1) {
                     $arr .= '\''.$k1.'\'=>\''.htmlspecialchars($v1, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val['value']['key_hidden']) {
                 $arr .= '\'key_hidden\'=>array(';
-                foreach ($val['value']['key_hidden'] as $k2=>$v2) {
+                foreach ($val['value']['key_hidden'] as $k2 => $v2) {
                     $arr .= '\''.$k2.'\'=>\''.htmlspecialchars($v2, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val['value']['key_type']) {
                 $arr .= '\'key_type\'=>array(';
-                foreach ($val['value']['key_type'] as $k3=>$v3) {
+                foreach ($val['value']['key_type'] as $k3 => $v3) {
                     $arr .= '\''.$k3.'\'=>\''.htmlspecialchars($v3, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val['value']['key_default']) {
                 $arr .= '\'key_default\'=>array(';
-                foreach ($val['value']['key_default'] as $k4=>$v4) {
+                foreach ($val['value']['key_default'] as $k4 => $v4) {
                     $arr .= '\''.$k4.'\'=>\''.htmlspecialchars($v4, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val['value']['key_tishi']) {
                 $arr .= '\'key_tishi\'=>array(';
-                foreach ($val['value']['key_tishi'] as $k5=>$v5) {
+                foreach ($val['value']['key_tishi'] as $k5 => $v5) {
                     $arr .= '\''.$k5.'\'=>\''.htmlspecialchars($v5, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val['value']['key_javascript']) {
                 $arr .= '\'key_javascript\'=>array(';
-                foreach ($val['value']['key_javascript'] as $k6=>$v6) {
+                foreach ($val['value']['key_javascript'] as $k6 => $v6) {
                     $arr .= '\''.$k6.'\'=>\''.htmlspecialchars($v6, ENT_QUOTES).'\',';
                 }
                 $arr .= ')';
@@ -956,7 +945,7 @@ class TestAction extends Action
      */
     public function getzLang1()
     {
-        $a = include(LANG_PATH.'/langForLoadUpadte.php');
+        $a = include LANG_PATH.'/langForLoadUpadte.php';
         dump($a);
     }
 
@@ -983,6 +972,6 @@ class TestAction extends Action
 
     public function info()
     {
-        $c = model('Credit')->setUserCredit($this->mid, 'user_login', '1', array('user'=>'<a href="http://www.baidu.com">呵呵</a>', 'content'=>'<a href="http://www.google.com">hh</a>'));
+        $c = model('Credit')->setUserCredit($this->mid, 'user_login', '1', array('user' => '<a href="http://www.baidu.com">呵呵</a>', 'content' => '<a href="http://www.google.com">hh</a>'));
     }
 }

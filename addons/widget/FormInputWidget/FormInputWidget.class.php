@@ -27,7 +27,7 @@ class FormInputWidget extends Widget
         //is_array($data) && $var = array_merge($var, array_filter($data));
 
         is_array($data) && $var = array_merge($var, $data);
-        
+
         if ($var['name'] == 'department') {
             $var['value'] = str_replace('|', ' - ', trim($var['value'], '|'));
             $var['defaultId'] = model('Department')->getUserDepartId($GLOBALS['ts']['mid']);
@@ -36,8 +36,7 @@ class FormInputWidget extends Widget
         !$var['value'] && $var['value'] = $var['default_value'];
         ('date' == $var['type']) && is_numeric($var['value']) && ($var['value'] = date('Y-m-d', $var['value']));
 
-        
-        $content = $this->renderFile(dirname(__FILE__) . "/{$var['type']}.html", $var);
+        $content = $this->renderFile(dirname(__FILE__)."/{$var['type']}.html", $var);
 
         unset($var, $data);
 

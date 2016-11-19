@@ -12,9 +12,9 @@ class CommentDiggModel extends Model
             2 => 'comment_id',
             3 => 'fid',
             4 => 'cTime',
-            '_pk' => 'id'
+            '_pk' => 'id',
     );
-    
+
     public function addDigg($comment_id, $mid)
     {
         $data ['comment_id'] = $comment_id;
@@ -22,11 +22,13 @@ class CommentDiggModel extends Model
         $data['uid'] = !$data['uid'] ? $GLOBALS['ts']['mid'] : $data['uid'];
         if (!$data['uid']) {
             $this->error = '未登录不能赞';
+
             return false;
         }
         $isExit = $this->where($data)->getField('id');
         if ($isExit) {
             $this->error = '你已经赞过';
+
             return false;
         }
         $data ['cTime'] = time();
@@ -42,7 +44,6 @@ class CommentDiggModel extends Model
 // 			$author = model ( 'User' )->getUserInfo ( $mid );
 // 			$config['user'] = '<a href="'.$author ['space_url'].'" >'.$author ['uname'].'</a>';
 
-
 // //			$config ['content'] = t($feed ['source_content']);
 // //			$config ['content'] = str_replace('◆','',$config ['content']);
 // //			$config ['content'] = mStr($config ['content'], 34);
@@ -51,10 +52,11 @@ class CommentDiggModel extends Model
 
             //增加积分
             // model('Credit')->setUserCredit($mid, 'digg_weibo');
-            // model('Credit')->setUserCredit($feed['uid'], 'digged_weibo');	
+            // model('Credit')->setUserCredit($feed['uid'], 'digged_weibo');
 
             $this->setDiggCache($mid, $comment_id, 'add');
         }
+
         return $res;
     }
 
@@ -65,11 +67,13 @@ class CommentDiggModel extends Model
         $data['uid'] = !$data['uid'] ? $GLOBALS['ts']['mid'] : $data['uid'];
         if (!$data['uid']) {
             $this->error = '未登录不能取消赞';
+
             return false;
         }
         $isExit = $this->where($data)->getField('id');
         if (!$isExit) {
             $this->error = '取消赞失败，您可以已取消过赞信息';
+
             return false;
         }
 
@@ -87,12 +91,12 @@ class CommentDiggModel extends Model
     }
     /**
      * 返回赞列表
-     * @param unknown_type $map 
-     * @param unknown_type $page -- 是否分页
-     * @param unknown_type $limit --分页代表每页条数 不分页表示查询条数
+     * @param  unknown_type $map
+     * @param  unknown_type $page  -- 是否分页
+     * @param  unknown_type $limit --分页代表每页条数 不分页表示查询条数
      * @return unknown
      */
-    public function getDiggList($map, $page=true, $limit=20)
+    public function getDiggList($map, $page = true, $limit = 20)
     {
         if ($page) {
             $list = $this->where($map)->order('id desc')->findPage($limit);
@@ -124,9 +128,10 @@ class CommentDiggModel extends Model
                 }
             }
         }
+
         return $list;
     }
-    public function getDiggListPage($map, $limit=20)
+    public function getDiggListPage($map, $limit = 20)
     {
         $list = $this->where($map)->order('id desc')->findPage($limit);
         foreach ($list['data'] as &$d) {
@@ -143,13 +148,14 @@ class CommentDiggModel extends Model
                     break;
             }
         }
+
         return $list;
     }
 
     /**
      * 返回赞过的用户列表
      */
-    public function getDiggUser($map, $page=true, $limit=20)
+    public function getDiggUser($map, $page = true, $limit = 20)
     {
         if ($page) {
             $list = $this->where($map)->order('id desc')->findPage($limit);
@@ -159,25 +165,26 @@ class CommentDiggModel extends Model
         foreach ($list['data'] as &$v) {
             $v['user'] = model('User')->getUserInfo($v['fid']);
         }
+
         return $list;
     }
 
     /**
      * 返回指定用户是否赞了指定的分享
-     * @var $comment_ids 指定的分享数组
-     * @var $uid 指定的用户
-     * @return array 
+     * @var    $comment_ids 指定的分享数组
+     * @var    $uid         指定的用户
+     * @return array
      */
     public function checkIsDigg($comment_ids, $uid)
     {
         if (! is_array($comment_ids)) {
             $comment_ids = array(
-                    $comment_ids
+                    $comment_ids,
             );
         }
-        
+
         $comment_ids = array_filter($comment_ids);
-        
+
         $digg = S('user_comment_digg_'.$uid);
 
         if ($digg === false) {

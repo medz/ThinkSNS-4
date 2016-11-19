@@ -6,7 +6,6 @@
  */
 class InviteTestHooks extends Hooks
 {
-
     protected static $checked = false;
 
     public function core_filter_init_action()
@@ -30,7 +29,7 @@ class InviteTestHooks extends Hooks
         $uniqid = t(cookie('_testrand'));
         if (!$uniqid) {
             $uniqid = uniqid();
-            cookie('_testrand', $uniqid, 86400*365);
+            cookie('_testrand', $uniqid, 86400 * 365);
         }
 
         //取得当前的邀请码
@@ -38,7 +37,7 @@ class InviteTestHooks extends Hooks
             $invitecode = $_SESSION['InviteTest'];
         } elseif (!empty($_REQUEST['invitecode'])) {
             $invitecode = t($_REQUEST['invitecode']);
-            cookie('invitetest', $invitecode, 86400*365);
+            cookie('invitetest', $invitecode, 86400 * 365);
         }
 
         $model = $this->model('InviteTest');
@@ -70,16 +69,16 @@ class InviteTestHooks extends Hooks
             if (!empty($_POST['isdel'])) { //删除
                 $map['id'] = array('in', t($_POST['id']));
                 if ($model->where($map)->delete()) {
-                    echo strpos($_POST['id'], ',')===false?2:1;
+                    echo strpos($_POST['id'], ',') === false ? 2 : 1;
                     exit;
                 }
                 exit;
             }
             if (!empty($_POST['isset'])) { //设置状态
                 $map['id'] = array('in', t($_POST['id']));
-                $save = array('is_disable'=>$_POST['status']?0:1);
+                $save = array('is_disable' => $_POST['status'] ? 0 : 1);
                 if ($model->where($map)->save($save)) {
-                    echo strpos($_POST['id'], ',')===false?2:1;
+                    echo strpos($_POST['id'], ',') === false ? 2 : 1;
                     exit;
                 }
                 exit;
@@ -94,9 +93,9 @@ class InviteTestHooks extends Hooks
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $model = $this->model('InviteTest');
-            $num   = $model->create(intval($_POST['number']));
+            $num = $model->create(intval($_POST['number']));
             $this->assign('isAdmin', 1);
-            $this->success('成功生成' . $num . '个邀请码');
+            $this->success('成功生成'.$num.'个邀请码');
             exit;
         }
         $this->display('addinvite');

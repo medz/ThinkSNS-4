@@ -15,7 +15,6 @@
 
  class HttpRequestService
  {
-  
      #cURL Object
     private $ch;
   #Contains the last HTTP status code returned.
@@ -33,7 +32,7 @@
   #Response format.
     public $format = ''; // Only support json & xml for extension
     public $decodeFormat = 'json'; //default is json
-    public $_encode         ='utf-8';
+    public $_encode = 'utf-8';
   #Decode returned json data.
     //public $decode_json = true;
   #Contains the last HTTP headers returned.
@@ -41,13 +40,12 @@
      public $http_header = array();
      private $contentType;
      private $postFields;
-     private static $paramsOnUrlMethod = array('GET','DELETE');
-     private static $supportExtension  = array('json','xml');
+     private static $paramsOnUrlMethod = array('GET', 'DELETE');
+     private static $supportExtension = array('json', 'xml');
   #For tmpFile
     private $file = null;
   #Set the useragnet.
     private static $userAgent = 'Timescode_RESTClient v0.0.1-alpha';
-
 
      public function __construct()
      {
@@ -65,27 +63,27 @@
          curl_setopt($this->ch, CURLOPT_HEADER, false);
      }
 
-     /**
-      * Execute calls
-      * @param $url String
-      * @param $method String
-      * @param $postFields String 
-      * @param $username String
-      * @param $password String
-      * @param $contentType String 
-      * @return RESTClient
-      */
-    public function call($url, $method, $postFields=null, $username=null, $password=null, $contentType=null)
+    /**
+     * Execute calls
+     * @param $url String
+     * @param $method String
+     * @param $postFields String
+     * @param $username String
+     * @param $password String
+     * @param $contentType String
+     * @return RESTClient
+     */
+    public function call($url, $method, $postFields = null, $username = null, $password = null, $contentType = null)
     {
         if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0 && !empty($this->format)) {
             $url = "{$this->api_url}{$url}.{$this->format}";
         }
 
-        $this->http_url        = $url;
-        $this->contentType    = $contentType;
-        $this->postFields    = $postFields;
+        $this->http_url = $url;
+        $this->contentType = $contentType;
+        $this->postFields = $postFields;
 
-        $url                = in_array($method, self::$paramsOnUrlMethod) ? $this->to_url() : $this->get_http_url();
+        $url = in_array($method, self::$paramsOnUrlMethod) ? $this->to_url() : $this->get_http_url();
 
         is_object($this->ch) or $this->__construct();
 
@@ -124,78 +122,81 @@
 
         return $response;
     }
-     public function call_fopen($url, $method, $postFields=null, $username=null, $password=null, $contentType=null)
+     public function call_fopen($url, $method, $postFields = null, $username = null, $password = null, $contentType = null)
      {
          if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0 && !empty($this->format)) {
              $url = "{$this->api_url}{$url}.{$this->format}";
          }
 
-         $this->http_url        = $url;
-         $this->contentType    = $contentType;
-         $this->postFields    = $postFields;
+         $this->http_url = $url;
+         $this->contentType = $contentType;
+         $this->postFields = $postFields;
 
-         $url                = in_array($method, self::$paramsOnUrlMethod) ? $this->to_url() : $this->get_http_url();
+         $url = in_array($method, self::$paramsOnUrlMethod) ? $this->to_url() : $this->get_http_url();
          $params = array('http' => array(
                'method' => 'POST',
                'header' => 'Content-type: application/x-www-form-urlencoded'."\r\n",
-               'content' => $this->create_post_body($this->postFields)
+               'content' => $this->create_post_body($this->postFields),
             ));
          $ctx = stream_context_create($params);
          $fp = fopen($url, 'rb', false, $ctx);
 
          if (!$fp) {
-             die("can not open server!");
+             die('can not open server!');
          }
 
          $response = @stream_get_contents($fp);
          if ($response === false) {
-             die("can not get message form server!");
+             die('can not get message form server!');
           //throw new Exception("Problem reading data from {$url}, {$php_errormsg}");
          }
+
          return $response;
      }
-    
+
      public function setEncode($encode)
      {
          !empty($encode) and $this->_encode = $encode;
+
          return $this;
      }
      public static function convertEncoding($source, $in, $out)
      {
-         $in    = strtoupper($in);
+         $in = strtoupper($in);
          $out = strtoupper($out);
-         if ($in == "UTF8") {
-             $in = "UTF-8";
+         if ($in == 'UTF8') {
+             $in = 'UTF-8';
          }
-         if ($out == "UTF8") {
-             $out = "UTF-8";
+         if ($out == 'UTF8') {
+             $out = 'UTF-8';
          }
-         if ($in==$out) {
+         if ($in == $out) {
              return $source;
          }
-    
+
          if (function_exists('mb_convert_encoding')) {
              return mb_convert_encoding($source, $out, $in);
          } elseif (function_exists('iconv')) {
-             return iconv($in, $out."//IGNORE", $source);
+             return iconv($in, $out.'//IGNORE', $source);
          }
+
          return $source;
      }
     /**
-      * POST wrapper，不基于curl函数，环境可以不支持curl函数
-      * @param method String
-      * @param parameters Array
-      * @return mixed
-      */
+     * POST wrapper，不基于curl函数，环境可以不支持curl函数
+     * @param method String
+     * @param parameters Array
+     * @return mixed
+     */
     public function do_post_request($url, $postdata, $files)
     {
-        $data = "";
-        $boundary = "---------------------".substr(md5(rand(0, 32000)), 0, 10);
+        $data = '';
+        $boundary = '---------------------'.substr(md5(rand(0, 32000)), 0, 10);
 
         //Collect Postdata
         foreach ($postdata as $key => $val) {
             $data .= "--$boundary\r\n";
-            $data .= "Content-Disposition: form-data; name=\"".$key."\"\r\n\r\n".$val."\r\n";
+            $data .= 'Content-Disposition: form-data; name="'.$key."\"\r\n\r\n".$val."\r\n";
         }
         $data .= "--$boundary\r\n";
 
@@ -203,7 +204,7 @@
         foreach ($files as $key => $file) {
             $fileContents = file_get_contents($file['tmp_name']);
             $data .= "Content-Disposition: form-data; name=\"{$key}\"; filename=\"{$file['name']}\"\r\n";
-            $data .= "Content-Type: ".$file['type']."\r\n";
+            $data .= 'Content-Type: '.$file['type']."\r\n";
             $data .= "Content-Transfer-Encoding: binary\r\n\r\n";
             $data .= $fileContents."\r\n";
             $data .= "--$boundary--\r\n";
@@ -212,81 +213,85 @@
         $params = array('http' => array(
                'method' => 'POST',
                'header' => 'Content-Type: multipart/form-data; boundary='.$boundary,
-               'content' => $data
+               'content' => $data,
             ));
-
 
         $ctx = stream_context_create($params);
         $fp = fopen($url, 'rb', false, $ctx);
 
         if (!$fp) {
-            die("can not open server!");
+            die('can not open server!');
         }
 
         $response = @stream_get_contents($fp);
         if ($response === false) {
-            die("can not get message form server!");
+            die('can not get message form server!');
           //throw new Exception("Problem reading data from {$url}, {$php_errormsg}");
         }
+
         return $response;
     }
      /**
       * POST wrapper for insert data
       * @param $url String
-      * @param $params mixed 
+      * @param $params mixed
       * @param $username String
       * @param $password String
       * @param $contentType String
       * @return RESTClient
       */
-     public function _POST($url, $params=null, $username=null, $password=null, $contentType=null)
+     public function _POST($url, $params = null, $username = null, $password = null, $contentType = null)
      {
          $response = $this->call($url, 'POST', $params, $username, $password, $contentType);
          //$this->convertEncoding($response,'utf-8',$this->_encode)
          return $this->json_foreach($this->parseResponse($response));
      }
-    
-     public function _POST_FOPEN($url, $params=null, $username=null, $password=null, $contentType=null)
+
+     public function _POST_FOPEN($url, $params = null, $username = null, $password = null, $contentType = null)
      {
          $response = $this->call_fopen($url, 'POST', $params, $username, $password, $contentType);
+
          return $this->json_foreach($this->parseResponse($response));
      }
      public function _photoUpload($url, $postdata, $files)
      {
          $response = $this->do_post_request($url, $postdata, $files);
+
          return $this->json_foreach($this->parseResponse($response));
      }
      //将stdclass object转换成数组，并转换编码
      public function json_foreach($jsonArr)
      {
          if (is_object($jsonArr)) {
-             $jsonArr=get_object_vars($jsonArr);
+             $jsonArr = get_object_vars($jsonArr);
          }
-         foreach ($jsonArr as $k=>$v) {
+         foreach ($jsonArr as $k => $v) {
              if (is_array($v)) {
-                 $jsonArr[$k]=$this->json_foreach($v);
+                 $jsonArr[$k] = $this->json_foreach($v);
              } elseif (is_object($v)) {
-                 $v=get_object_vars($v);
-                 $jsonArr[$k]=$this->json_foreach($v);
+                 $v = get_object_vars($v);
+                 $jsonArr[$k] = $this->json_foreach($v);
              } else {
-                 $v=$this->convertEncoding($v, "utf-8", $this->_encode);
-                 $jsonArr[$k]=$v;
+                 $v = $this->convertEncoding($v, 'utf-8', $this->_encode);
+                 $jsonArr[$k] = $v;
              }
          }
+
          return $jsonArr;
      }
      /**
       * PUT wrapper for update data
       * @param $url String
-      * @param $params mixed 
+      * @param $params mixed
       * @param $username String
       * @param $password String
       * @param $contentType String
       * @return RESTClient
       */
-     public function _PUT($url, $params=null, $username=null, $password=null, $contentType=null)
+     public function _PUT($url, $params = null, $username = null, $password = null, $contentType = null)
      {
          $response = $this->call($url, 'PUT', $params, $username, $password, $contentType);
+
          return $this->parseResponse($this->convertEncoding($response, 'utf-8', $this->_encode));
      }
      public function create_post_body($post_params)
@@ -298,6 +303,7 @@
              }
              $params[] = $key.'='.urlencode($val);
          }
+
          return implode('&', $params);
      }
      /**
@@ -308,9 +314,10 @@
       * @param $password String
       * @return RESTClient
       */
-     public function _GET($url, $params=null, $username=null, $password=null)
+     public function _GET($url, $params = null, $username = null, $password = null)
      {
          $response = $this->call($url, 'GET', $params, $username, $password);
+
          return $this->parseResponse($response);
      }
 
@@ -322,10 +329,11 @@
       * @param $password String
       * @return RESTClient
       */
-     public function _DELETE($url, $params=null, $username=null, $password=null)
+     public function _DELETE($url, $params = null, $username = null, $password = null)
      {
          #Modified by Edison tsai on 09:50 2010/11/26 for missing part
          $response = $this->call($url, 'DELETE', $params, $username, $password);
+
          return $this->parseResponse($response);
      }
 
@@ -335,16 +343,17 @@
      * @param $ext	String, including json/xml
      * @return String
      */
-     public function parseResponse($resp, $ext='')
+     public function parseResponse($resp, $ext = '')
      {
          $ext = !in_array($ext, self::$supportExtension) ? $this->decodeFormat : $ext;
-        
+
          switch ($ext) {
                 case 'json':
-                    $resp = json_decode($resp);break;
+                    $resp = json_decode($resp); break;
                 case 'xml':
-                    $resp = self::xml_decode($resp);break;
+                    $resp = self::xml_decode($resp); break;
         }
+
          return $resp;
      }
 
@@ -354,10 +363,11 @@
      * @param $toArray boolean, true for make it be array
      * @return String
      */
-      public static function xml_decode($data, $toArray=false)
+      public static function xml_decode($data, $toArray = false)
       {
           /* TODO: What to do with 'toArray'? Just write it as you need. */
             $data = simplexml_load_string($data);
+
           return $data;
       }
 
@@ -365,7 +375,7 @@
      {
      }
 
-       /**
+      /**
        * parses the url and rebuilds it to be
        * scheme://host/path
        */
@@ -384,6 +394,7 @@
             || ($scheme == 'http' && $port != '80')) {
               $host = "$host:$port";
           }
+
           return "$scheme://$host$path";
       }
 
@@ -397,6 +408,7 @@
           if ($post_data) {
               $out .= '?'.$post_data;
           }
+
           return $out;
       }
 
@@ -416,17 +428,17 @@
      {
          curl_setopt($this->ch, CURLOPT_AUTOREFERER, false);
          curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, false);
+
          return $this;
      }
 
      /**
       * Closes the connection and release resources
-      * @return void
       */
      public function close()
      {
          curl_close($this->ch);
-         if ($this->file !=null) {
+         if ($this->file != null) {
              fclose($this->file);
          }
      }
@@ -434,7 +446,6 @@
      /**
       * Sets the URL to be Called
       * @param $url String
-      * @return void
       */
      public function setURL($url)
      {
@@ -444,28 +455,30 @@
      /**
       * Sets the format type to be extension
       * @param $format String
-      * @return boolean
+      * @return bool
       */
-     public function setFormat($format=null)
+     public function setFormat($format = null)
      {
-         if ($format==null) {
+         if ($format == null) {
              return false;
          }
          $this->format = $format;
+
          return true;
      }
 
      /**
       * Sets the format type to be decoded
       * @param $format String
-      * @return boolean
+      * @return bool
       */
-     public function setDecodeFormat($format=null)
+     public function setDecodeFormat($format = null)
      {
-         if ($format==null) {
+         if ($format == null) {
              return false;
          }
          $this->decodeFormat = $format;
+
          return true;
      }
 
@@ -473,7 +486,6 @@
       * Set the Content-Type of the request to be send
       * Format like "application/json" or "application/xml" or "text/plain" or other
       * @param string $contentType
-      * @return void
       */
      public function setContentType($contentType)
      {
@@ -484,7 +496,6 @@
       * Set the authorize info for Basic Authentication
       * @param $username String
       * @param $password String
-      * @return void
       */
      public function setAuthorizeInfo($username, $password)
      {
@@ -497,11 +508,10 @@
      /**
       * Set the Request HTTP Method
       * @param $method String
-      * @return void
       */
      public function setMethod($method)
      {
-         $this->method=$method;
+         $this->method = $method;
      }
 
      /**
@@ -510,11 +520,10 @@
       * or a string containing the body of the request, like a XML, JSON or other
       * Proper content-type should be set for the body if not a array
       * @param $params mixed
-      * @return void
       */
      public function setParameters($params)
      {
-         $this->postFields=$params;
+         $this->postFields = $params;
      }
 
       /**
@@ -528,6 +537,7 @@
               $value = trim(substr($header, $i + 2));
               $this->http_header[$key] = $value;
           }
+
           return strlen($header);
       }
  }

@@ -10,13 +10,14 @@ class FeedTopModel extends Model
     protected $_error;
     /**
      * 添加分享置顶数据
-     * @param array $data 广告位相关数据
-     * @return boolean 是否插入成功
+     * @param  array $data 广告位相关数据
+     * @return bool  是否插入成功
      */
     public function doAddFeedTop($data)
     {
         $res = $this->add($data);
-        return (boolean)$res;
+
+        return (boolean) $res;
     }
     /**
      * 获取分享置顶数据
@@ -24,13 +25,14 @@ class FeedTopModel extends Model
      */
     public function getFeedTopList($type)
     {
-        if ($type==1) {
+        if ($type == 1) {
             $data = $this->where('status = 0')->order('id DESC')->findAll();
-        } elseif ($type==0) {
+        } elseif ($type == 0) {
             $data = $this->limit(6)->order('id DESC')->findAll();
         } else {
             $data = $this->order('id DESC')->findpage(20);
         }
+
         return $data;
     }
     public function doEditFeedTop($id, $data)
@@ -40,34 +42,37 @@ class FeedTopModel extends Model
         }
         $map['id'] = $id;
         $res = $this->where($map)->save($data);
-        return (boolean)$res;
+
+        return (boolean) $res;
     }
     /**
      * 删除分享置顶操作
-     * @param string|array $ids 广告位ID
-     * @return boolean 是否删除广告位成功
+     * @param  string|array $ids 广告位ID
+     * @return bool         是否删除广告位成功
      */
     public function doDelFeedTop($id)
     {
         if (empty($id)) {
             return false;
         }
-        
+
         $map['id'] = $id;
         $data['status'] = 1;
         $res = $this->where($map)->save($data);
-        return (boolean)$res;
+
+        return (boolean) $res;
     }
     public function doFeedTop($id)
     {
         if (empty($id)) {
             return false;
         }
-        
+
         $map['id'] = $id;
         $data['status'] = 0;
         $res = $this->where($map)->save($data);
-        return (boolean)$res;
+
+        return (boolean) $res;
     }
     public function doDel($id)
     {
@@ -76,7 +81,8 @@ class FeedTopModel extends Model
         }
         $map['id'] = $id;
         $res = $this->where($map)->delete();
-        return (boolean)$res;
+
+        return (boolean) $res;
     }
 
     public function checkedFeedTop($uid, $feedId)
@@ -109,7 +115,7 @@ class FeedTopModel extends Model
         $data['ctime'] = time();
         $result = $this->add($data);
 
-        return (boolean)$result;
+        return (boolean) $result;
     }
 
     public function delFeedTop($uid, $feedId)
@@ -121,6 +127,6 @@ class FeedTopModel extends Model
         $map['feed_id'] = $feedId;
         $result = $this->where($map)->delete();
 
-        return (boolean)$result;
+        return (boolean) $result;
     }
 }

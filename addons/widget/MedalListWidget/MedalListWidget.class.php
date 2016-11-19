@@ -19,7 +19,7 @@ class MedalListWidget extends Widget
             return;
         }
         $medalids = getSubByKey($medals, 'id');
-        $map['medal_id'] = array( 'in' , $medalids );
+        $map['medal_id'] = array('in', $medalids);
         //加入缓存 如果勋章数目有变化的话 重新获取在缓存
         $key = 'medal_user_'.$map['uid'].'_'.count($medalids);
         $usermedal = model('Cache')->get($key);
@@ -39,7 +39,8 @@ class MedalListWidget extends Widget
         $var['medals'] = $medals;
         $var['isme'] = $map['uid'] == $GLOBALS['ts']['mid'] ? true : false;
         $var['uid'] = $map['uid'];
-        $content = $this->renderFile(dirname(__FILE__)."/list.html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/list.html', $var);
+
         return $content;
     }
 }

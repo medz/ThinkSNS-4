@@ -2,7 +2,6 @@
 
 class DisableUserModel extends Model
 {
-
     protected $tableName = 'user_disable';
 
     public function setDisableUser($uid, $disableItem, $startTime, $endTime)
@@ -29,7 +28,7 @@ class DisableUserModel extends Model
 
         S('is_disable_user_'.$disableItem.'_'.$uid, null);
 
-        return (boolean)$result;
+        return (boolean) $result;
     }
 
     public function getDisableUser($uid)
@@ -90,11 +89,10 @@ class DisableUserModel extends Model
 
         $result = $this->where($map)->delete();
 
-
         S('is_disable_user_login_'.$uid, null);
         S('is_disable_user_post_'.$uid, null);
 
-        return (boolean)$result;
+        return (boolean) $result;
     }
 
     public function isDisableUser($uid, $type = 'login')
@@ -126,6 +124,7 @@ class DisableUserModel extends Model
 
         if ($result['status'] && $result['time'] < time()) {
             S($key, null);
+
             return false;
         }
 

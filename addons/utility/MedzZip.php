@@ -1,16 +1,16 @@
 <?php
+
 define('EOF_CENTRAL_DIRECTORY', 0x06054b50); //'end of central directory record'区块的标记
 define('LOCAL_FILE_HEADER', 0x04034b50); //'Local file header'区块标记
 define('CENTRAL_DIRECTORY', 0x02014b50); //'Central directory'区块标记
 
 class MedzZip
 {
-    
     public $fileHeaderAndData = array();
     public $centralDirectory = array();
     public $localFileHeaderOffset = 0;
     public $fileHandle = '';
-    
+
     /**
      * 增加待压缩的文件
      * @param $data string 待压缩的字符串
@@ -23,7 +23,7 @@ class MedzZip
         if (!$this->_checkZlib()) {
             return false;
         }
-        
+
         list($modTime, $modDate) = $this->_getDosFormatTime($timestamp);
         $unCompressedSize = strlen($data);
         $crcValue = crc32($data);
@@ -31,26 +31,27 @@ class MedzZip
         $compressedData = substr(substr($compressedData, 0, strlen($compressedData) - 4), 2); // crc problem
         $compressedSize = strlen($compressedData);
         $filenameLength = strlen($filename);
-        
-        $header    = pack('V', LOCAL_FILE_HEADER);            // local file header signature
-        $header   .= "\x14\x00";                               // version needed to extract
-        $header   .= "\x00\x00";                            // general purpose bit flag  
-        $header   .= "\x08\x00";                               // compression method, deflated used here
-        $header   .= pack('vv', $modTime, $modDate);        // last mod file time, last mod file date
-        $header   .= pack('V', $crcValue);                   // crc-32
-        $header   .= pack('V', $compressedSize);               // compressed size
-        $header   .= pack('V', $unCompressedSize);           // uncompressed size
-        $header   .= pack('v', $filenameLength);               // file name length
-        $header   .= pack('v', 0);                           // extra field length
-        $header   .= $filename;                              // filename
-        $header   .= $compressedData;                          // file data
-        $header   .= $this->_getDataDescriptor($crcValue, $compressedSize, $unCompressedSize); // Data descriptor
+
+        $header = pack('V', LOCAL_FILE_HEADER);            // local file header signature
+        $header .= "\x14\x00";                               // version needed to extract
+        $header .= "\x00\x00";                            // general purpose bit flag
+        $header .= "\x08\x00";                               // compression method, deflated used here
+        $header .= pack('vv', $modTime, $modDate);        // last mod file time, last mod file date
+        $header .= pack('V', $crcValue);                   // crc-32
+        $header .= pack('V', $compressedSize);               // compressed size
+        $header .= pack('V', $unCompressedSize);           // uncompressed size
+        $header .= pack('v', $filenameLength);               // file name length
+        $header .= pack('v', 0);                           // extra field length
+        $header .= $filename;                              // filename
+        $header .= $compressedData;                          // file data
+        $header .= $this->_getDataDescriptor($crcValue, $compressedSize, $unCompressedSize); // Data descriptor
         $this->fileHeaderAndData[] = $header;
         //central directory
         $this->centralDirectory[] = $this->_getCentralDirectory($modTime, $modDate, $crcValue, $compressedSize, $unCompressedSize, $filenameLength, strlen($header), $filename);
+
         return true;
     }
-    
+
     /**
      * 返回压缩后的数据
      * @return string 压缩后的数据
@@ -59,8 +60,8 @@ class MedzZip
     {
         $fileHeaderAndData = implode('', $this->fileHeaderAndData);
         $centralDirectory = implode('', $this->centralDirectory);
-        
-        $return = $fileHeaderAndData . $centralDirectory;
+
+        $return = $fileHeaderAndData.$centralDirectory;
         $return .= pack('V', EOF_CENTRAL_DIRECTORY);            // end of central dir signature
         $return .= pack('v', 0);                                // Number of this disk
         $return .= pack('v', 0);                                // Disk where central directory starts
@@ -71,7 +72,7 @@ class MedzZip
         $return .= "\x00\x00";                                    // .zip file comment length
         return $return;
     }
-    
+
     /**
      * 解压缩一个文件
      * @param $file string 文件名
@@ -84,10 +85,10 @@ class MedzZip
             return false;
         }
         $filesize = sprintf('%u', filesize($file));
-        
+
         $this->fileHandle = fopen($file, 'rb');
         $fileData = fread($this->fileHandle, $filesize);
-        
+
         $EofCentralDirData = $this->_findEOFCentralDirectoryRecord($filesize); //获取'End of central directory record'区块的数据
         if (!is_array($EofCentralDirData)) {
             return false;
@@ -112,9 +113,10 @@ class MedzZip
             );
         }
         fclose($this->fileHandle);
+
         return $extractedData;
     }
-    
+
     /**
      * 初始化
      */
@@ -122,9 +124,10 @@ class MedzZip
     {
         $this->fileHeaderAndData = $this->centralDirectory = array();
         $this->localFileHeaderOffset = 0;
+
         return true;
     }
-    
+
     /**
      * 取得压缩数据中的'Local file header'区块跟压缩的数据
      * @param $centralDirectoryData array 'Central directory' 区块数据
@@ -144,19 +147,19 @@ class MedzZip
         if (!$this->_checkLocalFileHeaderAndCentralDir($localFileHeaderData, $centralDirectoryData)) {
             return false;
         }
-        
+
         if ($localFileHeaderData['flag'] & 1) {
             return false;
         } //文件加密过
         $compressedData = fread($this->fileHandle, $localFileHeaderData['compressedsize']);
         $data = $this->_unCompressData($compressedData, $localFileHeaderData['compressmethod']);
-        
+
         if (crc32($data) != $localFileHeaderData['crc'] || strlen($data) != $localFileHeaderData['uncompressedsize']) {
             return false;
         } //crc32 校验不一致或长度不一致
         return $data;
     }
-    
+
     /**
      * 解压被压缩的数据
      * @param $data string 被压缩的数据
@@ -169,27 +172,28 @@ class MedzZip
             return $data;
         }
         switch ($compressMethod) {
-            case 8 : // compressed by deflate
+            case 8: // compressed by deflate
                 $data = gzinflate($data);
                 break;
-            default :
+            default:
                 return false;
                 break;
         }
+
         return $data;
     }
-    
+
     /**
      * 校验 'Local file header' 跟 'Central directory'
-     * @param unknown_type $localFileHeaderData
-     * @param unknown_type $centralDirectoryData
+     * @param  unknown_type $localFileHeaderData
+     * @param  unknown_type $centralDirectoryData
      * @return bool
      */
     public function _checkLocalFileHeaderAndCentralDir($localFileHeaderData, $centralDirectoryData)
     {
         return true; //暂时不验证，有需要时可扩展
     }
-    
+
     /**
      * 读取'Central directory' 区块数据
      * @return string
@@ -208,11 +212,11 @@ class MedzZip
         $centralDirectoryData['time'] = $this->_recoverFromDosFormatTime($centralDirectoryData['modtime'], $centralDirectoryData['moddate']); //读取时间信息
         return $centralDirectoryData;
     }
-    
+
     /**
      * 读取'end of central directory record'区块数据
      * @param $filesize int 文件大小
-     * @return string 
+     * @return string
      */
     public function _findEOFCentralDirectoryRecord($filesize)
     {
@@ -234,9 +238,10 @@ class MedzZip
         }
         $EofCentralDirData = unpack('vdisknum/vdiskstart/vcentraldirnum/vtotalentries/Vcentraldirsize/Vcentraldiroffset/vcommentlength', fread($this->fileHandle, 18)); // 'End of central directory record'区块除signature跟注释外的数据
         $EofCentralDirData['commentlength'] && $EofCentralDirData['comment'] = fread($this->fileHandle, $EofCentralDirData['commentlength']);
+
         return $EofCentralDirData;
     }
-    
+
     /**
      * 检查PHP zlib扩展有没有载入
      * @return bool
@@ -245,7 +250,7 @@ class MedzZip
     {
         return (extension_loaded('zlib') && function_exists('gzcompress')) ? true : false;
     }
-    
+
     /**
      * 组装 'Central directory' 区块数据
      * @param $modTime
@@ -280,7 +285,7 @@ class MedzZip
         $centralDirectory .= $filename;                                // file name
         return $centralDirectory;
     }
-    
+
     /**
      * 组装 'Data descriptor' 区块数据
      * @param $crc
@@ -293,7 +298,7 @@ class MedzZip
         return '';    // return string only when bit 3 of the general purpose bit flag is set
         //return pack('VVV', $crc, $compressedSize, $unCompressedSize);
     }
-    
+
     /**
      * 格式化时间为DOS格式
      * @param $timestamp
@@ -304,18 +309,19 @@ class MedzZip
         $timestamp = (int) $timestamp;
         $time = $timestamp === 0 ? getdate() : getdate($timestamp);
         if ($time['year'] < 1980) {
-            $time['year']    = 1980;
-            $time['mon']     = 1;
-            $time['mday']    = 1;
-            $time['hours']   = 0;
+            $time['year'] = 1980;
+            $time['mon'] = 1;
+            $time['mday'] = 1;
+            $time['hours'] = 0;
             $time['minutes'] = 0;
             $time['seconds'] = 0;
         }
         $modTime = ($time['hours'] << 11) + ($time['minutes'] << 5) + $time['seconds'] / 2;
         $modDate = (($time['year'] - 1980) << 9) + ($time['mon'] << 5) + $time['mday'];
+
         return array($modTime, $modDate);
     }
-    
+
     /**
      * 还原DOS格式的时间为时间戳
      * @param $time
@@ -329,7 +335,8 @@ class MedzZip
         $day = $date & 0x001F;
         $hour = ($time & 0xF800) >> 11;
         $minutes = ($time & 0x07E0) >> 5;
-        $seconds = ($time & 0x001F)*2;
+        $seconds = ($time & 0x001F) * 2;
+
         return mktime($hour, $minutes, $seconds, $month, $day, $year);
     }
 }

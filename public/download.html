@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ThinkSNS官方社区 - ThinkSNS开源分享系统 - ThinkSNS</title>
+<meta content="ThinkSNS 开源分享 免费分享 开源SNS" name="keywords">
+<meta content="ThinkSNS开源分享程序致力于提供中国最好的分享程序、轻知识系统、SNS社交网络平台解决方案，提供分享源代码免费下载。内置分享插件机制和API体系，功能覆盖微群功能、社区群组、论坛分享整合、cms分享整合、长分享、图片分享、等综合功能，使分享二次开发更简单。系统采用php+mysql开发，开源发布，支持多个分享系统同步登陆，是能与ucenter整合的分享系统。智士软件使企业或个人快速拥有分享建站能力，为客户提供高质量的分享软件平台服务。" name="description">
+<meta property="qc:admins" content="345471037076401633636375" />
+<link href="favicon.ico?v=4.3.6" type="image/x-icon" rel="shortcut icon">
+<link href="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/css/css.php?t=css&f=global.css,module.css,menu.css,form.css,message.css,jquery.atwho.css&v=4.3.6.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/uploadify/uploadify.css?v=4.3.6" type="text/css">
+
+<link href="http://demo.thinksns.com/ts4/storage/app/public/login.css?v=4.3.6" rel="stylesheet" type="text/css"/><script>
+/**
+ * 全局变量
+ */
+var SITE_URL  = 'http://demo.thinksns.com/ts4';
+var UPLOAD_URL= 'http://demo.thinksns.com/ts4/data/upload';
+var THEME_URL = 'http://demo.thinksns.com/ts4/addons/theme/stv1/_static';
+var APPNAME   = 'public';
+var MID     = '0';
+var UID     = '0';
+var initNums  =  '140';
+var SYS_VERSION = '4.3.6'
+var UMEDITOR_HOME_URL = 'http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/um/';
+var _CP       = 'TS4_';
+// Js语言变量
+var LANG = new Array();
+</script>
+<script src="http://demo.thinksns.com/ts4/data/lang/public_zh-cn.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/jquery.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/jquery.form.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/common.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/core.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/module.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/module.common.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/jwidget_1.0.0.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/jquery.atwho.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/jquery.caret.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/ui.core.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/ui.draggable.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/plugins/core.digg.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/plugins/core.comment.js?v=4.3.6"></script>
+<script src="http://demo.thinksns.com/ts4/addons/theme/stv1/_static/js/plugins/core.digg.js?v=4.3.6"></script>
+
+<style type="text/css">
+body, #header { padding-right: 0; }
+</style>
+</head>
+<body>
+<script>
+    core.plugFunc('message', function(){
+        core.message.init();
+        
+    });
+</script>
+
+<style type="text/css">
+  .login-info .error-box{top:440px;height: 32px;}
+  .login-info .error-box p{line-height: 32px;}
+</style>
+<div id="page-wrap" class="clearfix"> 
+  <!--***登录***-->
+  <div class="login-main clearfix">
+    <!-- <div class="login-banner"><img  src="http://bendifaxian.com/data/upload/2016/1001/16/57ef7a9b4f88ec1b475a.jpg"/></div> -->
+    <!--登录面板-->
+    <div class="login-board">
+      <h3>欢迎来到ThinkSNS</h3>
+        <div class="login-info">
+            <div class="android">
+              <a style="width: 120px" class="act-but submit" href="http://demo.thinksns.com/ts4/Thinksns_v4.0-release.apk" >安卓版下载</a>
+              <img src="android.png" style="width: 150px;height: 150px;" alt="http://demo.thinksns.com/ts4/Thinksns_v4.0-release.apk">
+            </div>
+            
+            <div class="ios">
+              <h1><a style="width: 120px" class="act-but submit" href="http://itunes.apple.com/cn/app/" >IOS版下载</a></h1>
+              <img src="ios.png" style="width: 150px;height: 150px;" alt="http://itunes.apple.com/cn/app/">
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+<style>
+  .android {
+    padding: 0 0 0 65px;
+  }
+  .ios {
+    padding: 40px 0 0 65px;
+  }
+  .submit {
+    margin-top: 0px;
+  }
+</style>
+<script type="text/javascript">
+$(function(){
+    //回车自动提交
+    $('body').keypress(function(event){
+        if(event.which==13){
+          $('#ajax_login_form').submit();
+        }
+    });
+    var bg = "http://demo.thinksns.com/ts4/data/upload/2015/0603/18/556edb32e928c.jpg";
+    $('body').css('background','url('+bg+')');
+    $('body').css('background-repeat','no-repeat');
+    $('body').css('background-position','center');
+    $('body').css('background-attachment','fixed');
+})
+</script>

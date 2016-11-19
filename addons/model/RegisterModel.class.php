@@ -1,23 +1,21 @@
 <?php
 /**
  * 注册模型 - 数据对象模型
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 class RegisterModel extends Model
 {
-
     private $_config;                                                                    // 注册配置字段
     private $_user_model;                                                                // 用户模型对象字段
     private $_error;                                                                    // 错误信息字段
     private $_email_reg = '/[_a-zA-Z\d\-\.]+(@[_a-zA-Z\d\-\.]+\.[_a-zA-Z\d\-]+)+$/i';        // 邮箱正则规则
     private $_mobile_reg = '/^1[34578][0-9]{1}[0-9]{8}$/';                        //手机正在规则
     private $_name_reg = "/^[\x{4e00}-\x{9fa5}A-Za-z0-9_\.]+$/u";                            // 昵称正则规则
-    private $_phone_reg = "/^[1][3578]\d{9}$/";
+    private $_phone_reg = '/^1[34578][0-9]{1}[0-9]{8}$/';
 
     /**
-     * 初始化操作，获取注册配置信息；实例化用户模型对象 
-     * @return void
+     * 初始化操作，获取注册配置信息；实例化用户模型对象
      */
     public function __construct()
     {
@@ -28,9 +26,9 @@ class RegisterModel extends Model
 
     /**
      * 验证邀请邮件内容的正确性
-     * @param string $email 邀请邮箱的信息
-     * @param string $old_email 原始邮箱的信息
-     * @return boolean 是否验证成功
+     * @param  string $email     邀请邮箱的信息
+     * @param  string $old_email 原始邮箱的信息
+     * @return bool   是否验证成功
      */
     public function isValidEmail_invite($email, $old_email = null)
     {
@@ -47,14 +45,14 @@ class RegisterModel extends Model
             $res = false;
         }
 
-        return (boolean)$res;
+        return (boolean) $res;
     }
 
     /**
      * 验证邮箱正确性
      *
-     * @param string $email 邮箱地址
-     * @param string $oldEmail 旧邮箱地址
+     * @param  string $email    邮箱地址
+     * @param  string $oldEmail 旧邮箱地址
      * @return bool
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -63,29 +61,33 @@ class RegisterModel extends Model
         // # 判断邮箱格式正确性
         if (!preg_match($this->_email_reg, $email, $matches)) {
             $this->_error = '无效的Email地址';
+
             return false;
 
         // # 判断是否是规定的后缀
         } elseif (!empty($this->_config['email_suffix']) and !in_array($matches['1'], explode(',', $this->_config['email_suffix']))) {
             $this->_error = '该邮箱后缀不允许注册';
+
             return false;
 
         // # 判断是否被注册
-        } elseif (!$this->_user_model->isChangeEmail($email, $this->_user_model->where('`email` LIKE "' . $oldEmail . '"')->field('uid')->getField('uid'))) {
+        } elseif (!$this->_user_model->isChangeEmail($email, $this->_user_model->where('`email` LIKE "'.$oldEmail.'"')->field('uid')->getField('uid'))) {
             $this->_error = '该Email已被注册';
+
             return false;
         }
+
         return true;
     }
 
     /**
      * 验证邮箱内容的正确性
-     * 
-     * @param string $email
-     *        	输入邮箱的信息
-     * @param string $old_email
-     *        	原始邮箱的信息
-     * @return boolean 是否验证成功
+     *
+     * @param  string $email
+     *                           输入邮箱的信息
+     * @param  string $old_email
+     *                           原始邮箱的信息
+     * @return bool   是否验证成功
      */
     // public function isValidEmail($email, $old_email = null) {
     // 	$res = preg_match ( $this->_email_reg, $email, $matches ) !== 0;
@@ -124,37 +126,40 @@ class RegisterModel extends Model
             $res = false;
         }
 
-        return (boolean)$res;
+        return (boolean) $res;
     }
 
     /**
      * 验证注册验证码是否正确
      *
-     * @param int $code 验证码
-     * @param float $phone 手机号码
-     * @return boolean
+     * @param  int   $code  验证码
+     * @param  float $phone 手机号码
+     * @return bool
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function isValidRegCode($code, $phone)
     {
         /* # 安全过滤 */
-        $code  = intval($code);
+        $code = intval($code);
         $phone = floatval($phone);
 
         /* # 验证手机号码是否为空 */
         if (!$phone) {
             $this->_error = '手机号不能为空';
+
             return false;
 
         /* # 验证验证码是否为空 */
         } elseif (!$code) {
             $this->_error = '验证码不能为空';
+
             return false;
 
         /* # 验证验证码是否错误 */
         } elseif (($sms = model('Sms')) and !$sms->CheckCaptcha($phone, $code)) {
             $this->_error = $sms->getMessage();
             unset($sms);
+
             return false;
         }
 
@@ -180,9 +185,9 @@ class RegisterModel extends Model
 
     /**
      * 验证昵称内容的正确性
-     * @param string $name 输入昵称的信息
-     * @param string $old_name 原始昵称的信息
-     * @return boolean 是否验证成功
+     * @param  string $name     输入昵称的信息
+     * @param  string $old_name 原始昵称的信息
+     * @return bool   是否验证成功
      */
     public function isValidName($name, $old_name = null)
     {
@@ -198,6 +203,7 @@ class RegisterModel extends Model
         $phone_reg = preg_match($this->_phone_reg, $name) !== 0;
         if ($phone_reg) {
             $this->_error = '用户名不能为手机号格式';
+
             return false;
         }
         //其他格式
@@ -206,21 +212,34 @@ class RegisterModel extends Model
             $length = get_str_length($name);
             $res = ($length >= 2 && $length <= 10);
             if (!$res) {
-                $this->_error = L('PUBLIC_NICKNAME_LIMIT', array('nums'=>'2-10'));            // 昵称长度必须在2-10个汉字之间
+                $this->_error = L('PUBLIC_NICKNAME_LIMIT', array('nums' => '2-10'));            // 昵称长度必须在2-10个汉字之间
                 return false;
             }
         } else {
-            $this->_error = '仅支持中英文，数字，下划线';
+            $this->_error = '昵称仅支持中英文，数字，下划线';
+
             return false;
         }
-        //是否已被使用
-        if (($name != $old_name) && $this->_user_model->where('`uname`="'.mysql_escape_string($name).'"')->find()) {
-            $this->_error = L('PUBLIC_ACCOUNT_USED');                // 该用户名已被使用
+
+        $user = \Ts\Models\User::existent()->byUserName($name)->first();
+
+        if (!$old_name && $user) {
+            $this->_error = '该用户名已经存在';
+
             return false;
+        } elseif ($old_name) {
+            $old_user = \Ts\Models\User::existent()->byUserName($old_name)->first();
+            if ($name != $old_name && $old_user && $user && $old_user->uid != $user->uid) {
+                $this->_error = '该用户名已经存在';
+
+                return false;
+            }
         }
+
         //敏感词
         if (filter_keyword($name) !== $name) {
             $this->_error = '抱歉，该昵称包含敏感词不允许被使用';
+
             return false;
         }
 
@@ -229,9 +248,9 @@ class RegisterModel extends Model
 
     /**
      * 验证密码内容的正确性
-     * @param string $pwd 密码信息
-     * @param string $repwd 确认密码信息
-     * @return boolean 是否验证成功
+     * @param  string $pwd   密码信息
+     * @param  string $repwd 确认密码信息
+     * @return bool   是否验证成功
      */
     public function isValidPassword($pwd, $repwd)
     {
@@ -257,6 +276,7 @@ class RegisterModel extends Model
         if (!preg_match('/^[a-zA-Z0-9]+$/', $pwd)) {
             $this->_error = L('密码只能包含字母和数字');
             $res = false;
+
             return $res;
         }
         $length = strlen($pwd);
@@ -270,14 +290,14 @@ class RegisterModel extends Model
 
         return $res;
     }
-    
+
     /**
      * 审核用户
-     * @param array $uids 用户UID数组
-     * @param integer $type 类型，0表示取消审核，1表示通过审核
-     * @return boolean 是否审核成功
+     * @param  array $uids 用户UID数组
+     * @param  int   $type 类型，0表示取消审核，1表示通过审核
+     * @return bool  是否审核成功
      */
-    public function audit($uids, $type=1)
+    public function audit($uids, $type = 1)
     {
         // 处理数据
         !is_array($uids) && $uids = explode(',', $uids);
@@ -296,9 +316,10 @@ class RegisterModel extends Model
                 foreach ($uids as $touid) {
                     model('Notify')->sendNotify($touid, 'audit_error');
                 }
+
                 return true;
             }
-            
+
             // 发送通过审核邮件
             foreach ($uids as $uid) {
                 $this->sendActivationEmail($uid, 'audit_ok');
@@ -310,11 +331,11 @@ class RegisterModel extends Model
 
     /**
      * 给指定用户发送激活账户邮件
-     * @param integer $uid 用户UID
-     * @param string $node 邮件模板类型
-     * @return boolean 是否发送成功
+     * @param  int    $uid  用户UID
+     * @param  string $node 邮件模板类型
+     * @return bool   是否发送成功
      */
-    public function sendActivationEmail($uid, $node ='register_active')
+    public function sendActivationEmail($uid, $node = 'register_active')
     {
         $map['uid'] = $uid;
         $user_info = $this->_user_model->where($map)->find();
@@ -327,7 +348,7 @@ class RegisterModel extends Model
                 $config['activeurl'] = $GLOBALS['ts']['site']['home_url'];
             } else {
                 $code = $this->getActivationCode($user_info);
-                $config['activeurl'] = U('public/Register/activate', array('uid'=>$uid, 'code'=>$code));
+                $config['activeurl'] = U('public/Register/activate', array('uid' => $uid, 'code' => $code));
             }
             $config['name'] = $user_info['uname'];
             model('Notify')->sendNotify($uid, $node, $config);
@@ -341,9 +362,9 @@ class RegisterModel extends Model
 
     /**
      * 激活指定用户
-     * @param integer $uid 用户UID
-     * @param string $code 激活码
-     * @return boolean 是否激活成功
+     * @param  int    $uid  用户UID
+     * @param  string $code 激活码
+     * @return bool   是否激活成功
      */
     public function activate($uid, $code)
     {
@@ -352,7 +373,7 @@ class RegisterModel extends Model
 
         $res = ($code == $this->getActivationCode($user_info));
         if ($res && !$user_info['is_active']) {
-            $res = $this->_user_model->where($map)->save(array('is_active'=>1));
+            $res = $this->_user_model->where($map)->save(array('is_active' => 1));
             $this->_user_model->cleanCache($uid);
         }
 
@@ -367,7 +388,7 @@ class RegisterModel extends Model
 
     /**
      * 获取激活码
-     * @param array $user_info 用户的相关信息
+     * @param  array  $user_info 用户的相关信息
      * @return string 激活码
      */
     public function getActivationCode($user_info)
@@ -377,17 +398,17 @@ class RegisterModel extends Model
 
     /**
      * 初始化用户账号
-     * @param integer $uid 用户UID
-     * @return boolean 是否成功初始化用户账号
+     * @param  int  $uid 用户UID
+     * @return bool 是否成功初始化用户账号
      */
     public function initUser($uid)
     {
         $map['uid'] = $uid;
-        $user_info  = $this->_user_model->where($map)->find();
+        $user_info = $this->_user_model->where($map)->find();
         $user_info['is_active'] && $res = $this->_user_model->where($map)->save(array('is_init' => 1));
         // 清除用户缓存
         $this->_user_model->cleanCache($uid);
-        
+
         if ($res) {
             $this->_error = L('PUBLIC_ACCOUNT_INITIALIZE_SUCCESS');            // 帐号初始化成功
             return true;
@@ -408,9 +429,9 @@ class RegisterModel extends Model
 
     /**
      * 修改指定用户的注册邮箱
-     * @param integer $uid 用户ID
-     * @param string $email 邮箱地址
-     * @return boolean 是否更改邮箱成功
+     * @param  int    $uid   用户ID
+     * @param  string $email 邮箱地址
+     * @return bool   是否更改邮箱成功
      */
     public function changeRegisterEmail($uid, $email)
     {
@@ -419,27 +440,28 @@ class RegisterModel extends Model
         $data['login'] = $email;
         $data['email'] = $email;
         $res = $this->_user_model->where($map)->save($data);
-        $res = (boolean)$res;
+        $res = (boolean) $res;
         if ($res) {
             $this->_error = '更换邮箱成功';
             $this->_user_model->cleanCache($uid);
         } else {
             $this->_error = '更换邮箱失败';
         }
+
         return $res;
     }
 
     /**
      * 指定用户初始化完成
-     * @param integer $uid 用户ID
-     * @return boolean 是否初始化成功
+     * @param  int  $uid 用户ID
+     * @return bool 是否初始化成功
      */
     public function overUserInit($uid)
     {
         $map['uid'] = $uid;
         $data['is_init'] = 1;
         $res = $this->_user_model->where($map)->save($data);
-        $res = (boolean)$res;
+        $res = (boolean) $res;
         // if($res) {
         // 	// 获取用户信息
         // 	$receiverInfo = model('User')->getUserInfo($uid);
@@ -461,6 +483,7 @@ class RegisterModel extends Model
         // }
         // 清除用户缓存
         $this->_user_model->cleanCache($uid);
+
         return $res;
     }
 }

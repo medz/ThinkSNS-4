@@ -3905,7 +3905,8 @@ CREATE TABLE IF NOT EXISTS `ts_credit_record` (
   `des` text COMMENT '详情',
   `change` varchar(255) DEFAULT NULL COMMENT '积分变更',
   `ctime` int(11) DEFAULT NULL COMMENT '时间',
-  `detail` varchar(255) NULL COMMENT 'API所需描述',
+  `detail` varchar(255) NULL DEFAULT NULL COMMENT 'API所需描述',
+  `reason` varchar(255) NULL DEFAULT NULL COMMENT '驳回理由',
   PRIMARY KEY (`rid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
@@ -4066,6 +4067,24 @@ CREATE TABLE IF NOT EXISTS `ts_credit_user` (
 TRUNCATE TABLE `ts_credit_user`;
 
 -- --------------------------------------------------------
+DROP TABLE IF EXISTS `ts_credit_order`;
+CREATE TABLE `ts_credit_order` (
+	`order_id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+	`order_number` VARCHAR(32) NOT NULL COMMENT '18位订单号',
+	`uid` INT(11) NOT NULL COMMENT '用户id',
+	`account` VARCHAR(50) NOT NULL COMMENT '用户提现账户',
+	`type` TINYINT(1) NULL DEFAULT '1' COMMENT '1-支付宝 2-微信 ',
+	`gold` INT(11) NOT NULL COMMENT '提现金币个数',
+	`amount` DECIMAL(10,2) NOT NULL COMMENT '对应金币计算的提现金额',
+	`ctime` INT(11) NOT NULL COMMENT '提现订单创建时间',
+	`utime` INT(11) NULL DEFAULT NULL COMMENT '订单处理更新时间',
+	`status` TINYINT(1) NULL DEFAULT '0' COMMENT '0-待处理 1-已处理 2-已拒绝',
+	PRIMARY KEY (`order_id`)
+)
+COMMENT='直播提现订单'
+COLLATE='utf8_general_ci'
+ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 
 --
 -- 表的结构 `ts_denounce`
@@ -6257,11 +6276,11 @@ DROP TABLE IF EXISTS `ts_login`;
 CREATE TABLE IF NOT EXISTS `ts_login` (
   `login_id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL COMMENT '用户UID',
-  `type_uid` varchar(255) NOT NULL COMMENT '授权登陆用户名',
+  `type_uid` varchar(255) DEFAULT '' NOT NULL COMMENT '授权登陆用户名',
   `type` char(80) NOT NULL COMMENT '登陆类型',
   `oauth_token` varchar(150) DEFAULT NULL COMMENT '授权账号',
   `oauth_token_secret` varchar(150) DEFAULT NULL COMMENT '授权密码',
-  `is_sync` tinyint(1) NOT NULL COMMENT '是否同步动态',
+  `is_sync` tinyint(1) DEFAULT 0 NOT NULL COMMENT '是否同步动态',
   PRIMARY KEY (`login_id`),
   KEY `uid` (`uid`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -6437,6 +6456,7 @@ CREATE TABLE IF NOT EXISTS `ts_message_list` (
   `from_uid` int(11) unsigned NOT NULL COMMENT '私信发起者UID',
   `type` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '私信类别，1：一对一；2：多人',
   `title` varchar(255) DEFAULT NULL COMMENT '标题',
+  `logo` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '群聊logo',
   `member_num` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '参与者数量',
   `min_max` varchar(255) DEFAULT NULL COMMENT '参与者UID正序排列，以下划线“_”链接',
   `mtime` int(11) unsigned NOT NULL COMMENT '发起时间戳',
@@ -7511,6 +7531,9 @@ INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES(66
 INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES(6662, 'pageKey', 'admin_User_disableSendList', 'a:4:{s:3:"key";a:11:{s:3:"uid";s:3:"uid";s:5:"uname";s:5:"uname";s:10:"user_group";s:10:"user_group";s:8:"location";s:8:"location";s:8:"is_audit";s:8:"is_audit";s:9:"is_active";s:9:"is_active";s:7:"is_init";s:7:"is_init";s:5:"ctime";s:5:"ctime";s:6:"reg_ip";s:6:"reg_ip";s:12:"disable_time";s:12:"disable_time";s:8:"DOACTION";s:8:"DOACTION";}s:8:"key_name";a:11:{s:3:"uid";s:3:"UID";s:5:"uname";s:9:"用户名";s:10:"user_group";s:9:"用户组";s:8:"location";s:6:"地区";s:8:"is_audit";s:12:"是否审核";s:9:"is_active";s:12:"是否激活";s:7:"is_init";s:15:"是否初始化";s:5:"ctime";s:12:"注册时间";s:6:"reg_ip";s:8:"注册IP";s:12:"disable_time";s:12:"禁言时间";s:8:"DOACTION";s:6:"操作";}s:10:"key_hidden";a:11:{s:3:"uid";s:1:"0";s:5:"uname";s:1:"0";s:10:"user_group";s:1:"0";s:8:"location";s:1:"0";s:8:"is_audit";s:1:"0";s:9:"is_active";s:1:"0";s:7:"is_init";s:1:"0";s:5:"ctime";s:1:"0";s:6:"reg_ip";s:1:"0";s:12:"disable_time";s:1:"0";s:8:"DOACTION";s:1:"0";}s:14:"key_javascript";a:11:{s:3:"uid";s:0:"";s:5:"uname";s:0:"";s:10:"user_group";s:0:"";s:8:"location";s:0:"";s:8:"is_audit";s:0:"";s:9:"is_active";s:0:"";s:7:"is_init";s:0:"";s:5:"ctime";s:0:"";s:6:"reg_ip";s:0:"";s:12:"disable_time";s:0:"";s:8:"DOACTION";s:0:"";}}', '2015-07-14 07:24:10');
 INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES
 (6664, 'pageKey', 'admin_Upgrade_check', 'a:6:{s:3:"key";a:2:{s:3:"log";s:3:"log";s:4:"tips";s:4:"tips";}s:8:"key_name";a:2:{s:3:"log";s:12:"升级日志";s:4:"tips";s:12:"升级提示";}s:8:"key_type";a:2:{s:3:"log";s:8:"textarea";s:4:"tips";s:6:"define";}s:11:"key_default";a:2:{s:3:"log";s:0:"";s:4:"tips";s:0:"";}s:9:"key_tishi";a:2:{s:3:"log";s:0:"";s:4:"tips";s:0:"";}s:14:"key_javascript";a:2:{s:3:"log";s:0:"";s:4:"tips";s:0:"";}}', '2015-07-17 13:40:28');
+INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES (6685, 'pageKey', 'admin_Application_ZB_config', 'a:6:{s:3:"key";a:5:{s:7:"version";s:7:"version";s:24:"cash_exchange_ratio_list";s:24:"cash_exchange_ratio_list";s:10:"alipay_pid";s:10:"alipay_pid";s:10:"alipay_key";s:10:"alipay_key";s:12:"alipay_email";s:12:"alipay_email";}s:8:"key_name";a:5:{s:7:"version";s:15:"配置版本号";s:24:"cash_exchange_ratio_list";s:12:"提现比例";s:10:"alipay_pid";s:0:"";s:10:"alipay_key";s:0:"";s:12:"alipay_email";s:0:"";}s:8:"key_type";a:5:{s:7:"version";s:4:"text";s:24:"cash_exchange_ratio_list";s:10:"stringText";s:10:"alipay_pid";s:4:"text";s:10:"alipay_key";s:4:"text";s:12:"alipay_email";s:4:"text";}s:11:"key_default";a:5:{s:7:"version";s:1:"1";s:24:"cash_exchange_ratio_list";s:0:"";s:10:"alipay_pid";s:0:"";s:10:"alipay_key";s:0:"";s:12:"alipay_email";s:0:"";}s:9:"key_tishi";a:5:{s:7:"version";s:39:"用于提醒客户端更新配置缓存";s:24:"cash_exchange_ratio_list";s:28:"金币：积分 以，隔开";s:10:"alipay_pid";s:0:"";s:10:"alipay_key";s:0:"";s:12:"alipay_email";s:0:"";}s:14:"key_javascript";a:5:{s:7:"version";s:0:"";s:24:"cash_exchange_ratio_list";s:0:"";s:10:"alipay_pid";s:0:"";s:10:"alipay_key";s:0:"";s:12:"alipay_email";s:0:"";}}', '2016-11-15 09:20:23');
+INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES (6684, 'pageKey', 'admin_Config_charge', 'a:6:{s:3:"key";a:6:{s:12:"charge_ratio";s:12:"charge_ratio";s:11:"description";s:11:"description";s:15:"charge_platform";s:15:"charge_platform";s:10:"alipay_pid";s:10:"alipay_pid";s:10:"alipay_key";s:10:"alipay_key";s:12:"alipay_email";s:12:"alipay_email";}s:8:"key_name";a:6:{s:12:"charge_ratio";s:12:"充值比例";s:11:"description";s:12:"充值描述";s:15:"charge_platform";s:12:"支付平台";s:10:"alipay_pid";s:12:"支付宝PID";s:10:"alipay_key";s:12:"支付宝KEY";s:12:"alipay_email";s:14:"支付宝Email";}s:8:"key_type";a:6:{s:12:"charge_ratio";s:4:"text";s:11:"description";s:4:"text";s:15:"charge_platform";s:8:"checkbox";s:10:"alipay_pid";s:4:"text";s:10:"alipay_key";s:4:"text";s:12:"alipay_email";s:4:"text";}s:11:"key_default";a:6:{s:12:"charge_ratio";s:3:"100";s:11:"description";s:12:"充值描述";s:15:"charge_platform";s:0:"";s:10:"alipay_pid";s:0:"";s:10:"alipay_key";s:0:"";s:12:"alipay_email";s:0:"";}s:9:"key_tishi";a:6:{s:12:"charge_ratio";s:39:"输入一元人民币等于多少积分";s:11:"description";s:0:"";s:15:"charge_platform";s:0:"";s:10:"alipay_pid";s:59:"合作身份者id，一般为以2088开头的16位纯数字";s:10:"alipay_key";s:56:"安全检验码，以数字和字母组成的32位字符";s:12:"alipay_email";s:21:"收款支付宝账号";}s:14:"key_javascript";a:6:{s:12:"charge_ratio";s:0:"";s:11:"description";s:0:"";s:15:"charge_platform";s:0:"";s:10:"alipay_pid";s:0:"";s:10:"alipay_key";s:0:"";s:12:"alipay_email";s:0:"";}}', '2016-11-15 09:18:40');
+INSERT INTO `ts_system_config` (`id`, `list`, `key`, `value`, `mtime`) VALUES (6699, 'pageKey', 'admin_Application_ZB_credit_order', 'a:4:{s:3:"key";a:10:{s:12:"order_number";s:12:"order_number";s:3:"uid";s:3:"uid";s:5:"uname";s:5:"uname";s:7:"account";s:7:"account";s:4:"gold";s:4:"gold";s:6:"amount";s:6:"amount";s:5:"ctime";s:5:"ctime";s:5:"utime";s:5:"utime";s:6:"status";s:6:"status";s:8:"DOACTION";s:8:"DOACTION";}s:8:"key_name";a:10:{s:12:"order_number";s:9:"订单号";s:3:"uid";s:3:"UID";s:5:"uname";s:9:"用户名";s:7:"account";s:12:"用户账户";s:4:"gold";s:12:"花费金币";s:6:"amount";s:12:"提现金额";s:5:"ctime";s:12:"创建时间";s:5:"utime";s:12:"处理时间";s:6:"status";s:12:"处理状态";s:8:"DOACTION";s:6:"操作";}s:10:"key_hidden";a:10:{s:12:"order_number";s:1:"0";s:3:"uid";s:1:"0";s:5:"uname";s:1:"0";s:7:"account";s:1:"0";s:4:"gold";s:1:"0";s:6:"amount";s:1:"0";s:5:"ctime";s:1:"0";s:5:"utime";s:1:"0";s:6:"status";s:1:"0";s:8:"DOACTION";s:1:"0";}s:14:"key_javascript";a:10:{s:12:"order_number";s:0:"";s:3:"uid";s:0:"";s:5:"uname";s:0:"";s:7:"account";s:0:"";s:4:"gold";s:0:"";s:6:"amount";s:0:"";s:5:"ctime";s:0:"";s:5:"utime";s:0:"";s:6:"status";s:0:"";s:8:"DOACTION";s:0:"";}}', '2016-11-15 09:27:58');
 
 -- --------------------------------------------------------
 
@@ -7865,6 +7888,7 @@ INSERT INTO `ts_system_data` (`id`, `list`, `key`, `value`, `mtime`) VALUES(5203
 INSERT INTO `ts_system_data` (`id`, `list`, `key`, `value`, `mtime`) VALUES(5204, 'square', 'weibaid', 's:0:"";', '2015-07-14 06:12:07');
 INSERT INTO `ts_system_data` (`id`, `list`, `key`, `value`, `mtime`) VALUES(5205, 'square', 'relateduser', 's:1:"0";', '2015-07-14 06:12:07');
 INSERT INTO `ts_system_data` (`id`, `list`, `key`, `value`, `mtime`) VALUES(5207, 'square', 'editSubmit', 's:1:"1";', '2015-07-14 06:12:07');
+INSERT INTO `ts_system_data` (`id`, `list`, `key`, `value`, `mtime`) VALUES(5229, 'admin_Application', 'ZB_config', 'a:2:{s:7:"version";s:1:"1";s:24:"cash_exchange_ratio_list";s:19:"1:100,2.5:200,4:300";}', '2016-11-15 09:29:38');
 
 -- --------------------------------------------------------
 
@@ -8237,14 +8261,14 @@ CREATE TABLE IF NOT EXISTS `ts_user` (
   `ctime` int(11) DEFAULT NULL COMMENT '注册时间',
   `identity` tinyint(1) NOT NULL DEFAULT '1' COMMENT '身份标识（1：用户，2：组织）',
   `api_key` varchar(255) DEFAULT NULL COMMENT '用户的api_key用于移动端',
-  `domain` char(80) NOT NULL COMMENT '保留字段，用于用户分表',
+  `domain` char(80) DEFAULT '' NOT NULL COMMENT '保留字段，用于用户分表',
   `province` mediumint(6) NOT NULL DEFAULT '0' COMMENT '省ID、关联ts_area表',
-  `city` int(5) NOT NULL COMMENT '城市ID，关联ts_area表',
-  `area` int(5) NOT NULL COMMENT '地区ID，关联ts_area表',
+  `city` int(5) NOT NULL DEFAULT 0 COMMENT '城市ID，关联ts_area表',
+  `area` int(5) NOT NULL DEFAULT 0 COMMENT '地区ID，关联ts_area表',
   `reg_ip` varchar(64) DEFAULT '127.0.0.1' COMMENT '册注IP',
   `lang` varchar(64) DEFAULT 'zh-cn' COMMENT '言语',
   `timezone` varchar(10) DEFAULT 'PRC' COMMENT '时区',
-  `is_del` tinyint(2) NOT NULL COMMENT '是否禁用，0不禁用，1：禁用',
+  `is_del` tinyint(2) DEFAULT 0 NOT NULL COMMENT '是否禁用，0不禁用，1：禁用',
   `first_letter` char(1) DEFAULT NULL COMMENT '用户名称的首字母',
   `intro` varchar(255) DEFAULT NULL COMMENT '户用简介',
   `last_login_time` int(11) DEFAULT '0' COMMENT '户用最后一次登录时间',
@@ -8269,6 +8293,17 @@ CREATE TABLE IF NOT EXISTS `ts_user` (
 
 TRUNCATE TABLE `ts_user`;
 -- --------------------------------------------------------
+DROP TABLE IF EXISTS `ts_user_account`;
+CREATE TABLE `ts_user_account` (
+	`uid` INT(11) NULL DEFAULT NULL,
+	`account` VARCHAR(50) NULL DEFAULT NULL COMMENT '用户账户',
+	`type` TINYINT(1) NULL DEFAULT '1' COMMENT '1-支付宝 2-微信',
+	`ctime` INT(11) NULL DEFAULT NULL COMMENT '绑定时间'
+)
+COMMENT='用户绑定账户表'
+COLLATE='utf8_general_ci'
+ENGINE=MyISAM;
+
 
 --
 -- 表的结构 `ts_user_app`
@@ -9522,3 +9557,16 @@ ALTER TABLE `ts_feed_data` CHANGE `feed_data` `feed_data` LONGTEXT CHARACTER SET
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+--
+-- 表结构 `ts_user_remark`
+--
+DROP TABLE IF EXISTS `ts_user_remark`;
+CREATE TABLE `ts_user_remark` (
+  `remark_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '备注id',
+  `mid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注名',
+  PRIMARY KEY (`remark_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

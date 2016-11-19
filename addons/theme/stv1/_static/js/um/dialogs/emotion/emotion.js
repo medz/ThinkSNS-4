@@ -224,6 +224,7 @@
                 src:url
             };
             obj._src = obj.src;
+            obj._emo = "emot";
             editor.execCommand( 'insertimage', obj );
             if ( !evt.ctrlKey ) {
                 //关闭预览

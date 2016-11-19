@@ -176,7 +176,13 @@ a:hover .contribute{background-position:0 -207px;}
 .feed_list .content .infopen{margin:15px 0 0 -80px;height:1px;background:#F5F5F5; border-bottom:1px solid #FAFAFA; border-top:1px solid #ECECEC;padding:0;overflow:visible;position:relative; display:none}
 .feed_list .content .infopen .trigon{width:17px;height:11px;overflow:hidden;position:absolute;top:-8px;margin-left:71px;background:#FFF url(../image/index-ico.png) -32px -300px no-repeat}
 .feed_list .content p.info a,.minh p.info a{ color:#888;}
+
 .feed_list .content p.info a:hover,.minh p.info a:hover{ color:#0096e6;}
+.feed_list .content p.info a:hover .digg-like,
+.minh p.info a:hover .digg-like {
+    background-position:-63px -221px;
+}
+
 .feed_list .content p.border{border:none 0;border-bottom:#ccc solid 1px;height:10px;overflow:hidden;margin:0 0 8px}
 .feed_list .content p.border .arrow-t{margin:3px 0 0 85px;position:absolute;}
 /*.feed_list .info a:link,.feed_list .info a:visited, .feed_list .content .more{color:#0096e6;font-weight:normal;cursor:pointer;}*/
@@ -184,8 +190,19 @@ a:hover .contribute{background-position:0 -207px;}
 .feed_list .content a.date em{color:#999;}
 /*.feed_list .info a.like-h:link,.feed_list .info a.like-h:visited{color:#ff8800;}*/
 .feed_list .info .digg-like,.minh .info .digg-like,.more-actions .digg-like,.feed_list .like-h .digg-like{width:17px;height:17px; display:inline-block; background:url(../image/index-ico.png);vertical-align:middle;background-position:-93px -221px;}
-.feed_list .digg-like-yes,.more-actions .digg-like-yes,.feed_list .digg-like-yes{color:#0096e6 !important}
-.feed_list .digg-like-yes .digg-like,.more-actions .digg-like-yes .digg-like,.feed_list .digg-like-yes .digg-like{background-position:-63px -221px;}
+
+.more-actions .digg-like-yes,
+.feed_list .digg-like-yes {
+  color:#0096e6 !important
+}
+
+.feed_list .digg-like:hover,
+.more-actions .digg-like-yes .digg-like,
+.feed_list .digg-like-yes .digg-like {
+  background-position:-63px -221px;
+}
+
+
 .feed_list .expand{padding:0;}
 .feed_list .arrow{height: 11px;overflow:hidden;width: 25px;position:absolute;top:-10px;left:10px;}
 .feed_list .type-bg{background:#fff;border-radius:2px;-moz-border-radius:2px;-webkit-border-radius:2px;padding:0 3px;}
@@ -195,6 +212,7 @@ a:hover .contribute{background-position:0 -207px;}
 .feed_list .comment span.downline{color:#F9FAFA;margin:-9px 0 0;}
 .feed_list .contents{margin:0 0 5px 0; overflow:hidden; width:100%; position:relative}
 .feed_list .contents a{color:#0096e6}
+.feed_list .contents img.emot{margin-right: .25rem;}
 .feed_list .contents .feed_txt,.feed_list .comment dd.com-info .feed_txt{width:444px;float:left;font-size:14px;color:#6E6E6E;}
 .feed_list .contents .feed_txt_default,.feed_list .comment dd.com-info .feed_txt_default{ padding:5px 14px 5px 14px; width:552px;}
 .feed_list .contents .feed_txt_video,.feed_list .comment dd.com-info .feed_txt_video{width:444px;}

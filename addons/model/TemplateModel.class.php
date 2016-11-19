@@ -10,21 +10,22 @@ class TemplateModel extends Model
 
     /**
      * 获取模板列表
-     * @param array $map 查询条件
-     * @param string $order 排序，默认'name ASC,tpl_id ASC'
-     * @param integer $limit 一次查询条数，默认30
-     * @return array 模板列表
+     * @param  array  $map   查询条件
+     * @param  string $order 排序，默认'name ASC,tpl_id ASC'
+     * @param  int    $limit 一次查询条数，默认30
+     * @return array  模板列表
      */
     public function getTemplate($map = array(), $order = 'tpl_id DESC', $limit = 30)
     {
         $list = $this->where($map)->order($order)->findPage($limit);
+
         return $list;
     }
 
     /**
      * 通过模板ID获取模板信息
-     * @param integet $tplId 模板ID
-     * @return array 模板ID获取模板信息
+     * @param  integet $tplId 模板ID
+     * @return array   模板ID获取模板信息
      */
     public function getTemplateById($tplId)
     {
@@ -33,13 +34,14 @@ class TemplateModel extends Model
         }
         $map['tpl_id'] = $tplId;
         $data = $this->where($map)->find();
+
         return $data;
     }
 
     /**
      * 按照模板名称查找模板
-     * @param string $name 模板名称
-     * @return array 模板名称查找模板
+     * @param  string $name 模板名称
+     * @return array  模板名称查找模板
      */
     public function getTemplateByName($name)
     {
@@ -48,13 +50,14 @@ class TemplateModel extends Model
         }
         $map['name'] = $name;
         $data = $this->where($name)->find();
+
         return $data;
     }
 
     /**
      * 添加模版操作
-     * @param array $data 模板相关数据
-     * @return boolean 是否添加成功
+     * @param  array $data 模板相关数据
+     * @return bool  是否添加成功
      */
     public function addTemplate($data)
     {
@@ -63,14 +66,15 @@ class TemplateModel extends Model
         }
         $data['ctime'] = empty($data['ctime']) ? time() : $data['ctime'];
         $result = $this->add($data);
-        return (boolean)$result;
+
+        return (boolean) $result;
     }
 
     /**
      * 编辑模板操作
-     * @param integer $tplId 模板ID
-     * @param array $data 模板相关数据
-     * @return boolean 是否添加成功
+     * @param  int   $tplId 模板ID
+     * @param  array $data  模板相关数据
+     * @return bool  是否添加成功
      */
     public function upTemplate($tplId, $data)
     {
@@ -79,13 +83,14 @@ class TemplateModel extends Model
         }
         $map['tpl_id'] = $tplId;
         $result = $this->where($map)->save($data);
-        return (boolean)$result;
+
+        return (boolean) $result;
     }
 
     /**
      * 删除指定模板ID的模板数据
-     * @param array|integer $tplIds 模板ID数组，也可以是单个模板ID
-     * @return boolean 是否删除成功
+     * @param  array|int $tplIds 模板ID数组，也可以是单个模板ID
+     * @return bool      是否删除成功
      */
     public function delTemplate($tplIds)
     {
@@ -95,13 +100,14 @@ class TemplateModel extends Model
         }
         $map['tpl_id'] = array('IN', $tplIds);
         $result = $this->where($map)->delete();
-        return (boolean)$result;
+
+        return (boolean) $result;
     }
 
     /**
      * 删除模板
-     * @param string $where 可以是模板ID：template_ids或模板名称：names多个ID或名称是数组形式，也可用“,”分隔
-     * @return boolean 是否删除成功
+     * @param  string $where 可以是模板ID：template_ids或模板名称：names多个ID或名称是数组形式，也可用“,”分隔
+     * @return bool   是否删除成功
      */
     public function deleteTemplate($where)
     {
@@ -119,15 +125,16 @@ class TemplateModel extends Model
             return false;
         }
         $result = $this->where($map)->delete();
-        return (boolean)$result;
+
+        return (boolean) $result;
     }
 
     /**
      * 解析模板（将模板中变量替换成数据）
-     * @param string $tpl_name 模板名称
-     * @param array $data 模板中的变量和数据
-     * @param boolean $auto_record 是否添加模板记录
-     * @return boolean|string 模板解析的结果
+     * @param  string      $tpl_name    模板名称
+     * @param  array       $data        模板中的变量和数据
+     * @param  bool        $auto_record 是否添加模板记录
+     * @return bool|string 模板解析的结果
      */
     public function parseTemplate($tpl_name, $data, $auto_record = null)
     {
@@ -153,8 +160,8 @@ class TemplateModel extends Model
         }
         // 内容模板
         if (!empty($template['body'])) {
-            $keys    = array_keys($data['body']);
-            $values    = array_values($data['body']);
+            $keys = array_keys($data['body']);
+            $values = array_values($data['body']);
             foreach ($keys as $k => $v) {
                 $keys[$k] = '{'.$v.'}';
             }
@@ -164,14 +171,15 @@ class TemplateModel extends Model
 
         //自动添加模板记录
         if ($auto_record) {
-            $record_data['uid']            = isset($data['uid']) ? $data['uid'] : $_SESSION['mid'];
-            $record_data['tpl_name']    = $template['name'];
-            $record_data['tpl_alias']    = $template['alias'];
-            $record_data['type']        = $template['type'];
-            $record_data['type2']        = $template['type2'];
-            $record_data['ctime']        = time();
+            $record_data['uid'] = isset($data['uid']) ? $data['uid'] : $_SESSION['mid'];
+            $record_data['tpl_name'] = $template['name'];
+            $record_data['tpl_alias'] = $template['alias'];
+            $record_data['type'] = $template['type'];
+            $record_data['type2'] = $template['type2'];
+            $record_data['ctime'] = time();
             unset($template['tpl_id']);
-            $record_data['data']        = serialize($template);
+            $record_data['data'] = serialize($template);
+
             return $this->addTemplateRecord($record_data);
         } else {
             return $template;
@@ -180,21 +188,22 @@ class TemplateModel extends Model
 
     /**
      * 添加模板记录
-     * @param array $data 模板的各种参数
-     * @return boolean 是否添加成功
+     * @param  array $data 模板的各种参数
+     * @return bool  是否添加成功
      */
     public function addTemplateRecord($data)
     {
         $result = D('template_record')->add($data);
-        return (boolean)$result;
+
+        return (boolean) $result;
     }
 
     /**
      * 查询模板记录
-     * @param array $map 查询条件
-     * @param string $order 结果排序，默认'tpl_record_id DESC'
-     * @param integer $limit 查询条数，默认30
-     * @return array 模板记录
+     * @param  array  $map   查询条件
+     * @param  string $order 结果排序，默认'tpl_record_id DESC'
+     * @param  int    $limit 查询条数，默认30
+     * @return array  模板记录
      */
     public function getTemplateRecordByMap($map = array(), $order = 'tpl_record_id DESC', $limit = 30)
     {

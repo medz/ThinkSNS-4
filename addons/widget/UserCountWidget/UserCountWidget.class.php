@@ -5,13 +5,13 @@
  */
     class UserCountWidget extends Widget
     {
-        
         public function render($data)
         {
             $content = '';
+
             return $content;
         }
-        
+
         /**
          * 获取指定用户的通知统计数目
          */

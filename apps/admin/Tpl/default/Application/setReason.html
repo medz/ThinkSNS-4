@@ -1,0 +1,42 @@
+<div class="layer-content">
+	<dl class="pop-area">
+		<dt class="mb10">
+			<div class="l">驳回理由：</div>
+			<div class="r"><input type="text" name="reason" /></div>
+			<div class="r"><input type="hidden" name="numbers" value="{$numbers}" /></div>
+		</dt>
+		<dd>
+			<input type="button" class="btn_b" value="确定" onclick="doPost()" />
+			<input type="button" class="btn_w ml10" value="取消" onclick="ui.box.close()" />
+		</dd>
+	</dl>
+</div>
+
+<script type="text/javascript">
+
+var doPost = function() {
+	var reason = $.trim($('#tsbox').find('input[name="reason"]').val());
+	if (reason === '') {
+		ui.error('请填写驳回理由');
+		return false;
+	}
+
+	var args = {};
+	args.reason = reason;
+	args.type = 2;
+	args.number = $.trim($('#tsbox').find('input[name="numbers"]').val());
+
+	$.post(U('admin/Application/doSetReason'), args, function(res) {
+		if (res.status == 1) {
+			ui.box.close();
+			ui.success(res.info);
+			setTimeout(function() {
+				location.reload();
+			}, 1500);
+		} else {
+			ui.error(res.info);
+		}
+	}, 'json');
+	return false;
+};
+</script>

@@ -8,7 +8,7 @@ class MenuWidget extends Widget
 {
     /**
      * 模板渲染
-     * @param array $data 相关数据
+     * @param  array  $data 相关数据
      * @return string 用户身份选择模板
      */
     public function render($data)
@@ -35,7 +35,7 @@ class MenuWidget extends Widget
                 $cate = D('area')->where('area_id='.$var['area'])->find();
                 if ($cate['pid'] != 0) {
                     $var['parent1'] = D('area')->where('area_id='.$cate['pid'])->find();  //上级
-                    if ($var['parent1']['pid']!=0) {
+                    if ($var['parent1']['pid'] != 0) {
                         $var['parent2'] = D('area')->where('area_id='.$var['parent1']['pid'])->find(); //上上级
                     } else {
                         $var['parent2']['title'] = $var['parent1']['title'];
@@ -55,13 +55,12 @@ class MenuWidget extends Widget
                         $var['city'] = model('CategoryTree')->setTable('area')->getNetworkList($cate['pid']);
                     }
                 }
-                
 
                 break;
             case 'verify':
                 // $var['menu'] = model('CategoryTree')->setTable('user_verified_category')->getNetworkList();
                 $var['menu'] = model('UserGroup')->where('is_authenticate=1')->findAll();
-                foreach ($var['menu'] as $k=>$v) {
+                foreach ($var['menu'] as $k => $v) {
                     $var['menu'][$k]['child'] = D('user_verified_category')->where('pid='.$v['user_group_id'])->findAll();
                 }
                 $var['pid'] = intval($data['pid']);
@@ -72,7 +71,7 @@ class MenuWidget extends Widget
         }
 
         // 渲染模版
-        $content = $this->renderFile(dirname(__FILE__)."/".$template.".html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$template.'.html', $var);
         // 输出数据
         return $content;
     }

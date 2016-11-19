@@ -6,29 +6,27 @@
  */
 class ShowAdsWidget extends Widget
 {
-    
     /**
      * 渲染可能感兴趣的人页面
      *
-     * @param array $data
-     *        	配置相关数据
+     * @param  array  $data
+     *                      配置相关数据
      * @return string 渲染页面的HTML
      */
     public function render($data)
     {
         $var = $this->_getRelatedDaren($data);
         //dump($var);exit;
-        $content = $this->renderFile(dirname(__FILE__) . "/ShowAds.html", $var);
-        
+        $content = $this->renderFile(dirname(__FILE__).'/ShowAds.html', $var);
+
         return $content;
     }
-    
-    
+
     /**
      * 获取用户的相关数据
      *
-     * @param array $data
-     *        	配置相关数据
+     * @param  array $data
+     *                     配置相关数据
      * @return array 显示所需数据
      */
     private function _getRelatedDaren($data)
@@ -39,7 +37,7 @@ class ShowAdsWidget extends Widget
         $var ['limit'] = isset($data ['limit']) ? intval($data ['limit']) : 2;
         // 收藏达人的信息
 
-        $key = '_getRelatedDaren' . $var ['uid'] . '_' . $var ['limit'] . '_' . date('Ymd');
+        $key = '_getRelatedDaren'.$var ['uid'].'_'.$var ['limit'].'_'.date('Ymd');
         $var ['user'] = S($key);
         if ($var ['user'] === false || intval($_REQUEST ['rel']) == 1) {
             $map['d.isHot'] = 1;
@@ -50,7 +48,7 @@ class ShowAdsWidget extends Widget
             ->field('f.*')
             ->limit($var ['limit'])
             ->findAll();
-            
+
             //$list = M ()->query ( $sql );
             ///dump(M()->getlastSQL());
             ///dump($list);
@@ -62,10 +60,10 @@ class ShowAdsWidget extends Widget
                 $arr [$key] ['id'] = $v['id'];
             }
             $var ['user'] = $arr;
-                
+
             S($key, $var ['user'], 86400);
         }
-    
+
         return $var;
     }
 }

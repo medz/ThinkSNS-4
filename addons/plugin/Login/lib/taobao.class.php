@@ -1,4 +1,5 @@
 <?php
+
 //TODO 授权刷新
 class taobao
 {
@@ -6,23 +7,25 @@ class taobao
     public function getUrl($redirect_uri)
     {
         if (!$redirect_uri) {
-            $redirect_uri = Addons::createAddonShow('Login', 'no_register_display', array('type'=>'taobao', 'do'=>"bind"));
+            $redirect_uri = Addons::createAddonShow('Login', 'no_register_display', array('type' => 'taobao', 'do' => 'bind'));
         }
         $_SESSION['state'] = md5(uniqid(rand(), true));
-        $this->loginUrl = 'https://oauth.taobao.com/authorize?'.'client_id='.TAOBAO_KEY.'&redirect_uri='.urlencode($redirect_uri).'&response_type=code&state=' . $_SESSION['state'] ;
+        $this->loginUrl = 'https://oauth.taobao.com/authorize?'.'client_id='.TAOBAO_KEY.'&redirect_uri='.urlencode($redirect_uri).'&response_type=code&state='.$_SESSION['state'] ;
+
         return $this->loginUrl;
     }
     //用户资料
     public function userInfo()
     {
         if ($_SESSION['taobao']['uid']) {
-            $user['id']         = $_SESSION['taobao']['uid'];
-            $user['uname']      = urldecode($_SESSION['taobao']['uname']);
-            $user['province']   = 0;
-            $user['city']       = 0;
-            $user['location']   = '';
-            $user['userface']   = $_SESSION['taobao']['userface'];
-            $user['sex']        = ($_SESSION['taobao']['sex']=='1')?1:0;
+            $user['id'] = $_SESSION['taobao']['uid'];
+            $user['uname'] = urldecode($_SESSION['taobao']['uname']);
+            $user['province'] = 0;
+            $user['city'] = 0;
+            $user['location'] = '';
+            $user['userface'] = $_SESSION['taobao']['userface'];
+            $user['sex'] = ($_SESSION['taobao']['sex'] == '1') ? 1 : 0;
+
             return $user;
         } else {
             //用接口获取数据
@@ -33,7 +36,7 @@ class taobao
     public function checkUser()
     {
         if ($_REQUEST['code']) {
-            $redirect_uri = Addons::createAddonShow('Login', 'no_register_display', array('type'=>'taobao', 'do'=>"bind"));
+            $redirect_uri = Addons::createAddonShow('Login', 'no_register_display', array('type' => 'taobao', 'do' => 'bind'));
             $url = 'https://oauth.taobao.com/token';
             $field = 'grant_type=authorization_code&client_id='.TAOBAO_KEY.'&code='.$_REQUEST['code'].'&client_secret='.TAOBAO_SECRET.'&redirect_uri='.urlencode($redirect_uri);
             $ch = curl_init();
@@ -53,6 +56,7 @@ class taobao
                 $_SESSION['taobao']['uname'] = $res['taobao_user_nick'];
                 $_SESSION['taobao']['userface'] = '';
                 $_SESSION['open_platform_type'] = 'taobao';
+
                 return $res;
             } else {
                 return false;
@@ -72,7 +76,7 @@ class taobao
         return true;
     }
     //转发一条分享
-    public function transpond($transpondId, $reId, $content='', $opt=null)
+    public function transpond($transpondId, $reId, $content = '', $opt = null)
     {
         return true;
     }

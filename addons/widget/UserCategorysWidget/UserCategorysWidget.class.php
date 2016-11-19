@@ -7,10 +7,9 @@
  */
 class UserCategorysWidget extends Widget
 {
-
     /**
      * 模板渲染
-     * @param array $data 相关数据
+     * @param  array  $data 相关数据
      * @return string 用户身份选择模板
      */
     public function render($data)
@@ -32,7 +31,7 @@ class UserCategorysWidget extends Widget
         }
         $var['callback'] = $data['callback'];
         // 渲染模版
-        $content = $this->renderFile(dirname(__FILE__)."/".$template.".html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$template.'.html', $var);
         // 输出数据
         return $content;
     }
@@ -63,7 +62,7 @@ class UserCategorysWidget extends Widget
 
     /**
      * 登录页面，获取选择模板数据
-     * @param array $data 参数数据
+     * @param  array $data 参数数据
      * @return array 获取的模板数据
      */
     private function _login($data)
@@ -87,7 +86,7 @@ class UserCategorysWidget extends Widget
 
     /**
      * 人物分类页面，获取选择模板数据
-     * @param array $data 参数数据
+     * @param  array $data 参数数据
      * @return array 获取的模板数据
      */
     public function _user($data)
@@ -131,6 +130,7 @@ class UserCategorysWidget extends Widget
         $var['nums'] = count($var['selectedIds']);
 
         $content = $this->renderFile(dirname(__FILE__).'/show.html', $var);
+
         return $content;
     }
 }

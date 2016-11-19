@@ -10,8 +10,8 @@ class ChannelFollowModel extends Model
 
     /**
      * 获取指定分类的关注数目
-     * @param integer $cid 频道分类ID
-     * @return integer 指定分类的关注数目
+     * @param  int $cid 频道分类ID
+     * @return int 指定分类的关注数目
      */
     public function getFollowingCount($cid)
     {
@@ -23,10 +23,10 @@ class ChannelFollowModel extends Model
 
     /**
      * 更新频道的关注状态
-     * @param integer $uid 关注用户ID
-     * @param integer $cid 频道分类ID
-     * @param string $type 更新频道操作，add or del
-     * @return boolean 更新频道关注状态是否成功
+     * @param  int    $uid  关注用户ID
+     * @param  int    $cid  频道分类ID
+     * @param  string $type 更新频道操作，add or del
+     * @return bool   更新频道关注状态是否成功
      */
     public function upFollow($uid, $cid, $type)
     {
@@ -46,14 +46,14 @@ class ChannelFollowModel extends Model
                     $data['uid'] = $uid;
                     $data['channel_category_id'] = $cid;
                     $result = $this->add($data);
-                    $result = (boolean)$result;
+                    $result = (boolean) $result;
                 }
                 break;
             case 'del':
                 $map['uid'] = $uid;
                 $map['channel_category_id'] = $cid;
                 $result = $this->where($map)->delete();
-                $result = (boolean)$result;
+                $result = (boolean) $result;
                 break;
         }
 
@@ -62,9 +62,9 @@ class ChannelFollowModel extends Model
 
     /**
      * 获取指定用户与指定频道分类的关注状态
-     * @param integer $uid 用户ID
-     * @param integer $cid 频道分类ID
-     * @return boolean 返回是否关注
+     * @param  int  $uid 用户ID
+     * @param  int  $cid 频道分类ID
+     * @return bool 返回是否关注
      */
     public function getFollowStatus($uid, $cid)
     {
@@ -78,7 +78,7 @@ class ChannelFollowModel extends Model
 
     /**
      * 获取指定用户的关注列表
-     * @param integer $uid 指定用户ID
+     * @param  int   $uid 指定用户ID
      * @return array 指定用户的关注列表
      */
     public function getFollowList($uid)
@@ -87,7 +87,7 @@ class ChannelFollowModel extends Model
             return array();
         }
         $map['f.uid'] = $uid;
-        $list = D()->table("`".C('DB_PREFIX')."channel_follow` AS f LEFT JOIN `".C('DB_PREFIX')."channel_category` AS c ON f.channel_category_id=c.channel_category_id")
+        $list = D()->table('`'.C('DB_PREFIX').'channel_follow` AS f LEFT JOIN `'.C('DB_PREFIX').'channel_category` AS c ON f.channel_category_id=c.channel_category_id')
                    ->field('c.`channel_category_id`, c.`title`, c.`ext`, c.`sort`')
                    ->where($map)
                    ->findAll();
@@ -97,19 +97,19 @@ class ChannelFollowModel extends Model
 
     /**
      * 获取指定用户所关注频道的所有分享，默认为当前登录用户
-     * @param string $where 查询条件
-     * @param integer $limit 结果集数目，默认为10
-     * @param integer $uid 指定用户ID，默认为空
-     * @param integer $fgid 关注频道ID，默认为空
-     * @return array 指定用户所关注频道的所有分享，默认为当前登录用户
+     * @param  string $where 查询条件
+     * @param  int    $limit 结果集数目，默认为10
+     * @param  int    $uid   指定用户ID，默认为空
+     * @param  int    $fgid  关注频道ID，默认为空
+     * @return array  指定用户所关注频道的所有分享，默认为当前登录用户
      */
     public function getFollowingFeed($where = '', $limit = 10, $uid = '', $fgid = '')
     {
         $buid = empty($uid) ? $GLOBALS['ts']['mid'] : $uid;
         $fgid = intval($fgid);
         $uid = intval($uid);
-        $where .= " AND b.uid=".$buid;
-        $where .= " AND a.status=1";
+        $where .= ' AND b.uid='.$buid;
+        $where .= ' AND a.status=1';
         $table = "`{$this->tablePrefix}channel` AS a LEFT JOIN `{$this->tablePrefix}channel_follow` AS b ON a.channel_category_id = b.channel_category_id LEFT JOIN `{$this->tablePrefix}feed` AS c ON a.feed_id = c.feed_id";
         !empty($fgid) && $where .= ' AND b.channel_category_id = '.$fgid;
         $feedList = D()->table($table)->field('a.feed_id')->where($where)->order('c.publish_time DESC')->findPage($limit);

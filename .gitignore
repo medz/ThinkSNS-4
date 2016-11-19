@@ -7,6 +7,7 @@
 /apps/Event/
 /apps/H5/
 /apps/book/
+/apps/w3g/
 /api/thinksns/*
 !/api/thinksns/UserApi.class.php
 !/api/thinksns/WeiboStatusesApi.class.php
@@ -18,6 +19,11 @@
 !/data/upload/2015/0[67]15/1[578]/
 /data/
 /_runtime/
-/src/Vendor
+/src/vendor
+/vendor
 /storage
 /composer.lock
+api/ts-api.phar
+api/phar.php
+.DS_Store
+.php_cs.cache

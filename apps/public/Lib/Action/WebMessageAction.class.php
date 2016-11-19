@@ -5,14 +5,13 @@
  */
 class WebMessageAction extends Action
 {
-
     public function tz()
     {
         $map['uid'] = $this->mid;
         $list = D('notify_message')->where($map)->order('ctime desc')->findpage(20);
-        foreach ($list['data'] as $k=>$v) {
+        foreach ($list['data'] as $k => $v) {
             $list['data'][$k]['body'] = parse_html($v['body']);
-            if ($v['appname'] !='public') {
+            if ($v['appname'] != 'public') {
                 $list['data'][$k]['app'] = model('App')->getAppByName($v['appname']);
             }
         }
@@ -45,18 +44,18 @@ class WebMessageAction extends Action
 
 //		$d['tab'] = model('Comment')->getTab($map);
         $d['tab'] = model('Comment')->getTabForApp($map);
-        foreach ($d['tab'] as $key=>$vo) {
-            if ($key=='feed') {
+        foreach ($d['tab'] as $key => $vo) {
+            if ($key == 'feed') {
                 $d['tabHash']['feed'] = L('PUBLIC_WEIBO');
             } elseif ($key == 'webpage') {
                 $d['tabHash']['webpage'] = '评论箱';
             } else {
                 // 微吧
                 strtolower($key) === 'weiba_post' && $key = 'weiba';
-                
-                $langKey = 'PUBLIC_APPNAME_' . strtoupper($key);
+
+                $langKey = 'PUBLIC_APPNAME_'.strtoupper($key);
                 $lang = L($langKey);
-                if ($lang==$langKey) {
+                if ($lang == $langKey) {
                     $d['tabHash'][$key] = ucfirst($key);
                 } else {
                     $d['tabHash'][$key] = $lang;
@@ -74,8 +73,8 @@ class WebMessageAction extends Action
             $map['app'] = 'public';
         }
         $list = model('Comment')->setAppName(t($_GET['app_name']))->getCommentList($map, 'comment_id DESC', null, true);
-        foreach ($list['data'] as $k=>$v) {
-            if ($v['sourceInfo']['app']=='weiba') {
+        foreach ($list['data'] as $k => $v) {
+            if ($v['sourceInfo']['app'] == 'weiba') {
                 $list['data'][$k]['sourceInfo']['source_body'] = str_replace($v['sourceInfo']['row_id'], $v['comment_id'], $v['sourceInfo']['source_body']);
             }
             if ($v['table'] === 'webpage') {
@@ -84,12 +83,12 @@ class WebMessageAction extends Action
                 $list['data'][$k]['hasComment'] = true;
             }
             $sourceInfo = $v['sourceInfo'];
-            
+
             $sourceContent = null;
             $sourceImage = null;
             $sourceUrl = $sourceInfo['source_url'];
-            if ($sourceInfo && $sourceInfo['is_del']==0) {
-                if ($sourceInfo['app'] == 'weiba' && $sourceInfo['is_repost']==0) {
+            if ($sourceInfo && $sourceInfo['is_del'] == 0) {
+                if ($sourceInfo['app'] == 'weiba' && $sourceInfo['is_repost'] == 0) {
                     if (!empty($sourceInfo['api_source'])) {
                         if (empty($sourceInfo['api_source']['title']) && empty($sourceInfo['api_source']['content'])) {
                             $sourceContent = '原帖子内容已被删除~';
@@ -100,13 +99,13 @@ class WebMessageAction extends Action
                             $sourceUrl = $sourceInfo['api_source']['source_url'];
                         }
                     }
-                } elseif ($sourceInfo['type']=='postvideo') {
+                } elseif ($sourceInfo['type'] == 'postvideo') {
                     if (strpos($sourceInfo['flashimg'], '://')) {
                         $sourceImage = $sourceInfo['flashimg'];
                     } else {
                         $sourceImage = getImageUrl($sourceInfo['flashimg'], 120, 120, true);
                     }
-                } elseif ($sourceInfo['type']=='postimage') {
+                } elseif ($sourceInfo['type'] == 'postimage') {
                     $sourceImage = $sourceInfo['attach'][0]['attach_small'];
                 }
                 if (empty($sourceContent)) {
@@ -128,13 +127,13 @@ class WebMessageAction extends Action
                 $sourceContent = '原分享内容已被删除~';
                 $sourceUrl = 'javascript:;';
             }
-            
+
             $list['data'][$k]['sourceContent'] = $sourceContent;
-            $list['data'][$k]['sourceIsVideo'] = $sourceInfo['type']=='postvideo';
+            $list['data'][$k]['sourceIsVideo'] = $sourceInfo['type'] == 'postvideo';
             $list['data'][$k]['sourceImage'] = $sourceImage;
             $list['data'][$k]['sourceUrl'] = $sourceUrl;
         }
-        model('UserCount')->resetUserCount($this->mid, 'unread_comment',  0);
+        model('UserCount')->resetUserCount($this->mid, 'unread_comment', 0);
         $this->assign('list', $list);
         $this->setTitle($keyword.'的评论');                    // 我的评论
         $userInfo = model('User')->getUserInfo($this->mid);
@@ -158,7 +157,7 @@ class WebMessageAction extends Action
         if (D('App')->isAppNameExist('weiba')) {
             $types = array(
                 'feed' => '分享',
-                'weiba_post'  => '微吧帖子',
+                'weiba_post' => '微吧帖子',
                 'weiba_reply' => '微吧回复',
             );
         } else { //不存在
@@ -167,7 +166,7 @@ class WebMessageAction extends Action
             );
         }
         foreach ($types as $key => $val) {
-            $count = (int)$userData[$keys[$key]];
+            $count = (int) $userData[$keys[$key]];
             if ($key == 'feed' || $type == $key) {
                 $unreadCount[$key] = $count;
                 continue;
@@ -205,10 +204,10 @@ class WebMessageAction extends Action
         $this->assign('type', $type);
         $this->assign('ismy', $ismy);
         $this->assign('unreadCount', $unreadCount);
-        $this->assign('surplusCount', array_sum($unreadCount)-$unreadCount[$type]);
+        $this->assign('surplusCount', array_sum($unreadCount) - $unreadCount[$type]);
         $this->display();
     }
-    
+
     public function lxr()
     {
         $this->friends();
@@ -218,7 +217,6 @@ class WebMessageAction extends Action
     /**
      * At me消息
      *
-     * @return void
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function at()
@@ -234,7 +232,7 @@ class WebMessageAction extends Action
         exit;
         $this->display('at');
     }
-    
+
     public function roomList()
     {
         $list = model('WebMessage')->getRoomList();
@@ -242,7 +240,7 @@ class WebMessageAction extends Action
         $this->assign('currentUserId', $this->mid);
         $this->display('roomList');
     }
-    
+
     public function latelyRoomList()
     {
         $limit = floor($_GET['limit']);
@@ -255,18 +253,18 @@ class WebMessageAction extends Action
             if ($rs['type'] == 2) {
                 $data[$key]['title'] = '来自群消息';
                 if ($rs['title']) {
-                    $data[$key]['title'] = '群:' . $rs['title'];
+                    $data[$key]['title'] = '群:'.$rs['title'];
                 }
                 if ($rs['logo'] > 0) {
                     $data[$key]['src'] = getImageUrlByAttachId($rs['logo'], 50, 50);
                 }
                 if (!isset($data[$key]['src']) or !$data[$key]['src']) {
-                    $data[$key]['src'] = THEME_PUBLIC_URL . '/image/message/group.png';
+                    $data[$key]['src'] = THEME_PUBLIC_URL.'/image/message/group.png';
                 }
             } else {
                 $_uid = intval(trim(str_replace('_'.$this->mid.'_', '_', '_'.$rs['min_max'].'_'), '_'));
                 $_user = getUserInfo($_uid);
-                $data[$key]['title'] = '联系人:' . $_user['uname'];
+                $data[$key]['title'] = '联系人:'.$_user['uname'];
                 $data[$key]['src'] = $_user['avatar_small'];
                 $data[$key]['uid'] = $_uid;
                 $data[$key]['min_max'] = $rs['min_max'];
@@ -277,20 +275,20 @@ class WebMessageAction extends Action
         $info = array();
 
         /* # 评论 */
-        $info['comment'] = model('UserData')->where('`uid`=' . $this->mid . " AND `key`='unread_comment'")->getField('value');
+        $info['comment'] = model('UserData')->where('`uid`='.$this->mid." AND `key`='unread_comment'")->getField('value');
 
         /* # 赞 */
-        $info['digg'] = model('UserData')->where('`uid`=' . $this->mid . " AND `key`='unread_digg'")->getField('value');
+        $info['digg'] = model('UserData')->where('`uid`='.$this->mid." AND `key`='unread_digg'")->getField('value');
 
         /* # 通知 */
-        $info['notice'] = D('notify_message')->where('`uid` = ' . $this->mid . ' AND `is_read` != 1')->field('`id`')->count();
+        $info['notice'] = D('notify_message')->where('`uid` = '.$this->mid.' AND `is_read` != 1')->field('`id`')->count();
 
         /* # At me */
-        $info['at'] = model('UserData')->where('`uid`=' . $this->mid . " AND `key`='unread_atme'")->getField('value');
+        $info['at'] = model('UserData')->where('`uid`='.$this->mid." AND `key`='unread_atme'")->getField('value');
 
         $this->ajaxReturn($data, $info);
     }
-    
+
     public function friends()
     {
         $mid = $this->mid;
@@ -302,8 +300,8 @@ class WebMessageAction extends Action
                 $exclude = array_column($members, 'member_uid');
             }
             $this->assign('addGroupMember', true);
-            $this->assign('roomId', (int)$_GET['roomid']);
-            $this->assign('memberCount', $members?count($members):0);
+            $this->assign('roomId', (int) $_GET['roomid']);
+            $this->assign('memberCount', $members ? count($members) : 0);
         }
         $array = array();
         foreach ($data as $key => $val) {
@@ -318,19 +316,19 @@ class WebMessageAction extends Action
             }
         }
         ksort($array);
-        $this->assign('count', $data?count($data):0);
+        $this->assign('count', $data ? count($data) : 0);
         $this->assign('data', $array);
         $this->display('friends');
     }
-    
+
     public function room()
     {
         $webMessage = model('WebMessage');
         if (!empty($_GET['uid'])) {
-            $room = $webMessage->getMessageRoom((int)$_GET['uid']);
+            $room = $webMessage->getMessageRoom((int) $_GET['uid']);
             $roomId = $room['list_id'];
         } else {
-            $roomId = (int)$_GET['roomid'];
+            $roomId = (int) $_GET['roomid'];
         }
 
         $list = $webMessage->getMessageList($roomId, null, 'lt', 6);
@@ -343,7 +341,7 @@ class WebMessageAction extends Action
         $data = $this->buildMsgList($list, $webMessage->getUserId(), true);
         if ($list) {
             $last = end($list);
-            $lastMessageId = (int)$last['message_id'];
+            $lastMessageId = (int) $last['message_id'];
         } else {
             $lastMessageId = 0;
         }
@@ -358,21 +356,21 @@ class WebMessageAction extends Action
         $this->assign('roomId', $roomId);
         $this->display();
     }
-    
+
     public function getMsgList()
     {
         $webMessage = model('WebMessage');
-        $list = $webMessage->getMessageList((int)$_GET['roomid'], (int)$_GET['msgid'], 'lt', 20);
+        $list = $webMessage->getMessageList((int) $_GET['roomid'], (int) $_GET['msgid'], 'lt', 20);
         $this->assign('isGetMessageList', true);
         $data = $this->buildMsgList($list, $webMessage->getUserId());
         $this->ajaxReturn($data, '', 1);
     }
-    
+
     public function pullMessage($roomId = null, $msgId = null)
     {
         if (null === $roomId && null === $msgId) {
-            $roomId = (int)$_GET['roomid'];
-            $msgId = (int)$_GET['msgid'];
+            $roomId = (int) $_GET['roomid'];
+            $msgId = (int) $_GET['msgid'];
         }
         $webMessage = model('WebMessage');
         $list = $webMessage->getMessageList($roomId, $msgId, 'gt');
@@ -380,13 +378,13 @@ class WebMessageAction extends Action
         $data = $this->buildMsgList($list, $webMessage->getUserId());
         if ($list) {
             $last = end($list);
-            $lastMessageId = (int)$last['message_id'];
+            $lastMessageId = (int) $last['message_id'];
         } else {
             $lastMessageId = '';
         }
         $this->ajaxReturn($data, $lastMessageId, 1);
     }
-    
+
     public function sendText()
     {
         ignore_user_abort(true);
@@ -402,13 +400,13 @@ class WebMessageAction extends Action
                 $this->pullMessage($_POST['room_id'], $_POST['msgid']);
             } else {
                 $html = $this->buildMsgList(array($result));
-                $this->ajaxReturn($html, (int)$result['message_id'], 1);
+                $this->ajaxReturn($html, (int) $result['message_id'], 1);
             }
         } else {
             $this->ajaxReturn('', '发送失败', 0);
         }
     }
-    
+
     public function sendImage()
     {
         $attachs = $this->uploadFile('image', 'message_image', 'gif,jpg,png,jpeg,bmp');
@@ -421,39 +419,39 @@ class WebMessageAction extends Action
             ));
             if ($result) {
                 $html = $this->buildMsgList(array($result));
-                $data = array('status'=>1, 'info'=>(int)$result['message_id'], 'id'=>t($_GET['id']), 'data'=>$html);
+                $data = array('status' => 1, 'info' => (int) $result['message_id'], 'id' => t($_GET['id']), 'data' => $html);
             }
         }
         if (!isset($data)) {
-            $data = array('status'=>0, 'id'=>t($_GET['id']), 'info'=>'图片发送失败');
+            $data = array('status' => 0, 'id' => t($_GET['id']), 'info' => '图片发送失败');
         }
         echo '<script> window.parent.sendImageCallback('.json_encode($data).'); </script>';
         exit;
     }
-    
+
     public function createGroupRoom()
     {
         $webMessage = model('WebMessage');
         if (is_numeric($_POST['uids'])) {
-            $room = $webMessage->getMessageRoom((int)$_POST['uids']);
+            $room = $webMessage->getMessageRoom((int) $_POST['uids']);
         } else {
-            $room = $webMessage->createGroupRoom($_POST['uids'], (string)$_POST['title']);
+            $room = $webMessage->createGroupRoom($_POST['uids'], (string) $_POST['title']);
         }
-        
+
         if ($room) {
             $this->ajaxReturn($room['list_id'], '', 1);
         } else {
-            $msg = is_numeric($_POST['uids'])? '发起聊天失败' : '创建群聊失败';
+            $msg = is_numeric($_POST['uids']) ? '发起聊天失败' : '创建群聊失败';
             $this->ajaxReturn('', $msg, 0);
         }
     }
-    
+
     public function addGroupMember()
     {
         $webMessage = model('WebMessage');
-        $result = $webMessage->addGroupMember((int)$_REQUEST['roomid'], $_POST['uids']);
+        $result = $webMessage->addGroupMember((int) $_REQUEST['roomid'], $_POST['uids']);
         if ($result) {
-            $this->ajaxReturn((int)$_REQUEST['roomid'], '', 1);
+            $this->ajaxReturn((int) $_REQUEST['roomid'], '', 1);
         } else {
             $this->ajaxReturn('', '添加群成员失败', 0);
         }
@@ -462,20 +460,20 @@ class WebMessageAction extends Action
     public function removeGroupMember()
     {
         $webMessage = model('WebMessage');
-        $result = $webMessage->removeGroupMember((int)$_REQUEST['roomid'], $_POST['uids']);
+        $result = $webMessage->removeGroupMember((int) $_REQUEST['roomid'], $_POST['uids']);
         if ($result) {
-            $this->ajaxReturn((int)$_REQUEST['roomid'], '', 1);
+            $this->ajaxReturn((int) $_REQUEST['roomid'], '', 1);
         } else {
             $this->ajaxReturn('', '移除群成员失败', 0);
         }
     }
-    
+
     public function quitGroupRoom()
     {
         $webMessage = model('WebMessage');
-        $result = $webMessage->quitGroupRoom((int)$_REQUEST['roomid']);
+        $result = $webMessage->quitGroupRoom((int) $_REQUEST['roomid']);
         if ($result) {
-            $this->ajaxReturn((int)$_REQUEST['roomid'], '', 1);
+            $this->ajaxReturn((int) $_REQUEST['roomid'], '', 1);
         } else {
             $this->ajaxReturn('', '退出群房间失败', 0);
         }
@@ -483,7 +481,7 @@ class WebMessageAction extends Action
 
     public function groupMember()
     {
-        $roomId = (int)$_GET['roomid'];
+        $roomId = (int) $_GET['roomid'];
         $webMessage = model('WebMessage');
         if ($webMessage->roomHasUser($roomId, $this->mid)) {
             $members = $webMessage->getRoomMember($roomId);
@@ -496,10 +494,10 @@ class WebMessageAction extends Action
             exit('你无权查看此房间成员');
         }
     }
-    
+
     public function clearMessage()
     {
-        $roomId = (string)$_REQUEST['roomid'];
+        $roomId = (string) $_REQUEST['roomid'];
         $webMessage = model('WebMessage');
         if ($webMessage->clearMessage($roomId, 'all')) {
             $this->ajaxReturn($roomId, '', 1);
@@ -507,7 +505,7 @@ class WebMessageAction extends Action
             $this->ajaxReturn($roomId, '', 0);
         }
     }
-    
+
     protected function buildMsgList($list, $userId = null, $isInit = false)
     {
         if (!$list) {
@@ -521,13 +519,14 @@ class WebMessageAction extends Action
         $this->assign('list', $list);
         $this->assign('isInit', $isInit);
         $this->assign('currentUserId', $userId);
+
         return $this->fetch('msg_list');
     }
-    
+
     protected function uploadFile($uploadType, $attachType, $allowTypes)
     {
         $option = array(
-            'attach_type' => $attachType
+            'attach_type' => $attachType,
         );
         if (is_array($allowTypes)) {
             $option['allow_exts'] = implode(',', $ext);
@@ -536,7 +535,7 @@ class WebMessageAction extends Action
         }
 
         $file = model('Attach')->upload(array(
-            'upload_type' => $uploadType
+            'upload_type' => $uploadType,
         ), $option);
 
         // 判断是否有上传
@@ -555,11 +554,11 @@ class WebMessageAction extends Action
     protected function weiba_postZan($ismy, $count = false)
     {
         if ($ismy) {
-            $where = array('uid'=>$this->mid);
+            $where = array('uid' => $this->mid);
         } else {
             $dbprefix = C('DB_PREFIX');
             $sql = "SELECT post_id FROM {$dbprefix}weiba_post WHERE post_uid={$this->mid}";
-            $where = array('post_id'=> array('in', $sql));
+            $where = array('post_id' => array('in', $sql));
         }
         if ($count) {
             return M('WeibaPostDigg')->where($where)->count();
@@ -575,8 +574,8 @@ class WebMessageAction extends Action
             $rs['data_id'] = $rs['post_id'];
             $rs['data_type'] = 'weiba_post';
             $post = $weibaPostModel->field('title,content,is_del')->find($rs['post_id']);
-            if ($post && $post['is_del']==0) {
-                $rs['source_url'] = U('weiba/Index/postDetail', array('post_id'=>$rs['post_id']));
+            if ($post && $post['is_del'] == 0) {
+                $rs['source_url'] = U('weiba/Index/postDetail', array('post_id' => $rs['post_id']));
                 $rs['source_content'] = '帖子|'.$post['title'].'-'.getShort(t($post['content']), 15);
                 $image = getEditorImages($post['content']);
                 if ($image) {
@@ -593,23 +592,24 @@ class WebMessageAction extends Action
                 $rs['source_content'] = '原帖子已被删除了~';
             }
         }
+
         return $result;
     }
 
     protected function weiba_replyZan($ismy, $count = false)
     {
         if ($ismy) {
-            $where = array('uid'=>$this->mid);
+            $where = array('uid' => $this->mid);
         } else {
             $dbprefix = C('DB_PREFIX');
             $sql = "SELECT reply_id FROM {$dbprefix}weiba_reply WHERE uid={$this->mid}";
-            $where = array('row_id'=> array('in', $sql));
+            $where = array('row_id' => array('in', $sql));
         }
         if ($count) {
             return M('WeibaReplyDigg')->where($where)->count();
         }
         $result = D('WeibaReplyDigg')->where($where)->order('cTime DESC')->findPage();
-        $weibaPostModel  = D('WeibaPost');
+        $weibaPostModel = D('WeibaPost');
         $weibaReplyModel = D('WeibaReply');
         foreach ($result['data'] as &$rs) {
             $user = getUserInfo($rs['uid']);
@@ -620,10 +620,10 @@ class WebMessageAction extends Action
             $rs['data_id'] = $rs['row_id'];
             $rs['data_type'] = 'weiba_reply';
             $reply = $weibaReplyModel->find($rs['row_id']);
-            if ($reply && $reply['is_del']==0) {
+            if ($reply && $reply['is_del'] == 0) {
                 $post = $weibaPostModel->field('title,is_del')->find($rs['post_id']);
-                if ($post && $post['is_del']==0) {
-                    $rs['source_url'] = U('weiba/Index/postDetail', array('post_id'=>$rs['row_id'])).'#reply_'.$rs['id'];
+                if ($post && $post['is_del'] == 0) {
+                    $rs['source_url'] = U('weiba/Index/postDetail', array('post_id' => $rs['row_id'])).'#reply_'.$rs['id'];
                     $rs['source_content'] = $reply['content'].' //帖子|'.$post['title'];
                 } else {
                     $rs['source_content'] = getShort($reply['content'], 7, '...').' //帖子已删除';
@@ -632,17 +632,18 @@ class WebMessageAction extends Action
                 $rs['source_content'] = '原回复已被删除了~';
             }
         }
+
         return $result;
     }
 
     protected function feedZan($ismy)
     {
         if ($ismy) {
-            $where = array('uid'=>$this->mid);
+            $where = array('uid' => $this->mid);
         } else {
             $dbprefix = C('DB_PREFIX');
             $feedId = "SELECT feed_id FROM {$dbprefix}feed WHERE uid={$this->mid}";
-            $where = array('feed_id'=>array('in', $feedId));
+            $where = array('feed_id' => array('in', $feedId));
         }
         $result = D('FeedDigg')->where($where)->order('cTime DESC')->findPage();
         $feedModel = D('Feed');
@@ -655,8 +656,8 @@ class WebMessageAction extends Action
             $rs['ctime'] = $rs['cTime'];
             $rs['data_id'] = $rs['feed_id'];
             $rs['data_type'] = 'feed';
-            $rs['source_url'] = U('public/Profile/feed', array('feed_id'=>$feed['feed_id']));
-            if ($feed['app'] == 'weiba' && $feed['is_repost']==0) {
+            $rs['source_url'] = U('public/Profile/feed', array('feed_id' => $feed['feed_id']));
+            if ($feed['app'] == 'weiba' && $feed['is_repost'] == 0) {
                 if (!empty($feed['api_source'])) {
                     if (empty($feed['api_source']['title']) && empty($feed['api_source']['content'])) {
                         $rs['source_content'] = '原分享内容已被删除~';
@@ -676,7 +677,7 @@ class WebMessageAction extends Action
                     $rs['source_content'] = t($feed['source_body']);
                 }
                 if (empty($rs['source_content']) || $feed['is_del']) {
-                    $rs['source_content'] = "原分享内容已被删除~";
+                    $rs['source_content'] = '原分享内容已被删除~';
                     $rs['source_url'] = 'javascript:;';
                 } else {
                     $rs['source_content'] = preg_replace('/\s+/u', ' ', $rs['source_content']);
@@ -693,9 +694,10 @@ class WebMessageAction extends Action
                 }
             }
         }
+
         return $result;
     }
-    
+
     protected function getRoomTitle($room, $members = null)
     {
         if (is_numeric($room)) {
@@ -703,8 +705,9 @@ class WebMessageAction extends Action
         }
         if ($room['title']) {
             return $room['title'];
-        } elseif ($room['type']==1) {
+        } elseif ($room['type'] == 1) {
             $uid = intval(trim(str_replace('_'.$this->mid.'_', '_', '_'.$room['min_max'].'_'), '_'));
+
             return getUserName($uid);
         } else {
             if (null === $members) {
@@ -720,6 +723,7 @@ class WebMessageAction extends Action
             if (count($members) > 3) {
                 $title .= '...';
             }
+
             return str_replace('/', '、', trim($title, '/'));
         }
     }

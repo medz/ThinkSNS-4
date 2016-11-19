@@ -7,12 +7,11 @@
  */
 class TagWidget extends Widget
 {
-
     /**
      * @param string width wigdet显示宽度
      * @param string appname 资源对应的应用名称
      * @param string apptable 资源对应的表
-     * @param integer row_id 资源在资源所在表中的主键ID,为0表示该资源为新加资源，需要在资源添加,往sociax_app_tag表添加相关数据
+     * @param int row_id 资源在资源所在表中的主键ID,为0表示该资源为新加资源，需要在资源添加,往sociax_app_tag表添加相关数据
      * @param string tpl 显示模版，tag/show 默认是tag，如果为show表示只显示标签
      * @param string tag_url 标签上的链接前缀，为空表示标签没有链接，只针对tpl=show有效
      * @param string name 输入框的input名称,标签的ID存储的隐藏域名称为 {name}_tags
@@ -20,7 +19,7 @@ class TagWidget extends Widget
     public function render($data)
     {
         $var = array();
-        $var['width'] = "200px";
+        $var['width'] = '200px';
         $var['appname'] = 'public';
         $var['apptable'] = 'user';
         $var['row_id'] = 0;
@@ -30,8 +29,8 @@ class TagWidget extends Widget
         is_array($data) && $var = array_merge($var, $data);
         // 清除缓存
         model('Cache')->rm('temp_'.$var['apptable'].$GLOBALS['ts']['mid']);
-        $var['add_url'] = U('widget/Tag/addTag', array('appname'=>$var['appname'], 'apptable'=>$var['apptable'], 'row_id'=>$var['row_id']));
-        $var['delete_url'] = U('widget/Tag/deleteTag', array('appname'=>$var['appname'], 'apptable'=>$var['apptable'], 'row_id'=>$var['row_id']));
+        $var['add_url'] = U('widget/Tag/addTag', array('appname' => $var['appname'], 'apptable' => $var['apptable'], 'row_id' => $var['row_id']));
+        $var['delete_url'] = U('widget/Tag/deleteTag', array('appname' => $var['appname'], 'apptable' => $var['apptable'], 'row_id' => $var['row_id']));
         // 获取标签
         $tags = model('Tag')->setAppName($var['appname'])->setAppTable($var['apptable'])->getAppTags($var['row_id'], $var['isUserTag']);
         $var['tags'] = $tags;
@@ -56,8 +55,8 @@ class TagWidget extends Widget
                 unset($var['categoryTree'][$key]);
             }
         }
-        $content = $this->renderFile(dirname(__FILE__)."/".$var['tpl'].".html", $var);
-        
+        $content = $this->renderFile(dirname(__FILE__).'/'.$var['tpl'].'.html', $var);
+
         return $content;
     }
 
@@ -72,7 +71,7 @@ class TagWidget extends Widget
         $_POST['name'] = t($_POST['name']);
         // 判断是否为空
         if (empty($_POST['name'])) {
-            exit(json_encode(array('status'=>0, 'info'=>L('PUBLIC_TAG_NOEMPTY'))));
+            exit(json_encode(array('status' => 0, 'info' => L('PUBLIC_TAG_NOEMPTY'))));
         }
         // 其他相关参数
         $appName = t($_REQUEST['appname']);
@@ -93,22 +92,20 @@ class TagWidget extends Widget
      */
     public function deleteTag()
     {
-        $appName  = t($_REQUEST['appname']);
+        $appName = t($_REQUEST['appname']);
         $appTable = t($_REQUEST['apptable']);
-        $row_id      = intval($_REQUEST['row_id']);
+        $row_id = intval($_REQUEST['row_id']);
         $result = model('Tag')->setAppName($appName)->setAppTable($appTable)->deleteAppTag($row_id, t($_POST['tag_id']));
-        
-        $return['info']    = model('Tag')->getError();
-        $return['status']    = $result;
-        $return['data']        = null;
+
+        $return['info'] = model('Tag')->getError();
+        $return['status'] = $result;
+        $return['data'] = null;
         echo json_encode($return);
         exit();
     }
 
     /**
      * 获取标签的ID
-     * @access public 
-     * @return void
      */
     public function getTagId()
     {

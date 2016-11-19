@@ -6,7 +6,6 @@
  */
 class WeiboWidget extends Widget
 {
-
     /**
      * 发布分享Widget, 用法包括分享等
      *
@@ -35,13 +34,14 @@ class WeiboWidget extends Widget
     public function render($data)
     {
         // 默认值
-        $data['page_title']        = isset($data['page_title'])        ? $data['page_title']        : '分享';
-        $data['button_title']    = isset($data['button_title'])        ? $data['button_title']        : L('PUBLISH');
-        $data['status_title']    = isset($data['status_title'])        ? t($data['status_title'])    : '';
-        $data['addon_info']        = isset($data['addon_info'])        ? $data['addon_info']    : '';
+        $data['page_title'] = isset($data['page_title']) ? $data['page_title'] : '分享';
+        $data['button_title'] = isset($data['button_title']) ? $data['button_title'] : L('PUBLISH');
+        $data['status_title'] = isset($data['status_title']) ? t($data['status_title']) : '';
+        $data['addon_info'] = isset($data['addon_info']) ? $data['addon_info'] : '';
         $data['url'] = U('public/Share/shareToFeed').'&initHTML='.$data['tpl_data'].'&attachId='.$data['attachid'].'&from='.$data['from'].'&appname=public&source_url='.urlencode($data['source_url']);
 // 		$data['url']	= U('public/Widget/weibo',array('button_title'=>urlencode($data['button_title']),'tpl_name'=>$data['tpl_name'],'addon_info'=>$data['addon_info']));
         $content = $this->renderFile(dirname(__FILE__).'/Weibo.html', $data);
+
         return $content;
     }
 }

@@ -1,13 +1,13 @@
 <?php
-include_once('qq/Tencent.php');
+
 class qq
 {
-    
     public $loginUrl;
 
-    private function getCallback($type='', $do='login')
+    private function getCallback($type = '', $do = 'login')
     {
-        $callbackurl = Addons::createAddonShow('Login', 'no_register_display', array('type'=>$type, 'do'=>$do));
+        $callbackurl = Addons::createAddonShow('Login', 'no_register_display', array('type' => $type, 'do' => $do));
+
         return urlencode($callbackurl);
     }
 
@@ -16,30 +16,33 @@ class qq
     {
         if ($url) {
             $this->loginUrl = $url;
+
             return $this->loginUrl;
         }
         OAuth::init(QQ_KEY, QQ_SECRET);
         $url = $this->getCallback('qq');
         $this->loginUrl = OAuth::getAuthorizeURL($url);
+
         return $this->loginUrl;
     }
-    
+
     //用户资料
     public function userInfo()
     {
         OAuth::init(QQ_KEY, QQ_SECRET);
         $r = Tencent::api('user/info');
         $me = json_decode($r, true);
-        $user['id']          = $me['data']['name'];
-        $user['uname']       = $me['data']['nick'];
-        $user['province']    = $me['data']['province_code'];
-        $user['city']        = $me['data']['city_code'];
-        $user['location']    = $me['data']['location'];
-        $user['userface']    = $me['data']['head']."/120";
-        $user['sex']         = ($me['data']['sex']=='1')?1:0;
+        $user['id'] = $me['data']['name'];
+        $user['uname'] = $me['data']['nick'];
+        $user['province'] = $me['data']['province_code'];
+        $user['city'] = $me['data']['city_code'];
+        $user['location'] = $me['data']['location'];
+        $user['userface'] = $me['data']['head'].'/120';
+        $user['sex'] = ($me['data']['sex'] == '1') ? 1 : 0;
+
         return $user;
     }
-    
+
     //验证用户
     public function checkUser($do)
     {
@@ -50,7 +53,7 @@ class qq
 
         OAuth::init(QQ_KEY, QQ_SECRET);
         $callback = $this->getCallback('qq', $do);
-        
+
         if ($_REQUEST['code']) {
             $code = $_REQUEST['code'];
             $openid = $_REQUEST['openid'];
@@ -67,10 +70,10 @@ class qq
                 $_SESSION['t_code'] = $code;
                 $_SESSION['t_openid'] = $openid;
                 $_SESSION['t_openkey'] = $openkey;
-                $_SESSION['qq']['access_token']  = $out['access_token'];
+                $_SESSION['qq']['access_token'] = $out['access_token'];
                 $_SESSION['qq']['refresh_token'] = $out['refresh_token'];
-                $_SESSION['open_platform_type']  = 'qq';
-                
+                $_SESSION['open_platform_type'] = 'qq';
+
                 //验证授权
                 $r = OAuth::checkOAuthValid();
                 if ($r) {
@@ -100,7 +103,7 @@ class qq
                 }
             } else {
                 $url = OAuth::getAuthorizeURL($callback);
-                header('Location: ' . $url);
+                header('Location: '.$url);
             }
         }
     }
@@ -111,6 +114,7 @@ class qq
         $params = array(
             'content' => $text,
         );
+
         return Tencent::api('t/add_pic_url', $params, 'POST');
     }
 
@@ -122,6 +126,7 @@ class qq
                 'content' => $text,
             );
             $multi = array('pic' => $pic);
+
             return Tencent::api('t/add_pic', $params, 'POST', $multi);
         } else {
             return $this->update($text, $opt);
@@ -129,7 +134,7 @@ class qq
     }
 
     //转发一条分享
-    public function transpond($transpondId, $reId, $content='', $opt=null)
+    public function transpond($transpondId, $reId, $content = '', $opt = null)
     {
         return true;
     }

@@ -1,12 +1,11 @@
 <?php
 /**
  * 搜索模型 - 业务逻辑模型
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 class SearchModel
 {
-
     // private $tableName = 'user';
     // private $host = 'dev.zhishisoft.com';
     // private $port =	9306;
@@ -28,8 +27,8 @@ class SearchModel
 
     /**
      * 重置数据库链接
-     * @param string $host 主机地址IP
-     * @param integer $port 端口号
+     * @param  string $host 主机地址IP
+     * @param  int    $port 端口号
      * @return object 搜索模型对象
      */
     // public function connect($host, $port = 9306) {
@@ -44,20 +43,21 @@ class SearchModel
 
     /**
      * 直接搜索sphinx，结果未处理
-     * @param string $query SQL查询语句
-     * @return array 查询出的相应结果
+     * @param  string $query SQL查询语句
+     * @return array  查询出的相应结果
      */
     public function query($query)
     {
         $list = $this->sdb->query($query);
+
         return $list;
     }
-    
+
     /**
      * 执行搜素，结果有处理
-     * @param string $query SQL查询语句
-     * @param integer $limit 结果集数目，默认为20
-     * @return array 查询出的相应结果
+     * @param  string $query SQL查询语句
+     * @param  int    $limit 结果集数目，默认为20
+     * @return array  查询出的相应结果
      */
     public function search($query, $limit = 20)
     {
@@ -65,16 +65,16 @@ class SearchModel
         if (empty($query)) {
             return false;
         }
-        
-        $query .=" limit ".$this->getLimit($limit);        // limit处理
+
+        $query .= ' limit '.$this->getLimit($limit);        // limit处理
         //return $query;exit;
-        $datas    =    D()->query($query);            // 执行SphinxQL查询
+        $datas = D()->query($query);            // 执行SphinxQL查询
 
         if (!$datas) {
             return false;
         }
         // 获取关键词信息
-        $metas = $this->sdb->query("SHOW META");
+        $metas = $this->sdb->query('SHOW META');
         if (!$metas) {
             return false;
         }
@@ -107,7 +107,7 @@ class SearchModel
 
     /**
      * 获取分页数，默认为1
-     * @return integer 分页数
+     * @return int 分页数
      */
     public function getPage()
     {
@@ -116,13 +116,14 @@ class SearchModel
 
     /**
      * 获取limit查询条件
-     * @param integer $limit 结果集数目，默认为20
+     * @param  int    $limit 结果集数目，默认为20
      * @return string limit查询条件
      */
     public function getLimit($limit = 20)
     {
         $nowPage = $this->getPage();
         $now = intval(abs($nowPage - 1) * $limit);
+
         return    $now.','.$limit;
     }
 }

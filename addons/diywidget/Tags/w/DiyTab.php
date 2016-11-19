@@ -11,7 +11,7 @@ class DiyTab extends TagsAbstract
      * @var unknown_type
      */
     public static $TAG_CLOSED = false;
-    
+
     public $config = array();
     public function getTagStatus()
     {
@@ -20,16 +20,17 @@ class DiyTab extends TagsAbstract
     /**
      * 返回模板文件路径
      */
-    public function getTemplateFile($tpl = "")
+    public function getTemplateFile($tpl = '')
     {
         //返回需要渲染的模板
         $file = $this->attr ['style'];
         if (!empty($tpl)) {
             $file = $tpl;
         }
+
         return dirname(__FILE__).'/DiyTab/'.$file.'.html';
     }
-    
+
     /**
      * 这里返回的是模板中需要渲染的变量
      */
@@ -44,8 +45,9 @@ class DiyTab extends TagsAbstract
             $value->comment = $parseTag->parse($temp);
         }
         $var['event'] = $this->attr['event'];
-        
-        $var['tabId'] = "i".substr($this->sign, 0, 5).$time;
+
+        $var['tabId'] = 'i'.substr($this->sign, 0, 5).$time;
+
         return $var;
     }
 }

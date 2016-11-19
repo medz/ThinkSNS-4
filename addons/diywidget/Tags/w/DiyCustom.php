@@ -17,7 +17,7 @@ class DiyCustom extends TagsAbstract
     public function __construct()
     {
     }
-    
+
     public function getTagStatus()
     {
         return self::$TAG_CLOSED;
@@ -33,6 +33,7 @@ class DiyCustom extends TagsAbstract
         if (!empty($tpl)) {
             $file = $tpl;
         }
+
         return dirname(__FILE__).'/DiyCustom/temp.html';
     }
     public function replaceTag($attr, $value = '')
@@ -47,6 +48,7 @@ class DiyCustom extends TagsAbstract
         $var = $this->replace();
         extract($var, EXTR_OVERWRITE);
         fetch($this->templateFile, $var);
+
         return $content;
     }
     /* (non-PHPdoc)

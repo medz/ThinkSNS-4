@@ -9,13 +9,12 @@
  */
 class AreasWidget extends Widget
 {
-
     /**
-     * @param integer curPro 当前省的ID
-     * @param integer curCity 当前城市的ID
-     * @param integer area 当前地区的ID
-     * @param integer impotid 特殊地区的ID
-     * @param integer impotval 特殊地区的ID
+     * @param int curPro 当前省的ID
+     * @param int curCity 当前城市的ID
+     * @param int area 当前地区的ID
+     * @param int impotid 特殊地区的ID
+     * @param int impotval 特殊地区的ID
      * @param string  tpl 选用的地区选择模版 loadCity(链接方式) loadArea(文本框形式)
      */
     public function render($data)
@@ -25,13 +24,13 @@ class AreasWidget extends Widget
         if ($data['tpl'] == 'loadCity') {
             if (empty($data['curPro'])) {
                 $info = model('Area')->getAreaById($data['curCity']);
-                $data['city_ids'] = $info['pid'] . ',' . $data['curCity'];
+                $data['city_ids'] = $info['pid'].','.$data['curCity'];
             } else {
-                $data['city_ids'] = $data['curPro'] . ',' . $data['curCity'];
+                $data['city_ids'] = $data['curPro'].','.$data['curCity'];
             }
         }
         if (!empty($data['area'])) {
-            $data['city_ids'] .=',' . $data['area'];
+            $data['city_ids'] .= ','.$data['area'];
         }
 
         if ($data['tpl'] == 'selectArea') {
@@ -44,7 +43,7 @@ class AreasWidget extends Widget
             if ($data['tpl'] == 'selectArea') {
                 $tmp = array();
                 foreach ($list as $key => $value) {
-                    $tmp['area_' . $key] = $value;
+                    $tmp['area_'.$key] = $value;
                 }
                 $list = $tmp;
                 unset($tmp);
@@ -53,9 +52,10 @@ class AreasWidget extends Widget
             $data['required'] = isset($data['required']) ? $data['required'] : true;
         }
         if ($data['curPro'] && $data['curCity'] && $data['area'] || true) {
-            $data['selected'] = $data['curPro'] . ',' . $data['curCity'] . ',' . $data['area'];
+            $data['selected'] = $data['curPro'].','.$data['curCity'].','.$data['area'];
         }
-        $content = $this->renderFile(dirname(__FILE__) . "/" . $data['tpl'] . '.html', $data);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$data['tpl'].'.html', $data);
+
         return $content;
     }
 
@@ -72,9 +72,9 @@ class AreasWidget extends Widget
 
         $list = model('Area')->getNetworkList(0);
         $data['list'] = json_encode($list);
-        // 模板选择		
-        $tpl = isset($_GET['tpl']) ? t($_GET['tpl']) . '_' : 'loadArea_';
+        // 模板选择
+        $tpl = isset($_GET['tpl']) ? t($_GET['tpl']).'_' : 'loadArea_';
 
-        echo $this->renderFile(dirname(__FILE__) . "/" . $tpl . '.html', $data);
+        echo $this->renderFile(dirname(__FILE__).'/'.$tpl.'.html', $data);
     }
 }

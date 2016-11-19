@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * 用户可管理的应用列表 Widget
  * @example {:W('Manage')}
@@ -6,7 +7,6 @@
  */
 class ManageWidget extends Widget
 {
-    
     private static $rand = 1;
 
     /**
@@ -15,9 +15,9 @@ class ManageWidget extends Widget
     public function render($data)
     {
         $var = array();
-        
+
         is_array($data) && $var = array_merge($var, $data);
-        
+
         $var['rand'] = self::$rand;
 
         $list = model('App')->getManageApp($GLOBALS['ts']['mid']);
@@ -26,7 +26,7 @@ class ManageWidget extends Widget
         } else {
             $var['list']['public'] = L('PUBLIC_REBUSINESS_MANAGEMENT');
         }
-        
+
         foreach ($list as $v) {
             $var['list'][$v['app_name']] = $v['app_alias'].L('PUBLIC_MANAGEMENT');
             if ($var['current'] == $v['app_name']) {
@@ -35,8 +35,8 @@ class ManageWidget extends Widget
         }
 
         //渲染模版
-        $content = $this->renderFile(dirname(__FILE__)."/default.html", $var);
-    
+        $content = $this->renderFile(dirname(__FILE__).'/default.html', $var);
+
         self::$rand ++;
 
         unset($var, $data);

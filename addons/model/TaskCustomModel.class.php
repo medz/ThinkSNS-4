@@ -9,7 +9,7 @@ class TaskCustomModel extends Model
     protected $tableName = 'task_custom';
     /**
      * 返回自定义任务列表
-     * @param unknown_type $map
+     * @param  unknown_type $map
      * @return unknown
      */
     public function getList($map)
@@ -27,7 +27,7 @@ class TaskCustomModel extends Model
                 $taskmap['status'] = 0;
                 $exist = D('task_user')->where($taskmap)->find();
                 $exist && $taskcondition = false;
-                
+
                 $taskname = model('Task')->where('task_type='.$cond[0].' and task_level='.$cond[1])->getField('task_name');
                 $v['task_condition_name'] = $taskname;
             }
@@ -48,7 +48,7 @@ class TaskCustomModel extends Model
             } elseif ((strtotime($etime[1]) < $_SERVER['REQUEST_TIME']) && $etime[1]) {
                 $v['status'] = 'over';
             }
-            foreach ($condition as $k=>$c) {
+            foreach ($condition as $k => $c) {
                 $status = model('Cache')->get('customtask_'.$mid.'_'.$v['id'].'_'.$k);
                 if (!$status && $c) {
                     $status = $this->iscomplete($k, $c);
@@ -79,13 +79,14 @@ class TaskCustomModel extends Model
             }
             unset($condition);
         }
+
         return $list;
     }
     /**
      * 判断是否完成
-     * @param unknown_type $key
-     * @param unknown_type $value
-     * @return boolean
+     * @param  unknown_type $key
+     * @param  unknown_type $value
+     * @return bool
      */
     private function iscomplete($key, $value)
     {
@@ -93,15 +94,18 @@ class TaskCustomModel extends Model
         switch ($key) {
             case 'endtime':
                 $times = explode('|', $value);
+
                 return strtotime($times[0]) <= $_SERVER['REQUEST_TIME'] && strtotime($times[1]) >= $_SERVER['REQUEST_TIME'];
                 break;
             case 'regtime':
                 $times = explode('|', $value);
                 $ctime = model('User')->where('uid='.$mid)->getField('ctime');
+
                 return strtotime($times[0]) <= $ctime && strtotime($times[1]) >= $ctime;
                 break;
             case 'userlevel':
                 $credit = model('Credit')->getUserCredit($mid);
+
                 return in_array($credit['level']['level'], explode(',', $value));
                 break;
             case 'usergroup':
@@ -109,20 +113,22 @@ class TaskCustomModel extends Model
                 $usergroup = getSubByKey($usergroup, 'user_group_id');
                 $gids = explode(',', $value);
                 $res = array_intersect($usergroup, $gids);
+
                 return $res ? true : false;
                 break;
             case 'topic':
                 $topicid = model('FeedTopic')->where("topic_name='".$value."'")->getField('topic_id');
                 $topicid && $res = model('Feed')->join('as a inner join '.C('DB_PREFIX').'feed_topic_link b on a.feed_id=b.feed_id')->where('b.topic_id='.$topicid.' and a.uid='.$mid)->find();
+
                 return $res ? true : false;
                 break;
         }
     }
     /**
      * 领取任务奖励
-     * @param unknown_type $id
-     * @param unknown_type $uid
-     * @return boolean
+     * @param  unknown_type $id
+     * @param  unknown_type $uid
+     * @return bool
      */
     public function completeTask($id, $uid)
     {
@@ -138,6 +144,7 @@ class TaskCustomModel extends Model
             $data['task_level'] = $id;
             $data['ctime'] = $_SERVER['REQUEST_TIME'];
             $res = D('task_receive')->add($data);
+
             return true;
         } else {
             return false;

@@ -2,9 +2,8 @@
 
 class WeibaReplyDiggModel extends Model
 {
-
     protected $tableName = 'weiba_reply_digg';
-    
+
     public function addDigg($row_id, $mid)
     {
         $data['row_id'] = $row_id;
@@ -12,21 +11,24 @@ class WeibaReplyDiggModel extends Model
         $data['uid'] = !$data['uid'] ? $GLOBALS['ts']['mid'] : $data['uid'];
         if (!$data['uid']) {
             $this->error = '未登录不能赞';
+
             return false;
         }
         $isExit = $this->where($data)->getField('id');
         if ($isExit) {
             $this->error = '你已经赞过';
+
             return false;
         }
-        
+
         $data ['cTime'] = time();
         $res = $this->add($data);
         if ($res) {
             D('weiba_reply')->where('reply_id='.$row_id)->setInc('digg_count');
-                        
+
             $this->setDiggCache($mid, $row_id, 'add');
         }
+
         return $res;
     }
 
@@ -37,11 +39,13 @@ class WeibaReplyDiggModel extends Model
         $data['uid'] = !$data['uid'] ? $GLOBALS['ts']['mid'] : $data['uid'];
         if (!$data['uid']) {
             $this->error = '未登录不能取消赞';
+
             return false;
         }
         $isExit = $this->where($data)->getField('id');
         if (!$isExit) {
             $this->error = '取消赞失败，您可以已取消过赞信息';
+
             return false;
         }
 
@@ -53,7 +57,7 @@ class WeibaReplyDiggModel extends Model
             if ($reply) {
                 model('UserData')->updateKey('unread_digg_weibareply', 1, true, $reply['post_uid']);
             }
-            
+
             $this->setDiggCache($mid, $row_id, 'del');
         }
 
@@ -62,9 +66,9 @@ class WeibaReplyDiggModel extends Model
 
     /**
      * 返回指定用户是否赞了指定的分享
-     * @var $row_ids 指定的分享数组
-     * @var $uid 指定的用户
-     * @return array 
+     * @var    $row_ids 指定的分享数组
+     * @var    $uid     指定的用户
+     * @return array
      */
     public function checkIsDigg($row_ids, $uid)
     {
@@ -72,7 +76,7 @@ class WeibaReplyDiggModel extends Model
 
         !is_array($row_ids) && $row_ids = array($row_ids);
         $row_ids = array_filter($row_ids);
-        
+
         $digg = S('weiba_user_digg_'.$uid);
 
         if ($digg === false) {
@@ -97,7 +101,7 @@ class WeibaReplyDiggModel extends Model
         return $this->error;
     }
 
-    private function setDiggCache($uid, $feedId, $type = 'add')
+    private function setDiggCache($uid, $feedId = 0, $type = 'add')
     {
         $key = 'weiba_reply_digg_'.$uid;
         $data = S($key);

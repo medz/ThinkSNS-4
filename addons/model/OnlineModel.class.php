@@ -2,12 +2,11 @@
 <?php
 /**
  * 在线统计模型 - 业务逻辑模型
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 class OnlineModel
 {
-
     private $today = 0;                        // 今日日期字符串
     private $todayTimestamp = 0;            // 今日0点的时间戳
     private $check_point = 0;                // 查询在线起始时间点的时间戳
@@ -15,7 +14,6 @@ class OnlineModel
     private $stats_step = 1800;                // 统计在线用户步长，30分钟
     /**
      * 初始化方法，数据库配置、连接初始化
-     * @return void
      */
     public function __construct()
     {
@@ -34,9 +32,9 @@ class OnlineModel
 
         if ($dbconfig['DB_ENCRYPT'] == 1) {
             if ($db_pwd != '') {
-                require_once(SITE_PATH.'/addons/library/CryptDES.php');
+                require_once SITE_PATH.'/addons/library/CryptDES.php';
                 $crypt = new CryptDES;
-                $db_pwd = (string)$crypt->decrypt($db_pwd);
+                $db_pwd = (string) $crypt->decrypt($db_pwd);
             }
         }
         // 重设Service的数据连接信息
@@ -56,39 +54,38 @@ class OnlineModel
 
     /**
      * 获取统计列表
-     * @param string $where 查询条件
-     * @param integer $limit 结果集数目，默认为30
-     * @return array 统计列表数据
+     * @param  string $where 查询条件
+     * @param  int    $limit 结果集数目，默认为30
+     * @return array  统计列表数据
      */
     public function getStatsList($where = '1', $limit = 30)
     {
         $p = $_REQUEST['p'] ? $_REQUEST['p'] : 1;
         $start = ($p - 1) * $limit;
-        $sqlCount = "SELECT COUNT(1) as count FROM ".C('DB_PREFIX')."online_stats WHERE {$where} ";
+        $sqlCount = 'SELECT COUNT(1) as count FROM '.C('DB_PREFIX')."online_stats WHERE {$where} ";
         if ($count = $this->odb->query($sqlCount)) {
             $count = $count[0]['count'];
         } else {
             $count = 0;
         }
-        
-        $sql = "SELECT * FROM ".C('DB_PREFIX')."online_stats WHERE {$where} LIMIT $start,$limit";
-        
+
+        $sql = 'SELECT * FROM '.C('DB_PREFIX')."online_stats WHERE {$where} LIMIT $start,$limit";
+
         $data = $this->odb->query($sql);
 
         $p = new Page($count, $limit);
-        $output['count'] =$count;
+        $output['count'] = $count;
         $output['totalPages'] = $p->totalPages;
         $output['totalRows'] = $p->totalRows;
         $output['nowPage'] = $p->nowPage;
         $output['html'] = $p->show();
         $output['data'] = $data;
-        
+
         return $output;
     }
 
     /**
      * 执行统计
-     * @return void
      */
     public function dostatus()
     {
@@ -99,14 +96,14 @@ class OnlineModel
         if (empty($max_id)) {
             return false;
         } else {
-            $sql = "UPDATE ".C('DB_PREFIX')."online_logs SET statsed = 1 WHERE id < {$max_id}";
+            $sql = 'UPDATE '.C('DB_PREFIX')."online_logs SET statsed = 1 WHERE id < {$max_id}";
             $this->odb->execute($sql);
         }
         // 开始统计
         // TODO:需要计划任务支持移动上一日数据到备份表，现在在每次统计之后备份今天之前的数据到备份表
         // 从logs累计总的用户数，总的游客数到stats表
-        $userDataSql = "SELECT COUNT(1) AS pv, COUNT(DISTINCT uid) AS pu, COUNT(ip) AS guestpu, `day`, isGuest 
-						FROM `".C('DB_PREFIX')."online_logs`
+        $userDataSql = 'SELECT COUNT(1) AS pv, COUNT(DISTINCT uid) AS pu, COUNT(ip) AS guestpu, `day`, isGuest 
+						FROM `'.C('DB_PREFIX')."online_logs`
 						WHERE id <= {$max_id}
 						GROUP BY day, isGuest";
 
@@ -125,14 +122,14 @@ class OnlineModel
                     $upData[$v['day']]['total_pageviews'] += $v['pv'];
                 }
             }
-            foreach ($upData as $k=>$v) {
-                $sql = "SELECT id FROM ".C('DB_PREFIX')."online_stats WHERE day = '{$k}'";
-                $issetRow  = $this->odb->query($sql);
+            foreach ($upData as $k => $v) {
+                $sql = 'SELECT id FROM '.C('DB_PREFIX')."online_stats WHERE day = '{$k}'";
+                $issetRow = $this->odb->query($sql);
                 if (empty($issetRow)) {
-                    $sql = "INSERT INTO ".C('DB_PREFIX')."online_stats (`day`,`total_users`,`total_guests`,`total_pageviews`) 
+                    $sql = 'INSERT INTO '.C('DB_PREFIX')."online_stats (`day`,`total_users`,`total_guests`,`total_pageviews`) 
 							 VALUES ('{$k}','{$v['total_users']}','{$v['total_guests']}','{$v['total_pageviews']}')";
                 } else {
-                    $sql = " UPDATE ".C('DB_PREFIX')."online_stats 
+                    $sql = ' UPDATE '.C('DB_PREFIX')."online_stats 
 							 SET total_users = '{$v['total_users']}',
 							 total_guests = '{$v['total_guests']}',
 							 total_pageviews = {$v['total_pageviews']}
@@ -141,33 +138,32 @@ class OnlineModel
                 $this->odb->execute($sql);
             }
         }
-        
+
         // 从online表统计在线用户到most_onine_user表
         $this->checkOnline();
         // 将logs表中今天之前的的数据移动到bak表
-        $sql = "INSERT INTO ".C('DB_PREFIX')."online_logs_bak SELECT * FROM `".C('DB_PREFIX')."online_logs` WHERE day <='".date('Y-m-d', strtotime('-1 day'))."'";
+        $sql = 'INSERT INTO '.C('DB_PREFIX').'online_logs_bak SELECT * FROM `'.C('DB_PREFIX')."online_logs` WHERE day <='".date('Y-m-d', strtotime('-1 day'))."'";
         $this->odb->execute($sql);
         // 删除logs表中今天之前的数据删除
-        $sql = " DELETE FROM `".C('DB_PREFIX')."online_logs` WHERE day <='".date('Y-m-d', strtotime('-1 day'))."'";
+        $sql = ' DELETE FROM `'.C('DB_PREFIX')."online_logs` WHERE day <='".date('Y-m-d', strtotime('-1 day'))."'";
         // 统计结束
         $this->odb->execute($sql);
     }
 
     /**
      * 在线用户检查及入库
-     * @return void
      */
     public function checkOnline()
     {
         $startTime = time() - $this->stats_step;
         $day = date('Y-m-d');
         // 今日统计数据
-        $sql = "SELECT * FROM ".C('DB_PREFIX')."online_stats WHERE day ='{$day}'";
-        $dayData =  $this->odb->query($sql);
+        $sql = 'SELECT * FROM '.C('DB_PREFIX')."online_stats WHERE day ='{$day}'";
+        $dayData = $this->odb->query($sql);
 
         if (!empty($dayData)) {
             // 在线注册用户
-            $sql = "SELECT COUNT(1) AS pu FROM ".C('DB_PREFIX')."online WHERE uid !=0 AND activeTime  >= {$startTime}";
+            $sql = 'SELECT COUNT(1) AS pu FROM '.C('DB_PREFIX')."online WHERE uid !=0 AND activeTime  >= {$startTime}";
             $onlineData = $this->odb->query($sql);
 
             $set = array();
@@ -175,7 +171,7 @@ class OnlineModel
                 $set[] = 'most_online_users = '.$onlineData[0]['pu'];
             }
             // 在线游客
-            $sql = "SELECT COUNT(ip) AS pu FROM ".C('DB_PREFIX')."online WHERE uid = 0 AND activeTime >= {$startTime}";
+            $sql = 'SELECT COUNT(ip) AS pu FROM '.C('DB_PREFIX')."online WHERE uid = 0 AND activeTime >= {$startTime}";
             $onlineGuestData = $this->odb->query($sql);
             if ($onlineGuestData && $onlineGuestData[0]['pu'] > 0 && $onlineGuestData[0]['pu'] > $dayData[0]['most_online_guests']) {
                 $set[] = ' most_online_guests = '.$onlineGuestData[0]['pu'];
@@ -190,7 +186,7 @@ class OnlineModel
             }
 
             if (!empty($set)) {
-                $sql = " UPDATE ".C('DB_PREFIX')."online_stats SET ".implode(',', $set)." WHERE day = '{$day}'";
+                $sql = ' UPDATE '.C('DB_PREFIX').'online_stats SET '.implode(',', $set)." WHERE day = '{$day}'";
                 $this->odb->execute($sql);
             }
         }
@@ -198,28 +194,30 @@ class OnlineModel
 
     /**
      * 获取指定用户最后操作的IP地址信息
-     * @param array $uids 指定用户ID数组
+     * @param  array $uids 指定用户ID数组
      * @return array 指定用户最后操作的IP地址信息
      */
     public function getLastOnlineInfo($uids)
     {
         $map['uid'] = array('IN', $uids);
         $data = D()->table(C('DB_PREFIX').'online')->where($map)->getHashList('uid', 'ip');
+
         return $data;
     }
 
     /**
      * 获取指定用户的操作知识 - 分页型
-     * @param integer $uid 用户ID
-     * @param array $map 查询条件
-     * @param integer $count 结果集数目，默认为20
-     * @param string $order 排序条件，默认为day DESC
-     * @return array 指定用户的操作知识 - 分页型
+     * @param  int    $uid   用户ID
+     * @param  array  $map   查询条件
+     * @param  int    $count 结果集数目，默认为20
+     * @param  string $order 排序条件，默认为day DESC
+     * @return array  指定用户的操作知识 - 分页型
      */
     public function getUserOperatingList($uid, $map, $count = 20, $order = 'id DESC')
     {
         $map['uid'] = $uid;
         $data = D()->table(C('DB_PREFIX').'online_logs_bak')->where($map)->order($order)->findPage($count);
+
         return $data;
     }
 }

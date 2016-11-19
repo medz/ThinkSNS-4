@@ -7,12 +7,11 @@
  */
 class FollowWeibaListWidget extends Widget
 {
-
     /**
      * 渲染关注按钮模板
      * @example
      * $data['follower_uid'] integer 用户ID
-     * @param array $data 渲染的相关配置参数
+     * @param  array  $data 渲染的相关配置参数
      * @return string 渲染后的模板数据
      */
     public function render($data)
@@ -25,18 +24,17 @@ class FollowWeibaListWidget extends Widget
         $map['weiba_id'] = array('in', getSubByKey($follow, 'weiba_id'));
         $map['is_del'] = 0;
         $var['weibaList'] = D('weiba')->where($map)->findAll();
-        if ($data['right']=='1') {
+        if ($data['right'] == '1') {
             $var['nweibaList'] = array_chunk($var['weibaList'], 4);
         }
-        
 
         $var['weibaListCount'] = D('weiba')->where($map)->count();
-        foreach ($var['weibaList'] as $k=>$v) {
+        foreach ($var['weibaList'] as $k => $v) {
             $var['weibaList'][$k]['logo'] = getImageUrlByAttachId($v['logo'], 50, 50);
         }
         is_array($data) && $var = array_merge($var, $data);
         // 渲染模版
-        $content = $this->renderFile(dirname(__FILE__) . "/followWeibaList.html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/followWeibaList.html', $var);
         unset($var, $data);
         // 输出数据
         return $content;

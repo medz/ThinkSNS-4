@@ -1,6 +1,6 @@
 <?php
+
 //使用V2版本的客户端,支持Oauth2.0
-require_once('baidu/Baidu.php');
 class baidu
 {
     public $loginUrl;
@@ -9,6 +9,7 @@ class baidu
     {
         $baidu = new BaiduAPI(BAIDU_KEY, BAIDU_SECRET, $redirectUri, new BaiduCookieStore(BAIDU_KEY));
         $loginUrl = $baidu->getLoginUrl();
+
         return $loginUrl;
     }
     //用户资料
@@ -20,13 +21,14 @@ class baidu
             $apiClient = $baidu->getBaiduApiClientService();
             $profile = $apiClient->api('/rest/2.0/passport/users/getInfo');
         }
-        $user['id']         =  $user['uid'];
-        $user['uname']       = $user['uname'];
-        $user['province']    = 0;
-        $user['city']        = 0;
-        $user['location']    = '';
-        $user['userface']    = $profile['portrait'];
-        $user['sex']         = $profile['sex'];
+        $user['id'] = $user['uid'];
+        $user['uname'] = $user['uname'];
+        $user['province'] = 0;
+        $user['city'] = 0;
+        $user['location'] = '';
+        $user['userface'] = $profile['portrait'];
+        $user['sex'] = $profile['sex'];
+
         return $user;
     }
     //验证用户
@@ -42,6 +44,7 @@ class baidu
             $_SESSION['baidu']['isSync'] = 0;
             $_SESSION['baidu']['uid'] = $user['uid'];
             $_SESSION['open_platform_type'] = 'baidu';
+
             return $user;
         } else {
             return false;
@@ -58,7 +61,7 @@ class baidu
         return true;
     }
     //转发一条分享
-    public function transpond($transpondId, $reId, $content='', $opt=null)
+    public function transpond($transpondId, $reId, $content = '', $opt = null)
     {
         return true;
     }

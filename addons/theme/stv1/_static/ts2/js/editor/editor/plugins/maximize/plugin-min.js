@@ -1,1 +1,0 @@
-KISSY.Editor.add("maximize",function(a){a.addPlugin("maximize",function(){var b=KISSY,c=b.Editor;if(!(b.UA.gecko<1.92)){var d=a.addButton("maximize",{title:"\u5168\u5c4f",contentCls:"ke-toolbar-maximize",loading:true});c.use("maximize/support",function(){d.reload(c.Maximize)});this.destroy=function(){d.destroy()}}})},{attach:false});

@@ -6,10 +6,8 @@
  */
 class PrivacyAction extends Action
 {
-
     /**
      * 模块初始化
-     * @return void
      */
     protected function _initialize()
     {
@@ -17,7 +15,6 @@ class PrivacyAction extends Action
 
     /**
      * 隐私设置页面
-     * @return void
      */
     public function index()
     {
@@ -26,7 +23,6 @@ class PrivacyAction extends Action
 
     /**
      * 保存隐私设置
-     * @return void
      */
     public function doSavePrivacy()
     {

@@ -15,7 +15,7 @@
     <div class="reg-tab-menu">
       <ul>
       <?php if(in_array($config['account_type'], array('all', 'email'))) { ?>
-        <li><a href="{:U('public/Register/index','t=email')}" 
+        <li><a href="{:U('public/Register/index','t=email')}<php>if($_GET['invite']){</php>&invite={:t($_GET['invite'])}<php> } </php>" 
           
           <php>if($_GET['t']!='phone'){</php>
           class="cur"
@@ -23,7 +23,7 @@
           >邮箱注册</a></li>
       <?php } ?>
       <?php if(in_array($config['account_type'], array('all', 'phone'))) { ?>
-        <li><a href="{:U('public/Register/index','t=phone')}" 
+        <li><a href="{:U('public/Register/index','t=phone')}<php>if($_GET['invite']){</php>&invite={:t($_GET['invite'])}<php> } </php>"
           
           <php>if($_GET['t']=='phone'){</php>
           class="cur"

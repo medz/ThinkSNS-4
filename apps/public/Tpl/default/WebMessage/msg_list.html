@@ -54,7 +54,7 @@
                 <a href="{$imgurl}" target="_blank"><img<php>if(!$isGetMessageList):</php> onload="core.message.scrollY('bottom'{$isInit?',0':''});"<php>endif;</php> src="{$imgurl}" /><span>{$msg['location']?$msg['location']:'查看详情>>'}</span></a>
             </div>
             <?php else:?>
-            <div class="text">{:parse_html($msg['content'])}</div>
+            <div class="text">{:h(parse_html($msg['content']))}</div>
             <?php endif;?>
         </div>
     </div>

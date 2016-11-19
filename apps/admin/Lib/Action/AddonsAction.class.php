@@ -4,13 +4,12 @@
  * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
-tsload(APPS_PATH . '/admin/Lib/Action/AdministratorAction.class.php');
+tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
 class AddonsAction extends AdministratorAction
 {
     /**
      * 插件列表页面
-     * 
-     * @return void
+     *
      */
     public function index()
     {
@@ -28,15 +27,14 @@ class AddonsAction extends AdministratorAction
                 }
             }
         }
-        
+
         $this->assign('list', $result);
         $this->display();
     }
-    
+
     /**
      * 开启插件操作
-     * 
-     * @return void
+     *
      */
     public function startAddon()
     {
@@ -47,11 +45,10 @@ class AddonsAction extends AdministratorAction
             $this->error('启动失败');
         }
     }
-    
+
     /**
      * 停止插件操作
-     * 
-     * @return void
+     *
      */
     public function stopAddon()
     {
@@ -62,11 +59,10 @@ class AddonsAction extends AdministratorAction
             $this->error('停用失败');
         }
     }
-    
+
     /**
      * 卸载插件操作
-     * 
-     * @return void
+     *
      */
     public function uninstallAddon()
     {
@@ -77,11 +73,10 @@ class AddonsAction extends AdministratorAction
             $this->error('卸载失败');
         }
     }
-    
+
     /**
      * 插件后台管理页面
-     * 
-     * @return void
+     *
      */
     public function admin()
     {
@@ -96,6 +91,7 @@ class AddonsAction extends AdministratorAction
             $this->assign('addonName', $info ['pluginName']);
             $this->assign('menu', false);
             $this->display();
+
             return;
         }
         $this->assign('menu', $adminMenu);
@@ -115,15 +111,15 @@ class AddonsAction extends AdministratorAction
         $addonInfo = model('Addon')->getAddon(intval($_GET ['pluginid']));
         $result = array(
                 'status' => true,
-                'info' => ""
+                'info' => '',
         );
-        
+
         F('Cache_App', null);
-        
+
         Addons::addonsHook($addonInfo ['name'], t($_GET ['page']), array(
-                'result' => & $result
+                'result' => & $result,
         ), true);
-        
+
         // dump($result);
 
         if ($result ['status']) {

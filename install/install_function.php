@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('THINKSNS_INSTALL')) {
     exit('Access Denied');
 }
@@ -53,10 +54,11 @@ function result($result = 1, $output = 1)
 function createtable($sql, $db_charset)
 {
     $db_charset = (strpos($db_charset, '-') === false) ? $db_charset : str_replace('-', '', $db_charset);
-    $type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
-    $type = in_array($type, array("MYISAM", "HEAP")) ? $type : "MYISAM";
-    return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql).
-        (mysql_get_server_info() > "4.1" ? " ENGINE=$type DEFAULT CHARSET=$db_charset" : " TYPE=$type");
+    $type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", '\\2', $sql));
+    $type = in_array($type, array('MYISAM', 'HEAP')) ? $type : 'MYISAM';
+
+    return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", '\\1', $sql).
+        (mysql_get_server_info() > '4.1' ? " ENGINE=$type DEFAULT CHARSET=$db_charset" : " TYPE=$type");
 }
 function getip()
 {
@@ -68,6 +70,7 @@ function getip()
         $onlineip = $_SERVER['REMOTE_ADDR'];
     }
     $onlineip = preg_match('/[\d\.]{7,15}/', addslashes($onlineip), $onlineipmatches);
+
     return $onlineipmatches[0] ? $onlineipmatches[0] : 'unknown';
 }
 function writable($var)
@@ -85,6 +88,7 @@ function writable($var)
             $writeable = true;
         }
     }
+
     return $writeable;
 }
 function PWriteFile($filename, $content, $mode = 'ab')
@@ -104,8 +108,10 @@ function PWriteFile($filename, $content, $mode = 'ab')
         fwrite($fp, $content);
         fclose($fp);
         @ chmod($filename, 0777);
+
         return true;
     }
+
     return false;
 }
 function random($length, $isNum = false)
@@ -122,37 +128,38 @@ function random($length, $isNum = false)
     for ($i = 0; $i < $length; $i++) {
         $random .= ${$sequece}{mt_rand(0, $max)};
     }
+
     return $random;
 }
 
-function dump($var, $echo=true, $label=null, $strict=true)
+function dump($var, $echo = true, $label = null, $strict = true)
 {
-    $label = ($label===null) ? '' : rtrim($label) . ' ';
+    $label = ($label === null) ? '' : rtrim($label).' ';
     if (!$strict) {
         if (ini_get('html_errors')) {
             $output = print_r($var, true);
             $output = '<pre style="text-align:left">'.$label.htmlspecialchars($output, ENT_QUOTES).'</pre>';
         } else {
-            $output = $label . " : " . print_r($var, true);
+            $output = $label.' : '.print_r($var, true);
         }
     } else {
         ob_start();
         var_dump($var);
         $output = ob_get_clean();
         if (!extension_loaded('xdebug')) {
-            $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
-            $output = '<pre style="text-align:left">'. $label. htmlspecialchars($output, ENT_QUOTES). '</pre>';
+            $output = preg_replace("/\]\=\>\n(\s+)/m", '] => ', $output);
+            $output = '<pre style="text-align:left">'.$label.htmlspecialchars($output, ENT_QUOTES).'</pre>';
         }
     }
     if ($echo) {
         echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-        echo($output);
+        echo $output;
+
         return null;
     } else {
         return $output;
     }
 }
-
 
 function iswaf_create_key()
 {
@@ -161,7 +168,7 @@ function iswaf_create_key()
 
 function iswaf_random($length, $numeric = 0)
 {
-    PHP_VERSION < '4.2.0' && mt_srand((double)microtime() * 1000000);
+    PHP_VERSION < '4.2.0' && mt_srand((double) microtime() * 1000000);
     if ($numeric) {
         $hash = sprintf('%0'.$length.'d', mt_rand(0, pow(10, $length) - 1));
     } else {
@@ -172,5 +179,6 @@ function iswaf_random($length, $numeric = 0)
             $hash .= $chars[mt_rand(0, $max)];
         }
     }
+
     return $hash;
 }

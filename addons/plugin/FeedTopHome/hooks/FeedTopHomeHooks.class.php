@@ -2,7 +2,6 @@
 
 class FeedTopHomeHooks extends Hooks
 {
-
     private $isRefresh = 1;
 
     public function __construct()
@@ -44,7 +43,7 @@ class FeedTopHomeHooks extends Hooks
         $uid = intval($_POST['uid']);
         $feedId = intval($_POST['feed_id']);
         if (empty($uid) || empty($feedId)) {
-            exit(json_encode(array('status'=>0, 'info'=>'设置失败')));
+            exit(json_encode(array('status' => 0, 'info' => '设置失败')));
         }
         $result = $this->model('FeedTopHome')->setFeedTopHome($uid, $feedId);
         $res = array();
@@ -63,7 +62,7 @@ class FeedTopHomeHooks extends Hooks
         $uid = intval($_POST['uid']);
         $feedId = intval($_POST['feed_id']);
         if (empty($uid) || empty($feedId)) {
-            exit(json_encode(array('status'=>0, 'info'=>'设置失败')));
+            exit(json_encode(array('status' => 0, 'info' => '设置失败')));
         }
         $result = $this->model('FeedTopHome')->delFeedTopHome($uid, $feedId);
         $res = array();
@@ -103,12 +102,12 @@ class FeedTopHomeHooks extends Hooks
         $this->assign('diggArr', $diggArr);
 
         $cancomment_old_type = array(
-            'post','repost','postimage','postfile',
-            'weiba_post','weiba_repost',
+            'post', 'repost', 'postimage', 'postfile',
+            'weiba_post', 'weiba_repost',
             'blog_post', 'blog_repost',
             'event_post', 'event_repost',
             'vote_post', 'vote_repost',
-            'photo_post', 'photo_repost');
+            'photo_post', 'photo_repost', );
         $this->assign('cancomment_old_type', $cancomment_old_type);
 
         $uids = array();
@@ -118,14 +117,13 @@ class FeedTopHomeHooks extends Hooks
         if (!empty($uids)) {
             $map = array();
             $map['uid'] = $GLOBALS['ts']['mid'];
-            $map['fid'] = array('in',$uids);
+            $map['fid'] = array('in', $uids);
             $followUids = model('Follow')->where($map)->getAsFieldArray('fid');
             $this->assign('followUids', $followUids);
 
             $remarkHash = model('Follow')->getRemarkHash($GLOBALS['ts']['mid']);
             $this->assign('remarkHash', $remarkHash);
         }
-
 
         $this->display('feedTop');
     }

@@ -16,7 +16,7 @@ class DenouceWidget extends Widget
     {
         return  false;
     }
-    
+
     /**
      * 举报弹框
      * @return string 弹窗页面HTML
@@ -29,7 +29,8 @@ class DenouceWidget extends Widget
         if ($var['source']['app'] != 'public' && $var['source']['is_repost'] == 0) {
             $var['source']['source_content'] = $var['source']['api_source']['source_content'];
         }
-        $content = $this->renderFile(dirname(__FILE__)."/index.html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/index.html', $var);
+
         return $content;
     }
 
@@ -53,7 +54,7 @@ class DenouceWidget extends Widget
         }
         exit(json_encode($res));
     }
-    
+
     /**
      * 格式化模板变量
      * @return array 被举报的信息
@@ -63,15 +64,16 @@ class DenouceWidget extends Widget
         if (empty($_GET['aid']) || empty($_GET['fuid']) || empty($_GET['type'])) {
             return false;
         }
-        foreach ($_GET as $k=>$v) {
+        foreach ($_GET as $k => $v) {
             $var[$k] = t($v);
         }
         $var['uid'] = $GLOBALS['ts']['mid'];
-        empty($var['app']) &&  $var['app'] = 'public';
+        empty($var['app']) && $var['app'] = 'public';
         $var['source'] = model('Source')->getSourceInfo($var['type'], $var['aid'], false, $var['app']);
+
         return $var;
     }
-    
+
     /**
      * 提交举报
      * @return array 举报信息和操作状态
@@ -85,7 +87,7 @@ class DenouceWidget extends Widget
         // 判断资源是否删除
 
         $fmap['is_del'] = 0;
-        if ($_POST['from']=='weiba_post') {
+        if ($_POST['from'] == 'weiba_post') {
             $fmap['post_id'] = intval($_POST['aid']);
             $isExist = M('weiba_post')->where($fmap)->count();
         } else {
@@ -99,7 +101,7 @@ class DenouceWidget extends Widget
         }
         $return = array();
         if ($isDenounce = model('Denounce')->where($map)->count()) {
-            $return = array('status'=>0,'data'=>L('PUBLIC_REPORTING_INFO'));
+            $return = array('status' => 0, 'data' => L('PUBLIC_REPORTING_INFO'));
         } else {
             $map['content'] = h($_POST['content']);
             $map['reason'] = t($_POST['reason']);
@@ -111,12 +113,12 @@ class DenouceWidget extends Widget
                 model('Credit')->setUserCredit($_POST['fuid'], 'reported_weibo');
 
                 $touid = D('user_group_link')->where('user_group_id=1')->field('uid')->findAll();
-                foreach ($touid as $k=>$v) {
+                foreach ($touid as $k => $v) {
                     model('Notify')->sendNotify($v['uid'], 'denouce_audit');
                 }
-                $return = array('status'=>1,'data'=>'您已经成功举报此信息');
+                $return = array('status' => 1, 'data' => '您已经成功举报此信息');
             } else {
-                $return = array('status'=>0,'data'=>L('PUBLIC_REPORT_ERROR'));
+                $return = array('status' => 0, 'data' => L('PUBLIC_REPORT_ERROR'));
             }
         }
         exit(json_encode($return));

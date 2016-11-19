@@ -2,10 +2,6 @@
 {$body|t|replaceUrl}
 <dl class="comment">
 	<php>if($sourceInfo['is_del'] == 0 && $sourceInfo['source_user_info'] != false):</php>
-	<!--<dd class="name">
-		<span class="f9"><i class="ico-rep"></i>转载自1</span><space uid="sourceInfo.source_user_info.uid">{uname}</space>
-        <span>1<a href="{:U('public/Profile/feed',array('uid'=>$sourceInfo['uid'],'feed_id'=>$sourceInfo['feed_id']))}" class="date" date="{$sourceInfo['publish_time']}">{$sourceInfo['publish_time']|friendlyDate}</a><span>{:getFromClient($sourceInfo['from'])}</span></span>
-	</dd>-->
 	<dd class="com-info clearfix">
 		<php>if(!empty($sourceInfo['attach'])):</php>
 
@@ -46,21 +42,6 @@
            <span class="source_info">{$sourceInfo['source_user_info']['space_link']}<em>&nbsp;&nbsp;{$sourceInfo['publish_time']|friendlyDate}<!--&nbsp;{:getFromClient($sourceInfo['from'])}--></em></span>
 		   <p class="txt-mt" onclick="core.weibo.clickRepost(this);" href="javascript:core.weibo.showBigImage({$sourceInfo['feed_id']}, {$i});">{:msubstr(t($sourceInfo['source_content']),0,100)}</p>
 		</div>
-		<!--<div class="feed_img_lists" rel='big' style='display:none'>
-			<ul class="feed_img_list big">
-				<span class='tools'>
-					<a href="javascript:void(0);" event-node='img_big'><i class="ico-pack-up"></i>收起</a>
-					<a target="_blank" href="{$vo.attach_url}"><i class="ico-show-big"></i>查看大图</a>
-					<a href="javascript:;" onclick="revolving('left', {$feedid})"><i class="ico-turn-l"></i>向左转</a>
-					<a href="javascript:;" onclick="revolving('right', {$feedid})"><i class="ico-turn-r"></i>向右转</a>
-				</span>
-				<volist name='sourceInfo.attach' id='vo'>
-				<li title='{$vo.attach_url}'>
-					<a href="javascript:void(0)" event-node='img_big'><img id="image_index_{$feedid}" maxwidth="740" class="imgsmall" src='{$vo.attach_middle}' title='点击缩小' /></a>
-				</li>
-				</volist>
-			</ul>
-		</div>-->
 		</eq>
 
 		<php>else:</php>

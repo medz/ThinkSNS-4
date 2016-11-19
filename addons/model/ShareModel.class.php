@@ -1,15 +1,14 @@
 <?php
 /**
  * 分享模型 - 业务逻辑模型
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 class ShareModel
 {
-    
     /**
      * 分享到分享
-     * 
+     *
      * @example 需要传入的$data值
      *          sid：转发的分享/资源ID
      *          app_name：app名称
@@ -17,26 +16,26 @@ class ShareModel
      *          body：转发时，自定义写入的内容
      *          type：分享类型（分享原文app_row_table）
      *          comment：是否给原作者评论
-     * @param array $data
-     *        	分享的相关数据
-     * @param string $from
-     *        	是否发@给资源作者，默认为share
-     * @param array $lessUids
-     *        	去掉@用户，默认为null
-     * @return array 分享操作后，相关反馈信息数据
+     * @param  array  $data
+     *                          分享的相关数据
+     * @param  string $from
+     *                          是否发@给资源作者，默认为share
+     * @param  array  $lessUids
+     *                          去掉@用户，默认为null
+     * @return array  分享操作后，相关反馈信息数据
      */
     public function shareFeed($data, $from = 'share', $lessUids = null)
     {
         // 返回的数据结果集
         $return = array(
                 'status' => 0,
-                'data' => L('PUBLIC_SHARE_FAILED')
+                'data' => L('PUBLIC_SHARE_FAILED'),
         ); // 分享失败
                                                                        // 验证数据正确性
         if (empty($data ['sid'])) {
             return $return;
         }
-        
+
         $stable = t($data ['type']); // 资源所在的表名
         $sid = t($data ['sid']);
         $app = isset($data ['app_name']) ? $data ['app_name'] : APP_NAME; // 当前产生分享所属的应用
@@ -53,16 +52,16 @@ class ShareModel
         if (! empty($oldInfo ['feedtype']) && ! in_array($oldInfo ['feedtype'], array(
                 'post',
                 'postimage',
-                'postfile'
+                'postfile',
         ))) {
             $feedType = $oldInfo ['feedtype'];
         }
         if ($app != 'public') { // 非分享类型内容转发
             $oldInfo ['uid'] = $oldInfo ['source_user_info'] ['uid'];
             $oldInfo ['sourceInfo'] ['source_id'] = $oldInfo ['feed_id'];
-            $feedType = $app . '_repost';
+            $feedType = $app.'_repost';
         }
-        
+
         $d ['sourceInfo'] = ! empty($oldInfo ['sourceInfo']) ? $oldInfo ['sourceInfo'] : $oldInfo;
 
         /* emoji处理 */
@@ -73,11 +72,11 @@ class ShareModel
         $isOther = ($from == 'comment') ? false : true;
         // 获取上个节点资源ID
         $d ['curid'] = $data ['curid'];
-        
+
         // 获取转发原分享信息
         $appId = $oldInfo ['source_id'];
         $appTable = $oldInfo ['source_table'];
-        
+
         $d ['from'] = isset($data ['from']) ? intval($data ['from']) : 0;
         $d ['latitude'] = isset($data ['latitude']) ? $data ['latitude'] : 0;
         $d ['longitude'] = isset($data ['longitude']) ? $data ['longitude'] : 0;
@@ -98,7 +97,7 @@ class ShareModel
                 $comment_id = model('Comment')->addComment($c, true, $notCount, $lessUids);
                 // 同步到微吧
                 if ($app == 'weiba') {
-                    $postDetail = D('weiba_post')->where('feed_id=' . $c ['row_id'])->find();
+                    $postDetail = D('weiba_post')->where('feed_id='.$c ['row_id'])->find();
                     if ($postDetail) {
                         $datas ['weiba_id'] = $postDetail ['weiba_id'];
                         $datas ['post_id'] = $postDetail ['post_id'];
@@ -112,9 +111,9 @@ class ShareModel
                         if (D('weiba_reply')->add($datas)) {
                             $map ['last_reply_uid'] = $this->mid;
                             $map ['last_reply_time'] = $datas ['ctime'];
-                            D('weiba_post')->where('post_id=' . $datas ['post_id'])->save($map);
+                            D('weiba_post')->where('post_id='.$datas ['post_id'])->save($map);
                             // 回复统计数加1
-                            D('weiba_post')->where('post_id=' . $datas ['post_id'])->setInc('reply_count');
+                            D('weiba_post')->where('post_id='.$datas ['post_id'])->setInc('reply_count');
                         }
                     }
                 }
@@ -129,10 +128,10 @@ class ShareModel
             $rdata ['app'] = $app;
             $rdata ['is_repost'] = 1;
             switch ($app) {
-                case 'weiba' :
+                case 'weiba':
                     $rdata ['from'] = getFromClient(0, $app, '微吧');
                     break;
-                default :
+                default:
                     $rdata ['from'] = getFromClient($from, $app);
                     break;
             }
@@ -140,12 +139,12 @@ class ShareModel
             $return ['status'] = 1;
             // 被分享内容“分享统计”数+1，同时可检测出app,table,row_id 的有效性
             if (! $pk = D($data ['type'], $data ['app_name'])->getPk()) {
-                $pk = $data ['type'] . '_id';
+                $pk = $data ['type'].'_id';
             }
             D($data ['type'], $data ['app_name'])->setInc('repost_count', "`{$pk}`={$data['sid']}", 1);
             if ($data ['curid'] != $data ['sid'] && ! empty($data ['curid'])) {
                 if (! $pk = D($data ['curtable'])->getPk()) {
-                    $pk = $data ['curtable'] . '_id';
+                    $pk = $data ['curtable'].'_id';
                 }
                 D($data ['curtable'])->setInc('repost_count', "`{$pk}`={$data['curid']}", 1);
                 D($data ['curtable'])->cleanCache($data ['curid']);
@@ -154,13 +153,13 @@ class ShareModel
         } else {
             $return ['data'] = model('Feed')->getError();
         }
-        
+
         return $return;
     }
-    
+
     /**
      * 分享给同事
-     * 
+     *
      * @example 需要传入的$data值
      *          uid：同事用户ID
      *          sid：转发的分享/资源ID
@@ -169,15 +168,15 @@ class ShareModel
      *          body：转发时，自定义写入的内容
      *          type：分享类型
      *          comment：是否给原作者评论
-     * @param array $data
-     *        	分享的相关数据
+     * @param  array $data
+     *                     分享的相关数据
      * @return array 分享操作后，相关反馈信息数据
      */
     public function shareMessage($data)
     {
         $return = array(
                 'status' => 0,
-                'data' => L('PUBLIC_SHARE_FAILED')
+                'data' => L('PUBLIC_SHARE_FAILED'),
         ); // 分享失败
         $app = t($data ['app_name']);
         $msg ['to'] = trim($data ['uids'], ',');
@@ -190,10 +189,10 @@ class ShareModel
             return $return;
         }
         $data ['content'] = trim($data ['content']);
-        $content = empty($data ['content']) ? "" : "“{$data['content']}”&nbsp;//&nbsp;";
+        $content = empty($data ['content']) ? '' : "“{$data['content']}”&nbsp;//&nbsp;";
         $content = parse_html($content);
         $message ['to'] = $msg ['to'];
-        $message ['content'] = $content . parse_html($oldInfo ['source_content']) . '&nbsp;&nbsp;<a href="' . $oldInfo ['source_url'] . '" target=\'_blank\'>查看</a>';
+        $message ['content'] = $content.parse_html($oldInfo ['source_content']).'&nbsp;&nbsp;<a href="'.$oldInfo ['source_url'].'" target="_blank">查看</a>';
         if (model('Message')->postMessage($message, $GLOBALS ['ts'] ['_user'] ['uid'])) {
             // 发表评论
             $c ['type'] = 3;
@@ -216,9 +215,10 @@ class ShareModel
 
             $return = array(
                     'status' => 1,
-                    'data' => L('PUBLIC_SHARE_SUCCESS')
+                    'data' => L('PUBLIC_SHARE_SUCCESS'),
             ); // 分享成功
         }
+
         return $return;
     }
 }

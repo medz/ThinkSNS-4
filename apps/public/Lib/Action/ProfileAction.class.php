@@ -9,7 +9,6 @@ class ProfileAction extends Action
     /**
      * _initialize 模块初始化
      *
-     * @return void
      */
     protected function _initialize()
     {
@@ -25,14 +24,14 @@ class ProfileAction extends Action
         $this->assign('uid', $this->uid);
 
         // # 微吧和频道开关检测
-        $weibaIfOpen   = model('App')->getAppByName('weiba');
-        $weibaIfOpen   = $weibaIfOpen['status'];
+        $weibaIfOpen = model('App')->getAppByName('weiba');
+        $weibaIfOpen = $weibaIfOpen['status'];
         $channelIfOpen = model('App')->getAppByName('channel');
         $channelIfOpen = $channelIfOpen['status'];
         $this->assign('weibaIfOpen', $weibaIfOpen);
         $this->assign('channelIfOpen', $channelIfOpen);
     }
-    
+
     /**
      * 隐私设置
      */
@@ -40,6 +39,7 @@ class ProfileAction extends Action
     {
         if ($this->mid != $uid) {
             $privacy = model('UserPrivacy')->getPrivacy($this->mid, $uid);
+
             return $privacy;
         } else {
             return true;
@@ -65,11 +65,11 @@ class ProfileAction extends Action
             $fids = getSubByKey($follower_list ['data'], 'fid');
             if ($fids) {
                 $uids = array_merge($fids, array(
-                        $this->uid
+                        $this->uid,
                 ));
             } else {
                 $uids = array(
-                        $this->uid
+                        $this->uid,
                 );
             }
             // 获取用户用户组信息
@@ -78,27 +78,27 @@ class ProfileAction extends Action
             $this->_assignUserProfile($uids);
             $this->_assignUserTag($uids);
             $this->_assignUserCount($fids);
-            
+
             $this->assign('follower_list', $follower_list);
         } else {
             $this->_assignUserInfo($this->uid);
         }
         $this->assign('userPrivacy', $userPrivacy);
-        
+
         $this->display();
     }
     public function collection()
     {
         $this->_top();
         $this->_assignUserInfo($this->uid);
-        
+
         // 获取信息
         if ($_GET ['feed_type'] == 'weiba') {
             $map ['uid'] = $this->uid;
             $post = M('weiba_favorite')->where($map)->select();
             $maps ['post_id'] = array(
                     'in',
-                    getSubByKey($post, 'post_id')
+                    getSubByKey($post, 'post_id'),
             );
             $weiba = M('weiba_post')->where($maps)->select();
             $weiba_ids = getSubByKey($weiba, 'weiba_id');
@@ -111,7 +111,7 @@ class ProfileAction extends Action
                 // $images[0] && $weiba[$k]['image'] = array_slice( $images , 0 , 5 );
                 $image = getEditorImages($v ['content']);
                 ! empty($image) && $weiba [$k] ['image'] = array(
-                        $image
+                        $image,
                 );
                 // 匹配图片的src
                 preg_match_all('#<img.*?src="([^"]*)"[^>]*>#i', $v ['content'], $match);
@@ -121,7 +121,7 @@ class ProfileAction extends Action
                         $weiba [$k] ['img'] [] = $imgurl;
                     }
                 }
-                $is_digg = M('weiba_post_digg')->where('post_id=' . $v ['post_id'] . ' and uid=' . $this->mid)->find();
+                $is_digg = M('weiba_post_digg')->where('post_id='.$v ['post_id'].' and uid='.$this->mid)->find();
                 $weiba [$k] ['digg'] = $is_digg ? 'digg' : 'undigg';
                 $weiba [$k] ['content'] = t($weiba [$k] ['content']);
             }
@@ -137,12 +137,13 @@ class ProfileAction extends Action
         }
         $map ['weiba_id'] = array(
                 'in',
-                $weiba_ids
+                $weiba_ids,
         );
         $names = D('weiba')->where($map)->field('weiba_id,weiba_name')->findAll();
         foreach ($names as $n) {
             $nameArr [$n ['weiba_id']] = $n ['weiba_name'];
         }
+
         return $nameArr;
     }
     public function photo()
@@ -150,30 +151,30 @@ class ProfileAction extends Action
         if ($this->uid != $this->mid) {
             // $this->error ( '无权限查看' );
         }
-        
+
         $this->_top();
         $this->_assignUserInfo($this->uid);
-        
+
         // 晒物
         $map ['uid'] = $this->uid;
         $products = M('shop_product_share')->where($map)->order('cTime desc')->findPage();
-        
+
         $ids = getSubByKey($products ['data'], 'product_id');
         $map ['product_id'] = array(
                 'in',
-                $ids
+                $ids,
         );
         $goods = M('shop_product')->where($map)->findAll();
         foreach ($goods as $g) {
             $goodArr [$g ['product_id']] = $g;
         }
-        
+
         foreach ($products ['data'] as $k => &$p) {
             if (isset($goodArr [$p ['product_id']])) {
-                $p = array_merge($p, ( array ) $goodArr [$p ['product_id']]);
+                $p = array_merge($p, (array) $goodArr [$p ['product_id']]);
             } else {
                 $arr = model('Shop')->GetGoodsInfo($p ['product_id']);
-                $p = array_merge($p, ( array ) $arr ['result']);
+                $p = array_merge($p, (array) $arr ['result']);
             }
         }
         $this->assign('products', $products);
@@ -185,12 +186,12 @@ class ProfileAction extends Action
     {
         $map ['uid'] = 1;
         $map ['id'] = intval($_POST ['id']);
-        
+
         $res = M('shop_product_share')->where($map)->delete();
-        
+
         echo $res ? 1 : 0;
     }
-    
+
     /**
      * 个人档案展示页面
      */
@@ -213,7 +214,7 @@ class ProfileAction extends Action
         // 个人空间头部
         $this->_top();
         $this->_tab_menu();
-        
+
         // 判断隐私设置
         $userPrivacy = $this->privacy($this->uid);
         if ($userPrivacy ['space'] !== 1) {
@@ -225,20 +226,20 @@ class ProfileAction extends Action
         } else {
             $this->_assignUserInfo($this->uid);
         }
-        
+
         // 添加积分
         model('Credit')->setUserCredit($this->uid, 'space_access');
-        
+
         $this->assign('userPrivacy', $userPrivacy);
         // seo
-        $seo = model('Xdata')->get("admin_Config:seo_user_profile");
+        $seo = model('Xdata')->get('admin_Config:seo_user_profile');
         $replace ['uname'] = $user_info ['uname'];
-        if ($feed_id = model('Feed')->where('uid=' . $this->uid)->order('publish_time desc')->limit(1)->getField('feed_id')) {
-            $replace ['lastFeed'] = D('feed_data')->where('feed_id=' . $feed_id)->getField('feed_content');
+        if ($feed_id = model('Feed')->where('uid='.$this->uid)->order('publish_time desc')->limit(1)->getField('feed_id')) {
+            $replace ['lastFeed'] = D('feed_data')->where('feed_id='.$feed_id)->getField('feed_content');
         }
         $replaces = array_keys($replace);
         foreach ($replaces as &$v) {
-            $v = "{" . $v . "}";
+            $v = '{'.$v.'}';
         }
         $seo ['title'] = str_replace($replaces, $replace, $seo ['title']);
         $seo ['keywords'] = str_replace($replaces, $replace, $seo ['keywords']);
@@ -248,7 +249,7 @@ class ProfileAction extends Action
         ! empty($seo ['des']) && $this->setDescription($seo ['des']);
         $this->display();
     }
-    
+
     /**
      * 获取指定用户的应用数据列表
      *
@@ -265,14 +266,14 @@ class ProfileAction extends Action
         // 个人空间头部
         $this->_top();
         $this->_assignUserInfo($this->uid);
-        
+
         $appArr = $this->_tab_menu();
         $type = t($_GET ['type']);
         if (! isset($appArr [$type])) {
             $this->error('参数出错！！');
         }
         $this->assign('type', $type);
-        $className = ucfirst($type) . 'Protocol';
+        $className = ucfirst($type).'Protocol';
         $content = D($className, $type)->profileContent($this->uid);
         if (empty($content)) {
             $content = '暂无内容';
@@ -291,7 +292,7 @@ class ProfileAction extends Action
             $userCategory = model('UserCategory')->getRelatedUserInfo($this->uid);
             if (! empty($userCategory)) {
                 foreach ($userCategory as $value) {
-                    $user_category .= '<a href="#" class="link btn-cancel"><span>' . $value ['title'] . '</span></a>&nbsp;&nbsp;';
+                    $user_category .= '<a href="#" class="link btn-cancel"><span>'.$value ['title'].'</span></a>&nbsp;&nbsp;';
                 }
             }
             $this->assign('user_category', $user_category);
@@ -299,20 +300,19 @@ class ProfileAction extends Action
             $this->_assignUserInfo($this->uid);
         }
         $this->assign('userPrivacy', $userPrivacy);
-        $this->setTitle($user_info ['uname'] . '的' . L('PUBLIC_APPNAME_' . $type));
-        $this->setKeywords($user_info ['uname'] . '的' . L('PUBLIC_APPNAME_' . $type));
+        $this->setTitle($user_info ['uname'].'的'.L('PUBLIC_APPNAME_'.$type));
+        $this->setKeywords($user_info ['uname'].'的'.L('PUBLIC_APPNAME_'.$type));
         $user_tag = model('Tag')->setAppName('User')->setAppTable('user')->getAppTags(array(
-                $this->uid
+                $this->uid,
         ));
-        $this->setDescription(t($user_category . $user_info ['location'] . ',' . implode(',', $user_tag [$this->uid]) . ',' . $user_info ['intro']));
-        
+        $this->setDescription(t($user_category.$user_info ['location'].','.implode(',', $user_tag [$this->uid]).','.$user_info ['intro']));
+
         $this->display();
     }
-    
+
     /**
      * 获取指定应用的信息
      *
-     * @return void
      */
     public function appprofile()
     {
@@ -320,25 +320,24 @@ class ProfileAction extends Action
         if (empty($user_info)) {
             $this->error(L('PUBLIC_USER_NOEXIST'));
         }
-        
-        $d ['widgetName'] = ucfirst(t($_GET ['appname'])) . 'Profile';
+
+        $d ['widgetName'] = ucfirst(t($_GET ['appname'])).'Profile';
         foreach ($_GET as $k => $v) {
             $d ['widgetAttr'] [$k] = t($v);
         }
         $d ['widgetAttr'] ['widget_appname'] = t($_GET ['appname']);
         $this->assign($d);
-        
+
         $this->_assignUserInfo(array(
-                $this->uid
+                $this->uid,
         ));
         ($this->mid != $this->uid) && $this->_assignFollowState($this->uid);
         $this->display();
     }
-    
+
     /**
      * 获取用户详细资料
      *
-     * @return void
      */
     public function data()
     {
@@ -366,7 +365,7 @@ class ProfileAction extends Action
             $userCategory = model('UserCategory')->getRelatedUserInfo($this->uid);
             if (! empty($userCategory)) {
                 foreach ($userCategory as $value) {
-                    $user_category .= '<a href="#" class="link btn-cancel"><span>' . $value ['title'] . '</span></a>&nbsp;&nbsp;';
+                    $user_category .= '<a href="#" class="link btn-cancel"><span>'.$value ['title'].'</span></a>&nbsp;&nbsp;';
                 }
             }
             $this->assign('user_category', $user_category);
@@ -374,20 +373,19 @@ class ProfileAction extends Action
             $this->_assignUserInfo($this->uid);
         }
         $this->assign('userPrivacy', $userPrivacy);
-        
-        $this->setTitle($user_info ['uname'] . '的资料');
-        $this->setKeywords($user_info ['uname'] . '的资料');
+
+        $this->setTitle($user_info ['uname'].'的资料');
+        $this->setKeywords($user_info ['uname'].'的资料');
         $user_tag = model('Tag')->setAppName('User')->setAppTable('user')->getAppTags(array(
-                $this->uid
+                $this->uid,
         ));
-        $this->setDescription(t($user_category . $user_info ['location'] . ',' . implode(',', $user_tag [$this->uid]) . ',' . $user_info ['intro']));
+        $this->setDescription(t($user_category.$user_info ['location'].','.implode(',', $user_tag [$this->uid]).','.$user_info ['intro']));
         $this->display();
     }
-    
+
     /**
      * 获取指定用户的某条动态
      *
-     * @return void
      */
     public function feed()
     {
@@ -395,10 +393,10 @@ class ProfileAction extends Action
         if (empty($feed_id)) {
             $this->error(L('PUBLIC_INFO_ALREADY_DELETE_TIPS'));
         }
-        
+
         // 获取用户信息
         $user_info = model('User')->getUserInfo($this->uid);
-        
+
         // 个人空间头部
         $this->_top();
         // 判断隐私设置
@@ -419,7 +417,7 @@ class ProfileAction extends Action
                 $this->error(L('PUBLIC_NO_RELATE_WEIBO'));
                 exit();
             }
-            
+
             $weiboSet = model('Xdata')->get('admin_Config:feed');
             $a ['initNums'] = $weiboSet ['weibo_nums'];
             $a ['weibo_type'] = $weiboSet ['weibo_type'];
@@ -429,10 +427,10 @@ class ProfileAction extends Action
                 $feedInfo ['from'] = getFromClient(6, $feedInfo ['app'], '3G版');
             } else {
                 switch ($feedInfo ['app']) {
-                    case 'weiba' :
+                    case 'weiba':
                         $feedInfo ['from'] = getFromClient(0, $feedInfo ['app'], '微吧');
                         break;
-                    default :
+                    default:
                         $feedInfo ['from'] = getFromClient($feedInfo ['from'], $feedInfo ['app']);
                         break;
                 }
@@ -448,9 +446,9 @@ class ProfileAction extends Action
                         $_attach = array(
                                 'attach_id' => $av ['attach_id'],
                                 'attach_name' => $av ['name'],
-                                'attach_url' => getImageUrl($av ['save_path'] . $av ['save_name'], 580),
+                                'attach_url' => getImageUrl($av ['save_path'].$av ['save_name'], 580),
                                 'extension' => $av ['extension'],
-                                'size' => $av ['size']
+                                'size' => $av ['size'],
                         );
                         // $_attach ['attach_small'] = getImageUrl ( $av ['save_path'] . $av ['save_name'], 100, 100, true );
                         // $_attach ['attach_middle'] = getImageUrl ( $av ['save_path'] . $av ['save_name'], 740 );
@@ -475,12 +473,12 @@ class ProfileAction extends Action
         }
         // seo
         $feedContent = unserialize($feedInfo ['feed_data']);
-        $seo = model('Xdata')->get("admin_Config:seo_feed_detail");
+        $seo = model('Xdata')->get('admin_Config:seo_feed_detail');
         $replace ['content'] = $feedContent ['content'];
         $replace ['uname'] = $feedInfo ['user_info'] ['uname'];
         $replaces = array_keys($replace);
         foreach ($replaces as &$v) {
-            $v = "{" . $v . "}";
+            $v = '{'.$v.'}';
         }
         $seo ['title'] = str_replace($replaces, $replace, $seo ['title']);
         $seo ['keywords'] = str_replace($replaces, $replace, $seo ['keywords']);
@@ -492,7 +490,7 @@ class ProfileAction extends Action
         // 赞功能
         $diggArr = model('FeedDigg')->checkIsDigg($feed_id, $this->mid);
         $this->assign('diggArr', $diggArr);
-        
+
         $cancomment_old_type = array(
                 'post',
                 'repost',
@@ -507,21 +505,20 @@ class ProfileAction extends Action
                 'vote_post',
                 'vote_repost',
                 'photo_post',
-                'photo_repost'
+                'photo_repost',
         );
         $this->assign('cancomment_old_type', $cancomment_old_type);
-        
+
         $appRow = model('Source')->getSourceInfo($feedInfo ['app_row_table'], $feedInfo ['app_row_id']);
         $appUid = $appRow ['source_user_info'] ['uid'];
         $this->assign('appUid', $appUid);
-        
+
         $this->display();
     }
-    
+
     /**
      * 获取用户关注列表
      *
-     * @return void
      */
     public function following()
     {
@@ -545,14 +542,14 @@ class ProfileAction extends Action
                 $this->assign('jsonKey', json_encode($key));
             }
             $fids = getSubByKey($following_list ['data'], 'fid');
-            
+
             if ($fids) {
                 $uids = array_merge($fids, array(
-                        $this->uid
+                        $this->uid,
                 ));
             } else {
                 $uids = array(
-                        $this->uid
+                        $this->uid,
                 );
             }
             // 获取用户组信息
@@ -570,14 +567,14 @@ class ProfileAction extends Action
             $this->_assignUserInfo($this->uid);
         }
         $this->assign('userPrivacy', $userPrivacy);
-        
+
         $this->setTitle(L('PUBLIC_TA_FOLLOWING', array(
-                'user' => $GLOBALS ['ts'] ['_user'] ['uname']
+                'user' => $GLOBALS ['ts'] ['_user'] ['uname'],
         )));
         $this->setKeywords(L('PUBLIC_TA_FOLLOWING', array(
-                'user' => $GLOBALS ['ts'] ['_user'] ['uname']
+                'user' => $GLOBALS ['ts'] ['_user'] ['uname'],
         )));
-        
+
         // 获取登录用户的所有分组
         if ($this->mid == $this->uid) {
             $userGroupList = model('FollowGroup')->getGroupList($this->mid);
@@ -585,22 +582,22 @@ class ProfileAction extends Action
             foreach ($userGroupList as $value) {
                 $userGroupListFormat [] = array(
                         'gid' => $value ['follow_group_id'],
-                        'title' => $value ['title']
+                        'title' => $value ['title'],
                 );
             }
             $groupList = array(
                     array(
                             'gid' => 0,
-                            'title' => '全部'
+                            'title' => '全部',
                     ),
                     array(
                             'gid' => - 1,
-                            'title' => '相互关注'
+                            'title' => '相互关注',
                     ),
                     array(
                             'gid' => - 2,
-                            'title' => '未分组'
-                    )
+                            'title' => '未分组',
+                    ),
             );
             ! empty($userGroupListFormat) && $groupList = array_merge($groupList, $userGroupListFormat);
             $this->assign('groupList', $groupList);
@@ -617,11 +614,10 @@ class ProfileAction extends Action
         }
         $this->display();
     }
-    
+
     /**
      * 获取用户粉丝列表
      *
-     * @return void
      */
     public function follower()
     {
@@ -647,11 +643,11 @@ class ProfileAction extends Action
             $fids = getSubByKey($follower_list ['data'], 'fid');
             if ($fids) {
                 $uids = array_merge($fids, array(
-                        $this->uid
+                        $this->uid,
                 ));
             } else {
                 $uids = array(
-                        $this->uid
+                        $this->uid,
                 );
             }
             // 获取用户用户组信息
@@ -673,55 +669,54 @@ class ProfileAction extends Action
         }
         model('UserCount')->resetUserCount($this->mid, 'new_folower_count', 0);
         $this->assign('userPrivacy', $userPrivacy);
-        
+
         $this->setTitle(L('PUBLIC_TA_FOLLWER', array(
-                'user' => $GLOBALS ['ts'] ['_user'] ['uname']
+                'user' => $GLOBALS ['ts'] ['_user'] ['uname'],
         )));
         $this->setKeywords(L('PUBLIC_TA_FOLLWER', array(
-                'user' => $GLOBALS ['ts'] ['_user'] ['uname']
+                'user' => $GLOBALS ['ts'] ['_user'] ['uname'],
         )));
         $this->display();
     }
-    
+
     /**
      * 批量获取用户的相关信息加载
      *
      * @param string|array $uids
-     *        	用户ID
+     *                           用户ID
      */
     private function _assignUserInfo($uids)
     {
         ! is_array($uids) && $uids = explode(',', $uids);
         $user_info = model('User')->getUserInfoByUids($uids);
-        foreach ($user_info as $k=>$v) {
-            if ($v['input_city']!='') {
-                $user_info[$k]['location'] =  '海外   '.$v['input_city'];
+        foreach ($user_info as $k => $v) {
+            if ($v['input_city'] != '') {
+                $user_info[$k]['location'] = '海外   '.$v['input_city'];
             }
         }
-        $user_info[$this->uid]['certInfo'] = D('user_verified')->where('verified=1 AND uid=' . $this->uid)->find();
+        $user_info[$this->uid]['certInfo'] = D('user_verified')->where('verified=1 AND uid='.$this->uid)->find();
         if ($user_info[$this->uid]['certInfo']) {
             $icon = getSubByKey($user_info[$this->uid]['user_group'], 'user_group_icon',
                             array('user_group_id', $user_info[$this->uid]['certInfo']['usergroup_id']));
-            $icon  = array_pop($icon);
+            $icon = array_pop($icon);
             $user_info[$this->uid]['certInfo']['icon'] = basename(substr($icon, 0, strpos($icon, '.')));
         }
         $this->assign('user_info', $user_info);
         // dump($user_info[$this->uid]);
         // exit;
     }
-    
+
     /**
      * 获取用户的档案信息和资料配置信息
      *
      * @param
      *        	mix uids 用户uid
-     * @return void
      */
     private function _assignUserProfile($uids)
     {
         $data ['user_profile'] = model('UserProfile')->getUserProfileByUids($uids);
         $data ['user_profile_setting'] = model('UserProfile')->getUserProfileSetting(array(
-                'visiable' => 1
+                'visiable' => 1,
         ));
         // 用户选择处理 uid->uname
         foreach ($data ['user_profile_setting'] as $k => $v) {
@@ -746,13 +741,12 @@ class ProfileAction extends Action
         }
         $this->assign($data);
     }
-    
+
     /**
      * 根据指定应用和表获取指定用户的标签
      *
      * @param
      *        	array uids 用户uid数组
-     * @return void
      */
     private function _assignUserTag($uids)
     {
@@ -760,26 +754,24 @@ class ProfileAction extends Action
         // dump($user_tag);
         $this->assign('user_tag', $user_tag);
     }
-    
+
     /**
      * 批量获取多个用户的统计数目
      *
      * @param array $uids
-     *        	用户uid数组
-     * @return void
+     *                    用户uid数组
      */
     private function _assignUserCount($uids)
     {
         $user_count = model('UserData')->getUserDataByUids($uids);
         $this->assign('user_count', $user_count);
     }
-    
+
     /**
      * 批量获取用户uid与一群人fids的彼此关注状态
      *
      * @param array $fids
-     *        	用户uid数组
-     * @return void
+     *                    用户uid数组
      */
     private function _assignFollowState($fids = null)
     {
@@ -792,7 +784,7 @@ class ProfileAction extends Action
         $this->assign('union_state', $union_state);
         // dump($union_state);exit;
     }
-    
+
     /**
      * 获取用户最后一条分享数据
      *
@@ -807,13 +799,12 @@ class ProfileAction extends Action
         $last_feed = model('Feed')->getLastFeed($uids);
         $this->assign('last_feed', $last_feed);
     }
-    
+
     /**
      * 调整分组列表
      *
      * @param array $fids
-     *        	指定用户关注的用户列表
-     * @return void
+     *                    指定用户关注的用户列表
      */
     private function _assignFollowGroup($fids)
     {
@@ -823,7 +814,7 @@ class ProfileAction extends Action
             $group_count = count($follow_group_list);
             for ($i = 0; $i < $group_count; $i ++) {
                 if ($follow_group_list [$i] ['follow_group_id'] != $data ['gid']) {
-                    $follow_group_list [$i] ['title'] = (strlen($follow_group_list [$i] ['title']) + mb_strlen($follow_group_list [$i] ['title'], 'UTF8')) / 2 > 8 ? getShort($follow_group_list [$i] ['title'], 3) . '...' : $follow_group_list [$i] ['title'];
+                    $follow_group_list [$i] ['title'] = (strlen($follow_group_list [$i] ['title']) + mb_strlen($follow_group_list [$i] ['title'], 'UTF8')) / 2 > 8 ? getShort($follow_group_list [$i] ['title'], 3).'...' : $follow_group_list [$i] ['title'];
                 }
                 if ($i < 2) {
                     $data ['follow_group_list_1'] [] = $follow_group_list [$i];
@@ -840,16 +831,15 @@ class ProfileAction extends Action
                 unset($data ['follow_group_list_2'] [0]);
             }
         }
-        
+
         $data ['follow_group_status'] = model('FollowGroup')->getGroupStatusByFids($this->mid, $fids);
-        
+
         $this->assign($data);
     }
-    
+
     /**
      * 个人主页头部数据
      *
-     * @return void
      */
     public function _top()
     {
@@ -864,10 +854,10 @@ class ProfileAction extends Action
         // 获取用户统计信息
         $userData = model('UserData')->getUserData($this->uid);
         $this->assign('userData', $userData);
-        
+
         $disableUser = model('DisableUser')->getDisableUserStatus($this->uid);
         $this->assign('disableUser', $disableUser);
-        
+
         // 用户兴趣
         $tags = model('Tag')->setAppName('public')->setAppTable('user')->getAppTags($this->uid);
         // dump($tags);
@@ -878,11 +868,10 @@ class ProfileAction extends Action
         // dump($unions);exit;
         // $this->assign ( 'unions', $unions );
     }
-    
+
     /**
      * 个人主页标签导航
      *
-     * @return void
      */
     public function _tab_menu()
     {
@@ -893,26 +882,25 @@ class ProfileAction extends Action
         foreach ($appList as $app) {
             $appName = strtolower($app ['app_name']);
             $className = ucfirst($appName);
-            $dao = D($className . 'Protocol', strtolower($className), false);
+            $dao = D($className.'Protocol', strtolower($className), false);
             if (method_exists($dao, 'profileContent')) {
-                $appArr [$appName] = L('PUBLIC_APPNAME_' . $appName);
+                $appArr [$appName] = L('PUBLIC_APPNAME_'.$appName);
             }
             unset($dao);
         }
         $this->assign('appArr', $appArr);
-        
+
         return $appArr;
     }
-    
+
     /**
      * 个人主页右侧
      *
-     * @return void
      */
     public function _sidebar()
     {
         // 判断用户是否已认证
-        $isverify = D('user_verified')->where('verified=1 AND uid=' . $this->uid)->find();
+        $isverify = D('user_verified')->where('verified=1 AND uid='.$this->uid)->find();
         if ($isverify) {
             $this->assign('verifyInfo', $isverify ['info']);
         }
@@ -920,13 +908,13 @@ class ProfileAction extends Action
         if ($this->mid == $this->uid) {
             $isMidVerify = true;
         } else {
-            $isMidVerify = D('user_verified')->where('verified=1 AND uid=' . $this->mid)->find();
-            $isMidVerify = ( boolean ) $isMidVerify;
+            $isMidVerify = D('user_verified')->where('verified=1 AND uid='.$this->mid)->find();
+            $isMidVerify = (boolean) $isMidVerify;
         }
         $this->assign('isMidVerify', $isMidVerify);
         // 加载用户标签信息
         $this->_assignUserTag(array(
-                $this->uid
+                $this->uid,
         ));
         // 加载关注列表
         $sidebar_following_list = model('Follow')->getFollowingList($this->uid, null, 12);
@@ -937,15 +925,15 @@ class ProfileAction extends Action
         $this->assign('sidebar_follower_list', $sidebar_follower_list);
         // 加载用户信息
         $uids = array(
-                $this->uid
+                $this->uid,
         );
-        
+
         $followingfids = getSubByKey($sidebar_following_list ['data'], 'fid');
         $followingfids && $uids = array_merge($uids, $followingfids);
-        
+
         $followerfids = getSubByKey($sidebar_follower_list ['data'], 'fid');
         $followerfids && $uids = array_merge($uids, $followerfids);
-        
+
         $this->_assignUserInfo($uids);
     }
     public function getDisableBox()
@@ -955,23 +943,23 @@ class ProfileAction extends Action
             return false;
         }
         $this->assign('uid', $uid);
-        
+
         $type = t($_GET ['t']);
         if (empty($type) || ! in_array($type, array(
                 'login',
-                'post'
+                'post',
         ))) {
             $type = 'login';
         }
         $this->assign('type', $type);
-        
+
         $uname = getUserName($uid);
         $this->assign('uname', $uname);
-        
+
         $data = model('DisableUser')->getDisableUser($uid);
         $this->assign('disable', $data);
         $this->assign('disableJson', json_encode($data));
-        
+
         $this->display('disableUserBox');
     }
     public function setDisableUser()
@@ -980,28 +968,28 @@ class ProfileAction extends Action
         $disableItem = t($_POST ['disableItem']);
         $startTime = strtotime(t($_POST ['startTime']));
         $endTime = strtotime(t($_POST ['endTime']));
-        
+
         if (empty($uid) || empty($disableItem) || ! in_array($disableItem, array(
                 'login',
-                'post'
+                'post',
         )) || empty($startTime) || empty($endTime) || $startTime > $endTime || ! CheckPermission('core_admin', 'admin_login')) {
             exit(json_encode(array(
                     'status' => 0,
-                    'info' => '操作失败'
+                    'info' => '操作失败',
             )));
         }
-        
+
         $result = model('DisableUser')->setDisableUser($uid, $disableItem, $startTime, $endTime);
         $res = array();
         if ($result) {
             $res = array(
                     'status' => '1',
-                    'info' => '操作成功'
+                    'info' => '操作成功',
             );
         } else {
             $res = array(
                     'status' => '0',
-                    'info' => '操作失败'
+                    'info' => '操作失败',
             );
         }
         exit(json_encode($res));
@@ -1013,25 +1001,25 @@ class ProfileAction extends Action
         $map ['uid'] = $uid;
         $map ['type'] = $type;
         $id = model('DisableUser')->where($map)->getField('user_disable_id');
-        
+
         if (empty($id) && ! CheckPermission('core_admin', 'admin_login')) {
             exit(json_encode(array(
                     'status' => '0',
-                    'info' => '操作失败'
+                    'info' => '操作失败',
             )));
         }
-        
+
         $result = model('DisableUser')->setEnableUser($id);
         $res = array();
         if ($result) {
             $res = array(
                     'status' => '1',
-                    'info' => '操作成功'
+                    'info' => '操作成功',
             );
         } else {
             $res = array(
                     'status' => '0',
-                    'info' => '操作失败'
+                    'info' => '操作失败',
             );
         }
         exit(json_encode($res));
@@ -1041,33 +1029,33 @@ class ProfileAction extends Action
         $html = '<dl class="weiboPic clearfix">';
         $type = intval($_POST ['type']);
         $max_id = intval($_POST ['max_id']);
-        
+
         $map ['a.uid'] = intval($_POST ['uid']);
         $map ['a.attach_type'] = 'feed_image';
         $map ['a.is_del'] = 0;
         $map ['f.is_del'] = 0;
-        
-        $dao = M()->table(C('DB_PREFIX') .'attach as a left join '. C('DB_PREFIX') .'feed as f on a.row_id=f.feed_id');
 
-        $res ['count'] = intval(M()->table(C('DB_PREFIX') . 'attach as a left join '. C('DB_PREFIX') .'feed as f on a.row_id=f.feed_id')->where($map)->count());
-        
+        $dao = M()->table(C('DB_PREFIX').'attach as a left join '.C('DB_PREFIX').'feed as f on a.row_id=f.feed_id');
+
+        $res ['count'] = intval(M()->table(C('DB_PREFIX').'attach as a left join '.C('DB_PREFIX').'feed as f on a.row_id=f.feed_id')->where($map)->count());
+
         $order = 'a.attach_id desc';
         if ($max_id > 0) {
             if ($type == 0) {
                 $map ['attach_id'] = array(
                         'lt',
-                        $max_id
+                        $max_id,
                 );
             } else {
                 $map ['attach_id'] = array(
                         'gt',
-                        $max_id
+                        $max_id,
                 );
                 $order = 'attach_id asc';
             }
         }
-        
-        $lists = M()->table(C('DB_PREFIX') . 'attach as a left join '. C('DB_PREFIX') .'feed as f on a.row_id=f.feed_id')->where($map)->order($order)->limit(5)->findAll();
+
+        $lists = M()->table(C('DB_PREFIX').'attach as a left join '.C('DB_PREFIX').'feed as f on a.row_id=f.feed_id')->where($map)->order($order)->limit(5)->findAll();
         // lastsql ();
         // dump ( $lists );
         if ($type == 1) { // 倒序
@@ -1077,48 +1065,48 @@ class ProfileAction extends Action
             }
             $lists = $arr;
         }
-        
+
         foreach ($lists as $k => &$v) {
             $ids [] = intval($v ['attach_id']);
             if ($k == 0) {
-                $html .= '<dt class="left"><a href="' . U('public/Profile/feed', array(
+                $html .= '<dt class="left"><a href="'.U('public/Profile/feed', array(
                         'feed_id' => $v ['row_id'],
-                        'uid' => $v ['uid']
-                )) . '"><img src="' . getImageUrl($v ['save_path'] . $v ['save_name'], 260, 260, true) . '" /></a></dt>';
+                        'uid' => $v ['uid'],
+                )).'"><img src="'.getImageUrl($v ['save_path'].$v ['save_name'], 260, 260, true).'" /></a></dt>';
             } else {
-                $html .= '<dd><a href="' . U('public/Profile/feed', array(
+                $html .= '<dd><a href="'.U('public/Profile/feed', array(
                         'feed_id' => $v ['row_id'],
-                        'uid' => $v ['uid']
-                )) . '"><img src="' . getImageUrl($v ['save_path'] . $v ['save_name'], 120, 120, true) . '" /></a></dd>';
+                        'uid' => $v ['uid'],
+                )).'"><img src="'.getImageUrl($v ['save_path'].$v ['save_name'], 120, 120, true).'" /></a></dd>';
             }
         }
         $html .= '</dl>';
-        
+
         $max_id2 = max($ids);
         $map ['attach_id'] = array(
                 'gt',
-                $max_id2
+                $max_id2,
         );
-        if ($max_id > 0 && M()->table(C('DB_PREFIX') . 'attach as a left join ' .C('DB_PREFIX') . 'feed as f on a.row_id=f.feed_id')->where($map)->getField('attach_id')) {
+        if ($max_id > 0 && M()->table(C('DB_PREFIX').'attach as a left join '.C('DB_PREFIX').'feed as f on a.row_id=f.feed_id')->where($map)->getField('attach_id')) {
             $html .= '<a class="next-page mt20 left" onClick="get_feed_img(1)"><i class="arrow-left"></i>上一页</a>';
         }
-        
+
         $max_id = $max_id2;
         $min_id = min($ids);
-        
+
         $map ['attach_id'] = array(
                 'lt',
-                $min_id
+                $min_id,
         );
-        
-        if (M()->table(C('DB_PREFIX') . 'attach as a left join ' . C('DB_PREFIX') . 'feed as f on a.row_id=f.feed_id')->where($map)->getField('attach_id')) {
+
+        if (M()->table(C('DB_PREFIX').'attach as a left join '.C('DB_PREFIX').'feed as f on a.row_id=f.feed_id')->where($map)->getField('attach_id')) {
             $html .= '<a class="next-page mt20 right" onClick="get_feed_img(0)">下一页<i class="arrow-right"></i></a>';
         }
-        
+
         $res ['html'] = $html;
         $res ['max_id'] = intval($max_id);
         $res ['min_id'] = intval($min_id);
-        
+
         echo json_encode($res);
     }
 }

@@ -21,6 +21,32 @@ setTimeout(function(){
     var pullMessageTime = 3.5;// 消息拉取的间隔时间，单位秒
     var pullMessageLock = false;
     var lastMessageId = '{$lastMessageId}';
+
+
+    /**
+     * [setInputPos description]
+     *
+     * @author Seven Du <lovevipdsw@outlook.com>
+     * @datetime 2016-05-05T14:21:49+0800
+     * @homepage http://medz.cn
+     */
+    var setInputPos = function setInputPos()
+    {
+        var inputWidth = $('#msgbox-main .msgbox-footer').width();
+        var bodyWidth = $('#msgbox-main .msgbox-body .common').outerWidth(true);
+        if(inputWidth > bodyWidth){
+            $('#msg-form').css({
+                'margin-left':(bodyWidth-inputWidth)/2,
+                'margin-right':(inputWidth-bodyWidth)/2
+            });
+        }else{
+            $('#msg-form').css({
+                'margin-left':0,
+                'margin-right':0
+            });
+        }
+    };
+
     $('.boxopenurl').click(function(){
         if(typeof core.message.openUrl == 'function'){
             core.message.openUrl($(this).attr('href'), false);
@@ -208,22 +234,6 @@ setTimeout(function(){
             }
             pullMessageLock = false;
         }, 'json');
-    }
-
-    var setInputPos = function(){
-        var inputWidth = $('#msgbox-main .msgbox-footer').width();
-        var bodyWidth = $('#msgbox-main .msgbox-body .common').outerWidth(true);
-        if(inputWidth > bodyWidth){
-            $('#msg-form').css({
-                'margin-left':(bodyWidth-inputWidth)/2,
-                'margin-right':(inputWidth-bodyWidth)/2
-            });
-        }else{
-            $('#msg-form').css({
-                'margin-left':0,
-                'margin-right':0
-            });
-        }
     }
 
     if(window.msgInterval){

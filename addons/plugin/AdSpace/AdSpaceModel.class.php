@@ -11,15 +11,15 @@ class AdSpaceModel extends Model
 
     /**
      * 添加广告位数据
-     * @param array $data 广告位相关数据
-     * @return boolean 是否插入成功
+     * @param  array $data 广告位相关数据
+     * @return bool  是否插入成功
      */
     public function doAddAdSpace($data)
     {
         $data['display_order'] = $this->count();
         $res = $this->add($data);
 
-        return (boolean)$res;
+        return (boolean) $res;
     }
 
     /**
@@ -35,8 +35,8 @@ class AdSpaceModel extends Model
 
     /**
      * 删除广告位操作
-     * @param string|array $ids 广告位ID
-     * @return boolean 是否删除广告位成功
+     * @param  string|array $ids 广告位ID
+     * @return bool         是否删除广告位成功
      */
     public function doDelAdSpace($ids)
     {
@@ -47,12 +47,12 @@ class AdSpaceModel extends Model
         $map['ad_id'] = array('IN', $ids);
         $res = $this->where($map)->delete();
 
-        return (boolean)$res;
+        return (boolean) $res;
     }
 
     /**
      * 获取指定ID的广告位信息
-     * @param integer $id 广告位ID
+     * @param  int   $id 广告位ID
      * @return array 指定ID的广告位信息
      */
     public function getAdSpace($id)
@@ -62,14 +62,15 @@ class AdSpaceModel extends Model
         }
         $map['ad_id'] = $id;
         $data = $this->where($map)->find();
+
         return $data;
     }
 
     /**
      * 编辑广告位操作
-     * @param integer $id 广告位ID
-     * @param array $data 广告位相关数据
-     * @return boolean 是否编辑成功
+     * @param  int   $id   广告位ID
+     * @param  array $data 广告位相关数据
+     * @return bool  是否编辑成功
      */
     public function doEditAdSpace($id, $data)
     {
@@ -79,14 +80,14 @@ class AdSpaceModel extends Model
         $map['ad_id'] = $id;
         $res = $this->where($map)->save($data);
 
-        return (boolean)$res;
+        return (boolean) $res;
     }
 
     /**
      * 移动广告位操作
-     * @param integer $id 广告位ID - A
-     * @param integer $baseId 广告位ID - B
-     * @return boolean 是否移动成功
+     * @param  int  $id     广告位ID - A
+     * @param  int  $baseId 广告位ID - B
+     * @return bool 是否移动成功
      */
     public function doMvAdSpace($id, $baseId)
     {
@@ -103,7 +104,7 @@ class AdSpaceModel extends Model
 
     /**
      * 通过位置ID获取相应的广告信息
-     * @param integer $place 位置ID
+     * @param  int   $place 位置ID
      * @return array 位置ID获取相应的广告信息
      */
     public function getAdSpaceByPlace($place)

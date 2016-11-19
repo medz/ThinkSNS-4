@@ -1,4 +1,5 @@
 <?php
+
 class FeedManageWidget extends Widget
 {
     public function render($data)
@@ -25,20 +26,20 @@ class FeedManageWidget extends Widget
         Addons::hook('check_feed_manage', array(
                 'feed_id' => $data ['feed_id'],
                 'uid' => $data ['feed_uid'],
-                'plugin_list' => &$pluginList
+                'plugin_list' => &$pluginList,
         ));
         $checkShowBtn = array();
         $checkShowBtn [] = $adminfeeddel;
         $checkShowBtn [] = $adminchannelrecom;
         $checkShowBtn [] = $admintaskrecom;
         ! empty($pluginList) && $checkShowBtn = array_merge($checkShowBtn, getSubByKey($pluginList, 'status'));
-        
+
         // 判断是否显示管理权限
         $showBtn = true;
         if (! in_array(true, $checkShowBtn)) {
             $showBtn = false;
         }
-        
+
         if (! $showBtn) {
             return '';
         }
@@ -58,23 +59,23 @@ class FeedManageWidget extends Widget
         isset($data ['channel_id']) && $args ['channel_id'] = intval($data ['channel_id']);
         isset($data ['clear']) && $args ['clear'] = intval($data ['clear']);
         isset($data ['isrefresh']) && $args ['isrefresh'] = intval($data ['isrefresh']);
-        
+
         $var ['feed_id'] = $feedId;
         // 获取列表页面HTML
-        $var ['listHtml'] = $this->renderFile(dirname(__FILE__) . '/list.html', $args);
-        
+        $var ['listHtml'] = $this->renderFile(dirname(__FILE__).'/list.html', $args);
+
         $tmp = array();
         foreach ($args as $key => $val) {
-            $tmp [] = $key . '=' . intval($val);
+            $tmp [] = $key.'='.intval($val);
         }
         $eventArgs = implode('&', $tmp);
         $var ['eventArgs'] = $eventArgs;
-        
+
         $manageClass = isset($data ['manage_class']) ? $data ['manage_class'] : 'right hover dp-cs';
         $var ['manageClass'] = $manageClass;
 
-        $content = $this->renderFile(dirname(__FILE__) . '/manage.html', $var);
-        
+        $content = $this->renderFile(dirname(__FILE__).'/manage.html', $var);
+
         return $content;
     }
 }

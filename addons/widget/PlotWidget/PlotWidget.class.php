@@ -7,19 +7,18 @@
  **/
 class PlotWidget extends Widget
 {
-
     /**
      * @param string type 报表类型 分为pieChart(饼状图)、pointLabelsChart(折线图)、barChart(柱状图)
-     * @param integer id //未知
-     * @param integer pWidth 图表宽度
-     * @param integer pHeight 图表高度
+     * @param int id //未知
+     * @param int pWidth 图表宽度
+     * @param int pHeight 图表高度
      * @param array key //好像没用
      * @param array value
      * @param array color
      */
     public function render($data)
     {
-        $var['tpl']  = isset($data['tpl']) ? $data['tpl'] : 'chart';
+        $var['tpl'] = isset($data['tpl']) ? $data['tpl'] : 'chart';
         // 获取渲染模板
         $type = t($data['type']);
         $var['type'] = $type;
@@ -33,8 +32,7 @@ class PlotWidget extends Widget
         $var = array_merge($var, $plotData);
 
         //渲染模版
-        $content = $this->renderFile(dirname(__FILE__)."/".$var['tpl'].".html", $var);
-
+        $content = $this->renderFile(dirname(__FILE__).'/'.$var['tpl'].'.html', $var);
 
         return $content;
     }
@@ -78,25 +76,25 @@ class PlotWidget extends Widget
         */
         $var['jsHtml'] = '';
         $most = 0;
-        foreach ($data['value'] as $k=>$v) {
+        foreach ($data['value'] as $k => $v) {
             $tmp = '';
-            foreach ($v as $kk=>$vv) {
+            foreach ($v as $kk => $vv) {
                 $vv > $most && $most = $vv;
-                $tmp[]="[$kk,$vv]";
+                $tmp[] = "[$kk,$vv]";
             }
-            $var['jsHtml'] .=" args.obj[$k] =[".implode(',', $tmp)."];";
+            $var['jsHtml'] .= " args.obj[$k] =[".implode(',', $tmp).'];';
         }
-        foreach ($data['ticks'] as $k=>$v) {
-            $var['jsHtml'] .=" args.ticks[$k] = '{$v}';";
+        foreach ($data['ticks'] as $k => $v) {
+            $var['jsHtml'] .= " args.ticks[$k] = '{$v}';";
         }
-        $most = $most%5 > 0 ? $most+(5-$most%5) : $most;
+        $most = $most % 5 > 0 ? $most + (5 - $most % 5) : $most;
 
-        $var['jsHtml'] .=" args.title = '{$data['title']}';";
-        $var['jsHtml'] .=" args['x'][0] = 0;";
-        $var['jsHtml'] .=" args['x'][1] = ".count($data['ticks']).";";
-        $var['jsHtml'] .=" args['y'][0] = 0;";
-        $var['jsHtml'] .=" args['y'][1] = {$most};";
-        $var['jsHtml'] .=" args['y']['numberTicks'] = 5;";
+        $var['jsHtml'] .= " args.title = '{$data['title']}';";
+        $var['jsHtml'] .= " args['x'][0] = 0;";
+        $var['jsHtml'] .= " args['x'][1] = ".count($data['ticks']).';';
+        $var['jsHtml'] .= " args['y'][0] = 0;";
+        $var['jsHtml'] .= " args['y'][1] = {$most};";
+        $var['jsHtml'] .= " args['y']['numberTicks'] = 5;";
 
         return $var;
     }

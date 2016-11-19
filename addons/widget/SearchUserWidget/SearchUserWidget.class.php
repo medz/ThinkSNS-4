@@ -8,15 +8,14 @@
  */
 class SearchUserWidget extends Widget
 {
-
     private static $rand = 1;
 
     /**
      * @param string name 存储uid的input名称
      * @param mixed uids 已选择的用户id集合
-     * @param integer follow 是否只能选择已关注的人（0表示可以选择全部用户，1表示只能选择已关注的人）
-     * @param integer max 最多可选择的用户个数
-     * @param integer editable 是否可修改选择的结果，如果为0则不能选择用户，不能删除已经选择的用户
+     * @param int follow 是否只能选择已关注的人（0表示可以选择全部用户，1表示只能选择已关注的人）
+     * @param int max 最多可选择的用户个数
+     * @param int editable 是否可修改选择的结果，如果为0则不能选择用户，不能删除已经选择的用户
      */
     public function render($data)
     {
@@ -38,7 +37,7 @@ class SearchUserWidget extends Widget
         $var['tpl'] && $tpl = $var['tpl'];
         //dump($tpl);exit;
         //渲染模版
-        $content = $this->renderFile(dirname(__FILE__) . "/" . $tpl, $var);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$tpl, $var);
 
         self::$rand ++;
 
@@ -48,7 +47,7 @@ class SearchUserWidget extends Widget
     }
 
     /**
-     * 搜索用户 
+     * 搜索用户
      * @return array 搜索状态及用户列表数据
      */
     public function search()
@@ -83,7 +82,7 @@ class SearchUserWidget extends Widget
      */
     public function searchAt()
     {
-        $users = model('UserData')->where("`key`='user_recentat' and uid=" . $GLOBALS['ts']['mid'])->getField('at_value');
+        $users = model('UserData')->where("`key`='user_recentat' and uid=".$GLOBALS['ts']['mid'])->getField('at_value');
         $data = unserialize($users);
         $msg = array('data' => $data);
         exit(json_encode($msg));

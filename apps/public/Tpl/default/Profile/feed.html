@@ -48,7 +48,7 @@
 
              <div class="feed_content">
                 <php>if($feedInfo['type'] === 'weiba_repost'):</php>
-                  <p>{$feedInfo.content_txt|parse_html}</p>
+                  <p>{$feedInfo.content_txt|replaceUrl|parse_html}</p>
                   <div id="feed_source">
                     <p  class="feed_uname">{$feedInfo.api_source.source_user_info.space_link}</p>
                     <php>if($feedInfo['api_source']['source_table'] ==='weiba_post'):</php>
@@ -68,7 +68,7 @@
                 <php>elseif($feedInfo['type'] === 'weiba_post'):</php>
                   <div class="feed_content">
                     <php>if($feedInfo['api_source']['source_table'] ==='weiba_post'):</php>
-                      {$feedInfo.api_source.source_content|parse_html} <a href="{$feedInfo.api_source.source_url}" title="{$feedInfo.api_source.title}">{$feedInfo.api_source.title}</a> 在 <a href="{$feedInfo.api_source.weiba_url}" title="{$feedInfo.api_source.weiba_name}">{$feedInfo.api_source.weiba_name}</a>
+                      {$feedInfo.api_source.source_content|replaceUrl|parse_html} <a href="{$feedInfo.api_source.source_url}" title="{$feedInfo.api_source.title}">{$feedInfo.api_source.title}</a> 在 <a href="{$feedInfo.api_source.weiba_url}" title="{$feedInfo.api_source.weiba_name}">{$feedInfo.api_source.weiba_name}</a>
                       <p>{$feedInfo.api_source.content|getShort=140}</p>
                       <neq name="feedInfo.api_source.pic_url" value="">
                         <div class="feed_img_lists" rel='big'>
@@ -78,11 +78,11 @@
                         </div>
                       </neq>
                     <php>else:</php>
-                      {$feedInfo.api_source.source_content|parse_html}
+                      {$feedInfo.api_source.source_content|replaceUrl|parse_html}
                     <php>endif;</php>
                   </div>
                 <php>elseif($feedInfo['type'] === 'postimage'):</php>
-                  <p>{$feedInfo.content_txt|parse_html}</p>
+                  <p>{$feedInfo.content_txt|replaceUrl|parse_html}</p>
                   <div class="feed_img_lists" rel='big'>
                     <ul class="feed_img_list big" >
                       <volist name='feedInfo.attachInfo' id='vo'>
@@ -96,7 +96,7 @@
                     </ul>
                   </div>
                 <php>elseif($feedInfo['type'] === 'postvideo'):</php>
-                  <p>{$feedInfo.content_txt|parse_html}</p>
+                  <p>{$feedInfo.content_txt|replaceUrl|parse_html}</p>
                   <div id="video_box_{$feedInfo.feed_id}" class="mt10"></div>
                   <php>if($feedInfo['videoInfo']['video_id']){</php>
                   <script type="text/javascript"> $("#video_box_{$feedInfo['feed_id']}").html(showFlash_upload("","{:SITE_URL.$feedInfo['videoInfo']['video_path']}", "{$feedInfo['videoInfo']['image_path']}", 528)); </script>
@@ -104,17 +104,17 @@
                   <script type="text/javascript"> $("#video_box_{$feedInfo['feed_id']}").html(showFlash_online("{$feedInfo['videoInfo']['host']}","{$feedInfo['videoInfo']['flashvar']}", 528)); </script>
                   <php>}</php>
                 <php>elseif($feedInfo['type'] === 'postfile'):</php>
-                <p>{$feedInfo.content_txt|parse_html}</p>
+                <p>{$feedInfo.content_txt|replaceUrl|parse_html}</p>
                 <ul class="feed_file_list mt10">
                   <volist name='feedInfo.fileInfo.files' id='vo'>
                     <li><i class="ico-{$vo.extension}-small"></i><a href="{:U('widget/Upload/down',array('attach_id'=>$vo['attach_id']))}">{$vo.name}</a> <span class="tips">({:byte_format($vo['size'])})</span></li>
                   </volist>
                 </ul>
                 <php>elseif($feedInfo['type'] === 'repost'):</php>
-                  {$feedInfo.content_txt|parse_html}
+                  {$feedInfo.content_txt|replaceUrl|parse_html}
                   <div id="feed_source">
                     <p  class="feed_uname">{$feedInfo.api_source.source_user_info.space_link}</p>
-                    <p>{$feedInfo.api_source.feed_content|parse_html}</p>
+                    <p>{$feedInfo.api_source.feed_content|replaceUrl|parse_html}</p>
                     <div class="feed_img_lists" rel='big'>
                       <ul class="feed_img_list big" >
                         <volist name='feedInfo.api_source.attach' id='vo'>
@@ -129,7 +129,7 @@
                     </div>
                   </div>
                 <php>elseif($feedInfo['type'] === 'post'):</php>
-                  <p>{$feedInfo.content_txt|parse_html}</p>
+                  <p>{$feedInfo.content_txt|replaceUrl|parse_html}</p>
                 <php>endif;</php>
             </div>
            </div>

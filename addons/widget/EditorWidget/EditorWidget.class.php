@@ -7,12 +7,11 @@
  */
 class EditorWidget extends Widget
 {
-
     private static $rand = 1;
 
     /**
-     * @param integer width 编辑器的宽度
-     * @param integer height 编辑器的高度
+     * @param int width 编辑器的宽度
+     * @param int height 编辑器的高度
      * @param string contentName 编辑器的表单名
      * @param string value 默认值
      */

@@ -46,7 +46,6 @@ class FeedbackModel extends Model
     /**
      * 初始化模型
      *
-     * @return void
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     protected function _initialize()
@@ -66,14 +65,16 @@ class FeedbackModel extends Model
         /* # 检查是否是合法的类型 */
         if (!isset($this->types[$type]) or !$this->types[$type]) {
             $this->_error = '保护字段不合法';
+
             return false;
 
         /* # 查询类型ID or 添加 */
         } elseif (
-            !($typeID = $this->typeModel->where('`type_name` LIKE \'' . $this->types[$type] . '\'')->field(`type_id`)->getField('type_id')) and
+            !($typeID = $this->typeModel->where('`type_name` LIKE \''.$this->types[$type].'\'')->field(`type_id`)->getField('type_id')) and
             !($typeID = $this->typeModel->add(array('type_name' => $this->types[$type])))
         ) {
             $this->_error = '无法增加反馈类型';
+
             return false;
         }
 
@@ -83,9 +84,9 @@ class FeedbackModel extends Model
     /**
      * 添加反馈
      *
-     * @param int $type 反馈的类型
-     * @param string $content 反馈的内容
-     * @param int $uid 反馈的UID，默认为0，兼容某些地方，可以匿名反馈
+     * @param  int    $type    反馈的类型
+     * @param  string $content 反馈的内容
+     * @param  int    $uid     反馈的UID，默认为0，兼容某些地方，可以匿名反馈
      * @return bool
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -99,9 +100,9 @@ class FeedbackModel extends Model
         /* # 添加数据 */
         return parent::add(array(
             'content' => $content,
-            'cTime'   => time(),
-            'type'    => $type,
-            'uid'     => intval($uid)
+            'cTime' => time(),
+            'type' => $type,
+            'uid' => intval($uid),
         ));
     }
 
@@ -117,15 +118,16 @@ class FeedbackModel extends Model
         $fid = intval($fid);
 
         /* # 检查是否存在 */
-        if (!$this->where('`id` = ' . $fid)->field('`id`')->count()) {
+        if (!$this->where('`id` = '.$fid)->field('`id`')->count()) {
             $this->_error = '更新的反馈信息不存在';
+
             return false;
         }
 
         /* # 更新数据 */
-        return $this->where('`id` = ' . $fid)->save(array(
-            'mTime'   => time(),
-            'content' => $content
+        return $this->where('`id` = '.$fid)->save(array(
+            'mTime' => time(),
+            'content' => $content,
         ));
     }
 
@@ -137,16 +139,17 @@ class FeedbackModel extends Model
      **/
     public function delete($fid)
     {
-        $this->where('`id` = ' . intval($fid));
+        $this->where('`id` = '.intval($fid));
+
         return parent::delete();
     }
 
     /**
      * 更具type类型获取分页数据
      *
-     * @param int $type 类型
-     * @param int $number 每页显示的数量
-     * @param bool $asc 是否按照时间正序排列，默认为false，以时间倒叙
+     * @param  int   $type   类型
+     * @param  int   $number 每页显示的数量
+     * @param  bool  $asc    是否按照时间正序排列，默认为false，以时间倒叙
      * @return array
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -157,6 +160,6 @@ class FeedbackModel extends Model
             return false;
         }
 
-        return $this->where('`type` = ' . $type)->order('`cTime` ' . ($asc ? 'ASC' : 'DESC'))->findPage($number);
+        return $this->where('`type` = '.$type)->order('`cTime` '.($asc ? 'ASC' : 'DESC'))->findPage($number);
     }
 } // END class FeedbackModel extends Model

@@ -1,7 +1,7 @@
-<?php 
+<?php
+
 class TopicAction extends Action
 {
-
     // 专题页
     public function index()
     {
@@ -20,7 +20,7 @@ class TopicAction extends Action
             }
             $data['topics']['name'] = t($data['search_key']);
         }
-        if ($data['topics']['lock']==1) {
+        if ($data['topics']['lock'] == 1) {
             $this->error('该话题已被屏蔽');
         }
         if ($data['topics']['pic']) {
@@ -35,7 +35,7 @@ class TopicAction extends Action
         $this->assign('initHtml', $initHtml);
         $this->assign($data);
         //seo
-        $seo= model('Xdata')->get("admin_Config:seo_feed_topic");
+        $seo = model('Xdata')->get('admin_Config:seo_feed_topic');
         $replace['topicName'] = $data['topic'];
         $replace['topicNote'] = $data['topics']['note'];
         $replace['topicDes'] = $data['topics']['des'];
@@ -44,7 +44,7 @@ class TopicAction extends Action
         }
         $replaces = array_keys($replace);
         foreach ($replaces as &$v) {
-            $v = "{".$v."}";
+            $v = '{'.$v.'}';
         }
         $seo['title'] = str_replace($replaces, $replace, $seo['title']);
         $seo['keywords'] = str_replace($replaces, $replace, $seo['keywords']);
@@ -77,9 +77,10 @@ class TopicAction extends Action
             //unset($_SESSION['home_user_search_key']);
         }
         $key = str_replace(array('%', '"', '<', '>'), '', $key);
+
         return trim($key);
     }
-    
+
     //话题列表页
     public function topic_list()
     {

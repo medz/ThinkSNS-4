@@ -1,4 +1,5 @@
 <?php
+
 class ContributeHooks extends Hooks
 {
     public function weibo_send_box_tab()

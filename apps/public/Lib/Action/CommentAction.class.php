@@ -1,12 +1,11 @@
 <?php
 /**
  * 我的评论控制器
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 class CommentAction extends Action
 {
-        
     /**
      * 我的评论页面
      */
@@ -34,18 +33,18 @@ class CommentAction extends Action
 
 //		$d['tab'] = model('Comment')->getTab($map);
         $d['tab'] = model('Comment')->getTabForApp($map);
-        foreach ($d['tab'] as $key=>$vo) {
-            if ($key=='feed') {
+        foreach ($d['tab'] as $key => $vo) {
+            if ($key == 'feed') {
                 $d['tabHash']['feed'] = L('PUBLIC_WEIBO');
             } elseif ($key == 'webpage') {
                 $d['tabHash']['webpage'] = '评论箱';
             } else {
                 // 微吧
                 strtolower($key) === 'weiba_post' && $key = 'weiba';
-                
-                $langKey = 'PUBLIC_APPNAME_' . strtoupper($key);
+
+                $langKey = 'PUBLIC_APPNAME_'.strtoupper($key);
                 $lang = L($langKey);
-                if ($lang==$langKey) {
+                if ($lang == $langKey) {
                     $d['tabHash'][$key] = ucfirst($key);
                 } else {
                     $d['tabHash'][$key] = $lang;
@@ -63,8 +62,8 @@ class CommentAction extends Action
             $map['app'] = 'public';
         }
         $list = model('Comment')->setAppName(t($_GET['app_name']))->getCommentList($map, 'comment_id DESC', null, true);
-        foreach ($list['data'] as $k=>$v) {
-            if ($v['sourceInfo']['app']=='weiba') {
+        foreach ($list['data'] as $k => $v) {
+            if ($v['sourceInfo']['app'] == 'weiba') {
                 $list['data'][$k]['sourceInfo']['source_body'] = str_replace($v['sourceInfo']['row_id'], $v['comment_id'], $v['sourceInfo']['source_body']);
             }
             if ($v['table'] === 'webpage') {
@@ -73,7 +72,7 @@ class CommentAction extends Action
                 $list['data'][$k]['hasComment'] = true;
             }
         }
-        model('UserCount')->resetUserCount($this->mid, 'unread_comment',  0);
+        model('UserCount')->resetUserCount($this->mid, 'unread_comment', 0);
         $this->assign('list', $list);
         // dump($list);exit;
         $this->setTitle($keyword.'的评论');                    // 我的评论
@@ -94,7 +93,7 @@ class CommentAction extends Action
         $var['comment_id'] = intval($_GET['comment_id']);
         $var['initNums'] = model('Xdata')->getConfig('weibo_nums', 'feed');
         $var['commentInfo'] = model('Comment')->getCommentInfo(intval($var['comment_id']), false);
-        $var['canrepost']  = $var['commentInfo']['table'] == 'feed'  ? 1 : 0;
+        $var['canrepost'] = $var['commentInfo']['table'] == 'feed' ? 1 : 0;
         $var['cancomment'] = 1;
         // 获取原作者信息
         $rowData = model('Feed')->get(intval($var['commentInfo']['row_id']));

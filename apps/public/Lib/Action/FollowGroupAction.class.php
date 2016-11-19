@@ -1,21 +1,20 @@
 <?php
 /**
  * 关注分组控制器
- * @author jason <yangjs17@yeah.net> 
+ * @author jason <yangjs17@yeah.net>
  * @version TS3.0
  */
 class FollowGroupAction extends Action
 {
-
     /**
      * 分组选择数据加载操作
-     * @param string $type 弹窗类型，box、list
-     * @return [type]       [description]
+     * @param  string $type 弹窗类型，box、list
+     * @return [type] [description]
      */
     public function selector($type = 'box')
     {
         $fid = intval($_REQUEST['fid']);
-        isset($_REQUEST['isrefresh'])&&$this->assign('isrefresh', intval($_REQUEST['isrefresh']));
+        isset($_REQUEST['isrefresh']) && $this->assign('isrefresh', intval($_REQUEST['isrefresh']));
 
         $followGroupDao = D('FollowGroup');
         $group_list = $followGroupDao->getGroupList($this->mid);
@@ -27,7 +26,7 @@ class FollowGroupAction extends Action
             //	 $v['title'] = (strlen($v['title'])+mb_strlen($v['title'],'UTF8'))/2>6?getShort($v['title'],3):$v['title'];
             //}
         }
-        
+
         $this->assign('fuserInfo', model('User')->getUserInfo($fid));
         $this->assign('fid', $fid);
         $this->assign('group_list', $group_list);
@@ -95,8 +94,8 @@ class FollowGroupAction extends Action
 
     /**
      * 设置指定用户的分组
-     * @param integer $gid 分组ID
-     * @param integer $fid 用户ID
+     * @param int    $gid    分组ID
+     * @param int    $fid    用户ID
      * @param string $action 操作状态类型，空、add、delete
      */
     private function _setFollowGroup($gid, $fid, $add)
@@ -113,7 +112,7 @@ class FollowGroupAction extends Action
             }
         }
         $_follow_group_status = substr($_follow_group_status, 0, -1);
-        S("weibo_followlist_".$this->mid, null);
+        S('weibo_followlist_'.$this->mid, null);
         $result['title'] = $_follow_group_status;
         $title = getSubByKey($follow_group_status, 'title');       // 用于存储原始数据
         $result['oldTitle'] = implode(',', $title);
@@ -150,7 +149,7 @@ class FollowGroupAction extends Action
             $this->ajaxReturn('', L('PUBLIC_SAVE_GROUP_FAIL'), 0);                    // 保存分组失败
         }
     }
-    
+
     /**
      * 设置关注分组Tab页面
      */
@@ -172,7 +171,7 @@ class FollowGroupAction extends Action
      */
     public function saveRemark()
     {
-        $r = array('status'=>0,'data'=>L('PUBLIC_REMARK_ADD_FAIL'));            // 备注添加失败
+        $r = array('status' => 0, 'data' => L('PUBLIC_REMARK_ADD_FAIL'));            // 备注添加失败
         // 设置备注
         if (!empty($_POST['fid'])) {
             $map['uid'] = $GLOBALS['ts']['mid'];
@@ -181,7 +180,7 @@ class FollowGroupAction extends Action
             // 默认全部编辑正确
             D('')->table(C('DB_PREFIX').'user_follow')->where($map)->save($save);
             S('follow_remark_'.$map['uid'], null);
-            $r = array('status'=>1,'data'=>$save['remark']);
+            $r = array('status' => 1, 'data' => $save['remark']);
         }
         exit(json_encode($r));
     }
@@ -202,17 +201,17 @@ class FollowGroupAction extends Action
             $gid = intval($_REQUEST['gid']);
             $res = D('FollowGroup')->setGroup($this->mid, $title, $gid);
         }
-        
+
         if (!empty($_REQUEST['fid']) && !empty($gid)) {
             $fid = intval($_REQUEST['fid']);
             $this->_setFollowGroup($gid, $fid, 'add');
         }
-        S("weibo_followlist_".$this->mid, null);
-        
+        S('weibo_followlist_'.$this->mid, null);
+
         if ($res) {
             $this->success($res);
         } else {
-            $error = !$_REQUEST['gid'] ? L('PUBLIC_USER_GROUP_EXIST'):L('PUBLIC_OPERATE_GROUP_FAIL');            // 您已经创建过这个分组了，分组操作失败
+            $error = !$_REQUEST['gid'] ? L('PUBLIC_USER_GROUP_EXIST') : L('PUBLIC_OPERATE_GROUP_FAIL');            // 您已经创建过这个分组了，分组操作失败
             $this->error($error);
         }
     }

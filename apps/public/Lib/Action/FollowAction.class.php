@@ -6,7 +6,6 @@
  */
 class FollowAction extends Action
 {
-
     private $_follow_model = null;         // 关注模型对象字段
 
     /**
@@ -24,7 +23,8 @@ class FollowAction extends Action
     public function doFollow()
     {
         // 安全过滤
-        $fid = t($_POST['fid']);
+        // $fid = t($_POST['fid']);
+        $fid = intval($_POST['fid']);
         $res = $this->_follow_model->doFollow($this->mid, intval($fid));
         $this->ajaxReturn($res, $this->_follow_model->getError(), false !== $res);
     }

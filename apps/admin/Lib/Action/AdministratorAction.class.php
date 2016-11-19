@@ -7,7 +7,6 @@
  */
 class AdministratorAction extends Action
 {
-
     /**
      * 页面字段列表
      *
@@ -49,7 +48,7 @@ class AdministratorAction extends Action
      * @var string
      */
     protected $savePostUrl = '';
-    
+
     /**
      * 搜索提交地址
      *
@@ -75,13 +74,13 @@ class AdministratorAction extends Action
     /**
      * 列表页的TAB切换项
      * 例子 : $this->pageTab[] = array('title'=>'邀请列表','tabHash'=>'list','url'=>U('admin/Home/invatecount'));
-     * @var array 
+     * @var array
      */
     protected $pageTab = array();
 
     /**
      * 列表页在分页栏的按钮
-     * 例子：$this->pageButton[] = array('title'=>'搜索','onclick'=>"admin.fold('search_form')");	
+     * 例子：$this->pageButton[] = array('title'=>'搜索','onclick'=>"admin.fold('search_form')");
      * @var array
      */
     protected $pageButton = array();
@@ -105,14 +104,14 @@ class AdministratorAction extends Action
      */
     protected $onload = array();
 
-   /**
-    * 提交时候需要进行的验证js函数
-    */
+    /**
+     * 提交时候需要进行的验证js函数
+     */
     protected $onsubmit = '';
 
-   /**
-    * 不能为空的字段
-    */
+    /**
+     * 不能为空的字段
+     */
     protected $notEmpty = array();
 
     protected $navList = array();
@@ -125,7 +124,7 @@ class AdministratorAction extends Action
             redirect(U('admin/Public/login'));
         }
         $this->systemdata_list = APP_NAME.'_'.MODULE_NAME;
-        $this->systemdata_key  = ACTION_NAME;
+        $this->systemdata_key = ACTION_NAME;
         $this->pageKey = APP_NAME.'_'.MODULE_NAME.'_'.ACTION_NAME;
         $this->searchPageKey = 'S_'.APP_NAME.'_'.MODULE_NAME.'_'.ACTION_NAME;
         $this->savePostUrl = U('admin/Index/saveConfigData');
@@ -133,7 +132,7 @@ class AdministratorAction extends Action
         $this->submitAlias = L('PUBLIC_SAVE');
         $this->assign('isAdmin', 1);
         $this->onload[] = 'admin.bindTrOn()';
-        $this->getSearchPost(); //默认初始化post查询   
+        $this->getSearchPost(); //默认初始化post查询
 
         if (!isIpAccess('adminipaccess')) {
             $this->error('你的IP已被管理中心禁止');
@@ -161,7 +160,7 @@ class AdministratorAction extends Action
         }
 
         //去除其他页面的session数据
-        foreach ($_SESSION['admin_init_post'] as $k=>$v) {
+        foreach ($_SESSION['admin_init_post'] as $k => $v) {
             if ($k != $this->searchPageKey) {
                 unset($_SESSION['admin_init_post'][$k]);
             } else {
@@ -180,7 +179,6 @@ class AdministratorAction extends Action
         $_SESSION['admin_init_post'][$this->searchPageKey] = $data;
     }
 
-
     /**
      * 显示配置详细页面
      *
@@ -194,11 +192,10 @@ class AdministratorAction extends Action
         $this->display(THEME_PATH.'/admin_config.html');
     }
 
-
     /**
      * 显示列表页面
      */
-    public function displayList($listData=array())
+    public function displayList($listData = array())
     {
         //搜索部分设置
         if (!empty($this->searchKey)) {
@@ -230,10 +227,10 @@ class AdministratorAction extends Action
     {
 
         //数据保存动作提交的地址
-        $this->onload[] = "admin.bindCatetree()";
+        $this->onload[] = 'admin.bindCatetree()';
         //页面Key配置保存的值
         $pageKeyData = model('Xconfig')->pagekey_get('pageKey:'.$this->pageKey);
-        
+
         $this->assign('pageKeyData', $pageKeyData);
 
         $this->assign('tree', $tree['_child']);
@@ -243,11 +240,11 @@ class AdministratorAction extends Action
 
     /**
      * 现实分类页面
-     * @param array $tree 树形结构数据
-     * @param string $stable 资源表明
-     * @param integer $level 子分类添加层级数目，默认为0（无限极）
-     * @param array $delParam 删除关联数据模型参数，app、module、method
-     * @param array $extra 附加配置信息字段，字段间使用|分割，字段的属性用-分割。例：attach|type-是-否|is_audit
+     * @param  array  $tree     树形结构数据
+     * @param  string $stable   资源表明
+     * @param  int    $level    子分类添加层级数目，默认为0（无限极）
+     * @param  array  $delParam 删除关联数据模型参数，app、module、method
+     * @param  array  $extra    附加配置信息字段，字段间使用|分割，字段的属性用-分割。例：attach|type-是-否|is_audit
      * @return string HTML页面数据
      */
     public function displayTree($tree = array(), $stable = null, $level = 0, $delParam = null, $extra = '', $limit = 0)
@@ -267,12 +264,11 @@ class AdministratorAction extends Action
     private function _assignPageKeyData($detailData = false)
     {
         $pageKeyData = model('Xconfig')->pagekey_get('pageKey:'.$this->pageKey);
-       
+
         $this->assign('pageKeyData', $pageKeyData);
 
-
         if ($detailData === false) {
-            $detailData = model('Xdata')->get($this->systemdata_list.":".$this->systemdata_key);
+            $detailData = model('Xdata')->get($this->systemdata_list.':'.$this->systemdata_key);
         }
 
         $this->assign('detailData', $detailData);
@@ -298,10 +294,10 @@ class AdministratorAction extends Action
         foreach ($_POST as &$v) {
             $v = $this->setKVArr($v, $keyArr);
         }
-        $data[$key]  = $_POST;
-     
+        $data[$key] = $_POST;
+
         if (model('Xconfig')->pageKey_lput('pageKey', $data)) {
-            LogRecord('admin_config', 'editPagekey', array('name'=>$title, 'k1'=>L('PUBLIC_ADMIN_EDIT_PEIZHI')), true);
+            LogRecord('admin_config', 'editPagekey', array('name' => $title, 'k1' => L('PUBLIC_ADMIN_EDIT_PEIZHI')), true);
             $this->success();
         } else {
             $this->error();
@@ -313,7 +309,7 @@ class AdministratorAction extends Action
      */
     public function createData()
     {
-        $sql = "select * from ".C('DB_PREFIX')."system_data where list = 'pageKey' or list = 'searchPageKey'";
+        $sql = 'select * from '.C('DB_PREFIX')."system_data where list = 'pageKey' or list = 'searchPageKey'";
         $list = D('')->query($sql);
         foreach ($list as $v) {
             $v['value'] = unserialize($v['value']);
@@ -334,10 +330,11 @@ class AdministratorAction extends Action
     private function setKVArr($arr, $keyList)
     {
         $r = array();
-        foreach ($arr as $k=>$v) {
+        foreach ($arr as $k => $v) {
             $key = is_array($keyList[$k]) ? $keyList[$k][0] : $keyList[$k];
             $r[$key] = $v;
         }
+
         return $r;
     }
 
@@ -351,10 +348,10 @@ class AdministratorAction extends Action
         foreach ($_POST as &$v) {
             $v = $this->setKVArr($v, $keyArr);
         }
-        $data[$key]  = $_POST;
+        $data[$key] = $_POST;
 
         if (model('Xconfig')->pageKey_lput('searchPageKey', $data)) {
-            LogRecord('admin_config', 'editSearchPagekey', array('name'=>$title, 'k1'=>L('PUBLIC_ADMIN_EDIT_PEIZHI')), true);
+            LogRecord('admin_config', 'editSearchPagekey', array('name' => $title, 'k1' => L('PUBLIC_ADMIN_EDIT_PEIZHI')), true);
             $this->success();
         } else {
             $this->error();
@@ -363,38 +360,37 @@ class AdministratorAction extends Action
 
     /**
      * 保存配置页面详细数据
-     * @return void
      */
     public function saveConfigData()
     {
         if (empty($_POST['systemdata_list']) || empty($_POST['systemdata_key'])) {
             $this->error(L('PUBLIC_SAVE_FAIL'));            // 保存失败
         }
-        $key = t($_POST['systemdata_list']).":".t($_POST['systemdata_key']);
+        $key = t($_POST['systemdata_list']).':'.t($_POST['systemdata_key']);
         $title = t($_POST['pageTitle']);
         unset($_POST['systemdata_list'], $_POST['systemdata_key'], $_POST['pageTitle']);
         //rewrite验证.
-        if (isset($_POST['site_rewrite_on']) && $_POST['site_rewrite_on']==1) {
+        if (isset($_POST['site_rewrite_on']) && $_POST['site_rewrite_on'] == 1) {
             $rewrite_test_content = file_get_contents(SITE_URL.'/rewrite');
-            if ($rewrite_test_content!='thinksns') {
+            if ($rewrite_test_content != 'thinksns') {
                 $this->error('服务器设置不支持Rewrite，请检查配置');
             }
         }
         if (isset($_POST['site_analytics_code'])) {
             $_POST['site_analytics_code'] = base64_encode($_POST['site_analytics_code']);
         }
-        if (isset($_POST['site_theme_name']) && $_POST['site_theme_name']!=C('THEME_NAME')) {
+        if (isset($_POST['site_theme_name']) && $_POST['site_theme_name'] != C('THEME_NAME')) {
             $res = $this->_switchTheme(t($_POST['site_theme_name']));
         }
         if ($key == 'admin_Config:attach') {
             $exts = explode(',', $_POST['attach_allow_extension']);
-            $objext = array('gif','png','jpeg','zip','rar','doc','xls','ppt','docx','xlsx','pptx','pdf','jpg','mp3');
+            $objext = array('gif', 'png', 'jpeg', 'zip', 'rar', 'doc', 'xls', 'ppt', 'docx', 'xlsx', 'pptx', 'pdf', 'jpg', 'mp3');
             $_POST['attach_allow_extension'] = implode(',', array_intersect($exts, $objext));
         }
         $result = model('Xdata')->put($key, $_POST);
-        LogRecord('admin_config', 'editDetail', array('name'=>$title, 'k1'=>L('PUBLIC_ADMIN_EDIT_EDTAIL_PEIZHI')), true);       // 保存修改编辑详细数据
+        LogRecord('admin_config', 'editDetail', array('name' => $title, 'k1' => L('PUBLIC_ADMIN_EDIT_EDTAIL_PEIZHI')), true);       // 保存修改编辑详细数据
 
-        if ($res===false) {
+        if ($res === false) {
             $this->error(L('PUBLIC_SWITCH_THEME_FAIL'));            // 写config.inc.php文件失败
         } elseif ($result) {
             $this->success();
@@ -415,11 +411,11 @@ class AdministratorAction extends Action
             $this->error(L('PUBLIC_SYSTEM_USERGROUP_NOEXIST'));
         }
         $ruleList = model('Permission')->getRuleList(intval($_GET['gid']), t($_GET['appname']), t($_GET['appgroup']));
-        $this->assign('moduleHash', array('normal'=>L('PUBLIC_SYSTEM_NORMAL_USER'), 'admin'=>L('PUBLIC_SYSTEM_ADMIN_USER')));
+        $this->assign('moduleHash', array('normal' => L('PUBLIC_SYSTEM_NORMAL_USER'), 'admin' => L('PUBLIC_SYSTEM_ADMIN_USER')));
         $this->assign($ruleList);
         $this->display('admin_permissionset');
     }
-   
+
     public function permissionsave()
     {
         $data = array();
@@ -444,7 +440,7 @@ class AdministratorAction extends Action
         $this->success(L('PUBLIC_SYSTEM_MODIFY_SUCCESS'));
     }
 
-    public function display($templateFile='', $charset='utf-8', $contentType='text/html')
+    public function display($templateFile = '', $charset = 'utf-8', $contentType = 'text/html')
     {
         $this->assign('systemdata_list', $this->systemdata_list);
         $this->assign('systemdata_key', $this->systemdata_key);
@@ -463,11 +459,11 @@ class AdministratorAction extends Action
         $this->assign('submitAlias', $this->submitAlias);
         parent::display($templateFile, $charset, $contentType);
     }
-    
-    private function _switchTheme($themeName='')
+
+    private function _switchTheme($themeName = '')
     {
         if (empty($themeName)) {
-            $themeName= THEME_NAME;
+            $themeName = THEME_NAME;
         }
         $file = SITE_PATH.'/config/config.inc.php';
         if (!is_writable($file)) {
@@ -475,7 +471,7 @@ class AdministratorAction extends Action
         }
         $content = file_get_contents($file);
         $pos = strpos($content, 'THEME_NAME');
-        if ($pos===false) {
+        if ($pos === false) {
             $content = str_replace('return array(', 'return array(
 	\'THEME_NAME\' => \''.$themeName.'\', ', $content);
         } else {

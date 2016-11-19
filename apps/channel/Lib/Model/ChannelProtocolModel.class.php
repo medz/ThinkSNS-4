@@ -1,6 +1,6 @@
 <?php
 /**
-     * ChannelProtocolModel 
+     * ChannelProtocolModel
      * 提供给TS核心调用的协议类
      *
      */
@@ -20,19 +20,19 @@ class ChannelProtocolModel extends Model
         if (empty($uidArr)) {
             return false;
         }
-        
+
         $map ['uid'] = array(
                 'in',
-                $uidArr
+                $uidArr,
         );
 
         M('channel')->where($map)->delete();
         M('channel_follow')->where($map)->delete();
     }
-    
+
     /**
      * 在个人空间里查看该应用的内容列表
-     * @param integer $uid 用户UID
+     * @param  int   $uid 用户UID
      * @return array 个人空间数据列表
      */
     public function profileContent($uid)
@@ -45,6 +45,7 @@ class ChannelProtocolModel extends Model
         $list['titleshort'] = 200;
         $list['suffix'] = '......';
         $tpl = APPS_PATH.'/channel/Tpl/default/Index/profileContent.html';
+
         return fetch($tpl, $list);
     }
 }

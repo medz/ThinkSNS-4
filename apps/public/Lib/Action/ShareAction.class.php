@@ -8,7 +8,6 @@ class ShareAction extends Action
 {
     /**
      * _initialize 模块初始化
-     * @return void
      */
     protected function _initialize()
     {
@@ -16,16 +15,15 @@ class ShareAction extends Action
 
     /**
      * 分享控制
-     * @return void
      */
     public function index()
     {
         $shareInfo['sid'] = intval($_GET['sid']);
         $shareInfo['stable'] = t($_GET['stable']);
-        $shareInfo['initHTML']  = h($_GET['initHTML']);
-        $shareInfo['curid']    = t($_GET['curid']);
-        $shareInfo['curtable']  = t($_GET['curtable']);
-        $shareInfo['appname']    = t($_GET['appname']);
+        $shareInfo['initHTML'] = h($_GET['initHTML']);
+        $shareInfo['curid'] = t($_GET['curid']);
+        $shareInfo['curtable'] = t($_GET['curtable']);
+        $shareInfo['appname'] = t($_GET['appname']);
         $shareInfo['cancomment'] = intval($_GET['cancomment']);
         $shareInfo['is_repost'] = intval($_GET['is_repost']);
         if (empty($shareInfo['stable']) || empty($shareInfo['sid'])) {
@@ -42,8 +40,8 @@ class ShareAction extends Action
         }
         if (empty($shareInfo['initHTML']) && !empty($shareInfo['curid'])) {
             //判断是否为转发的分享
-            if ($shareInfo['curid'] != $shareInfo['sid'] && $shareInfo['is_repost']==1) {
-                $app = $curtable == $shareInfo['stable'] ? $shareInfo['appname'] :'public';
+            if ($shareInfo['curid'] != $shareInfo['sid'] && $shareInfo['is_repost'] == 1) {
+                $app = $curtable == $shareInfo['stable'] ? $shareInfo['appname'] : 'public';
                 $curInfo = model('Source')->getSourceInfo($shareInfo['curtable'], $shareInfo['curid'], false, $app);
                 $userInfo = $curInfo['source_user_info'];
                 // if($userInfo['uid'] != $this->mid){	//分享其他人的分享，非自己的
@@ -68,9 +66,9 @@ class ShareAction extends Action
                     }
                 }
         }
-        $shareInfo['shareHtml'] =  !empty($oldInfo['shareHtml'])  ?  $oldInfo['shareHtml'] : '';
+        $shareInfo['shareHtml'] = !empty($oldInfo['shareHtml']) ? $oldInfo['shareHtml'] : '';
         $weiboSet = model('Xdata')->get('admin_Config:feed');
-        $canShareFeed = in_array('repost', $weiboSet['weibo_premission']) ? 1  : '0';
+        $canShareFeed = in_array('repost', $weiboSet['weibo_premission']) ? 1 : '0';
         $this->assign('canShareFeed', $canShareFeed);
         $this->assign('initNums', $weiboSet['weibo_nums']);
         $this->assign('shareInfo', $shareInfo);
@@ -120,7 +118,7 @@ class ShareAction extends Action
         $var['mid'] = $GLOBALS['ts']['mid'];
         $var['initHTML'] = $_GET['initHTML'];
         $var['source_url'] = urlencode($_GET['source_url']);
-        $var['post_event'] ='post_feed_box';
+        $var['post_event'] = 'post_feed_box';
         $var['cancomment'] = 0;
         !$var['send_type'] && $var['send_type'] = 'send_weibo';
         $weiboSet = model('Xdata')->get('admin_Config:feed');
@@ -129,15 +127,15 @@ class ShareAction extends Action
         $var['attachId'] = intval($_GET['attachId']);
         //取附件
         if ($var['attachId']) {
-            $attachIds = is_array($var['attachId'])?$var['attachId']:explode(',', $var['attachId']);
+            $attachIds = is_array($var['attachId']) ? $var['attachId'] : explode(',', $var['attachId']);
             $attach = model('Attach')->getAttachByIds($attachIds);
             foreach ($attach as $ak => $av) {
                 $_attach = array(
-                    'attach_id'   => $av['attach_id'],
+                    'attach_id' => $av['attach_id'],
                     'attach_name' => $av['name'],
-                    'attach_url'  => getImageUrl($av['save_path'].$av['save_name']),
-                    'extension'   => $av['extension'],
-                    'size'          => $av['size']
+                    'attach_url' => getImageUrl($av['save_path'].$av['save_name']),
+                    'extension' => $av['extension'],
+                    'size' => $av['size'],
                 );
                 if (in_array($av['extension'], array('jpg', 'png', 'gif', 'bmp'))) {
                     $_attach['attach_small'] = getImageUrl($av['save_path'].$av['save_name'], 100, 100, true);

@@ -6,7 +6,6 @@
  */
 class MedalModel extends Model
 {
-    
     public function getList($map, $limit = 20)
     {
         $list = $this->where($map)->order('id desc')->findPage($limit);
@@ -19,6 +18,7 @@ class MedalModel extends Model
                 $v['small_src'] = $smallsrc[1];
             }
         }
+
         return $list;
     }
 
@@ -31,6 +31,7 @@ class MedalModel extends Model
                 $keyidlist[$v['id']] = $v['name'];
             }
         }
+
         return $keyidlist;
     }
 
@@ -45,19 +46,20 @@ class MedalModel extends Model
             foreach ($list as &$v) {
                 $src = explode('|', $v['src']);
                 $v['src'] = getImageUrl($src[1]);
-                
+
                 $smallsrc = explode('|', $v['small_src']);
                 $v['small_src'] = $smallsrc[1];
                 //$v['small_src'] = getImageUrl( $smallsrc[1] );
             }
         }
+
         return $list;
     }
 
     /**
      * 返回用户勋章列表
-     * @param unknown_type $map
-     * @param unknown_type $limit
+     * @param  unknown_type $map
+     * @param  unknown_type $limit
      * @return unknown
      */
     public function getUserMedalList($map, $limit = 20)
@@ -68,14 +70,14 @@ class MedalModel extends Model
         }
         $uids = getSubByKey($list['data'], 'uid');
         $mids = getSubByKey($list['data'], 'medal_id');
-        
+
         $users = model('User')->getUserInfoByUids($uids);
         $unames = array();
         foreach ($users as $n) {
             $unames[$n['uid']] = $n['uname'];
         }
-        
-        $gmap['id'] = array('in' , $mids );
+
+        $gmap['id'] = array('in', $mids);
         $medals = $this->where($gmap)->findAll();
         $medalnames = array();
         foreach ($medals as $m) {
@@ -83,13 +85,13 @@ class MedalModel extends Model
             $medalnames[$m['id']]['src'] = $src[1];
             $medalnames[$m['id']]['name'] = $m['name'];
         }
-        
+
         foreach ($list['data'] as &$v) {
             $v['uname'] = $unames[$v['uid']];
             $v['medalsrc'] = $medalnames[$v['medal_id']]['src'];
             $v['medalname'] = $medalnames[$v['medal_id']]['name'];
         }
-        
+
         return $list;
     }
 
@@ -125,6 +127,7 @@ class MedalModel extends Model
                 model('Notify')->sendNotify($data['uid'], 'admin_add_user_medal', $config);
             }
         }
+
         return $res;
     }
 

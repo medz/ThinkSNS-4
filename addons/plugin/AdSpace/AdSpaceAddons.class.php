@@ -36,7 +36,7 @@ class AdSpaceAddons extends NormalAddons
         $page = isset($_GET['page']) ? t($_GET['page']) : 'addAdSpace';
         if ($page === 'editAdSpace') {
             unset($menu['addAdSpace']);
-            $menu['editAdSpace'] = array('content'=>'编辑广告位','param'=>array('id'=>intval($_GET['id'])));
+            $menu['editAdSpace'] = array('content' => '编辑广告位', 'param' => array('id' => intval($_GET['id'])));
         }
 
         return $menu;
@@ -48,7 +48,7 @@ class AdSpaceAddons extends NormalAddons
 
     /**
      * 插件安装入口
-     * @return boolean 是否安装成功
+     * @return bool 是否安装成功
      */
     public function install()
     {
@@ -68,12 +68,13 @@ class AdSpaceAddons extends NormalAddons
 				  PRIMARY KEY (`ad_id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='广告位表';";
         D()->execute($sql);
+
         return true;
     }
 
     /**
      * 插件卸载入口
-     * @return boolean 是否卸载成功
+     * @return bool 是否卸载成功
      */
     public function uninstall()
     {
@@ -81,6 +82,7 @@ class AdSpaceAddons extends NormalAddons
         $dbPrefix = C('DB_PREFIX');
         $sql = "DROP TABLE IF EXISTS `{$dbPrefix}ad`;";
         D()->execute($sql);
+
         return true;
     }
 }

@@ -1,18 +1,17 @@
 <?php
 /**
  * 导航模型 - 数据对象模型
- * @author jason <renjianchao@zhishisoft.com> 
+ * @author jason <renjianchao@zhishisoft.com>
  * @version TS3.0
  */
 class NaviModel extends Model
 {
-
     protected $tableName = 'navi';
-    protected $fields = array(0=>'navi_id',1=>'navi_name',2=>'app_name',3=>'url',4=>'target',5=>'status',6=>'position',7=>'guest',8=>'is_app_navi',9=>'parent_id',10=>'order_sort');
-    
+    protected $fields = array(0 => 'navi_id', 1 => 'navi_name', 2 => 'app_name', 3 => 'url', 4 => 'target', 5 => 'status', 6 => 'position', 7 => 'guest', 8 => 'is_app_navi', 9 => 'parent_id', 10 => 'order_sort');
+
     /**
      * 获取头部导航
-     * @return array 头部导航 
+     * @return array 头部导航
      */
     public function getTopNav()
     {
@@ -63,7 +62,7 @@ class NaviModel extends Model
             empty($guestNav) && $guestNav = array();
             model('Cache')->set('guestNav', $guestNav);
         }
-        
+
         return $guestNav;
     }
     /**
@@ -94,7 +93,7 @@ class NaviModel extends Model
 
         return $bottomNav;
     }
-    
+
     public function getBottomChildNav($bottomNav)
     {
         foreach ($bottomNav as $v) {
@@ -102,11 +101,11 @@ class NaviModel extends Model
                 return true;
             }
         }
+
         return false;
     }
     /**
      * 清除导航缓存
-     * @return void
      */
     public function cleanCache()
     {

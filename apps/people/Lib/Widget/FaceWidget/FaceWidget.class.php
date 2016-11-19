@@ -1,12 +1,12 @@
 <?php
 /**
- * 
+ *
  */
 class FaceWidget extends Widget
 {
     /**
      * 模板渲染
-     * @param array $data 相关数据
+     * @param  array  $data 相关数据
      * @return string 用户身份选择模板
      */
     public function render($data)
@@ -18,7 +18,7 @@ class FaceWidget extends Widget
         $var['type'] = t($data['type']);
         $var['faceList'] = D('People', 'people')->getTopUserInfos($var['uids'], $var['type']);
         // 渲染模版
-        $content = $this->renderFile(dirname(__FILE__)."/".$template.".html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$template.'.html', $var);
         // 输出数据
         return $content;
     }

@@ -1,1 +1,3 @@
-<?php echo replaceUrl(t($body));
+<?php
+
+echo replaceUrl(t($body));

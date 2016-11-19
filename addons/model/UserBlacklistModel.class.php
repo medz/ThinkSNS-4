@@ -6,14 +6,13 @@
  */
 class UserBlacklistModel extends Model
 {
-
     protected $tableName = 'user_blacklist';
-    protected $fields = array(0 =>'uid',1=>'fid',2=>'ctime');
+    protected $fields = array(0 => 'uid', 1 => 'fid', 2 => 'ctime');
     public static $blackHash = array();
-    
+
     /**
      * 获取指定用户的黑名单列表
-     * @param integer $uid 用户UID
+     * @param  int   $uid 用户UID
      * @return array 指定用户的黑名单列表
      */
     public function getUserBlackList($uid)
@@ -34,12 +33,12 @@ class UserBlacklistModel extends Model
 
         return $list;
     }
-    
+
     /**
      * 指定用户添加黑名单
-     * @param integer $uid 指定用户UID
-     * @param integer $fid 黑名单用户UID
-     * @return boolean 是否添加成功
+     * @param  int  $uid 指定用户UID
+     * @param  int  $fid 黑名单用户UID
+     * @return bool 是否添加成功
      */
     public function addUser($uid, $fid)
     {
@@ -47,28 +46,32 @@ class UserBlacklistModel extends Model
         $fid = intval($fid);
         if (empty($uid) || empty($fid)) {
             $this->error = '用户ID不能为空';
+
             return false;
         }
         $blackList = $this->getUserBlackList($uid);
         if (isset($blackList[$fid])) {
             $this->error = '用户已经在黑名单中了';
+
             return false;
         }
-        $blackList[$fid] = array('uid'=>$uid, 'fid'=>$fid, 'ctime'=>time());
+        $blackList[$fid] = array('uid' => $uid, 'fid' => $fid, 'ctime' => time());
         if ($this->add($blackList[$fid])) {
             model('Follow')->unFollow($uid, $fid);
             model('Follow')->unFollow($fid, $uid);
             model('Cache')->set('u_blacklist_'.$uid, $blackList);
+
             return true;
         }
+
         return false;
     }
 
     /**
      * 指定用户取消黑名单
-     * @param integer $uid 指定用户UID
-     * @param integer $fid 黑名单用户UID
-     * @return boolean 是否移除成功
+     * @param  int  $uid 指定用户UID
+     * @param  int  $fid 黑名单用户UID
+     * @return bool 是否移除成功
      */
     public function removeUser($uid, $fid)
     {
@@ -76,11 +79,13 @@ class UserBlacklistModel extends Model
         $fid = intval($fid);
         if (empty($uid) || empty($fid)) {
             $this->error = '用户ID不能为空';
+
             return false;
         }
         $blackList = $this->getUserBlackList($uid);
         if (!isset($blackList[$fid])) {
             $this->error = '用户不在黑名单中了';
+
             return false;
         }
         unset($blackList[$fid]);
@@ -88,15 +93,17 @@ class UserBlacklistModel extends Model
         $map['fid'] = $fid;
         if ($this->where($map)->limit(1)->delete()) {
             model('Cache')->set('u_blacklist_'.$uid, $blackList);
+
             return true;
         }
+
         return false;
     }
-    
+
     /**
      * 清除用户的黑名单缓存信息
-     * @param array $uids 用户UID数组
-     * @return boolean 缓存是否清除成功
+     * @param  array $uids 用户UID数组
+     * @return bool  缓存是否清除成功
      */
     public function cleanCache($uids)
     {
@@ -105,7 +112,7 @@ class UserBlacklistModel extends Model
         foreach ($uids as $uid) {
             $cache->rm('u_blacklist_'.$uid);
         }
-      
+
         return true;
     }
 }

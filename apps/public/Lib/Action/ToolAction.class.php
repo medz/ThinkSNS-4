@@ -1,10 +1,10 @@
 <?php
+
 class ToolAction extends Action
 {
     /**
      * 官方服务器生成语言同步文件
      *
-     * @return void
      */
     public function createLangPHPFile()
     {
@@ -14,7 +14,7 @@ class ToolAction extends Action
             mkdir(LANG_PATH, 0777);
         }
         $data = model('Lang')->order('lang_id asc')->findAll();
-        $fileName = LANG_PATH . '/langForLoadUpadte.php';
+        $fileName = LANG_PATH.'/langForLoadUpadte.php';
         // 权限处理
         $fp = fopen($fileName, 'w+');
         $fileData = "<?php\n";
@@ -35,13 +35,13 @@ class ToolAction extends Action
         unset($fileData);
         unset($content);
         @chmod($fileName, 0775);
-        
-        tsload(ADDON_PATH . '/library/Update.class.php');
+
+        tsload(ADDON_PATH.'/library/Update.class.php');
         $updateClass = new Update();
-        
+
         $res = $updateClass->zipPackage($fileName, LANG_PATH, 'langForLoadUpadte', LANG_PATH);
         unlink($fileName);
-        
+
         echo $res;
     }
     /**
@@ -57,8 +57,8 @@ class ToolAction extends Action
             mkdir(LANG_PATH, 0777);
         }
         $data = D('system_config')->findAll();
-        
-        $fileName = LANG_PATH . '/system_config.php';
+
+        $fileName = LANG_PATH.'/system_config.php';
         // 权限处理
         $fp = fopen($fileName, 'w+');
         $fileData = "<?php\n";
@@ -69,49 +69,49 @@ class ToolAction extends Action
             if ($val ['value'] ['key']) {
                 $arr .= '\'key\'=>array(';
                 foreach ($val ['value'] ['key'] as $k0 => $v0) {
-                    $arr .= '\'' . $k0 . '\'=>\'' . htmlspecialchars($v0, ENT_QUOTES) . '\',';
+                    $arr .= '\''.$k0.'\'=>\''.htmlspecialchars($v0, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val ['value'] ['key_name']) {
                 $arr .= '\'key_name\'=>array(';
                 foreach ($val ['value'] ['key_name'] as $k1 => $v1) {
-                    $arr .= '\'' . $k1 . '\'=>\'' . htmlspecialchars($v1, ENT_QUOTES) . '\',';
+                    $arr .= '\''.$k1.'\'=>\''.htmlspecialchars($v1, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val ['value'] ['key_hidden']) {
                 $arr .= '\'key_hidden\'=>array(';
                 foreach ($val ['value'] ['key_hidden'] as $k2 => $v2) {
-                    $arr .= '\'' . $k2 . '\'=>\'' . htmlspecialchars($v2, ENT_QUOTES) . '\',';
+                    $arr .= '\''.$k2.'\'=>\''.htmlspecialchars($v2, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val ['value'] ['key_type']) {
                 $arr .= '\'key_type\'=>array(';
                 foreach ($val ['value'] ['key_type'] as $k3 => $v3) {
-                    $arr .= '\'' . $k3 . '\'=>\'' . htmlspecialchars($v3, ENT_QUOTES) . '\',';
+                    $arr .= '\''.$k3.'\'=>\''.htmlspecialchars($v3, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val ['value'] ['key_default']) {
                 $arr .= '\'key_default\'=>array(';
                 foreach ($val ['value'] ['key_default'] as $k4 => $v4) {
-                    $arr .= '\'' . $k4 . '\'=>\'' . htmlspecialchars($v4, ENT_QUOTES) . '\',';
+                    $arr .= '\''.$k4.'\'=>\''.htmlspecialchars($v4, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val ['value'] ['key_tishi']) {
                 $arr .= '\'key_tishi\'=>array(';
                 foreach ($val ['value'] ['key_tishi'] as $k5 => $v5) {
-                    $arr .= '\'' . $k5 . '\'=>\'' . htmlspecialchars($v5, ENT_QUOTES) . '\',';
+                    $arr .= '\''.$k5.'\'=>\''.htmlspecialchars($v5, ENT_QUOTES).'\',';
                 }
                 $arr .= '),';
             }
             if ($val ['value'] ['key_javascript']) {
                 $arr .= '\'key_javascript\'=>array(';
                 foreach ($val ['value'] ['key_javascript'] as $k6 => $v6) {
-                    $arr .= '\'' . $k6 . '\'=>\'' . htmlspecialchars($v6, ENT_QUOTES) . '\',';
+                    $arr .= '\''.$k6.'\'=>\''.htmlspecialchars($v6, ENT_QUOTES).'\',';
                 }
                 $arr .= ')';
             }
@@ -119,7 +119,7 @@ class ToolAction extends Action
             if (empty($val ['key']) || empty($val ['list']) || $arr == 'array()') {
                 continue;
             }
-            $content [] = "'{$val['key']}-{$val['list']}'=>" . $arr;
+            $content [] = "'{$val['key']}-{$val['list']}'=>".$arr;
         }
         $fileData .= implode(",\n", $content);
         $fileData .= "\n);";
@@ -128,32 +128,32 @@ class ToolAction extends Action
         unset($fileData);
         unset($content);
         @chmod($fileName, 0775);
-        
-        tsload(ADDON_PATH . '/library/Update.class.php');
+
+        tsload(ADDON_PATH.'/library/Update.class.php');
         $updateClass = new Update();
-        
+
         $res = $updateClass->zipPackage($fileName, LANG_PATH, 'system_config', LANG_PATH);
         unlink($fileName);
-        
+
         echo $res;
     }
-    
+
     // 获取官方服务器上应用的信息给本地服务器
     public function downloadApp()
     {
         $map ['develop_id'] = intval($_GET ['develop_id']);
         $dao = D('develop', 'develop');
-        
+
         $info = $dao->getDetailDevelop($map ['develop_id']);
         $info ['packageURL'] = getAttachUrl($info ['file'] ['filename']);
         $info['app_name'] = $info['package'];
-        
+
         // 记录下载数
         $dao->where($map)->setInc('download_count');
-        
+
         echo json_encode($info);
     }
-    
+
     /**
      * 自动获取在线应用列表给本地服务器
      * @return JSON 相关的JSON数据
@@ -169,12 +169,12 @@ class ToolAction extends Action
         }
         echo json_encode($data);
     }
-    
+
     // 自动获取升级包信息给本地服务器
     public function getVersionInfo()
     {
         $result = M('system_update')->where('status=1')->field('id,title,version,package')->findAll();
-        foreach ($result as $k=>$v) {
+        foreach ($result as $k => $v) {
             $list[$v['id']] = $v;
             unset($result[$k]);
         }

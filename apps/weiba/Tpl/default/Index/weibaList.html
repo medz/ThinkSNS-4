@@ -48,7 +48,7 @@
 			          <div class="weiba-logo left"><a href="{:U('weiba/Index/detail','weiba_id='.$k['weiba_id'])}"><img src="{$k.avatar_middle}"  /></a></div>
 			          <div class="weiba-info">
 			            <h2 class="weiba-tit mb5"><a href="{:U('weiba/Index/detail','weiba_id='.$k['weiba_id'])}">{$k.weiba_name}</a></h2>
-                  <p class="weiba-prof">{$k.intro|getShort=20}</p>
+                  <p class="weiba-prof" title="{$k.intro}">{$k.intro|getShort=###, 20, '...'}</p>
 			            <p class="weiba-data"><span>成员数：{$k.follower_count}</span>&nbsp;&nbsp;<span>今日新帖：{$k.new_count}</span></p>
 			          </div>
 			        </li>

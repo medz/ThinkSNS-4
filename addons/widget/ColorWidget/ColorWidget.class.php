@@ -9,7 +9,7 @@ class ColorWidget extends Widget
     /**
      * 渲染颜色板页面
      * @example
-     * 
+     *
      * @return string 颜色板HTML相关信息
      */
     public function render($data)

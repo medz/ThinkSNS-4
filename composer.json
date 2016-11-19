@@ -1,13 +1,35 @@
 {
-    "name": "medz/thinksns-4",
+    "name": "medz/thinksns",
     "type": "project",
-    "description": "This is a sns system.",
+    "description": "A extensable social networing system.",
     "keywords": ["sns", "think", "ts", "thinksns", "t4", "ts4"],
     "homepage": "http://www.thinksns.com",
-    "license": "Apache-2.0",
+    "license": "Private",
+    "license-url": "./LICENSE",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "authors": [
+        {
+            "name": "智艺创想",
+            "homepage": "http://www.zhiyicx.com",
+            "role": "Development company"
+        },
+        {
+            "name": "The ThinkSNS Team",
+            "email": "support@zhishisoft.com",
+            "homepage": "http://www.thinksns.com",
+            "role": "R & D team"
+        },
+        {
+            "name": "Bin Qiao",
+            "homepage": "http://demo.thinksns.com/ts4/index.php?app=public&mod=Profile&act=index&uid=32179",
+            "role": "Developer"
+        },
+        {
+            "name": "while",
+            "homepage": "http://demo.thinksns.com/ts4/index.php?app=public&mod=Profile&act=index&uid=32521",
+            "role": "Developer"
+        },
         {
             "name": "Seven Du",
             "email": "lovevipdsw@outlook.com",
@@ -15,8 +37,9 @@
             "role": "Developer"
         },
         {
-            "name": "The ThinkSNS Team",
-            "homepage": "http://www.zhiyicx.com"
+            "name": "陈然",
+            "email": "396147081@qq.com",
+            "role": "Developer"
         }
     ],
     "repositories": [
@@ -46,24 +69,33 @@
         "ext-zip": "*",
         "medz/vendor-pack-pinyin": "@dev",
         "medz/filesystem": "~1.0",
+        "medz/emoji-format": "^1.0",
         "symfony/polyfill-mbstring": "~1.0",
         "illuminate/database": "4.1.*"
     },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^1.11"
+    },
     "config": {
-        "vendor-dir": "src/Vendor/",
+        "vendor-dir": "src/vendor/",
         "preferred-install": "dist"
     },
     "autoload": {
-        "classmap": ["src/Ts.php"],
+        "files": [
+            "src/old/OpenSociax/functions.inc.php"
+        ],
+        "classmap": [
+            "addons/",
+            "src/Ts.php",
+            "src/old/OpenSociax/"
+        ],
         "psr-4": {
             "Ts\\": "src/",
-            "Ts\\Base\\": "src/Bases/",
-            "Ts\\Model\\": "src/Models/",
             "App\\": "apps/"
         }
     },
     "support": {
-        "email": "1943395309@qq.com",
+        "email": "support@zhishisoft.com",
         "forum": "http://demo.thinksns.com",
         "source": "https://github.com/medz/ThinkSNS-4.git"
     },

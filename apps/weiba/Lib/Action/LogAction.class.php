@@ -1,7 +1,8 @@
 <?php
+
 // /**
 //  * 微吧管理知识控制器
-//  * @author 
+//  * @author
 //  * @version TS3.0
 //  */
 // class LogAction extends Action {
@@ -25,7 +26,7 @@
 // 		$weiba_detail = D('weiba')->where('weiba_id='.$weiba_id)->find();
 // 		if($weiba_detail['logo']){
 // 			$weiba_detail['logo_url'] = getImageUrlByAttachId($weiba_detail['logo']);
-// 		}		
+// 		}
 // 		$this->assign('weiba_detail',$weiba_detail);
 // 		$this->display();
 // 	}
@@ -66,7 +67,7 @@
 // 		$weiba_id = intval($_GET['weiba_id']);
 // 		$this->assign('weiba_id',$weiba_id);
 // 		$weiba_member = D('weiba_follow')->where('weiba_id='.$weiba_id)->order('level desc')->findAll();
-// 		$uids = getSubByKey($weiba_member, 'follower_uid');	
+// 		$uids = getSubByKey($weiba_member, 'follower_uid');
 // 		$user_info = model('User')->getUserInfoByUids($uids);
 // 		$this->assign('user_info', $user_info);
 // 		$this->assign('weiba_member', $weiba_member);
@@ -132,10 +133,10 @@
 // 		$weiba_id = intval($_POST['weiba_id']);
 // 		$this->assign('weiba_id',$weiba_id);
 // 		$notify = t($_POST['notify']);
-// 		preg_match_all('/./us', $notify, $match);  
+// 		preg_match_all('/./us', $notify, $match);
 //         if(count($match[0])>200){     //汉字和字母都为一个字
 //         	$this->error('公告内容不能超过200个字');
-//         } 
+//         }
 //         $data['notify'] = $notify;
 // 		$res = D('weiba')->where('weiba_id='.$weiba_id)->save($data);
 // 		if($res !== false){

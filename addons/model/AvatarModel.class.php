@@ -7,44 +7,38 @@
  */
 class AvatarModel
 {
-
     protected $_uid;   // 用户UID字段
 
     /**
      * 初始化模型，加载相应的文件
-     * @param integer $uid 用户UID
-     * @return void 头像模型对象
+     * @param int $uid 用户UID
      */
 
-    public function __construct($uid)
+    public function __construct($uid = null)
     {
         $uid or $uid = intval($_SESSION['mid']);
-        $this->_uid  = $uid;
-        unset($uid);
-        // if (!$uid)
-        //     $uid = intval($_SESSION['mid']);
-        // $this->_uid = intval($uid);
-        // return $this; # 呵呵哒！
+        $this->_uid = $uid;
     }
 
     /**
      * 初始化模型，加载相应的文件
-     * @param integer $uid 用户UID
+     * @param  int    $uid 用户UID
      * @return object 头像模型对象
      */
     public function init($uid)
     {
         $this->_uid = intval($uid);
+
         return $this;
     }
 
     /**
      * 判断用户是否上传头像
-     * @return array 
+     * @return array
      */
     public function hasAvatar()
     {
-        $original_file_name = '/avatar' . $this->convertUidToPath($this->_uid) . '/original.jpg';
+        $original_file_name = '/avatar'.$this->convertUidToPath($this->_uid).'/original.jpg';
 
         //头像云存储
         $cloud = model('CloudImage');
@@ -52,14 +46,15 @@ class AvatarModel
             $original_file_info = $cloud->getFileInfo($original_file_name);
             if ($original_file_info) {
                 $filemtime = @intval($original_file_info['date']);
-                $avatar = getImageUrl($original_file_name) . '!small.avatar.jpg?v' . $filemtime;
+                $avatar = getImageUrl($original_file_name).'!small.avatar.jpg?v'.$filemtime;
             }
 
             //头像本地存储
-        } elseif (file_exists(UPLOAD_PATH . $original_file_name)) {
-            $filemtime = @filemtime(UPLOAD_PATH . $original_file_name);
-            $avatar = getImageUrl($original_file_name, 50, 50) . '?v' . $filemtime;
+        } elseif (file_exists(UPLOAD_PATH.$original_file_name)) {
+            $filemtime = @filemtime(UPLOAD_PATH.$original_file_name);
+            $avatar = getImageUrl($original_file_name, 50, 50).'?v'.$filemtime;
         }
+
         return ($avatar) ? true : false;
     }
 
@@ -69,16 +64,16 @@ class AvatarModel
      */
     public function getUserAvatar()
     {
-        $empty_url = THEME_URL . '/_static/image/noavatar';
+        $empty_url = THEME_URL.'/_static/image/noavatar';
         $avatar_url = array(
-            'avatar_original' => $empty_url . '/big.jpg',
-            'avatar_big' => $empty_url . '/big.jpg',
-            'avatar_middle' => $empty_url . '/middle.jpg',
-            'avatar_small' => $empty_url . '/small.jpg',
-            'avatar_tiny' => $empty_url . '/tiny.jpg'
+            'avatar_original' => $empty_url.'/big.jpg',
+            'avatar_big' => $empty_url.'/big.jpg',
+            'avatar_middle' => $empty_url.'/middle.jpg',
+            'avatar_small' => $empty_url.'/small.jpg',
+            'avatar_tiny' => $empty_url.'/tiny.jpg',
         );
 
-        $original_file_name = '/avatar' . $this->convertUidToPath($this->_uid) . '/original.jpg';
+        $original_file_name = '/avatar'.$this->convertUidToPath($this->_uid).'/original.jpg';
 
         //头像云存储
         $cloud = model('CloudImage');
@@ -87,20 +82,20 @@ class AvatarModel
             if ($original_file_info) {
                 $filemtime = @intval($original_file_info['date']);
                 $avatar_url['avatar_original'] = getImageUrl($original_file_name);
-                $avatar_url['avatar_big'] = getImageUrl($original_file_name) . '!big.avatar.jpg?v' . $filemtime;
-                $avatar_url['avatar_middle'] = getImageUrl($original_file_name) . '!middle.avatar.jpg?v' . $filemtime;
-                $avatar_url['avatar_small'] = getImageUrl($original_file_name) . '!small.avatar.jpg?v' . $filemtime;
-                $avatar_url['avatar_tiny'] = getImageUrl($original_file_name) . '!tiny.avatar.jpg?v' . $filemtime;
+                $avatar_url['avatar_big'] = getImageUrl($original_file_name).'!big.avatar.jpg?v'.$filemtime;
+                $avatar_url['avatar_middle'] = getImageUrl($original_file_name).'!middle.avatar.jpg?v'.$filemtime;
+                $avatar_url['avatar_small'] = getImageUrl($original_file_name).'!small.avatar.jpg?v'.$filemtime;
+                $avatar_url['avatar_tiny'] = getImageUrl($original_file_name).'!tiny.avatar.jpg?v'.$filemtime;
             }
 
             //头像本地存储
-        } elseif (file_exists(UPLOAD_PATH . $original_file_name)) {
-            $filemtime = @filemtime(UPLOAD_PATH . $original_file_name);
+        } elseif (file_exists(UPLOAD_PATH.$original_file_name)) {
+            $filemtime = @filemtime(UPLOAD_PATH.$original_file_name);
             $avatar_url['avatar_original'] = getImageUrl($original_file_name);
-            $avatar_url['avatar_big'] = getImageUrl($original_file_name, 200, 200) . '?v' . $filemtime;
-            $avatar_url['avatar_middle'] = getImageUrl($original_file_name, 100, 100) . '?v' . $filemtime;
-            $avatar_url['avatar_small'] = getImageUrl($original_file_name, 50, 50) . '?v' . $filemtime;
-            $avatar_url['avatar_tiny'] = getImageUrl($original_file_name, 30, 30) . '?v' . $filemtime;
+            $avatar_url['avatar_big'] = getImageUrl($original_file_name, 200, 200).'?v'.$filemtime;
+            $avatar_url['avatar_middle'] = getImageUrl($original_file_name, 100, 100).'?v'.$filemtime;
+            $avatar_url['avatar_small'] = getImageUrl($original_file_name, 50, 50).'?v'.$filemtime;
+            $avatar_url['avatar_tiny'] = getImageUrl($original_file_name, 30, 30).'?v'.$filemtime;
         }
 
         return $avatar_url;
@@ -108,13 +103,13 @@ class AvatarModel
 
     /**
      * 保存Flash提交的数据 - flash上传
-     * @param array $data 用户头像的相关信息
-     * @param array $oldUserInfo 貌似无用字段，与此flash组件有关
-     * @return boolean 是否保存成功
+     * @param  array $data        用户头像的相关信息
+     * @param  array $oldUserInfo 貌似无用字段，与此flash组件有关
+     * @return bool  是否保存成功
      */
     public function saveUploadAvatar($data, $oldUserInfo)
     {
-        $original_file_name = '/avatar' . $this->convertUidToPath($this->_uid) . '/original.jpg';
+        $original_file_name = '/avatar'.$this->convertUidToPath($this->_uid).'/original.jpg';
         // Log::write(var_export($data,true));
         //如果是又拍上传
         $cloud = model('CloudImage');
@@ -124,7 +119,7 @@ class AvatarModel
             $imageAsString = $data['big'];
             $res = $cloud->writeFile($original_file_name, $imageAsString, true);
         } else {
-            $res = file_put_contents(UPLOAD_PATH . $original_file_name, $data['big']);
+            $res = file_put_contents(UPLOAD_PATH.$original_file_name, $data['big']);
             getThumbImage($original_file_name, 200, 200, true, true);
             getThumbImage($original_file_name, 100, 100, true, true);
             getThumbImage($original_file_name, 50, 50, true, true);
@@ -136,6 +131,7 @@ class AvatarModel
         } else {
             // 清理用户缓存
             model('User')->cleanCache($this->_uid);
+
             return true;
         }
     }
@@ -153,28 +149,28 @@ class AvatarModel
         //Log::write(var_export($info,true));
         if ($info['status']) {
             $data = $info['info'][0];
-            $image_url = getImageUrl($data['save_path'] . $data['save_name']);
+            $image_url = getImageUrl($data['save_path'].$data['save_name']);
             $image_info = getimagesize($image_url);
             //如果不支持获取远程图片信息，使用如下方法
             if (!$image_info) {
                 $cloud = model('CloudImage');
                 if ($cloud->isOpen()) {
-                    $cinfo = $cloud->getFileInfo($data['save_path'] . $data['save_name']);
+                    $cinfo = $cloud->getFileInfo($data['save_path'].$data['save_name']);
                     if ($cinfo) {
                         $cinfo = json_decode($cinfo);
                         $image_info[0] = $cinfo['width'];
                         $image_info[1] = $cinfo['height'];
                     }
                 } else {
-                    $image_info = getimagesize(UPLOAD_PATH . '/' . $data['save_path'] . $data['save_name']);
+                    $image_info = getimagesize(UPLOAD_PATH.'/'.$data['save_path'].$data['save_name']);
                 }
             }
             if ($image_info) {
                 unset($return);
                 $return['data']['picwidth'] = $image_info[0];
                 $return['data']['picheight'] = $image_info[1];
-                $return['data']['picurl'] = $data['save_path'] . $data['save_name'];
-                $return['data']['fullpicurl'] = getImageUrl($data['save_path'] . $data['save_name']);
+                $return['data']['picurl'] = $data['save_path'].$data['save_name'];
+                $return['data']['fullpicurl'] = getImageUrl($data['save_path'].$data['save_name']);
                 $return['status'] = '1';
                 // if($image_info[0] < 300){
                 // 	die(json_encode(array('status'=>0,'info'=>'请选择一个较大的照片作为头像，宽度不小于300px')));
@@ -211,7 +207,7 @@ class AvatarModel
         if (!$facedata) {
             $facedata = $_POST;
         }
-        //header("Content-type: image/jpeg"); 
+        //header("Content-type: image/jpeg");
         //Log::write(var_export($facedata,true));
         $picWidth = intval($facedata['picwidth']); //原图的宽度
         $scale = $picWidth / 300; //缩放比例
@@ -224,7 +220,7 @@ class AvatarModel
 
         $src = getImageUrl($facedata['picurl']); // 图片的路径
         //原图存储地址
-        $original_file_name = '/avatar' . $this->convertUidToPath($this->_uid) . '/original.jpg';
+        $original_file_name = '/avatar'.$this->convertUidToPath($this->_uid).'/original.jpg';
 
         $filemtime = microtime(true);
 
@@ -232,7 +228,7 @@ class AvatarModel
         $cloud = model('CloudImage');
         if ($cloud->isOpen()) {
             //切割原图
-            require_once SITE_PATH . '/addons/library/phpthumb/ThumbLib.inc.php';
+            require_once SITE_PATH.'/addons/library/phpthumb/ThumbLib.inc.php';
             $thumb = PhpThumbFactory::create($src);
             $res = $thumb->crop($x1, $y1, $w, $h);
 
@@ -250,10 +246,10 @@ class AvatarModel
             $res = $cloud->writeFile($original_file_name, $imageAsString, true);
             if ($res) {
                 unset($return);
-                $return['data']['big'] = getImageUrl($original_file_name) . '!big.avatar.jpg?v' . $filemtime;
-                $return['data']['middle'] = getImageUrl($original_file_name) . '!middle.avatar.jpg?v' . $filemtime;
-                $return['data']['small'] = getImageUrl($original_file_name) . '!small.avatar.jpg?v' . $filemtime;
-                $return['data']['tiny'] = getImageUrl($original_file_name) . '!tiny.avatar.jpg?v' . $filemtime;
+                $return['data']['big'] = getImageUrl($original_file_name).'!big.avatar.jpg?v'.$filemtime;
+                $return['data']['middle'] = getImageUrl($original_file_name).'!middle.avatar.jpg?v'.$filemtime;
+                $return['data']['small'] = getImageUrl($original_file_name).'!small.avatar.jpg?v'.$filemtime;
+                $return['data']['tiny'] = getImageUrl($original_file_name).'!tiny.avatar.jpg?v'.$filemtime;
                 $return['status'] = 1;
                 // 清理用户缓存
                 model('User')->cleanCache($this->_uid);
@@ -264,8 +260,8 @@ class AvatarModel
         } else {
 
             //切割原图
-            require_once SITE_PATH . '/addons/library/phpthumb/ThumbLib.inc.php';
-            $thumb = PhpThumbFactory::create(UPLOAD_PATH . '/' . $facedata['picurl']);
+            require_once SITE_PATH.'/addons/library/phpthumb/ThumbLib.inc.php';
+            $thumb = PhpThumbFactory::create(UPLOAD_PATH.'/'.$facedata['picurl']);
             $res = $thumb->crop($x1, $y1, $w, $h);
 
             //获取获取缩图后的数据
@@ -276,15 +272,15 @@ class AvatarModel
                 die(json_encode(array('status' => 0, 'info' => '头像切割失败')));
             }
 
-            if (!file_exists(UPLOAD_PATH . $original_file_name)) {
-                $this->_createFolder(UPLOAD_PATH . '/avatar' . $this->convertUidToPath($this->_uid));
+            if (!file_exists(UPLOAD_PATH.$original_file_name)) {
+                $this->_createFolder(UPLOAD_PATH.'/avatar'.$this->convertUidToPath($this->_uid));
             }
-            $thumb->save(UPLOAD_PATH . $original_file_name, 'jpg');
+            $thumb->save(UPLOAD_PATH.$original_file_name, 'jpg');
             unset($return);
-            $return['data']['big'] = getImageUrl($original_file_name, 200, 200, true, true) . '?v' . $filemtime;
-            $return['data']['middle'] = getImageUrl($original_file_name, 100, 100, true, true) . '?v' . $filemtime;
-            $return['data']['small'] = getImageUrl($original_file_name, 50, 50, true, true) . '?v' . $filemtime;
-            $return['data']['tiny'] = getImageUrl($original_file_name, 30, 30, true, true) . '?v' . $filemtime;
+            $return['data']['big'] = getImageUrl($original_file_name, 200, 200, true, true).'?v'.$filemtime;
+            $return['data']['middle'] = getImageUrl($original_file_name, 100, 100, true, true).'?v'.$filemtime;
+            $return['data']['small'] = getImageUrl($original_file_name, 50, 50, true, true).'?v'.$filemtime;
+            $return['data']['tiny'] = getImageUrl($original_file_name, 30, 30, true, true).'?v'.$filemtime;
             $return['status'] = 1;
         }
         if ($forceReturn) {
@@ -302,28 +298,28 @@ class AvatarModel
         //Log::write(var_export($info,true));
         if ($info['status']) {
             $data = $info['info'][0];
-            $image_url = getImageUrl($data['save_path'] . $data['save_name']);
+            $image_url = getImageUrl($data['save_path'].$data['save_name']);
             $image_info = getimagesize($image_url);
             //如果不支持获取远程图片信息，使用如下方法
             if (!$image_info) {
                 $cloud = model('CloudImage');
                 if ($cloud->isOpen()) {
-                    $cinfo = $cloud->getFileInfo($data['save_path'] . $data['save_name']);
+                    $cinfo = $cloud->getFileInfo($data['save_path'].$data['save_name']);
                     if ($cinfo) {
                         $cinfo = json_decode($cinfo);
                         $image_info[0] = $cinfo['width'];
                         $image_info[1] = $cinfo['height'];
                     }
                 } else {
-                    $image_info = getimagesize(UPLOAD_PATH . '/' . $data['save_path'] . $data['save_name']);
+                    $image_info = getimagesize(UPLOAD_PATH.'/'.$data['save_path'].$data['save_name']);
                 }
             }
             if ($image_info) {
                 unset($return);
                 $return['data']['picwidth'] = $image_info[0];
                 $return['data']['picheight'] = $image_info[1];
-                $return['data']['picurl'] = $data['save_path'] . $data['save_name'];
-                $return['data']['fullpicurl'] = getImageUrl($data['save_path'] . $data['save_name']);
+                $return['data']['picurl'] = $data['save_path'].$data['save_name'];
+                $return['data']['fullpicurl'] = getImageUrl($data['save_path'].$data['save_name']);
                 $return['status'] = '1';
                 // if($image_info[0] < 300){
                 // 	die(json_encode(array('status'=>0,'info'=>'请选择一个较大的照片作为头像，宽度不小于300px')));
@@ -373,7 +369,7 @@ class AvatarModel
 
         $src = getImageUrl($facedata['picurl']); // 图片的路径
         //原图存储地址
-        $original_file_name = '/' . $facedata['picurl'];
+        $original_file_name = '/'.$facedata['picurl'];
 
         $filemtime = microtime(true);
 
@@ -381,7 +377,7 @@ class AvatarModel
         $cloud = model('CloudImage');
         if ($cloud->isOpen()) {
             //切割原图
-            require_once SITE_PATH . '/addons/library/phpthumb/ThumbLib.inc.php';
+            require_once SITE_PATH.'/addons/library/phpthumb/ThumbLib.inc.php';
             $thumb = PhpThumbFactory::create($src);
             $res = $thumb->crop($x1, $y1, $w, $h);
 
@@ -399,10 +395,10 @@ class AvatarModel
             $res = $cloud->writeFile($original_file_name, $imageAsString, true);
             if ($res) {
                 unset($return);
-                $return['data']['big'] = getImageUrl($original_file_name) . '!big.avatar.jpg?v' . $filemtime;
-                $return['data']['middle'] = getImageUrl($original_file_name) . '!middle.avatar.jpg?v' . $filemtime;
-                $return['data']['small'] = getImageUrl($original_file_name) . '!small.avatar.jpg?v' . $filemtime;
-                $return['data']['tiny'] = getImageUrl($original_file_name) . '!tiny.avatar.jpg?v' . $filemtime;
+                $return['data']['big'] = getImageUrl($original_file_name).'!big.avatar.jpg?v'.$filemtime;
+                $return['data']['middle'] = getImageUrl($original_file_name).'!middle.avatar.jpg?v'.$filemtime;
+                $return['data']['small'] = getImageUrl($original_file_name).'!small.avatar.jpg?v'.$filemtime;
+                $return['data']['tiny'] = getImageUrl($original_file_name).'!tiny.avatar.jpg?v'.$filemtime;
                 $return['status'] = 1;
             } else {
                 $return['status'] = '0';
@@ -411,8 +407,8 @@ class AvatarModel
         } else {
 
             //切割原图
-            require_once SITE_PATH . '/addons/library/phpthumb/ThumbLib.inc.php';
-            $thumb = PhpThumbFactory::create(UPLOAD_PATH . '/' . $facedata['picurl']);
+            require_once SITE_PATH.'/addons/library/phpthumb/ThumbLib.inc.php';
+            $thumb = PhpThumbFactory::create(UPLOAD_PATH.'/'.$facedata['picurl']);
             $res = $thumb->crop($x1, $y1, $w, $h);
 
             //获取获取缩图后的数据
@@ -423,13 +419,13 @@ class AvatarModel
                 die(json_encode(array('status' => 0, 'info' => '切割失败')));
             }
 
-            if (!file_exists(UPLOAD_PATH . $original_file_name)) {
-                $this->_createFolder(UPLOAD_PATH . '/avatar' . $this->convertUidToPath($this->_uid));
+            if (!file_exists(UPLOAD_PATH.$original_file_name)) {
+                $this->_createFolder(UPLOAD_PATH.'/avatar'.$this->convertUidToPath($this->_uid));
             }
-            $thumb->save(UPLOAD_PATH . $original_file_name, 'jpg');
+            $thumb->save(UPLOAD_PATH.$original_file_name, 'jpg');
             unset($return);
-            $return['data']['big'] = getImageUrl($original_file_name, 200, 200, true, true) . '?v' . $filemtime;
-            $return['data']['middle'] = getImageUrl($original_file_name, 100, 100, true, true) . '?v' . $filemtime;
+            $return['data']['big'] = getImageUrl($original_file_name, 200, 200, true, true).'?v'.$filemtime;
+            $return['data']['middle'] = getImageUrl($original_file_name, 100, 100, true, true).'?v'.$filemtime;
             $return['status'] = 1;
         }
         if ($forceReturn) {
@@ -447,15 +443,15 @@ class AvatarModel
     {
 
         //原图存储地址
-        $original_file_name = '/avatar' . $this->convertUidToPath($uid) . '/original.jpg';
+        $original_file_name = '/avatar'.$this->convertUidToPath($uid).'/original.jpg';
 
         //保存图片到原图
         $opts = array(
             'http' => array(
-                'method' => "GET",
+                'method' => 'GET',
                 'timeout' => 3, //超时30秒
-                'user_agent' => "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)"
-            )
+                'user_agent' => 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)',
+            ),
         );
         $context = stream_context_create($opts);
         $imageData = file_get_contents($src, false, $context);
@@ -471,60 +467,63 @@ class AvatarModel
             $res = $cloud->writeFile($original_file_name, $imageAsString, true);
             if ($res) {
                 unset($return);
-                $return['data']['big'] = getImageUrl($original_file_name) . '!big.avatar.jpg?v' . $filemtime;
-                $return['data']['middle'] = getImageUrl($original_file_name) . '!middle.avatar.jpg?v' . $filemtime;
-                $return['data']['small'] = getImageUrl($original_file_name) . '!small.avatar.jpg?v' . $filemtime;
-                $return['data']['tiny'] = getImageUrl($original_file_name) . '!tiny.avatar.jpg?v' . $filemtime;
+                $return['data']['big'] = getImageUrl($original_file_name).'!big.avatar.jpg?v'.$filemtime;
+                $return['data']['middle'] = getImageUrl($original_file_name).'!middle.avatar.jpg?v'.$filemtime;
+                $return['data']['small'] = getImageUrl($original_file_name).'!small.avatar.jpg?v'.$filemtime;
+                $return['data']['tiny'] = getImageUrl($original_file_name).'!tiny.avatar.jpg?v'.$filemtime;
                 $return['status'] = 1;
                 // 清理用户缓存
                 model('User')->cleanCache($this->_uid);
             } else {
                 $return['status'] = '0';
                 $return['info'] = '上传头像失败';
+
                 return $return;
             }
         } else {
-            if (!file_exists(UPLOAD_PATH . $original_file_name)) {
-                $this->_createFolder(UPLOAD_PATH . '/avatar' . $this->convertUidToPath($uid));
+            if (!file_exists(UPLOAD_PATH.$original_file_name)) {
+                $this->_createFolder(UPLOAD_PATH.'/avatar'.$this->convertUidToPath($uid));
             }
 
-            if (!file_put_contents(UPLOAD_PATH . $original_file_name, $imageData)) {
+            if (!file_put_contents(UPLOAD_PATH.$original_file_name, $imageData)) {
                 $return['status'] = '0';
                 $return['info'] = '切割保存失败';
+
                 return $return;
             }
 
-            $return['data']['big'] = getImageUrl($original_file_name, 200, 200, true, true) . '?v' . $filemtime;
-            $return['data']['middle'] = getImageUrl($original_file_name, 100, 100, true, true) . '?v' . $filemtime;
-            $return['data']['small'] = getImageUrl($original_file_name, 50, 50, true, true) . '?v' . $filemtime;
-            $return['data']['tiny'] = getImageUrl($original_file_name, 30, 30, true, true) . '?v' . $filemtime;
+            $return['data']['big'] = getImageUrl($original_file_name, 200, 200, true, true).'?v'.$filemtime;
+            $return['data']['middle'] = getImageUrl($original_file_name, 100, 100, true, true).'?v'.$filemtime;
+            $return['data']['small'] = getImageUrl($original_file_name, 50, 50, true, true).'?v'.$filemtime;
+            $return['data']['tiny'] = getImageUrl($original_file_name, 30, 30, true, true).'?v'.$filemtime;
             $return['status'] = 1;
         }
+
         return $return;
     }
 
     /**
      * 将用户的UID转换为三级路径
-     * @param integer $uid 用户UID
+     * @param  int    $uid 用户UID
      * @return string 用户路径
      */
     public function convertUidToPath($uid)
     {
         // 静态缓存
-        $sc = static_cache('avatar_uidpath_' . $uid);
+        $sc = static_cache('avatar_uidpath_'.$uid);
         if (!empty($sc)) {
             return $sc;
         }
         $md5 = md5($uid);
-        $sc = '/' . substr($md5, 0, 2) . '/' . substr($md5, 2, 2) . '/' . substr($md5, 4, 2);
-        static_cache('avatar_uidpath_' . $uid, $sc);
+        $sc = '/'.substr($md5, 0, 2).'/'.substr($md5, 2, 2).'/'.substr($md5, 4, 2);
+        static_cache('avatar_uidpath_'.$uid, $sc);
+
         return $sc;
     }
 
     /**
      * 创建多级文件目录
      * @param string $path 路径名称
-     * @return void
      */
     private function _createFolder($path)
     {

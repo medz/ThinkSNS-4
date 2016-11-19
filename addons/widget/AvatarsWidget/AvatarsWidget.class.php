@@ -1,13 +1,12 @@
 <?php
-   /**
-    * 头像上传组件
-    *登录注册
-    * @example {:W('Avatar',array('avatar'=>$user_info,'defaultImg'=>$user_info['avatar_big'],'callback'=>'gotoStep3'))}
-    * @version TS3.0
-    */
+/**
+ * 头像上传组件
+ *登录注册
+ * @example {:W('Avatar',array('avatar'=>$user_info,'defaultImg'=>$user_info['avatar_big'],'callback'=>'gotoStep3'))}
+ * @version TS3.0
+ */
 class AvatarsWidget extends Widget
 {
-    
     /**
      * @param array avatar 用户信息
      * @param string defaultImg 头像地址
@@ -18,9 +17,9 @@ class AvatarsWidget extends Widget
         $template = 'default';
         $var = array();
         if ($template === 'default') {
-            $var['password']   = time();
+            $var['password'] = time();
             $var['defaultImg'] = 'noavatar/big.jpg';
-            $var['uploadUrl']  = urlencode(U('public/Account/doSaveUploadAvatar'));
+            $var['uploadUrl'] = urlencode(U('public/Account/doSaveUploadAvatar'));
             // 获取附件配置信息
             $attachConf = model('Xdata')->get('admin_Config:attachimage');
             $var['attach_max_size'] = $attachConf['attach_max_size'];
@@ -29,7 +28,7 @@ class AvatarsWidget extends Widget
             is_array($data) && $var = array_merge($var, $data);
         }
         $content = $this->renderFile(dirname(__FILE__)."/{$template}.html", $var);
-        
+
         return $content;
     }
 

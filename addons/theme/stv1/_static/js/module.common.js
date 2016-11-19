@@ -917,9 +917,9 @@ var follow = {
 		var _this = this;
 		var args = M.getEventArgs(node);
 		var url = node.getAttribute( "href" ) || U('public/Follow/unFollow');
+
 		// 取消关注操作
 		$.post(url, {fid:args.uid}, function(txt) {
-			txt = eval( "(" + txt + ")" );
 			if ( 1 == txt.status ) {
 				if("undefined" != typeof(core.facecard) ){
 					core.facecard.deleteUser(args.uid);
@@ -942,7 +942,7 @@ var follow = {
 			} else {
 				ui.error( txt.info );
 			}
-		});
+		}, 'json');
 	},
 	/**
 	 * 更新关注数目
@@ -1098,7 +1098,7 @@ var followSpace = {
 		var url = node.getAttribute( "href" ) || U('public/Follow/unFollow');
 		// 取消关注操作
 		$.post(url, {fid:args.uid}, function(txt) {
-			txt = eval( "(" + txt + ")" );
+			// txt = eval( "(" + txt + ")" );
 			if ( 1 == txt.status ) {
 				if("undefined" != typeof(core.facecard) ){
 					core.facecard.deleteUser(args.uid);
@@ -1121,7 +1121,7 @@ var followSpace = {
 			} else {
 				ui.error( txt.info );
 			}
-		});
+		}, 'json');
 	},
 	/**
 	 * 更新关注数目

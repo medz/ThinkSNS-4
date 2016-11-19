@@ -6,10 +6,9 @@
  */
 class UserInformationWidget extends Widget
 {
-
     /**
      * 模板渲染
-     * @param array $data 相关数据
+     * @param  array  $data 相关数据
      * @return string 用户身份选择模板
      */
     public function render($data)
@@ -57,19 +56,20 @@ class UserInformationWidget extends Widget
         $GLOBALS['ts']['mid'] != $var['uid'] && $var['follow_state'] = model('Follow')->getFollowState($GLOBALS['ts']['mid'], $var['uid']);
 
         // 渲染模版
-        $content = $this->renderFile(dirname(__FILE__)."/".$var['tpl'].".html", $var);
+        $content = $this->renderFile(dirname(__FILE__).'/'.$var['tpl'].'.html', $var);
         // 输出数据
         return $content;
     }
 
     /**
      * 将统计数据限定指定的数目
-     * @param integer $nums 指定的数目
-     * @param integer $limit 限定的数目
+     * @param int $nums  指定的数目
+     * @param int $limit 限定的数目
      */
     private function limitedNumbers($nums, $limit = 99999)
     {
         $nums > $limit && $nums = $limit.'+';
+
         return $nums;
     }
 }

@@ -18,7 +18,7 @@ class AddonModel extends Model
             7 => 'lastupdate',
             8 => 'site',
             9 => 'tsVersion',
-            10 => 'is_weixin'
+            10 => 'is_weixin',
     );
     private $valid = array(); // 已安装插件
     private $invalid = array(); // 待安装插件
@@ -36,15 +36,16 @@ class AddonModel extends Model
         $map ['is_weixin'] = intval($_GET ['is_weixin']);
         $databaseAddons = $this->where($map)->findAll();
         $this->_validAddons($databaseAddons);
-        
+
         $this->_invalidAddons();
         $result ['valid'] ['data'] = $this->valid;
-        $result ['valid'] ['name'] = "已安装插件";
+        $result ['valid'] ['name'] = '已安装插件';
         $result ['invalid'] ['data'] = $this->invalid;
-        $result ['invalid'] ['name'] = "待安装插件";
+        $result ['invalid'] ['name'] = '待安装插件';
+
         return $result;
     }
-    
+
     /**
      * 重置所有已安装插件列表缓存
      *
@@ -56,7 +57,7 @@ class AddonModel extends Model
             $this->_getFileAddons();
         }
         $addonList = $this->getAddonsValid();
-        
+
         $addonCache = array();
         foreach ($addonList as $key => $value) {
             if (isset($this->fileAddons [$value ['name']])) {
@@ -64,10 +65,10 @@ class AddonModel extends Model
             }
         }
         $res = S('system_addons_list', $addonCache);
-        
+
         return $addonCache;
     }
-    
+
     /**
      * 获取已安装的插件列表
      *
@@ -76,9 +77,10 @@ class AddonModel extends Model
     public function getAddonsValid()
     {
         $map ['status'] = '1';
+
         return $this->where($map)->findAll();
     }
-    
+
     /**
      * 获取未安装的插件列表
      *
@@ -88,13 +90,13 @@ class AddonModel extends Model
     {
         // TODO:待完成
     }
-    
+
     /**
      * 通过插件ID停止插件
      *
-     * @param integer $id
-     *        	插件ID
-     * @return boolean 插件是否停止
+     * @param  int  $id
+     *                  插件ID
+     * @return bool 插件是否停止
      */
     public function stopAddonsById($id)
     {
@@ -103,15 +105,16 @@ class AddonModel extends Model
         }
         // 将数据库中标示该插件停止
         $result = $this->_stopAddons('addonId', intval($id));
+
         return $result ? true : false;
     }
-    
+
     /**
      * 通过插件名称停止插件
      *
-     * @param string $name
-     *        	插件名称
-     * @return boolean 插件是否停止
+     * @param  string $name
+     *                      插件名称
+     * @return bool   插件是否停止
      */
     public function stopAddonsByName($name)
     {
@@ -120,14 +123,15 @@ class AddonModel extends Model
         }
         // 将数据库中标示该插件停止
         $result = $this->_stopAddons('name', $name);
+
         return $result ? true : false;
     }
-    
+
     /**
      * 通过插件ID获取插件对象
      *
-     * @param integer $id
-     *        	插件ID
+     * @param  int    $id
+     *                    插件ID
      * @return object 指定插件对象
      */
     public function getAddonObj($id)
@@ -135,20 +139,21 @@ class AddonModel extends Model
         $data = $this->getAddon($id);
         if ($data) {
             $this->_getFileAddons();
+
             return $this->fileAddons [$data ['name']];
         }
-        
+
         return false;
     }
-    
+
     /**
      * 停止插件
      *
-     * @param string $field
-     *        	查询插件的Key值
-     * @param string $value
-     *        	查询插件的Value值
-     * @return boolean 插件是否停止
+     * @param  string $field
+     *                       查询插件的Key值
+     * @param  string $value
+     *                       查询插件的Value值
+     * @return bool   插件是否停止
      */
     private function _stopAddons($field, $value)
     {
@@ -166,16 +171,16 @@ class AddonModel extends Model
             $addonCacheList = $this->resetAddonCache();
             S('system_addons_list', $addonCacheList);
         }
-        
+
         return $result ? true : false;
     }
-    
+
     /**
      * 通过插件名称启动插件
      *
-     * @param string $name
-     *        	插件名称
-     * @return boolean 插件是否启动
+     * @param  string $name
+     *                      插件名称
+     * @return bool   插件是否启动
      */
     public function startAddons($name)
     {
@@ -205,21 +210,21 @@ class AddonModel extends Model
                 $result = false;
             }
         }
-        
+
         if ($result) {
             $addonCacheList = $this->resetAddonCache();
             S('system_addons_list', $addonCacheList);
         }
-        
+
         return $result;
     }
-    
+
     /**
      * 通过插件名称卸载插件
      *
-     * @param string $name
-     *        	插件名称
-     * @return boolean 插件是否卸载成功
+     * @param  string $name
+     *                      插件名称
+     * @return bool   插件是否卸载成功
      */
     public function uninstallAddons($name)
     {
@@ -233,24 +238,24 @@ class AddonModel extends Model
         }
         $addonObject = $this->fileAddons [$name];
         $addonObject->uninstall();
-        
+
         $map ['name'] = $name;
         $result = $this->where($map)->delete() ? true : false;
         if ($result) {
             $addonCacheList = $this->resetAddonCache();
             S('system_addons_list', $addonCacheList);
         }
-        
+
         return $result;
     }
-    
+
     /**
      * 获取指定插件信息
      *
-     * @param integer $id
-     *        	插件ID
-     * @param integer $status
-     *        	插件状态
+     * @param  int   $id
+     *                       插件ID
+     * @param  int   $status
+     *                       插件状态
      * @return array 指定插件信息
      */
     public function getAddon($id, $status = 1)
@@ -258,9 +263,10 @@ class AddonModel extends Model
         $map ['addonId'] = intval($id);
         $status = intval($status);
         $map ['status'] = "$status";
+
         return $this->where($map)->find();
     }
-    
+
     /**
      * 获取所有插件管理面板所需数据
      *
@@ -279,22 +285,22 @@ class AddonModel extends Model
             if ($obj && $obj->adminMenu()) {
                 $data [] = array(
                         $value ['pluginName'],
-                        $value ['addonId']
+                        $value ['addonId'],
                 );
             }
         }
-        
+
         return $data;
     }
-    
+
     /**
      * 创建插件缓存数据
      *
-     * @param string $name
-     *        	插件名称
-     * @param array $addonList
-     *        	插件列表
-     * @return array 返回插件列表
+     * @param  string $name
+     *                           插件名称
+     * @param  array  $addonList
+     *                           插件列表
+     * @return array  返回插件列表
      */
     private function _createAddonsCacheData($name, $addonList)
     {
@@ -311,13 +317,12 @@ class AddonModel extends Model
 
         return $addonList;
     }
-    
+
     /**
      * 验证已安装的插件
      *
      * @param array $databaseAddons
-     *        	插件列表数据
-     * @return void
+     *                              插件列表数据
      */
     private function _validAddons($databaseAddons)
     {
@@ -335,11 +340,10 @@ class AddonModel extends Model
             }
         }
     }
-    
+
     /**
      * 验证未安装的插件
      *
-     * @return void
      */
     private function _invalidAddons()
     {
@@ -351,30 +355,29 @@ class AddonModel extends Model
             $this->invalid [] = $data;
         }
     }
-    
+
     /**
      * 设置所有插件对象
      *
-     * @return void
      */
     private function _getFileAddons()
     {
         // 获取文件夹下面的所有插件
-        $dirName = ADDON_PATH . '/plugin/';
+        $dirName = ADDON_PATH.'/plugin/';
         $dir = dir($dirName);
         $fileAddons = array();
         while (false !== $entry = $dir->read()) {
-            if ($entry == '.' || $entry == '..' || $entry == ".svn") {
+            if ($entry == '.' || $entry == '..' || $entry == '.svn') {
                 continue;
             }
-            $path = $dirName . '/' . $entry;
-            $addonsFile = $path . '/' . $entry . 'Addons.class.php';
-            tsload(CORE_PATH . '/OpenSociax/addons/AbstractAddons.class.php');
-            tsload(CORE_PATH . '/OpenSociax/addons/NormalAddons.class.php');
-            tsload(CORE_PATH . '/OpenSociax/addons/SimpleAddons.class.php');
+            $path = $dirName.'/'.$entry;
+            $addonsFile = $path.'/'.$entry.'Addons.class.php';
+            tsload(CORE_PATH.'/OpenSociax/addons/AbstractAddons.class.php');
+            tsload(CORE_PATH.'/OpenSociax/addons/NormalAddons.class.php');
+            tsload(CORE_PATH.'/OpenSociax/addons/SimpleAddons.class.php');
             if (file_exists($addonsFile)) {
                 tsload($addonsFile);
-                $class = $entry . 'Addons';
+                $class = $entry.'Addons';
                 $fileAddons [$entry] = new $class ();
                 $fileAddons [$entry]->setPath($path);
             }
@@ -382,7 +385,7 @@ class AddonModel extends Model
 
         $this->fileAddons = $fileAddons;
     }
-    
+
     /**
      * 获取后台所有插件URL
      *
@@ -395,10 +398,10 @@ class AddonModel extends Model
         foreach ($addons as $value) {
             $r [$value [0]] = U('admin/Addons/admin', array(
                     'pluginid' => $value [1],
-                    'is_weixin' => intval($_GET ['is_weixin'])
+                    'is_weixin' => intval($_GET ['is_weixin']),
             ));
         }
-        
+
         return $r;
     }
 }

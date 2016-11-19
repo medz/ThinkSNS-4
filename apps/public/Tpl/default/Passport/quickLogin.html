@@ -76,7 +76,7 @@ $(function () {
 });
 
 function quicksubmit(){
-  var url = '{$url}';
+  var url = '<?php echo strip_tags($url); ?>';
 	var email = $.trim($("input[name='login_email']").val());
 	var password = $.trim($("input[name='login_password']").val());
 	if ( !email ){

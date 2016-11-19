@@ -1,6 +1,6 @@
 /**
  * 后台JS操作对象 -
- * 
+ *
  * 后台所有JS操作都集中在此
  */
 
@@ -72,7 +72,7 @@ admin.getChecked = function() {
     var ids = new Array();
     $.each($('#list input:checked'), function(i, n){
         if($(n).val() !='0' && $(n).val()!='' ){
-            ids.push( $(n).val() );    
+            ids.push( $(n).val() );
         }
     });
     return ids;
@@ -89,7 +89,7 @@ admin.checkon = function(o){
 admin.checkAll = function(o){
     if( o.checked == true ){
         $('#list input[name="checkbox"]').attr('checked','true');
-        $('tr[overstyle="on"]').addClass("bg_on"); 
+        $('tr[overstyle="on"]').addClass("bg_on");
     }else{
         $('#list input[name="checkbox"]').removeAttr('checked');
         $('tr[overstyle="on"]').removeClass("bg_on");
@@ -119,9 +119,9 @@ admin.selectLog = function(value,def){
             if($('#selectAfter').length > 0){
                 $('#selectAfter').html(msg);
             }else{
-                $('#form_app_name').after("<span id='selectAfter'>"+msg+"</span>");    
+                $('#form_app_name').after("<span id='selectAfter'>"+msg+"</span>");
             }
-            
+
         }) ;
     }else{
         $('#selectAfter').html('');
@@ -130,7 +130,7 @@ admin.selectLog = function(value,def){
 //清理知识
 admin.cleanLogs = function(m){
     if(m!=6 && m!=12){
-    	ui.error(L('PUBLIC_TIME_ISNOT'));       
+    	ui.error(L('PUBLIC_TIME_ISNOT'));
     }else{
         $.post(U('admin/Home/_cleanLogs'),{m:m},function(msg){
             admin.ajaxReload(msg);
@@ -203,7 +203,7 @@ admin.checkCreditSet = function(form){
 };
 admin.delCreditType = function(type){
    if(!type){
-        var type = admin.getChecked(); 
+        var type = admin.getChecked();
    }
    if(type==''){
         ui.error( L('PUBLIC_PLEASE_SELECTDATA') );
@@ -214,7 +214,7 @@ admin.delCreditType = function(type){
    }
 };
 //部门子集管理
-admin.selectDepart = function(pid,obj,sid){    
+admin.selectDepart = function(pid,obj,sid){
     obj.nextAll().remove();
     if("undefined"==typeof(sid))
     	sid ='';
@@ -261,7 +261,7 @@ admin.addUserSubmitCheck = function(form) {
         ui.error(L('PUBLIC_PASSWORD_EMPTY'));
         return false;
     }
-    
+
     if(!admin.checkUser(form)) {
         return false;
     }
@@ -270,7 +270,7 @@ admin.addUserSubmitCheck = function(form) {
         ui.error('请选择用户组');
         return false;
     }
-       
+
     return true;
 };
 // 检验用户基本信息
@@ -291,13 +291,13 @@ admin.checkUser = function(form){
         ui.error("请选择用户职业信息");
         return false;
     }
-    
+
     return true;
 };
 
 admin.selectUserDepart = function(){
 	var oldDepartMent = $('#form_department_id').val();
-	var oldDepartMentName = $('#form_show_user_department').val(); 
+	var oldDepartMentName = $('#form_show_user_department').val();
 	ui.box.load(U('widget/SelectDepartment/render')+'&departDomId=form_department_id&departId='+oldDepartMent+'+&departName='+oldDepartMentName+'&tpl=public&callback=admin.doSelectUserDepart','部门选择');
 };
 
@@ -345,7 +345,7 @@ admin.departmentdel = function(id){
 admin.dodeldepart = function(id){
 
 	var topid = $('#DepartmentSelect').attr('departmentid');
-	 
+
 	if("undefined" == typeof(topid) || topid == 0 ){
         ui.error( L('PUBLIC_SELECT_NEWDEPARENT') );
         return false;
@@ -363,7 +363,7 @@ admin.departmentedit = function(id){
 };
 admin.doeditdepart = function(){
 	var id = $('#editid').val();
-	var title = $('#edittitle').val();	
+	var title = $('#edittitle').val();
 	var display_order = $('#display_order').val();
     if(getLength(title) < 1){
           ui.error(L('PUBLIC_DEPARENT_ISNULL'));
@@ -373,7 +373,7 @@ admin.doeditdepart = function(){
 		ui.box.close();
 		admin.ajaxReload(msg);
 	},'json');
-	
+
 };
 //移动部门
 admin.departmentmove = function(id){
@@ -391,7 +391,7 @@ admin.domovedepart = function(id,oldid){
 	$.post(U('admin/Department/domoveDepartment'),{id:id,topid:topid},function(msg){
 		ui.box.close();
 		admin.ajaxReload(msg);
-	},'json');	
+	},'json');
 };
 
 
@@ -451,7 +451,7 @@ admin.bindperm = function(){
         var name = $(this).attr('name');
         $('.'+name).attr("checked","checked");
       }
-      
+
       });
     $('.vAll').click(function(){
       var checked = $(this).attr("checked");
@@ -539,12 +539,12 @@ admin.delsystemdata = function(id){
 //删除导航配置
 admin.delnav = function(id){
     if(confirm( L('PUBLIC_ANSWER_DELETE') )){
-    	
+
         $.post(U('admin/Config/delNav'),{id:id},function(msg){
              admin.ajaxReload(msg);
       },'json');
      }
-	
+
 }
 //验证应用信息
 admin.checkAppInfo = function(form){
@@ -610,13 +610,13 @@ admin.moveAppDown = function(obj,app_id){
 //站点配置页面JS
 admin.siteConfigDefault = function(value){
 
-	var html ='<input type="submit" value="'+L('PUBLIC_QUEDING')+'" onclick="return confirm(\''+L('PUBLIC_CLOSE_LOCALHOST_TIPES')+'\')"' 
+	var html ='<input type="submit" value="'+L('PUBLIC_QUEDING')+'" onclick="return confirm(\''+L('PUBLIC_CLOSE_LOCALHOST_TIPES')+'\')"'
 		  +' id ="form_submit_2" class="btn_b">';
 	$(html).insertAfter($('#form_submit')).hide();
 	admin.siteConfig(value);
 };
 admin.siteConfig = function(value){
-   
+
 	$('.form2 dl').each(function(){
 		var _id = $(this).attr('id');
 		if(_id != "dl_site_closed"){
@@ -649,10 +649,10 @@ admin.registerConfig = function(value){
 			switch(value){
 				case 'closed':
 					if(_id != 'dl_register_close'){
-						$(this).hide(); 
+						$(this).hide();
 					}else{
 						$(this).show();
-					}	
+					}
 					break;
 				case 'open':
 					if(_id == 'dl_email_suffix' || _id == 'dl_register_close'){
@@ -669,7 +669,7 @@ admin.registerConfig = function(value){
 					}
 					break;
 			}
-		}	
+		}
 	});
 };
 admin.addmedal = function(value){
@@ -717,7 +717,7 @@ admin.rebackUser = function(id){
         id = admin.getChecked();
     if(id==''){
         ui.error( L('PUBLIC_PLEASE_SELECT_NUMBER') );return false;
-    }  
+    }
     //alert(id);exit;
     if(confirm( L('PUBLIC_ANSWER_NUMBER') )){
         $.post(U('admin/User/doRebackUser'),{id:id},function(msg){
@@ -753,7 +753,7 @@ admin.enableUser = function(id) {
                 ui.error(res.info);
             }
         }, 'json');
-    }    
+    }
     return false;
 }
 
@@ -763,7 +763,7 @@ admin.activeUser = function(id,type){
         id = admin.getChecked();
     if(id==''){
         ui.error( L('PUBLIC_PLEASE_SELECT_USER') );return false;
-    }  
+    }
     $.post(U('admin/User/doActiveUser'),{id:id,type:type},function(msg){
             admin.ajaxReload(msg);
     },'json');
@@ -797,7 +797,7 @@ admin.changeUserDepartment = function(){
 admin.domoveUserdepart = function(){
 	var uid = $('#uid').val();
 	var topid = $('#DepartmentSelect').attr('departmentid');
-     
+
     if("undefined" == typeof(topid) || topid == 0 || topid == null){
         ui.error( L('PUBLIC_SELECT_NEWDEPARENT') );
         return false;
@@ -811,12 +811,12 @@ admin.domoveUsergroup = function(){
 	var ids = new Array();
     $.each($('#movegroup input:checked'), function(i, n){
         if($(n).val() !='0' && $(n).val()!='' ){
-            ids.push( $(n).val() );    
+            ids.push( $(n).val() );
         }
     });
     if(ids.length<1){
     	ui.error( L('PUBLIC_PLEASE_SELECT_USERGROUP') );return false;
-    }	
+    }
     ids = ids.join(',');
     var uid = $('#uid').val();
     $.post(U('admin/User/domoveUsergroup'),{uid:uid,user_group_id:ids},function(msg){
@@ -864,9 +864,10 @@ admin.upload = function(type,obj){
         core.uploadFile.filehash = new Array();
     }
 	core.plugInit('uploadFile',obj,function(data){
-        $('.input-content').remove(); $(obj).val('');
+        // $('.input-content').remove();
+        $(obj).val('');
         $('#show_'+type).html('<img class="pic-size" src="'+data.src+'">');
-        $('#form_'+type).val(data.attach_id);    
+        $('#form_'+type).val(data.attach_id);
     },'image');
 };
 
@@ -973,7 +974,7 @@ admin.testEmail = function(){
           email_password:email_password,email_sender_name:email_sender_name,sendto_email:sendto_email,email_sender_email:email_sender_email},
         function(msg){
         if(msg == 1 ){
-            ui.success( L('PUBLIC_TEST_MAIL_SUCCESS') );    
+            ui.success( L('PUBLIC_TEST_MAIL_SUCCESS') );
         }else{
             alert(msg);
         }
@@ -1080,13 +1081,13 @@ admin.checkMessage = function(form){
 };
 
 admin.checkEditor = function(editor,content){
-    
+
     var html = editor.html();
     content.value =  html;
 
     var t =$('<div></div>');
     t.html(html);
-    
+
     var imgnums = t.find('img').size();
 
     html = html.replace(/&nbsp;/g,"").replace(/\s+/g,"").replace(/<.*?>/g,"");
@@ -1096,7 +1097,7 @@ admin.checkEditor = function(editor,content){
         ui.error( L('PUBLIC_INNULL') );
         return false;
     }
-    
+
     return true;
 };
 
@@ -1105,11 +1106,11 @@ admin.delTag = function(obj,tag_id,table,row_id){
         $.post(U('admin/Home/deltag'),{tag_id:tag_id,table:table,row_id:row_id},function(msg){
             if(msg.status == 1){
                  ui.success(msg.data);
-                $(obj).parent().parent().remove();    
+                $(obj).parent().parent().remove();
             }else{
                 ui.error(msg.data);
             }
-            
+
         },'json');
     }
 };
@@ -1124,7 +1125,7 @@ admin.appnav = function(obj,name,url){
         window.parent.removeFromNav(appname[0]);
         $(obj).html(L('PUBLIC_ADD_NAV'));
         $(obj).attr('add',0);
-    } 
+    }
 };
 
 
@@ -1201,7 +1202,7 @@ admin.verify = function(id,status,isgroup,info){
 admin.addVerifySubmitCheck = function(form){
     if(!admin.checkAddVerify(form)){
         return false;
-    } 
+    }
     return true;
 };
 
@@ -1243,7 +1244,7 @@ admin.checkAddVerify = function(form){
         if(!Regx3.test($.trim(form.realname.value)) || getLength($.trim(form.realname.value))>10){
             ui.error('请输入正确的法人姓名');
             return false;
-        }   
+        }
         if(!Regx2.test(form.idcard.value)){
             ui.error('请输入正确的营业证号格式');
             return false;
@@ -1252,7 +1253,7 @@ admin.checkAddVerify = function(form){
         //     ui.error(L('认证资料不能超过140个字符'));
         //     return false;
         // }
-    }else{     
+    }else{
         if(getLength(form.realname.value) < 1){
             ui.error(L('请输入真实姓名'));
             return false;
@@ -1272,7 +1273,7 @@ admin.checkAddVerify = function(form){
         if(!Regx3.test($.trim(form.realname.value)) || getLength($.trim(form.realname.value))>10){
             ui.error('请输入正确的真实姓名');
             return false;
-        }   
+        }
         if($.trim(form.idcard.value).length !== 18 || !Regx1.test($.trim(form.idcard.value).substr(0,17)) || !Regx2.test($.trim(form.idcard.value).substr(-1,1))){
             ui.error('请输入正确的身份证号码格式');
             return false;
@@ -1285,7 +1286,7 @@ admin.checkAddVerify = function(form){
         //     ui.error(L('认证资料不能超过140个字符'));
         //     return false;
         // }
-    }  
+    }
     return true;
 };
 
@@ -1362,7 +1363,7 @@ admin.editVerifyConfig = function(value){
 admin.editVerifySubmitCheck = function(form){
     if(!admin.checkEditVerify(form)){
         return false;
-    } 
+    }
     return true;
 };
 
@@ -1375,7 +1376,7 @@ admin.checkEditVerify = function(form){
     var Regx1 = /^[0-9]*$/;
     var Regx2 = /^[A-Za-z0-9]*$/;
     var Regx3 = /^[A-Za-z\u4E00-\u9FA5]+$/;
-    
+
     if($(":radio:checked").val() == 6){
         if(getLength(form.company.value) < 1){
             ui.error('请输入企业名称');
@@ -1404,7 +1405,7 @@ admin.checkEditVerify = function(form){
         if(!Regx3.test($.trim(form.realname.value)) || getLength($.trim(form.realname.value))>10){
             ui.error('请输入正确的法人姓名');
             return false;
-        }   
+        }
         if(!Regx2.test(form.idcard.value)){
             ui.error('请输入正确的营业证号格式');
             return false;
@@ -1413,7 +1414,7 @@ admin.checkEditVerify = function(form){
         //     ui.error(L('认证资料不能超过140个字符'));
         //     return false;
         // }
-    }else{     
+    }else{
         if(getLength(form.realname.value) < 1){
             ui.error(L('请输入真实姓名'));
             return false;
@@ -1437,7 +1438,7 @@ admin.checkEditVerify = function(form){
         if(!Regx3.test($.trim(form.realname.value)) || getLength($.trim(form.realname.value))>10){
             ui.error('请输入正确的真实姓名');
             return false;
-        }   
+        }
         if($.trim(form.idcard.value).length !== 18 || !Regx1.test($.trim(form.idcard.value).substr(0,17)) || !Regx2.test($.trim(form.idcard.value).substr(-1,1))){
             ui.error('请输入正确的身份证号码格式');
             return false;
@@ -1450,7 +1451,7 @@ admin.checkEditVerify = function(form){
         //     ui.error(L('认证资料不能超过140个字符'));
         //     return false;
         // }
-    }  
+    }
     return true;
 };
 // 验证CheckBox选中的个数
@@ -1464,7 +1465,7 @@ admin.checkBoxNums = function(obj, nums) {
 /**
  * 设置话题类型
  * @param integer type 要设置的话题类型 1:推荐  2:精华   3:锁定
- * @param integer topic_id  话题ID 
+ * @param integer topic_id  话题ID
  * @param integer value 话题现有的类型值，改为相反的。0变为1，1变为0
  */
 admin.setTopic = function(type,topic_id,value){
@@ -1481,7 +1482,7 @@ admin.setTopic = function(type,topic_id,value){
 
 /**
  * 添加/编辑话题验证
- * 
+ *
  */
 admin.topicCheck = function(form){
     if(getLength(form.topic_name.value) < 1){
@@ -1776,9 +1777,9 @@ admin.del = function(id){
       $.post(U('gift/Admin/delete'),{id:id},function(text ){
           if( text == 1 ){
               ui.success( "删除多份礼物成功" );
-              var id_list = id.split( ',' );   
+              var id_list = id.split( ',' );
               for (var j=0 ; j< id_list.length ; j++   ){
-                  $('#tr'+id_list[j]).remove(); 
+                  $('#tr'+id_list[j]).remove();
               }
           }else if( text == 2 ){
               ui.success( "删除成功" );
@@ -1800,7 +1801,7 @@ admin.forbid = function(id){
       $.post(U('gift/Admin/forbid'),{id:id},function( text ){
          if( text == 1 ){
              ui.success( "禁用多份礼物成功" );
-              var id_list = id.split( ',' );   
+              var id_list = id.split( ',' );
               for (var j=0 ; j< id_list.length ; j++   ){
                   $('#status'+id_list[j]).html('<img src="'+SITE_URL+'/apps/'+APPNAME+'/_static/images/locked.gif" width="20" height="20" border="0" alt="正常">');
                   $('#button'+id_list[j]).html('<a href="javascript:void(0);" onclick="admin.resume('+id_list[j]+')">启用</a> ');
@@ -1826,7 +1827,7 @@ admin.resume = function(id){
       $.post(U('gift/Admin/resume'),{id:id},function( text ){
          if( text == 1 ){
              ui.success( "启用多份礼物成功" );
-              var id_list = id.split( ',' );   
+              var id_list = id.split( ',' );
               for (var j=0 ; j< id_list.length ; j++   ){
                   $('#status'+id_list[j]).html('<img src="'+SITE_URL+'/apps/'+APPNAME+'/_static/images/ok.gif" width="20" height="20" border="0" alt="正常">');
                   $('#button'+id_list[j]).html('<a href="javascript:void(0);" onclick="admin.forbid('+id_list[j]+')">禁用</a> ');
@@ -1844,4 +1845,8 @@ admin.resume = function(id){
 admin.edit_tab = function(action,id){
     var title = action+"礼物";
     ui.box.load(U('gift/Admin/edit_gift_tab')+ '&id='+id,title+'信息');
+};
+admin.setReason = function(number){
+    var number = number ? number : getChecked();
+    ui.box.load(U('admin/Application/setReason')+'&number='+number,'驳回理由');
 };

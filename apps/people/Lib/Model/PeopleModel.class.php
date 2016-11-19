@@ -8,9 +8,9 @@ class PeopleModel extends model
 {
     /**
      * 通过条件查询相应的用户信息
-     * @param array $data 相应的查询条件
-     * @param string $type 查询类型
-     * @return array 相应的用户信息
+     * @param  array  $data 相应的查询条件
+     * @param  string $type 查询类型
+     * @return array  相应的用户信息
      */
     public function getPeople($data, $type)
     {
@@ -57,23 +57,23 @@ class PeopleModel extends model
         }
         // 获取用户ID
         $uids = getSubByKey($list['data'], 'uid');
-        
-        foreach ($list['data'] as $k=>$vo) {
+
+        foreach ($list['data'] as $k => $vo) {
             $list['data'][$k]['user_tag'] = model('Tag')->setAppName('User')->setAppTable('user')->getAppTags($vo['uid']);
             //$list['data'][$k]['user_tag'] = empty ( $list['data'][$k]['user_tag'] ) ? '' : implode ( '、', $list['data'][$k]['user_tag'] );
             $list['data'][$k]['userdata'] = model('UserData')->getUserData($vo['uid']);
         }
-        
+
         // 用户数据信息组装
         $list['data'] = $this->getUserInfos($uids, $list['data']);
                 //dump($list['data']);exit;
         return $list;
     }
 
-    public function searchUser($searchKey, $lastUid, $curType=1, $limit = 20, $page=1)
+    public function searchUser($searchKey, $lastUid, $curType = 1, $limit = 20, $page = 1)
     {
         $userlist = array();
-        if ($searchKey != "") {
+        if ($searchKey != '') {
             // if($curType == 3){         //按标签搜索
             // 	$data['name'] = $searchKey;
             // 	$tagid = D('tag')->where($data)->getField('tag_id');
@@ -134,15 +134,16 @@ class PeopleModel extends model
                 $userlist['data'][$k]['follow_state'] = $followstatus[ $v['uid'] ];
             }*/
         }
+
         return $userlist;
     }
 
     /**
      * 获取筛选用户数据列表
-     * @param array $data 筛选相关条件
-     * @param string $field 字段数据
-     * @param string $order 排序数据
-     * @return array 筛选用户数据列表
+     * @param  array  $data  筛选相关条件
+     * @param  string $field 字段数据
+     * @param  string $order 排序数据
+     * @return array  筛选用户数据列表
      */
     /*private function _w3g_getFilterData($data, $field = 'u.uid', $order = 'u.uid DESC')
     {
@@ -213,12 +214,12 @@ class PeopleModel extends model
             case '3':
                 !empty($data['area']) && $map['area'] = intval($data['area']);
                 break;
-            
+
             default:
                 # code...
                 break;
         }
-        
+
         !empty($data['sex']) && $map['sex'] = intval($data['sex']);
 
         $list['data'] = D()->table($table)
@@ -232,10 +233,10 @@ class PeopleModel extends model
     }*/
     /**
      * 获取筛选认证用数据列表
-     * @param array $data 筛选相关条件
-     * @param string $field 字段数据
-     * @param string $order 排序数据
-     * @return array 筛选认证用数据列表
+     * @param  array  $data  筛选相关条件
+     * @param  string $field 字段数据
+     * @param  string $order 排序数据
+     * @return array  筛选认证用数据列表
      */
     /*public function _w3g_getVerifyData($data, $field = 'u.uid, v.info', $order = 'u.uid DESC')
     {
@@ -262,7 +263,7 @@ class PeopleModel extends model
         // 			continue;
         // 		}
         // 		$uids_arr[] = $v;
-        // 	}			
+        // 	}
         // }
         // $map['u.uid'] = array('in', $uids_arr);
         $data['lastUid'] && $map['uid'] = array('lt', $data['lastUid']);
@@ -277,10 +278,10 @@ class PeopleModel extends model
 
     /**
      * 获取筛选官方用户数据列表
-     * @param array $data 筛选相关条件
-     * @param string $field 字段数据
-     * @param string $order 排序数据
-     * @return array 筛选官方用户数据列表
+     * @param  array  $data  筛选相关条件
+     * @param  string $field 字段数据
+     * @param  string $order 排序数据
+     * @return array  筛选官方用户数据列表
      */
     /*private function _w3g_getOfficialData($data, $field = 'u.uid, o.info', $order = 'u.uid DESC')
     {
@@ -303,14 +304,13 @@ class PeopleModel extends model
         return $list;
     }*/
 
-
     /**
      * 获取筛选用户数据列表
-     * @param array $data 筛选相关条件
-     * @param string $field 字段数据
-     * @param string $order 排序数据
-     * @param integer $page 分页个数
-     * @return array 筛选用户数据列表
+     * @param  array  $data  筛选相关条件
+     * @param  string $field 字段数据
+     * @param  string $order 排序数据
+     * @param  int    $page  分页个数
+     * @return array  筛选用户数据列表
      */
     private function _getFilterData($data, $field = 'u.uid', $order = 'u.uid DESC', $page = 30)
     {
@@ -326,23 +326,23 @@ class PeopleModel extends model
             if ($tagInfo['pid'] == 0) {
                 $tags = model('UserCategory')->where('pid='.$tagInfo['user_category_id'])->findAll();
 
-                foreach ($tags as $k=>$v) {
-                    $tag_id = D('tag')->where(array('name'=>t($v['title'])))->getField('tag_id');
+                foreach ($tags as $k => $v) {
+                    $tag_id = D('tag')->where(array('name' => t($v['title'])))->getField('tag_id');
                     if ($tag_id) {
                         $tagId[] = $tag_id;
                         unset($tag_id);
                     }
                 }
-                $maps['tag_id'] = array('in',$tagId);
+                $maps['tag_id'] = array('in', $tagId);
             } else {
-                $tagId = D('tag')->where(array('name'=>t($tagInfo['title'])))->getField('tag_id');
+                $tagId = D('tag')->where(array('name' => t($tagInfo['title'])))->getField('tag_id');
                 $maps['tag_id'] = $tagId;
             }
             //dump($tagId);exit;
             $maps['app'] = 'public';
             $maps['table'] = 'user';
             $tag_user = D('app_tag')->where($maps)->findAll();
-            $map['uid'] = array('in',getSubByKey($tag_user, 'row_id'));
+            $map['uid'] = array('in', getSubByKey($tag_user, 'row_id'));
             // $table .= ' LEFT JOIN `'.C('DB_PREFIX').'user_category_link` AS c ON u.uid = c.uid';
             // // 若是第一级 TODO
             // $categoryInfo = model('UserCategory')->where('user_category_id='.intval($data['cid']))->find();
@@ -365,10 +365,10 @@ class PeopleModel extends model
         $pid1 = model('Area')->where('area_id='.$data['area'])->getField('pid');
         $level = 1;
         if ($pid1 != 0) {
-            $level = $level +1;
+            $level = $level + 1;
             $pid2 = model('Area')->where('area_id='.$pid1)->getField('pid');
             if ($pid2 != 0) {
-                $level = $level +1;
+                $level = $level + 1;
             }
         }
         switch ($level) {
@@ -381,12 +381,12 @@ class PeopleModel extends model
             case '3':
                 !empty($data['area']) && $map['area'] = intval($data['area']);
                 break;
-            
+
             default:
                 # code...
                 break;
         }
-        
+
         !empty($data['sex']) && $map['sex'] = intval($data['sex']);
 
         $list = D()->table($table)->field($field)->where($map)->order($order)->findPage($page);
@@ -396,11 +396,11 @@ class PeopleModel extends model
 
     /**
      * 获取筛选认证用数据列表
-     * @param array $data 筛选相关条件
-     * @param string $field 字段数据
-     * @param string $order 排序数据
-     * @param integer $page 分页个数
-     * @return array 筛选认证用数据列表
+     * @param  array  $data  筛选相关条件
+     * @param  string $field 字段数据
+     * @param  string $order 排序数据
+     * @param  int    $page  分页个数
+     * @return array  筛选认证用数据列表
      */
     public function _getVerifyData($data, $field = 'u.uid, v.info', $order = 'u.uid DESC', $page = 30)
     {
@@ -423,16 +423,17 @@ class PeopleModel extends model
         }
         // 查询数据
         $list = D()->table($table)->where($map)->order($order)->findPage($page);
+
         return $list;
     }
 
     /**
      * 获取筛选官方用户数据列表
-     * @param array $data 筛选相关条件
-     * @param string $field 字段数据
-     * @param string $order 排序数据
-     * @param integer $page 分页个数
-     * @return array 筛选官方用户数据列表
+     * @param  array  $data  筛选相关条件
+     * @param  string $field 字段数据
+     * @param  string $order 排序数据
+     * @param  int    $page  分页个数
+     * @return array  筛选官方用户数据列表
      */
     private function _getOfficialData($data, $field = 'u.uid, o.info', $order = 'u.uid DESC', $page = 30)
     {
@@ -457,7 +458,7 @@ class PeopleModel extends model
 
     /**
      * 获取用户相关信息
-     * @param array $uids 用户ID数组
+     * @param  array $uids 用户ID数组
      * @return array 用户相关数组
      */
     public function getUserInfos($uids, $data)
@@ -483,10 +484,10 @@ class PeopleModel extends model
 
     /**
      * 获取指定用户的相关信息
-     * @param array $uids 指定用户ID数组
-     * @param string $type 指定类型
-     * @param integer $limit 显示数据，默认为3
-     * @return array 指定用户的相关信息
+     * @param  array  $uids  指定用户ID数组
+     * @param  string $type  指定类型
+     * @param  int    $limit 显示数据，默认为3
+     * @return array  指定用户的相关信息
      */
     public function getTopUserInfos($uids, $type, $limit = 3)
     {

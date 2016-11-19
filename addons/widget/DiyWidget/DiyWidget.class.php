@@ -6,11 +6,10 @@
  */
 class DiyWidget extends Widget
 {
-    
     /**
      * [render description]
-     * @param  integer id [description]
-     * @return integer widget_user_id [description]
+     * @param  int id [description]
+     * @return int widget_user_id [description]
      */
     public function render($data)
     {
@@ -18,11 +17,11 @@ class DiyWidget extends Widget
 
         !empty($data) && $var = array_merge($var, $data);
 
-        $wigdetList  = model('Widget')->getUserWidget($var['id'], $GLOBALS['ts']['uid']);
-        
+        $wigdetList = model('Widget')->getUserWidget($var['id'], $GLOBALS['ts']['uid']);
+
         $var = array_merge($var, $wigdetList);
 
-        return $this->renderFile(dirname(__FILE__)."/default.html", $var);
+        return $this->renderFile(dirname(__FILE__).'/default.html', $var);
     }
 
     public function addWidget()
@@ -31,13 +30,13 @@ class DiyWidget extends Widget
         //全部列表
         $var['list'] = model('Widget')->getWidgetList();
 
-        $wigdetList  = model('Widget')->getUserWidget($var['diyId'], $GLOBALS['ts']['uid']);
+        $wigdetList = model('Widget')->getUserWidget($var['diyId'], $GLOBALS['ts']['uid']);
 
         foreach ($wigdetList['widget_list'] as $v) {
             $var['selected'][] = $v['appname'].':'.$v['name'];
         }
 
-        return $this->renderFile(dirname(__FILE__)."/add.html", $var);
+        return $this->renderFile(dirname(__FILE__).'/add.html', $var);
     }
 
     public function dosort()
@@ -51,9 +50,9 @@ class DiyWidget extends Widget
     public function doadd()
     {
         if (model('Widget')->saveUserWigdet(intval($_POST['diyId']), $GLOBALS['ts']['uid'], t($_POST['selected']))) {
-            $return = array('status'=>1,'data'=>'','info'=>L('PUBLIC_SAVE_SUCCESS'));
+            $return = array('status' => 1, 'data' => '', 'info' => L('PUBLIC_SAVE_SUCCESS'));
         } else {
-            $return = array('status'=>0,'data'=>'','info'=>L('PUBLIC_SAVE_FAIL'));
+            $return = array('status' => 0, 'data' => '', 'info' => L('PUBLIC_SAVE_FAIL'));
         }
 
         echo json_encode($return);
@@ -63,15 +62,15 @@ class DiyWidget extends Widget
     public function set()
     {
         $var = $_REQUEST;
-        
+
         $data = $_POST;
 
         $return = model('Widget')->updateUserWidget($var['diyId'], $GLOBALS['ts']['uid'], $var['appname'].':'.$var['widget_name'], $data);
 
         if ($return) {
-            $return = array('status'=>1,'data'=>'','info'=>L('PUBLIC_SETING_SUCCESS'));
+            $return = array('status' => 1, 'data' => '', 'info' => L('PUBLIC_SETING_SUCCESS'));
         } else {
-            $return = array('status'=>0,'data'=>'','info'=>L('PUBLIC_SYSTEM_SETTING_FAIL'));
+            $return = array('status' => 0, 'data' => '', 'info' => L('PUBLIC_SYSTEM_SETTING_FAIL'));
         }
 
         echo json_encode($return);
@@ -85,9 +84,9 @@ class DiyWidget extends Widget
         $return = model('Widget')->deleteUserWidget($var['diyId'], $GLOBALS['ts']['uid'], $var['appname'].':'.$var['widget_name']);
 
         if ($return) {
-            $return = array('status'=>1,'data'=>'','info'=>L('PUBLIC_DELETE_SUCCESS'));
+            $return = array('status' => 1, 'data' => '', 'info' => L('PUBLIC_DELETE_SUCCESS'));
         } else {
-            $return = array('status'=>0,'data'=>'','info'=>L('PUBLIC_DELETE_FAIL'));
+            $return = array('status' => 0, 'data' => '', 'info' => L('PUBLIC_DELETE_FAIL'));
         }
 
         echo json_encode($return);
@@ -109,21 +108,20 @@ class DiyWidget extends Widget
 
         $slist = model('Widget')->getDiyWidgetById($var['diyId']);
 
-
         $slist = unserialize($slist['widget_list']);
 
         foreach ($slist as $v) {
             $var['selected'][] = $v['appname'].':'.$v['name'];
         }
 
-        return $this->renderFile(dirname(__FILE__)."/config.html", $var);
+        return $this->renderFile(dirname(__FILE__).'/config.html', $var);
     }
     public function doconfig()
     {
         if (model('Widget')->configWidget(intval($_POST['diyId']), t($_POST['selected']))) {
-            $return = array('status'=>1,'data'=>'','info'=>L('PUBLIC_SAVE_SUCCESS'));
+            $return = array('status' => 1, 'data' => '', 'info' => L('PUBLIC_SAVE_SUCCESS'));
         } else {
-            $return = array('status'=>0,'data'=>'','info'=>L('PUBLIC_SAVE_FAIL'));
+            $return = array('status' => 0, 'data' => '', 'info' => L('PUBLIC_SAVE_FAIL'));
         }
 
         echo json_encode($return);

@@ -3,11 +3,11 @@
  * 游客访问的黑/白名单，不需要开放的，可以注释掉
  */
 return array(
-    "access" => array(
-        
+    'access' => array(
+
         //搜索
         'public/Search/*' => true,
-        
+
         //网站公告
         'public/Index/announcement' => true,
 
@@ -18,10 +18,10 @@ return array(
         'public/Profile/data' => true,
         //分享配图
         'public/Profile/get_feed_img' => true,
-        
+
         // 分享内容
         'public/Profile/feed' => true,
-        
+
         // 分享话题
         'public/Topic/index' => true,
 
@@ -38,6 +38,6 @@ return array(
         'public/Feed/ajaxImageInfo' => true,
 
         'public/Feed/video_exist' => true, /* # 视频状态 */
-    )
-         
+    ),
+
 );

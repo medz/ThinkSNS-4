@@ -6,13 +6,12 @@
  */
 class PermissionModel
 {
-    
     protected static $permission = array();            // 当前用户所具有的权限列表
 
     /**
      * 验证权限
-     * @param string $action 动作节点
-     * @return boolean 是否具有该动作节点的权限
+     * @param  string $action 动作节点
+     * @return bool   是否具有该动作节点的权限
      */
     public function check($action)
     {
@@ -28,17 +27,18 @@ class PermissionModel
                 return false;
             }
         }
-        
+
         $permission = $this->loadRule($GLOBALS['ts']['mid']);
         if (isset($permission[$this->option['app']][$this->option['module']][$action])) {
             return true;
         }
+
         return false;
     }
 
     /**
      * 设置需要加载权限的 应用 - 模块
-     * @param string $type 应用 - 模块
+     * @param  string $type 应用 - 模块
      * @return object 配置后的权限对象
      */
     public function load($type)
@@ -52,18 +52,19 @@ class PermissionModel
 
     /**
      * 设置自定义组信息
-     * @param string $group 自定义用户组名称，例如：群组内成员必须设置为member，否则按其当前用户组权限判断
+     * @param  string $group 自定义用户组名称，例如：群组内成员必须设置为member，否则按其当前用户组权限判断
      * @return object 配置后的权限对象
      */
     public function group($group = false)
     {
         $this->option['group'] = $group;
+
         return $this;
     }
-    
+
     /**
      * 获取指定用户的权限集合
-     * @param integer $uid 用户ID
+     * @param  int   $uid 用户ID
      * @return array 指定用户的权限集合
      */
     public function loadRule($uid)
@@ -71,7 +72,7 @@ class PermissionModel
         if (empty($uid)) {
             return false;
         }
-        
+
         if (empty(self::$permission[$uid])) {
             $permission = model('Cache')->get('perm_user_'.$uid);
             if (!$permission) {
@@ -110,8 +111,8 @@ class PermissionModel
 
     /**
      * 清除权限缓存
-     * @param string $key 权限相关Key值
-     * @return boolean 是否清除缓存成功
+     * @param  string $key 权限相关Key值
+     * @return bool   是否清除缓存成功
      */
     public function cleanCache($key = '')
     {
@@ -126,13 +127,13 @@ class PermissionModel
 
         return true;
     }
-    
+
     /**
      * 获取权限节点列表，供后台使用
-     * @param integer $gid 用户组ID
-     * @param string $app 应用名称字段
-     * @param string $appgroup 应用中用户组字段
-     * @return array 权限节点列表
+     * @param  int    $gid      用户组ID
+     * @param  string $app      应用名称字段
+     * @param  string $appgroup 应用中用户组字段
+     * @return array  权限节点列表
      */
     public function getRuleList($gid, $app, $appgroup)
     {
@@ -151,7 +152,7 @@ class PermissionModel
         foreach ($appGroupData as $v) {
             $appGroup[$v['appname']][$v['appgroup']] = $v['appgroup_name'] ;
         }
-        
+
         if (!empty($app) && !empty($appgroup)) {
             // 取出应用下的权限设置
             foreach ($permNode as $a => $v) {
@@ -160,14 +161,14 @@ class PermissionModel
                     foreach ($appGroup[$a] as $group => $groupname) {
                         if ($group == $appgroup) {
                             // 所查的组权限
-                            $groupInfo = array('user_group_name'=>$groupname, 'user_group_id'=>$app.'_'.$group);
+                            $groupInfo = array('user_group_name' => $groupname, 'user_group_id' => $app.'_'.$group);
                         }
                     }
 
                     $permission[$a]['info'] = $appHash[$a];
 
                     foreach ($v as $rules) {
-                        foreach ($rules as $ruls) {
+                        foreach ($rules as $rule) {
                             $permission[$a]['module'][$rule['module']]['info'] = $rule['module'];
                             $permission[$a]['module'][$rule['module']]['rule'][$rule['rule']] = $rule['ruleinfo'];
                         }
@@ -189,14 +190,14 @@ class PermissionModel
             }
             $grouppermission = $this->getGroupPermission($gid);
         }
-        
-        return array('groupInfo'=>$groupInfo,'permission'=>$permission,'grouppermission'=>$grouppermission);
+
+        return array('groupInfo' => $groupInfo, 'permission' => $permission, 'grouppermission' => $grouppermission);
     }
-    
+
     /**
      * 获取指定用户组的权限
-     * @param string $key 用户组ID或者特殊应用下面的appname_appgroupname
-     * @return array 指定用户组的权限信息
+     * @param  string $key 用户组ID或者特殊应用下面的appname_appgroupname
+     * @return array  指定用户组的权限信息
      */
     public function getGroupPermission($key)
     {
@@ -212,12 +213,11 @@ class PermissionModel
 
         return $permissionCache[$key];
     }
-    
+
     /**
      * 设置指定用户组的权限信息
-     * @param string $key 用户组ID或者特殊应用下面的appname_appgroupname
-     * @param array $data 相关权限信息
-     * @return void
+     * @param string $key  用户组ID或者特殊应用下面的appname_appgroupname
+     * @param array  $data 相关权限信息
      */
     public function setGroupPermission($key, $data)
     {

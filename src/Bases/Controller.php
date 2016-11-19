@@ -1,6 +1,6 @@
 <?php
 
-namespace Ts\Base;
+namespace Ts\Bases;
 
 use Action as BaseController;
 
@@ -8,14 +8,13 @@ use Action as BaseController;
  * undocumented class
  *
  * @package default
- * @author 
+ * @author
  **/
 abstract class Controller extends BaseController
 {
     /**
      * 构造方法
      *
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     final public function __construct()
@@ -41,7 +40,6 @@ abstract class Controller extends BaseController
     /**
      * 析构方法
      *
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     final public function __destruct()
@@ -56,10 +54,9 @@ abstract class Controller extends BaseController
      *
      * @param string $method 方法名称
      * @param array  $params 方法参数
-     * @return void
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
-    final function __call($method, array $params = array())
+    final public function __call($method, array $params = array())
     {
         /* class 重载之前 */
         $notCallOld = null;
@@ -77,5 +74,4 @@ abstract class Controller extends BaseController
         method_exists($this, 'classCallAfter') &&
         $this->classCallAfter($method, $params);
     }
-
 } // END abstract class Controller extends Controller

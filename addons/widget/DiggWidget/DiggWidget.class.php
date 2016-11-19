@@ -70,7 +70,8 @@ class DiggWidget extends Widget
                 $html .= '<a href="javascript:;" class="like-h digg-like-yes" title="取消赞" onclick="core.digg.delDigg('.$feed_id.')"><i class="digg-like"></i>('.$digg_count.')</a>';
             }
         }
-        $html .= "</span>";
+        $html .= '</span>';
+
         return $html;
     }
 }

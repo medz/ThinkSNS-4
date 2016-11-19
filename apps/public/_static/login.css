@@ -37,7 +37,7 @@ li{list-style-type:none}
 			 
 /*s-body*/
 /***登录***/
-#page-wrap .login-main{width:1000px; /*margin:180px auto 80px auto;*/ padding-top:3%}
+#page-wrap .login-main{width:auto; position: absolute; top: 50%; margin: -281px 0px 0px 200px; left: 50%;}
 .login-banner{ width:645px;height:442px; border:#8e8e8e 1px solid;overflow:hidden;float:left;margin-top:56px;}
 .login-banner img{ width:100%; }
 .login-board{width:280px;height:490px;padding:35px; border:#8e8e8e 1px solid; float:right; background:#fff;}

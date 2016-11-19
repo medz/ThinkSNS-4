@@ -1,6 +1,6 @@
 <?php
+
 //使用V2版本的客户端,支持Oauth2.0
-include_once('sina/saetv2.ex.class.php');
 class sina
 {
     public $loginUrl;
@@ -19,9 +19,10 @@ class sina
             return false;
         }
         if (is_null($call_back)) {
-            $call_back = Addons::createAddonShow('Login', 'no_register_display', array('type'=>'sina', 'do'=>"bind"));
+            $call_back = Addons::createAddonShow('Login', 'no_register_display', array('type' => 'sina', 'do' => 'bind'));
         }
         $this->loginUrl = $this->_oauth->getAuthorizeURL($call_back);
+
         return $this->loginUrl;
     }
     //获取token信息
@@ -30,18 +31,19 @@ class sina
         return $this->_oauth->getTokenInfo($access_token) ;
     }
     //用户资料
-    public function userInfo($opt=array())
+    public function userInfo($opt = array())
     {
         $sinauid = $this->doClient($opt)->get_uid();
         $me = $this->doClient($opt)->show_user_by_id($sinauid['uid']);
         //print_r($me);echo $sinauid['uid'];exit;
-        $user['id']          = $me['id'];
-        $user['uname']       = $me['name'];
-        $user['province']    = $me['province'];
-        $user['city']        = $me['city'];
-        $user['location']    = $me['location'];
-        $user['userface']    = str_replace($user['id'].'/50/', $user['id'].'/180/', $me['profile_image_url']);
-        $user['sex']         = ($me['gender']=='m')?1:0;
+        $user['id'] = $me['id'];
+        $user['uname'] = $me['name'];
+        $user['province'] = $me['province'];
+        $user['city'] = $me['city'];
+        $user['location'] = $me['location'];
+        $user['userface'] = str_replace($user['id'].'/50/', $user['id'].'/180/', $me['profile_image_url']);
+        $user['sex'] = ($me['gender'] == 'm') ? 1 : 0;
+
         return $user;
     }
     private function doClient($opt)
@@ -50,9 +52,10 @@ class sina
             $access_token = $_SESSION['sina']['access_token']['oauth_token'];
             $refresh_token = $_SESSION['sina']['access_token']['oauth_token_secret'];
         } else {
-            $access_token = $opt["oauth_token"];
-            $refresh_token = $opt["oauth_token_secret"];
+            $access_token = $opt['oauth_token'];
+            $refresh_token = $opt['oauth_token_secret'];
         }
+
         return new SaeTClientV2($this->_sina_akey, $this->_sina_skey, $access_token, $refresh_token);
     }
     //验证用户
@@ -61,7 +64,7 @@ class sina
         if (isset($_REQUEST['code'])) {
             $keys = array();
             $keys['code'] = $_REQUEST['code'];
-            $keys['redirect_uri'] = U('public/Widget/displayAddons', array('type'=>$_REQUEST['type'], 'addon'=>'Login', 'hook'=>'no_register_display'));
+            $keys['redirect_uri'] = U('public/Widget/displayAddons', array('type' => $_REQUEST['type'], 'addon' => 'Login', 'hook' => 'no_register_display'));
             try {
                 $token = $this->_oauth->getAccessToken('code', $keys) ;
             } catch (OAuthException $e) {
@@ -80,9 +83,10 @@ class sina
             setcookie('weibojs_'.$this->_oauth->client_id, http_build_query($token));
             $_SESSION['sina']['access_token']['oauth_token'] = $token['access_token'];
             $_SESSION['sina']['access_token']['oauth_token_secret'] = $token['refresh_token'];
-            $_SESSION['sina']['expire'] = time()+$token['expires_in'];
+            $_SESSION['sina']['expire'] = time() + $token['expires_in'];
             $_SESSION['sina']['uid'] = $token['uid'];
             $_SESSION['open_platform_type'] = 'sina';
+
             return $token;
         } else {
             return false;
@@ -103,7 +107,7 @@ class sina
         }
     }
     //转发一条分享
-    public function transpond($transpondId, $reId, $content='', $opt=null)
+    public function transpond($transpondId, $reId, $content = '', $opt = null)
     {
         if ($reId) {
             $this->doClient($opt)->send_comment($reId, $content);
@@ -116,8 +120,9 @@ class sina
     public function saveData($data)
     {
         if (isset($data['id'])) {
-            return array("sinaId"=>$data['id']);
+            return array('sinaId' => $data['id']);
         }
+
         return array();
     }
 }

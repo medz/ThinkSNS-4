@@ -11,9 +11,9 @@ class DiyUser extends TagsAbstract
      * @var unknown_type
      */
     public static $TAG_CLOSED = false;
-    
+
     public $config = array();
-    
+
     public function getTagStatus()
     {
         return self::$TAG_CLOSED;
@@ -28,6 +28,7 @@ class DiyUser extends TagsAbstract
         if (!empty($tpl)) {
             $file = $tpl;
         }
+
         return dirname(__FILE__).'/DiyUser/'.$file.'.html';
     }
 
@@ -41,7 +42,7 @@ class DiyUser extends TagsAbstract
         $limit = 10;
         if (!empty($attr['limit'])) {
             $limit = intval($attr['limit']);
-            $limit = $limit>100 ? 100 : $limit;
+            $limit = $limit > 100 ? 100 : $limit;
         }
         switch ($attr['source']) {
             case 'new'://最新注册
@@ -49,15 +50,14 @@ class DiyUser extends TagsAbstract
                 break;
             case 'follow'://粉丝最多
                 $list = model('UserData')->where("`key`='follower_count'")->field('uid')->order('`value`+0 desc')->limit($limit)->findAll();
-                
-                $map['uid'] = array( 'in' , getSubByKey($list, 'uid') );
+
+                $map['uid'] = array('in', getSubByKey($list, 'uid'));
                 $users = $userDao->getList($map, $limit, 'uid,uname');
                 $kusers = array();
                 foreach ($users as $us) {
                     $kusers[$us['uid']] = $us['uname'];
                 }
-                
-                
+
                 foreach ($list as &$u) {
                     $u['uname'] = $kusers[$u['uid']];
                 }
@@ -70,15 +70,14 @@ class DiyUser extends TagsAbstract
         $followstate = array();
         if ($attr['style'] == 'down' || $attr['style'] == 'numdown') {
             $fids = getSubByKey($list, 'uid');
-            $follower_map['fid'] = array('IN', $fids );
+            $follower_map['fid'] = array('IN', $fids);
             // 粉丝数
             $follower = model('Follow')->field('COUNT(1) AS `count`,`fid`')->where($follower_map)->group('`fid`')->findAll();
             foreach ($follower as $v) {
-                $followercount[$v['fid']]['follower'] =  $v['count'];
+                $followercount[$v['fid']]['follower'] = $v['count'];
             }
-            
+
             $mid = $GLOBALS['ts']['mid'];
-            ;
             $followstate = model('Follow')->getFollowStateByFids($mid, $fids);
         }
         foreach ($list as &$v) {
@@ -87,6 +86,7 @@ class DiyUser extends TagsAbstract
             $v['follow'] = $followstate[$v['uid']];
         }
         $attr['list'] = $list;
+
         return $attr;
     }
 }

@@ -2,7 +2,6 @@
 
 class SmallToolsAction extends Action
 {
-
     public function weiboShare()
     {
         $this->display();

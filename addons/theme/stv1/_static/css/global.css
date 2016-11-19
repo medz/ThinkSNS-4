@@ -2073,7 +2073,7 @@ a.btn-account:hover{background-position:-164px 0;}
 
 /*首页fieldset*/
 .inter-txt{border:0;padding:0 10px 0 0;font-family:"微软雅黑";font-weight:normal;font-size:16px;*padding:0 5px 0 0;*margin:0 0 0 -8px;*line-height:20px; color:#111;}
-.inter-line a,.inter-line span{background:#fff;padding:0 0 0 5px;margin:-20px 0 0 0;font-weight:300;float:right;color:#555;margin:0\9;}
+.inter-line a,.inter-line span{background:#fff;padding:0 0 0 5px;margin:-16px 0 0 0;font-weight:300;float:right;color:#555;margin:0\9;}
 .inter-line{/* position:relative;*/border-top: 1px solid #efefef;}
 .inter-line .refresh{ position:absolute;right:0;top:-8px;}
 /*知识添加分类*/
