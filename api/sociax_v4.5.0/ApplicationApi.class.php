@@ -110,6 +110,7 @@ class ApplicationApi extends Api
             D('credit_record')->add($record);
             D('credit_user')->setDec('score', 'uid='.$this->mid, $data['gold']);
             D('Credit')->cleanCache($this->mid);
+
             return $this->rd('', '提交成功请等待审核', 0);
         } else {
             return $this->rd('', '保存失败，请稍后再试', 1);

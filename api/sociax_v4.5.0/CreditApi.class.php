@@ -105,7 +105,7 @@ class CreditApi extends Api
     */
     public function createCharge()
     {
-        $price = 0.01;//intval($this->data['money']);
+        $price = 0.01; //intval($this->data['money']);
         // if ($price < 1) {
         //     return array('status' => 0, 'mesage' => '充值金额不正确');
         // }
@@ -114,7 +114,7 @@ class CreditApi extends Api
         if (!isset($types[$type])) {
             return array('status' => 0, 'mesage' => '充值方式不支持');
         }
-        $version = intval($this->data['version']) ? : 1;//版本   1-系统版  2-直播版
+        $version = intval($this->data['version']) ?: 1; //版本   1-系统版  2-直播版
         if ($version == 1) {
             $chargeConfigs = model('Xdata')->get('admin_Config:charge');
         } elseif ($version == 2) {
@@ -147,26 +147,27 @@ class CreditApi extends Api
                 $configs['sign_type'] = 'RSA';
                 $configs['private_key_path'] = $chargeConfigs['private_key_path'];
                 $parameter = array(
-                    'app_id'        =>  $chargeConfigs['alipay_app_pid'],
-                    'method'        =>  'alipay.trade.app.pay',
-                    'charset'       =>  'utf-8',
-                    'sign_type'     =>  'RSA',
-                    'timestamp'     =>  date('Y-m-d H:i:s'),
-                    'version'       =>  '1.0',
-                    'notify_url'    =>  SITE_URL.'/alipay_notify_api.php',
+                    'app_id' => $chargeConfigs['alipay_app_pid'],
+                    'method' => 'alipay.trade.app.pay',
+                    'charset' => 'utf-8',
+                    'sign_type' => 'RSA',
+                    'timestamp' => date('Y-m-d H:i:s'),
+                    'version' => '1.0',
+                    'notify_url' => SITE_URL.'/alipay_notify_api.php',
                 );
-                $parameter['biz_content'] = "{".
-                    "\"subject\":\"积分充值:".$data['charge_sroce']."积分\",".
-                    "\"out_trade_no\":\"".$data['serial_number']."\",".
-                    "\"total_amount\":\"".$data['charge_value']."\",'".
-                    "\"seller_id\":\"".$chargeConfigs['alipay_pid']."\",".
-                    "\"product_code\":\"QUICK_MSECURITY_PAY\"".
-                    "}";
+                $parameter['biz_content'] = '{'.
+                    '"subject":"积分充值:'.$data['charge_sroce'].'积分",'.
+                    '"out_trade_no":"'.$data['serial_number'].'",'.
+                    '"total_amount":"'.$data['charge_value']."\",'".
+                    '"seller_id":"'.$chargeConfigs['alipay_pid'].'",'.
+                    '"product_code":"QUICK_MSECURITY_PAY"'.
+                    '}';
 
-                $url ['url'] = createAlipayUrl($configs, $parameter, 3);//直接返回支付宝支付url
+                $url ['url'] = createAlipayUrl($configs, $parameter, 3); //直接返回支付宝支付url
                 $url ['charge_type'] = $type;
                 $url ['charge_value'] = $price;
                 $url ['out_trade_no'] = $data['serial_number'];
+
                 return array(
                     'status' => 1,
                     'mesage' => '',
@@ -174,19 +175,19 @@ class CreditApi extends Api
                 );
             } elseif ($type == 1) {
                 require_once ADDON_PATH.'/library/WeChatPay.php';
-                $ip = get_client_ip();//微信支付需要终端ip
-                $order=array(
-                    "body" => "积分充值:".$data['charge_sroce'].'积分',
-                    "appid" => $chargeConfigs['weixin_pid'],
-                    "device_info" => "APP",
-                    "mch_id" => $chargeConfigs['weixin_mid'],
-                    "nonce_str" => mt_rand(),
-                    "notify_url" => SITE_URL.'/weixin_notify_api.php',
-                    "out_trade_no" => $data['serial_number'],
-                    "spbill_create_ip" => $ip,
-                    "total_fee" => $data['charge_value']*100,//这里的最小单位是分，跟支付宝不一样。1就是1分钱。只能是整形。
-                    "trade_type" => "APP"
-                    );//预支付订单
+                $ip = get_client_ip(); //微信支付需要终端ip
+                $order = array(
+                    'body' => '积分充值:'.$data['charge_sroce'].'积分',
+                    'appid' => $chargeConfigs['weixin_pid'],
+                    'device_info' => 'APP',
+                    'mch_id' => $chargeConfigs['weixin_mid'],
+                    'nonce_str' => mt_rand(),
+                    'notify_url' => SITE_URL.'/weixin_notify_api.php',
+                    'out_trade_no' => $data['serial_number'],
+                    'spbill_create_ip' => $ip,
+                    'total_fee' => $data['charge_value'] * 100, //这里的最小单位是分，跟支付宝不一样。1就是1分钱。只能是整形。
+                    'trade_type' => 'APP',
+                    ); //预支付订单
                 $weixinpay = new WeChatPay();
 
                 $input = $weixinpay->getPayParam($order, $chargeConfigs['weixin_pid'], $chargeConfigs['weixin_mid'], $chargeConfigs['weixin_key'], 2);
@@ -194,13 +195,13 @@ class CreditApi extends Api
                 $input ['out_trade_no'] = $data['serial_number'];
                 $input ['charge_type'] = $type;
                 $input ['charge_value'] = $price;
+
                 return array(
                     'status' => 1,
                     'mesage' => '',
                     'data' => $input,
                 );
             }
-
         } else {
             $res = array();
             $res ['status'] = 0;
@@ -226,7 +227,7 @@ class CreditApi extends Api
             return array('status' => 0, 'mesage' => '充值方式不支持');
         }
 
-        $version = intval($this->data['version']) ? : 1;//版本   1-系统版  2-直播版
+        $version = intval($this->data['version']) ?: 1; //版本   1-系统版  2-直播版
         if ($version == 1) {
             $chargeConfigs = model('Xdata')->get('admin_Config:charge');
         } elseif ($version == 2) {
@@ -234,7 +235,7 @@ class CreditApi extends Api
         } else {
             return array('status' => 0, 'mesage' => '参数错误');
         }
-        
+
         if (!in_array($types[$type], $chargeConfigs['charge_platform'])) {
             return array('status' => 0, 'mesage' => '充值方式不支持');
         }
@@ -259,36 +260,37 @@ class CreditApi extends Api
                 $configs['seller_email'] = $chargeConfigs['alipay_email'];
                 $configs['key'] = $chargeConfigs['alipay_key'];
                 $parameter = array(
-                    'notify_url'    => SITE_URL.'/alipay_notify_api.php',
-                    'out_trade_no'  => $data['serial_number'],
-                    'subject'       => '积分充值:'.$data['charge_sroce'].'积分',
-                    'total_fee'     => $data['charge_value'],
-                    'body'          => '',
-                    'payment_type'  => 1,
-                    'service'       => 'mobile.securitypay.pay',
-                    'it_b_pay'      => '1c',
+                    'notify_url' => SITE_URL.'/alipay_notify_api.php',
+                    'out_trade_no' => $data['serial_number'],
+                    'subject' => '积分充值:'.$data['charge_sroce'].'积分',
+                    'total_fee' => $data['charge_value'],
+                    'body' => '',
+                    'payment_type' => 1,
+                    'service' => 'mobile.securitypay.pay',
+                    'it_b_pay' => '1c',
                 );
-                $url = createAlipayUrl($configs, $parameter, 2);//直接返回支付宝支付url
+                $url = createAlipayUrl($configs, $parameter, 2); //直接返回支付宝支付url
             } elseif ($type == 1) {
                 require_once ADDON_PATH.'/library/WeChatPay.php';
-                $ip = get_client_ip();//微信支付需要终端ip
-                $order=array(
-                    "body" => "积分充值:".$data['charge_sroce'].'积分',
-                    "appid" => $chargeConfigs['weixin_pid'],
-                    "device_info" => "APP",
-                    "mch_id" => $chargeConfigs['weixin_mid'],
-                    "nonce_str" => mt_rand(),
-                    "notify_url" => SITE_URL.'/weixin_notify_api.php',
-                    "out_trade_no" => $data['serial_number'],
-                    "spbill_create_ip" => $ip,
-                    "total_fee" => $data['charge_value']*100,//这里的最小单位是分，跟支付宝不一样。1就是1分钱。只能是整形。
-                    "trade_type" => "APP"
-                    );//预支付订单
+                $ip = get_client_ip(); //微信支付需要终端ip
+                $order = array(
+                    'body' => '积分充值:'.$data['charge_sroce'].'积分',
+                    'appid' => $chargeConfigs['weixin_pid'],
+                    'device_info' => 'APP',
+                    'mch_id' => $chargeConfigs['weixin_mid'],
+                    'nonce_str' => mt_rand(),
+                    'notify_url' => SITE_URL.'/weixin_notify_api.php',
+                    'out_trade_no' => $data['serial_number'],
+                    'spbill_create_ip' => $ip,
+                    'total_fee' => $data['charge_value'] * 100, //这里的最小单位是分，跟支付宝不一样。1就是1分钱。只能是整形。
+                    'trade_type' => 'APP',
+                    ); //预支付订单
                 $weixinpay = new WeChatPay();
 
                 $url['url'] = $weixinpay->getPayParam($order, $chargeConfigs['weixin_pid'], $chargeConfigs['weixin_mid'], $chargeConfigs['weixin_key'], 1);
                 $url['out_trade_no'] = $data['serial_number'];
             }
+
             return array(
                 'status' => 1,
                 'mesage' => '',
@@ -481,14 +483,14 @@ class CreditApi extends Api
     private function setWXsign($param, $wxkey)
     {
         ksort($param);
-        $sign="";
+        $sign = '';
         foreach ($param as $key => $value) {
-            if($value&&$key!="sign"&&$key!="key"){
-                $sign.=$key."=".$value."&";
+            if ($value && $key != 'sign' && $key != 'key') {
+                $sign .= $key.'='.$value.'&';
             }
         }
-        $sign.="key=".$wxkey;
-        $sign=strtoupper(md5($sign));
+        $sign .= 'key='.$wxkey;
+        $sign = strtoupper(md5($sign));
 
         return $sign;
     }

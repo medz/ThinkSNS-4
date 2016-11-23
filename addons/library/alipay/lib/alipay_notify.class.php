@@ -139,7 +139,7 @@ class AlipayNotify
                 $isSgin = md5Verify($prestr, $sign, $this->alipay_config['key']);
                 break;
             case 'RSA':
-                $isSgin = rsaVerify($prestr,  $this->alipay_config['private_key_path'], $sign);
+                $isSgin = rsaVerify($prestr, $this->alipay_config['private_key_path'], $sign);
                 break;
             default:
                 $isSgin = false;

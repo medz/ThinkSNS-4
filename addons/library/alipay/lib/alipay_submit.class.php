@@ -76,13 +76,14 @@ class AlipaySubmit
 
         //签名结果与签名方式加入请求提交参数组中
 
-        if(strtoupper(trim($this->alipay_config['sign_type']))=='RSA') {
+        if (strtoupper(trim($this->alipay_config['sign_type'])) == 'RSA') {
             $para_sort['sign'] = urlencode($mysign);
             $para_sort['sign_type'] = 'RSA';
-        } elseif(strtoupper(trim($this->alipay_config['sign_type']))=='MD5') {
+        } elseif (strtoupper(trim($this->alipay_config['sign_type'])) == 'MD5') {
             $para_sort['sign'] = $mysign;
             $para_sort['sign_type'] = strtoupper(trim($this->alipay_config['sign_type']));
         }
+
         return $para_sort;
     }
 

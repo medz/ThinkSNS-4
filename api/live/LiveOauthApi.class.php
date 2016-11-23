@@ -190,7 +190,7 @@ class LiveOauthApi extends Api
             $credit = CreditUser::where('uid', $v ['uid'])->first();
             $follower_arr [$k] ['follow_status'] = $follow_status [$v ['uid']];
             $data[$k]['user']['uid'] = (string) $v['uid'];
-            $data[$k]['user']['usid'] = ($usid = $live_user_mod->where(array('uid'=>$v['uid']))->getField('usid')) ? $usid : '';
+            $data[$k]['user']['usid'] = ($usid = $live_user_mod->where(array('uid' => $v['uid']))->getField('usid')) ? $usid : '';
             // 没登陆过智播没有usid的 直接生成一个
             if (!$usid = $live_user_mod->where(array('uid' => $v['uid']))->getField('usid')) {
                 $live_user_info = file_get_contents(SITE_URL.'/api.php?api_version=live&mod=LiveUser&act=postUser&uid='.$v['uid']);

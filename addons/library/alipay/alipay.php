@@ -44,24 +44,25 @@ function createAlipayUrl(array $alipayConfig, array $parameter, $type = 1)
         '_input_charset' => trim(strtolower($alipayConfig['input_charset'])),
         ), $parameter);
     }
-    
+
     $alipaySubmit = new AlipaySubmit($alipayConfig);
     if ($type == 1) {
         $url = $alipaySubmit->alipay_gateway_new;
         $url .= $alipaySubmit->buildRequestParaToString($parameter);
-    } elseif($type == 2) {
+    } elseif ($type == 2) {
         $parameter['seller_id'] = trim($alipayConfig['partner']);
 
         $url = $alipaySubmit->alipay_client_url;
-        $url .=  urlencode(json_encode(array('requestType' => 'SafePay', "fromAppUrlScheme" => "com.zhiyiThinkSNS4", "dataString" => $alipaySubmit->buildRequestParaToString($parameter))));//带客户端协议的参数拼接
-    } elseif($type == 3) {
+        $url .= urlencode(json_encode(array('requestType' => 'SafePay', 'fromAppUrlScheme' => 'com.zhiyiThinkSNS4', 'dataString' => $alipaySubmit->buildRequestParaToString($parameter)))); //带客户端协议的参数拼接
+    } elseif ($type == 3) {
         $url = $alipaySubmit->buildRequestParaToString($parameter);
     }
 
     return $url;
 }
 
-function alipaytest($param, $config) {
+function alipaytest($param, $config)
+{
     $privatekey = file_get_contents($config['private_key_path']);
     $res = openssl_pkey_get_private($privatekey);
     ksort($param);
@@ -101,19 +102,21 @@ function verifyAlipayNotify(array $alipayConfig)
  * @param $private_key_path 商户私钥文件路径
  * return 解密后内容，明文
  */
-function rsaDecrypt($content, $private_key_path) {
+function rsaDecrypt($content, $private_key_path)
+{
     $priKey = file_get_contents($private_key_path);
     $res = openssl_get_privatekey($priKey);
     //用base64将内容还原成二进制
     $content = base64_decode($content);
     //把需要解密的内容，按128位拆开解密
-    $result  = '';
-    for($i = 0; $i < strlen($content)/128; $i++  ) {
+    $result = '';
+    for ($i = 0; $i < strlen($content) / 128; $i++) {
         $data = substr($content, $i * 128, 128);
         openssl_private_decrypt($data, $decrypt, $res);
         $result .= $decrypt;
     }
     openssl_free_key($res);
+
     return $result;
 }
 
@@ -122,16 +125,19 @@ function rsaDecrypt($content, $private_key_path) {
  * @param $para 需要拼接的数组
  * return 拼接完成以后的字符串
  */
-function createRsaLinkstring($para) {
-    $arg  = "";
-    while (list ($key, $val) = each ($para)) {
-        $arg.=$key."=".urlencode($val)."&";
+function createRsaLinkstring($para)
+{
+    $arg = '';
+    while (list($key, $val) = each($para)) {
+        $arg .= $key.'='.urlencode($val).'&';
     }
     //去掉最后一个&字符
-    $arg = substr($arg,0,count($arg)-2);
-    
+    $arg = substr($arg, 0, count($arg) - 2);
+
     //如果存在转义字符，那么去掉转义
-    if(get_magic_quotes_gpc()){$arg = stripslashes($arg);}
-    
+    if (get_magic_quotes_gpc()) {
+        $arg = stripslashes($arg);
+    }
+
     return $arg;
 }

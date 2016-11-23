@@ -14,18 +14,18 @@ $_GET['app'] = 'api';
 
 define('APP_NAME', 'api');
 if (isset($_REQUEST['api_version'])) {
-	if ($_REQUEST['api_version'] == 'live') {
-		define('API_VERSION', 'live');
-	} elseif ($_REQUEST['api_version'] == 'jipu') {
-		define('API_VERSION', 'jipu');
-	} elseif ($_REQUEST['api_version'] == 'video') {
-		define('API_VERSION', 'video');
-	} elseif ($_REQUEST['api_version'] == 'photo') {
-		define('API_VERSION', 'photo');
-	}else {
-	    $api_version = preg_replace('/[^A-Za-z0-9\._-]/', '', $_REQUEST['api_version']);
-    	define('API_VERSION', 'sociax_v'.$api_version);
-	}
+    if ($_REQUEST['api_version'] == 'live') {
+        define('API_VERSION', 'live');
+    } elseif ($_REQUEST['api_version'] == 'jipu') {
+        define('API_VERSION', 'jipu');
+    } elseif ($_REQUEST['api_version'] == 'video') {
+        define('API_VERSION', 'video');
+    } elseif ($_REQUEST['api_version'] == 'photo') {
+        define('API_VERSION', 'photo');
+    } else {
+        $api_version = preg_replace('/[^A-Za-z0-9\._-]/', '', $_REQUEST['api_version']);
+        define('API_VERSION', 'sociax_v'.$api_version);
+    }
 } else {
     define('API_VERSION', 'sociax_v4.5.0');
 }

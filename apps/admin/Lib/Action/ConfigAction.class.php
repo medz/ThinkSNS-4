@@ -2389,12 +2389,12 @@ define('UC_SYNC', {$ucopen});
 
     //直播版充值配置
     public function ZBcharge()
-    {   
+    {
         $this->pageTab[] = array('title' => '充值配置', 'tabHash' => 'charge', 'url' => U('admin/Config/charge'));
         $this->pageTab[] = array('title' => '直播版充值配置', 'tabHash' => 'ZBcharge', 'url' => U('admin/Config/ZBcharge'));
         $this->pageTab[] = array('title' => '提现配置', 'tabHash' => 'ZB_config', 'url' => U('admin/Application/ZB_config'));
 
-        $this->pageKeyList = array('charge_ratio', 'description', 'charge_platform', 'alipay_pid', 'alipay_key', 'alipay_email', 'alipay_app_pid', 'private_key_path','weixin_pid', 'weixin_mid', 'weixin_key');
+        $this->pageKeyList = array('charge_ratio', 'description', 'charge_platform', 'alipay_pid', 'alipay_key', 'alipay_email', 'alipay_app_pid', 'private_key_path', 'weixin_pid', 'weixin_mid', 'weixin_key');
         $this->opt['charge_platform'] = array(
             'alipay' => '支付宝',
             'weixin' => '微信支付',

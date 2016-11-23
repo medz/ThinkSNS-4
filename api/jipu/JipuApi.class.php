@@ -79,29 +79,29 @@ class JipuApi extends Api
     /********** 验证 **********/
     /**
      * 认证方法 --using
-     * @param varchar oauth_token 
-     * @param varchar oauth_token_secret 
+     * @param varchar oauth_token
+     * @param varchar oauth_token_secret
      * @return array 状态+提示
      */
     public function loginCheck()
     {
         if ($this->mid) {
             return array('status' => 1, 'uid' => $this->mid);
-        } 
+        }
     }
 
 
     /********** 注册 **********/
     /**
      * 认证方法 --using
-     * @param varchar oauth_token 
-     * @param varchar oauth_token_secret 
+     * @param varchar oauth_token
+     * @param varchar oauth_token_secret
      * @return array 状态+提示
      */
     public function register()
     {
         $phone = floatval($this->data['phone']);    // 手机号码
-        $username = 'jipu_' . t($this->data['username']);      // 用户名
+        $username = 'jipu_'.t($this->data['username']);      // 用户名
         $password = $this->data['password'];         // 密码
         $sex = intval($this->data['sex']);
         in_array($sex, array(1, 2)) or
@@ -206,7 +206,6 @@ class JipuApi extends Api
      */
     public function save_user_info()
     {
-
         $uid = $this->data['uid'];
         $save = array();
         // 修改用户昵称
