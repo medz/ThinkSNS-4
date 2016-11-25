@@ -15,7 +15,7 @@ $_GET['app'] = 'api';
 define('APP_NAME', 'api');
 $api_version = !empty($_REQUEST['api_version']) ? $_REQUEST['api_version'] : '4.5.0';
 $api_type = !empty($_REQUEST['api_type']) ? $_REQUEST['api_type'] : 'sociax';
-define('API_VERSION', $api_type . '_v' .$api_version);
+define('API_VERSION', $api_type.'_v'.$api_version);
 
 /* 新系统需要的一些配置 */
 define('TS_ROOT', dirname(__FILE__));        // Ts根

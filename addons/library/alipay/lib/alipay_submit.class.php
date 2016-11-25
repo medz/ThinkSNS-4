@@ -67,7 +67,7 @@ class AlipaySubmit
     {
         if (strtoupper(trim($this->alipay_config['sign_type'])) == 'RSA') {
             //除去待签名参数数组中的空值和签名参数
-            $para_filter = paraFilter($para_temp,2);
+            $para_filter = paraFilter($para_temp, 2);
 
             //对待签名参数数组排序
             $para_sort = argSort($para_filter);
@@ -76,7 +76,7 @@ class AlipaySubmit
             $mysign = $this->buildRequestMysign($para_sort);
 
             //签名结果与签名方式加入请求提交参数组中
-            $para_sort['sign'] = $mysign;//20161124  使用最官方的新sdk注意：sign_type字段需要参加签名  生成的签名不要urlencode 放在数组里再进行urlencode
+            $para_sort['sign'] = $mysign; //20161124  使用最官方的新sdk注意：sign_type字段需要参加签名  生成的签名不要urlencode 放在数组里再进行urlencode
         } elseif (strtoupper(trim($this->alipay_config['sign_type'])) == 'MD5') {
             //除去待签名参数数组中的空值和签名参数
             $para_filter = paraFilter($para_temp);

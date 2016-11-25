@@ -323,14 +323,14 @@ class CreditApi extends Api
                 'sign_type' => 'RSA',
             );
         } else {
-           $configs = array(
+            $configs = array(
                 'partner' => $chargeConfigs['alipay_pid'],
                 'seller_id' => $chargeConfigs['alipay_pid'],
                 'seller_email' => $chargeConfigs['alipay_email'],
                 'key' => $chargeConfigs['alipay_key'],
             );
         }
- 
+
         if (verifyAlipayNotify($configs)) {
             model('Credit')->charge_success(t($_POST['out_trade_no']));
         }

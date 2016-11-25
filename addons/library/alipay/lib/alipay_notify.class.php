@@ -126,7 +126,7 @@ class AlipayNotify
     {
         //除去待签名参数数组中的空值和签名参数
         if (strtoupper(trim($this->alipay_config['sign_type'])) == 'RSA') {
-            $para_filter = paraFilter($para_temp,3);//参数需要urldecode
+            $para_filter = paraFilter($para_temp, 3); //参数需要urldecode
         } else {
             $para_filter = paraFilter($para_temp);
         }

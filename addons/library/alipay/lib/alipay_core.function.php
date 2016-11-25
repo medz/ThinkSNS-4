@@ -79,7 +79,6 @@ function paraFilter($para, $type = 1)
                 $para_filter[$key] = urldecode($para[$key]);
             }
         }
-
     }
 
     return $para_filter;
@@ -241,7 +240,7 @@ function rsaSign($data, $private_key_path)
  * return 验证结果
  */
 function rsaVerify($data, $ali_public_key_path, $sign)
-{   
+{
     $pubKey = file_get_contents($ali_public_key_path);
     $res = openssl_get_publickey($pubKey);
     $result = (bool) openssl_verify($data, base64_decode($sign), $res);
