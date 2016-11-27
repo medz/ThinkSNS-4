@@ -24,5 +24,4 @@ abstract class Model extends Eloquent
     {
         return EmojiFormat::de($data);
     }
-
 } // END abstract class Model extends Eloquent
