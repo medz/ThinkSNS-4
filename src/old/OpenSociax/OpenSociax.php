@@ -130,4 +130,3 @@ if (
     file_put_contents($timer, time());
 }
 define('APP_PUBLIC_URL', sprintf('%s%s/app/%s', SITE_URL, TS_STORAGE, strtolower(APP_NAME)));
-
