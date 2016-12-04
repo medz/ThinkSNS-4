@@ -258,7 +258,6 @@ class AvatarModel
                 $return['info'] = '切割头像失败';
             }
         } else {
-
             $thumb = PhpThumbFactory::create(UPLOAD_PATH.'/'.$facedata['picurl']);
             $res = $thumb->crop($x1, $y1, $w, $h);
 

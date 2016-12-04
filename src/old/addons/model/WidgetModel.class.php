@@ -305,5 +305,4 @@ class WidgetModel extends Model
 
         return false;
     }
-
 }
