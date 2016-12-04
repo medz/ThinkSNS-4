@@ -139,7 +139,6 @@ class CreditApi extends Api
         if (!$result) {
             $data['charge_id'] = $result;
             if ($type == 0) {
-
                 $configs = $parameter = array();
                 $configs['partner'] = $chargeConfigs['alipay_pid'];
                 $configs['seller_id'] = $chargeConfigs['alipay_pid'];
@@ -174,7 +173,6 @@ class CreditApi extends Api
                     'data' => $url,
                 );
             } elseif ($type == 1) {
-
                 $ip = get_client_ip(); //微信支付需要终端ip
                 $order = array(
                     'body' => '积分充值:'.$data['charge_sroce'].'积分',

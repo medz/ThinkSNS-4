@@ -2,7 +2,6 @@
 
 class ToolAction extends Action
 {
-
     // 获取官方服务器上应用的信息给本地服务器
     public function downloadApp()
     {

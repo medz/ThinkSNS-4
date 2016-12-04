@@ -112,7 +112,6 @@ if (C('THEME_NAME')) {
 
 if (!defined('THEME_ROOT')) {
     define('THEME_ROOT', SITE_PATH.'/resources/theme/');
-    
 }
 
 //默认静态文件、模版文件目录
