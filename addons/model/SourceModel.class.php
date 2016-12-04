@@ -252,7 +252,7 @@ class SourceModel
     /**
      * 获取编辑器内容中的第一个图片（非表情图片）
      * @param  string $content 编辑器内容
-     * @return array  图片的地址数组
+     * @return array 图片的地址数组
      */
     private function getEditorImages($content)
     {

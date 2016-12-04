@@ -102,7 +102,7 @@ class WidgetModel extends Model
     /**
      * 添加自定义Widget
      * @param  array $add 自定义Widget相关数据
-     * @return mix   添加失败返回false，添加成功返回新的Widget的ID
+     * @return mix 添加失败返回false，添加成功返回新的Widget的ID
      */
     public function addDiyWidget($add)
     {
@@ -136,11 +136,11 @@ class WidgetModel extends Model
 
     /**
      * 用户主动更新某个位置的某个Widget属性
-     * @param  int    $diyId  用户自定义Widget的DiyID
-     * @param  int    $uid    用户ID
-     * @param  string $target 目标Widget名称，[应用名:Widget名称]
+     * @param int    $diyId  用户自定义Widget的DiyID
+     * @param int    $uid    用户ID
+     * @param string $target 目标Widget名称，[应用名:Widget名称]
      * @param  array  $data   更新的相关数据
-     * @return bool   是否更新成功
+     * @return bool 是否更新成功
      */
     public function updateUserWidget($diyId, $uid, $target, $data)
     {
@@ -212,7 +212,7 @@ class WidgetModel extends Model
 
     /**
      * 获取指定Widget的具体内容
-     * @param  string $target 目标Widget名称，[应用名:Widget名称]
+     * @param string $target 目标Widget名称，[应用名:Widget名称]
      * @return array  指定自定义Widget的具体内容
      */
     public function getWidget($target)
@@ -230,8 +230,8 @@ class WidgetModel extends Model
 
     /**
      * 获取指定用户指定自定义的Widget具体内容
-     * @param  int   $diyId 自定义Widget的DiyId
-     * @param  int   $uid   用户ID
+     * @param int $diyId 自定义Widget的DiyId
+     * @param int $uid   用户ID
      * @return array 指定用户指定自定义的Widget具体内容
      */
     public function getUserWidget($diyId, $uid)
@@ -278,8 +278,8 @@ class WidgetModel extends Model
     /*** 后台操作 ***/
     /**
      * 后台配置单个Widget
-     * @param  int   $id         自定义Widget的DiyId
-     * @param  array $targetList 目标Widget名称列表，[应用名:Widget名称]
+     * @param int   $id         自定义Widget的DiyId
+     * @param array $targetList 目标Widget名称列表，[应用名:Widget名称]
      * @return bool  后台配置单个Widget是否成功
      */
     public function configWidget($id, $targetList)

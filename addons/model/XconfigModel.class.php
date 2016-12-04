@@ -18,7 +18,7 @@ class XconfigModel extends Model
 
     /**
      * 写入参数列表
-     * @param  string $listName 参数列表list
+     * @param string $listName 参数列表list
      * @param  array  $listData 存入的数据，形式为key=>value
      * @return bool   是否写入成功
      */

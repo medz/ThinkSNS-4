@@ -104,7 +104,7 @@ class CreditApi extends Api
      * 充值，创建一个订单
     */
     public function createCharge()
-    {   
+    {
         $orderinfo = $this->setOrder();
         if ($orderinfo['status'] == 0) {
             return array('status' => 0, 'mesage' => $orderinfo['mesage']);
@@ -141,7 +141,7 @@ class CreditApi extends Api
 
                 $url ['url'] = createAlipayUrl($configs, $parameter, 3); //直接返回支付宝支付url
                 $url ['charge_type'] = $data ['charge_type'];
-                $url ['charge_value'] =  $data ['charge_value'];
+                $url ['charge_value'] = $data ['charge_value'];
                 $url ['out_trade_no'] = $data ['serial_number'];
 
                 return array(
@@ -474,16 +474,15 @@ class CreditApi extends Api
             $data['result'] = $result;
 
             return  array(
-                'status'  => 1,
-                'data'    => $data,
-                'config'  => $chargeConfigs,
+                'status' => 1,
+                'data' => $data,
+                'config' => $chargeConfigs,
             );
         } else {
             return array(
-                'status'  => 0,
-                'mesage'  => '创建订单失败',
+                'status' => 0,
+                'mesage' => '创建订单失败',
             );
         }
     }
-
 }

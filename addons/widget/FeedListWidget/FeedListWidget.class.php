@@ -185,10 +185,10 @@ class FeedListWidget extends Widget
     /**
      * 获取分享数据，渲染分享显示页面
      *
-     * @param  array  $var
+     * @param array $var
      *                     分享数据相关参数
-     * @param  string $tpl
-     *                     渲染的模板
+     * @param string $tpl
+     *                    渲染的模板
      * @return array  获取分享相关模板数据
      */
     private function getData(array $var, $tpl = 'FeedList.html')
@@ -460,10 +460,10 @@ class FeedListWidget extends Widget
     /**
      * 获取话题分享数据，渲染分享显示页面
      *
-     * @param  array  $var
+     * @param array $var
      *                     分享数据相关参数
-     * @param  string $tpl
-     *                     渲染的模板
+     * @param string $tpl
+     *                    渲染的模板
      * @return array  获取分享相关模板数据
      */
     private function getTopicData(array $var, $tpl = 'FeedList.html')

@@ -128,7 +128,7 @@ class FollowGroupAction extends Action
     {
         $follow_group_id = intval($_REQUEST['gid']);
         if (!empty($follow_group_id)) {
-            $save['title'] = htmlspecialchars($_REQUEST['title'] ,ENT_QUOTES );
+            $save['title'] = htmlspecialchars($_REQUEST['title'], ENT_QUOTES);
             if ($save['title'] === '') {
                 $this->ajaxReturn('', L('PUBLIC_FROUPNAME_NOEMPTY'), 0);            // 分组名称不能为空
             }

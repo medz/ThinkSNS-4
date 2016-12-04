@@ -10,7 +10,7 @@ class PermissionModel
 
     /**
      * 验证权限
-     * @param  string $action 动作节点
+     * @param string $action 动作节点
      * @return bool   是否具有该动作节点的权限
      */
     public function check($action)
@@ -38,7 +38,7 @@ class PermissionModel
 
     /**
      * 设置需要加载权限的 应用 - 模块
-     * @param  string $type 应用 - 模块
+     * @param string $type 应用 - 模块
      * @return object 配置后的权限对象
      */
     public function load($type)
@@ -197,7 +197,7 @@ class PermissionModel
     /**
      * 获取指定用户组的权限
      * @param  string $key 用户组ID或者特殊应用下面的appname_appgroupname
-     * @return array  指定用户组的权限信息
+     * @return array 指定用户组的权限信息
      */
     public function getGroupPermission($key)
     {

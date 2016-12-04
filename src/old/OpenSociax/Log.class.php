@@ -47,9 +47,9 @@ class Log
     /**
      * 知识保存
      * @static
-     * @param int    $type        知识记录方式
+     * @param int $type 知识记录方式
      * @param string $destination 写入目标
-     * @param string $extra       额外参数
+     * @param string $extra 额外参数
      */
     public static function save($type = self::FILE, $destination = '', $extra = '')
     {
@@ -72,11 +72,11 @@ class Log
     /**
      * 知识直接写入
      * @static
-     * @param string $message     知识信息
-     * @param string $level       知识级别
-     * @param int    $type        知识记录方式
+     * @param string $message 知识信息
+     * @param string $level   知识级别
+     * @param int    $type    知识记录方式
      * @param string $destination 写入目标
-     * @param string $extra       额外参数
+     * @param string $extra 额外参数
      */
     public static function write($message, $level = self::ERR, $type = self::FILE, $destination = '', $extra = '')
     {

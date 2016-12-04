@@ -40,9 +40,9 @@ class LiveUserApi extends LiveBaseApi
         $live_service = $this->getStreamServiceUrl();
         //组装数据
         $data = array();
-        $data['usid'] = $this->usid_prex.$uid;//传递uid增加前缀
-        $data['uname'] = getUserName($uid);//用户名
-        $data['sex'] = getUserField($uid, 'sex');//传递性别
+        $data['usid'] = $this->usid_prex.$uid; //传递uid增加前缀
+        $data['uname'] = getUserName($uid); //用户名
+        $data['sex'] = getUserField($uid, 'sex'); //传递性别
         $data['ticket'] = $_REQUEST['ticket'];
 
         // $data = [
@@ -237,8 +237,8 @@ class LiveUserApi extends LiveBaseApi
 
         //直播开始推送
         if ($status == 1) {
-            $userinfo = M('live_user_info')->where(array('usid'=>$usid))->find();
-            $followers = M('user_follow')->where(array('fid'=>$userinfo['uid']))->order('`follow_id` DESC')->field('uid')->select();
+            $userinfo = M('live_user_info')->where(array('usid' => $usid))->find();
+            $followers = M('user_follow')->where(array('fid' => $userinfo['uid']))->order('`follow_id` DESC')->field('uid')->select();
             $followers_uids = getSubByKey($followers, 'uid');
 
             $alert = $userinfo['uname'];
@@ -254,12 +254,15 @@ class LiveUserApi extends LiveBaseApi
      * @DateTime 2016-12-01
      * @return [type] [description]
      */
-    public function updateTicket($usid){
+    public function updateTicket($usid)
+    {
         $data ['usid'] = $usid;
         $data ['ticket'] = '';
         var_dump($usid);
         $result = json_decode(tocurl($this->Service_User_Url, $this->curl_header, $data), true);
-        var_dump($result);exit;
+        var_dump($result);
+        exit;
+
         return $result['code'] == 1 ? true : false;
     }
 }

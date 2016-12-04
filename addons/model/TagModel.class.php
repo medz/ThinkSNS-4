@@ -73,8 +73,8 @@ class TagModel extends Model
     /**
      * 设置指定应用下的应用内容标签
      * @param  int   $row_id 应用内容编号
-     * @param  array $tags   标签
-     * @param  int   $max    最多标签数量
+     * @param  array $tags 标签
+     * @param  int   $max  最多标签数量
      * @return bool  是否设置成功
      */
     public function setAppTags($row_id, $tags, $max = 9)
@@ -119,7 +119,7 @@ class TagModel extends Model
     /**
      * 一次添加多个应用内容的标签
      * @param  int    $row_id 应用内容编号
-     * @param  string $tags   标签
+     * @param  string $tags 标签
      * @return bool   是否添加成功
      */
     public function addAppTags($row_id, $tags)
@@ -145,7 +145,7 @@ class TagModel extends Model
     /**
      * 添加应用内容的标签
      * @param  int    $row_id 应用内容编号
-     * @param  string $tag    标签
+     * @param  string $tag 标签
      * @return bool   是否添加成功
      */
     public function addAppTag($row_id, $tag)
@@ -243,7 +243,7 @@ class TagModel extends Model
 
     /**
      * 通过标签编号，获取标签内容
-     * @param  array $tag_ids 标签ID数组
+     * @param array $tag_ids 标签ID数组
      * @return array 标签内容列表
      */
     public function getTagNames($tag_ids)
@@ -271,10 +271,10 @@ class TagModel extends Model
 
     /**
      * 获取全局标签列表 - 分页型
-     * @param  array  $map   查询条件
-     * @param  string $field 显示字段名称，多个用“,”分割
-     * @param  string $order 排序条件，默认tag_id DESC
-     * @param  int    $limit 结果集数目，默认为20
+     * @param array  $map   查询条件
+     * @param string $field 显示字段名称，多个用“,”分割
+     * @param string $order 排序条件，默认tag_id DESC
+     * @param int    $limit 结果集数目，默认为20
      * @return array  全局标签列表
      */
     public function getTagList($map = null, $field = null, $order = 'tag_id DESC', $limit = 20)

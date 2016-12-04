@@ -8,7 +8,7 @@ class ExpressionModel
 {
     /**
      * 获取当前所有的表情
-     * @param  bool  $flush 是否更新缓存，默认为false
+     * @param bool $flush 是否更新缓存，默认为false
      * @return array 返回表情数据
      */
     public function getAllExpression($flush = false)

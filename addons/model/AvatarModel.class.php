@@ -105,7 +105,7 @@ class AvatarModel
      * 保存Flash提交的数据 - flash上传
      * @param  array $data        用户头像的相关信息
      * @param  array $oldUserInfo 貌似无用字段，与此flash组件有关
-     * @return bool  是否保存成功
+     * @return bool 是否保存成功
      */
     public function saveUploadAvatar($data, $oldUserInfo)
     {

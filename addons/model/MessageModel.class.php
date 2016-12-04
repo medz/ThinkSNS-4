@@ -75,8 +75,8 @@ class MessageModel extends Model
 
     /**
      * 获取私信详细内容
-     * @param  int   $uid          用户UID
-     * @param  int   $id           私信ID
+     * @param int $uid 用户UID
+     * @param int $id  私信ID
      * @param  bool  $show_cascade 是否获取回话内容
      * @return array 私信详细内容
      */
@@ -125,11 +125,11 @@ class MessageModel extends Model
 
     /**
      * 获取指定私信列表中的私信内容
-     * @param  int   $list_id  私信列表ID
-     * @param  int   $uid      用户ID
-     * @param  int   $since_id 最早会话ID
-     * @param  int   $max_id   最新会话ID
-     * @param  int   $count    旧会话加载条数，默认为20
+     * @param int $list_id  私信列表ID
+     * @param int $uid      用户ID
+     * @param int $since_id 最早会话ID
+     * @param int $max_id   最新会话ID
+     * @param int $count    旧会话加载条数，默认为20
      * @return array 指定私信列表中的私信内容
      */
     public function getMessageByListId($list_id, $uid, $since_id = null, $max_id = null, $count = 20)
@@ -235,9 +235,9 @@ class MessageModel extends Model
     /**
      * 发送私信
      * @param  array $data       私信信息，包括to接受对象、title私信标题、content私信正文
-     * @param  int   $from_uid   发送私信的用户ID
-     * @param  bool  $send_email 是否同时发送邮件，默认为false
-     * @return bool  是否发送成功
+     * @param  int  $from_uid   发送私信的用户ID
+     * @param  bool $send_email 是否同时发送邮件，默认为false
+     * @return bool 是否发送成功
      */
     public function postMessage($data, $from_uid, $send_email = false)
     {
@@ -292,11 +292,11 @@ class MessageModel extends Model
 
     /**
      * 回复私信
-     * @param  int    $list_id    回复的私信list_id
+     * @param int $list_id 回复的私信list_id
      * @param  string $content    回复内容
      * @param  int    $from_uid   回复者ID
-     * @param  array  $attach_ids 附件ID数组
-     * @return mix    回复失败返回false，回复成功返回本条新回复的message_id
+     * @param  array $attach_ids 附件ID数组
+     * @return mix   回复失败返回false，回复成功返回本条新回复的message_id
      */
     public function replyMessage($list_id, $content, $from_uid, $attach_ids)
     {
@@ -543,9 +543,9 @@ class MessageModel extends Model
 
     /**
      * 验证指定用户是否是指定私信列表的成员
-     * @param  int   $list_id     私信列表ID
-     * @param  int   $uid         用户ID
-     * @param  bool  $show_detail 是否显示详细，默认为false
+     * @param int  $list_id     私信列表ID
+     * @param int  $uid         用户ID
+     * @param bool $show_detail 是否显示详细，默认为false
      * @return array 如果是成员返回相关信息，不是则返回空数组
      */
     public function isMember($list_id, $uid, $show_detail = false)
@@ -571,8 +571,8 @@ class MessageModel extends Model
     /**
      * 添加新的私信列表
      * @param  array $data     私信列表相关数据
-     * @param  int   $from_uid 发布人ID
-     * @return mix   添加失败返回false，成功返回新的私信列表ID
+     * @param  int $from_uid 发布人ID
+     * @return mix 添加失败返回false，成功返回新的私信列表ID
      */
     private function _addMessageList($data, $from_uid)
     {
@@ -608,8 +608,8 @@ class MessageModel extends Model
     /**
      * 添加私信列表的成员
      * @param  array $data     添加私信成员相关信息；私信列表ID：list_id，私信成员ID数组：member，当前时间：mtime
-     * @param  int   $from_uid 发布人ID
-     * @return mix   添加成功返回新的私信成员表ID，添加失败返回false
+     * @param  int $from_uid 发布人ID
+     * @return mix 添加成功返回新的私信成员表ID，添加失败返回false
      */
     private function _addMessageMember($data, $from_uid)
     {
@@ -642,8 +642,8 @@ class MessageModel extends Model
     /**
      * 添加会话
      * @param  array $data     会话相关数据
-     * @param  int   $from_uid 发布人ID
-     * @return mix   添加失败返回false，添加成功返回新的会话ID
+     * @param  int $from_uid 发布人ID
+     * @return mix 添加失败返回false，添加成功返回新的会话ID
      */
     private function _addMessage($data, $from_uid)
     {
@@ -690,10 +690,10 @@ class MessageModel extends Model
 
     /**
      * 编辑会话，彻底删除，假删除，恢复
-     * @param  int    $message_id 会话ID
+     * @param int $message_id 会话ID
      * @param  string $type       操作类型，彻底删除：deleteMessage，假删除：delMessage，恢复：其他字符串
      * @param  string $title      知识内容，功能待完成
-     * @return array  返回操作后的信息数据
+     * @return array 返回操作后的信息数据
      */
     public function doEditMessage($message_id, $type, $title)
     {
@@ -768,7 +768,7 @@ class MessageModel extends Model
     /*** API使用 ***/
     /**
      * 私信列表，API专用
-     * @param  int    $uid      用户ID
+     * @param int $uid 用户ID
      * @param  string $type     all:全部消息,is_read:阅读过的,is_unread:为阅读  默认'all'
      * @param  int    $since_id 范围起始ID，默认0
      * @param  int    $max_id   范围结束ID，默认0
@@ -806,7 +806,7 @@ class MessageModel extends Model
 
     /**
      * 未读私信列表，API专用
-     * @param  int    $uid      用户ID
+     * @param int $uid 用户ID
      * @param  string $type     all:全部消息,is_read:阅读过的,is_unread:为阅读  默认'all'
      * @param  int    $since_id 范围起始ID，默认0
      * @param  int    $max_id   范围结束ID，默认0

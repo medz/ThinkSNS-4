@@ -152,7 +152,7 @@ class ContentAction extends AdministratorAction
 
     /**
      * 评论管理
-     * @param  bool  $isRec 是否是回收站列表
+     * @param bool $isRec 是否是回收站列表
      * @return array 相关数据
      */
     public function comment($isRec = false, $is_audit = 1)

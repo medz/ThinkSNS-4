@@ -20,8 +20,8 @@ class FollowModel extends Model
     /**
      * 获取关注查询SQL语句，具体使用不清楚
      *
-     * @param  int    $uid
-     *                     用户ID
+     * @param int $uid
+     *                 用户ID
      * @return string 关注查询SQL语句
      */
     public function getFollowingSql($uid)
@@ -66,9 +66,9 @@ class FollowModel extends Model
      *          11：已关注
      *          12：关注成功(且为单向关注)
      *          13：关注成功(且为互粉)
-     * @param  int  $uid
-     *                   发起操作的用户ID
-     * @param  int  $fid
+     * @param int $uid
+     *                 发起操作的用户ID
+     * @param int $fid
      *                   被关注的用户ID或被关注的话题ID
      * @return bool 是否关注成功
      */
@@ -189,9 +189,9 @@ class FollowModel extends Model
     /**
      * 双向关注用户操作
      *
-     * @param  int   $uid
-     *                     用户ID
-     * @param  array $fids
+     * @param int   $uid
+     *                    用户ID
+     * @param array $fids
      *                     需关注用户ID数组
      * @return bool  是否双向关注成功
      */
@@ -249,9 +249,9 @@ class FollowModel extends Model
      *
      * @example 00：取消失败
      *          01：取消成功
-     * @param  int  $uid
-     *                   发起操作的用户ID
-     * @param  int  $fid
+     * @param int $uid
+     *                 发起操作的用户ID
+     * @param int $fid
      *                   被取消关注的用户ID或被取消关注的话题ID
      * @return bool 是否取消关注成功
      */
@@ -286,8 +286,8 @@ class FollowModel extends Model
     /**
      * 获取指定用户的关注与粉丝数
      *
-     * @param  array $uids
-     *                     用户ID数组
+     * @param array $uids
+     *                    用户ID数组
      * @return array 指定用户的关注与粉丝数
      */
     public function getFollowCount($uids)
@@ -321,12 +321,12 @@ class FollowModel extends Model
     /**
      * 获取指定用户的关注列表 分页
      *
-     * @param  int   $uid
-     *                      用户ID
-     * @param  int   $gid
+     * @param int $uid
+     *                 用户ID
+     * @param int $gid
      *                      关注组ID，默认为空
-     * @param  int   $limit
-     *                      结果集数目，默认为10
+     * @param int $limit
+     *                   结果集数目，默认为10
      * @return array 指定用户的关注列表
      */
     public function getFollowingList($uid, $gid = null, $limit = 10)
@@ -368,12 +368,12 @@ class FollowModel extends Model
     /**
      * 获取指定用户的关注列表 不分页
      *
-     * @param  int   $uid
-     *                      用户ID
-     * @param  int   $gid
+     * @param int $uid
+     *                 用户ID
+     * @param int $gid
      *                      关注组ID，默认为空
-     * @param  int   $limit
-     *                      结果集数目，默认为10
+     * @param int $limit
+     *                   结果集数目，默认为10
      * @return array 指定用户的关注列表
      */
     public function getFollowingListAll($uid, $gid = null)
@@ -422,10 +422,10 @@ class FollowModel extends Model
     /**
      * 获取用户uid与用户fid的关注状态，已uid为主
      *
-     * @param  int $uid
-     *                  用户ID
-     * @param  int $fid
-     *                  用户ID
+     * @param int $uid
+     *                 用户ID
+     * @param int $fid
+     *                 用户ID
      * @return int 用户关注状态，格式为array('following'=>1,'follower'=>1)
      */
     public function getFollowState($uid, $fid)
@@ -438,10 +438,10 @@ class FollowModel extends Model
     /**
      * 批量获取用户uid与一群人fids的彼此关注状态
      *
-     * @param  int   $uid
-     *                     用户ID
-     * @param  array $fids
-     *                     用户ID数组
+     * @param int   $uid
+     *                    用户ID
+     * @param array $fids
+     *                    用户ID数组
      * @return array 用户uid与一群人fids的彼此关注状态
      */
     public function getFollowStateByFids($uid, $fids)
@@ -495,8 +495,8 @@ class FollowModel extends Model
     /**
      * 获取所有关注用户数据
      *
-     * @param  int   $uid
-     *                    用户ID
+     * @param int $uid
+     *                 用户ID
      * @return array 所有关注用户数据
      */
     public function getFollowingsList($uid)
@@ -509,11 +509,11 @@ class FollowModel extends Model
     /**
      * 格式化，用户的关注数据
      *
-     * @param  int   $uid
-     *                            用户ID
-     * @param  array $fids
-     *                            用户ID数组
-     * @param  array $follow_data
+     * @param int   $uid
+     *                           用户ID
+     * @param array $fids
+     *                           用户ID数组
+     * @param array $follow_data
      *                            关注状态数据
      * @return array 格式化后的用户关注状态数据
      */
@@ -613,18 +613,18 @@ class FollowModel extends Model
     /**
      * 获取指定用户关注列表，API使用
      *
-     * @param  int   $mid
-     *                         当前登录用户ID
-     * @param  int   $uid
-     *                         指定用户ID
-     * @param  int   $since_id
-     *                         主键起始ID，默认为0
-     * @param  int   $max_id
-     *                         主键最大ID，默认为0
-     * @param  int   $limit
-     *                         结果集数目，默认为20
-     * @param  int   $page
-     *                         页数ID，默认为1
+     * @param int $mid
+     *                      当前登录用户ID
+     * @param int $uid
+     *                      指定用户ID
+     * @param int $since_id
+     *                      主键起始ID，默认为0
+     * @param int $max_id
+     *                      主键最大ID，默认为0
+     * @param int $limit
+     *                      结果集数目，默认为20
+     * @param int $page
+     *                      页数ID，默认为1
      * @return array 指定用户的关注列表数据
      */
     public function getFollowingListForApi($mid, $uid, $since_id = 0, $max_id = 0, $limit = 20, $page = 1)
@@ -716,17 +716,17 @@ class FollowModel extends Model
     /**
      * 数据库搜索关注用户
      *
-     * @param  string $key
+     * @param string $key
      *                       关键字
-     * @param  string $type
+     * @param string $type
      *                       关键字，following,follower
-     * @param  int    $limit
-     *                       结果集数目
-     * @param  int    $uid
-     *                       指定用户UID
-     * @param  int    $gid
-     *                       分组ID
-     * @return array  搜索后的数据
+     * @param  int   $limit
+     *                      结果集数目
+     * @param  int   $uid
+     *                      指定用户UID
+     * @param  int   $gid
+     *                      分组ID
+     * @return array 搜索后的数据
      */
     public function searchFollows($key, $type, $limit = 20, $uid, $gid)
     {

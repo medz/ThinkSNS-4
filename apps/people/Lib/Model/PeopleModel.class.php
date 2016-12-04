@@ -458,7 +458,7 @@ class PeopleModel extends model
 
     /**
      * 获取用户相关信息
-     * @param  array $uids 用户ID数组
+     * @param array $uids 用户ID数组
      * @return array 用户相关数组
      */
     public function getUserInfos($uids, $data)
@@ -484,9 +484,9 @@ class PeopleModel extends model
 
     /**
      * 获取指定用户的相关信息
-     * @param  array  $uids  指定用户ID数组
-     * @param  string $type  指定类型
-     * @param  int    $limit 显示数据，默认为3
+     * @param array  $uids  指定用户ID数组
+     * @param string $type  指定类型
+     * @param int    $limit 显示数据，默认为3
      * @return array  指定用户的相关信息
      */
     public function getTopUserInfos($uids, $type, $limit = 3)

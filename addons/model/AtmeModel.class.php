@@ -88,10 +88,10 @@ class AtmeModel extends Model
     /**
      * 添加@Me数据
      * @param  string $content    @Me的相关内容
-     * @param  int    $row_id     资源ID
-     * @param  array  $extra_uids 额外@用户ID
-     * @param  array  $less_uids  去除@用户ID
-     * @return int    添加成功后的@ID
+     * @param  int   $row_id     资源ID
+     * @param  array $extra_uids 额外@用户ID
+     * @param  array $less_uids  去除@用户ID
+     * @return int   添加成功后的@ID
      */
     public function addAtme($content, $row_id, $extra_uids = null, $less_uids = null)
     {
@@ -213,10 +213,10 @@ class AtmeModel extends Model
     /**
      * 获取@内容中的@用户
      * @param  string $content    @Me的相关内容
-     * @param  array  $extra_uids 额外@用户UID
-     * @param  int    $row_id     资源ID
-     * @param  array  $less_uids  去除@用户ID
-     * @return array  用户UID数组
+     * @param  array $extra_uids 额外@用户UID
+     * @param  int   $row_id     资源ID
+     * @param  array $less_uids  去除@用户ID
+     * @return array 用户UID数组
      */
     public function getUids($content, $extra_uids = null, $row_id, $less_uids = null)
     {
@@ -287,9 +287,9 @@ class AtmeModel extends Model
     /**
      * 删除@Me数据
      * @param  string $content    @Me的相关内容
-     * @param  int    $row_id     资源ID
-     * @param  array  $extra_uids 额外@用户UID
-     * @return bool   是否删除成功
+     * @param  int   $row_id     资源ID
+     * @param  array $extra_uids 额外@用户UID
+     * @return bool  是否删除成功
      */
     public function deleteAtme($content, $row_id, $extra_uids = null)
     {
@@ -402,7 +402,7 @@ class AtmeModel extends Model
     }
     /**
      * 获取动态的种类，用于动态的Tab
-     * @param  array $map 查询条件
+     * @param array $map 查询条件
      * @return array 评论种类与其资源数目
      */
     public function getTab($map)

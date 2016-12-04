@@ -14,7 +14,7 @@ class CollectionModel extends Model
     /**
      * 添加收藏记录
      * @param  array $data 收藏相关数据
-     * @return bool  是否收藏成功
+     * @return bool 是否收藏成功
      */
     public function addCollection(array $data)
     {
@@ -126,7 +126,7 @@ class CollectionModel extends Model
 
     /**
      * 获取收藏的种类，用于收藏的Tab
-     * @param  array $map 查询条件
+     * @param array $map 查询条件
      * @return array 收藏种类与其资源数目
      */
     public function getCollTab($map)
@@ -300,8 +300,8 @@ class CollectionModel extends Model
     /**
      * 数据库搜索收藏分享
      * @param  string $key   关键字
-     * @param  int    $limit 结果集数目，默认20
-     * @return array  搜索的结果数据
+     * @param  int   $limit 结果集数目，默认20
+     * @return array 搜索的结果数据
      */
     public function searchCollections($key, $limit = 20)
     {

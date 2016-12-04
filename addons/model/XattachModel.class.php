@@ -25,7 +25,7 @@ class XattachModel
     /**
      * 上传附件
      *
-     * @param string $attach_type   附件类型
+     * @param string $attach_type 附件类型
      * @param array  $input_options 配置选项[不推荐修改, 默认使用后台的配置]
      */
     public function upload($attach_type = 'attach', $input_options = array())

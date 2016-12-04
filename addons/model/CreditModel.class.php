@@ -200,12 +200,12 @@ class CreditModel extends Model
      * TS2兼容方法：设置用户积分
      * 操作用户积分
      *
-     * @param  int          $uid
-     *                              用户ID
-     * @param  array|string $action
-     *                              系统设定的积分规则的名称
-     *                              或临时定义的一个积分规则数组，例如array('score'=>-4,'experience'=>3)即socre减4点，experience加三点
-     * @param  string|int   $type
+     * @param int          $uid
+     *                             用户ID
+     * @param array|string $action
+     *                             系统设定的积分规则的名称
+     *                             或临时定义的一个积分规则数组，例如array('score'=>-4,'experience'=>3)即socre减4点，experience加三点
+     * @param string|int   $type
      *                              reset:按照操作的值直接重设积分值，整型：作为操作的系数，-1可实现增减倒置
      * @return Object
      */

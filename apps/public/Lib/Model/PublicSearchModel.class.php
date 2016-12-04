@@ -62,7 +62,7 @@ class PublicSearchModel extends Model
     /**
      * 全站查找接口
      * @param  string $key 关键字
-     * @return array  搜索结果列表数据
+     * @return array 搜索结果列表数据
      */
     public function searchInAll($key)
     {

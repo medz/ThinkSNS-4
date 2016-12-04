@@ -392,9 +392,9 @@ class Template
 
     /**
      * TagLib库解析
-     * @param  string $tagLib  要解析的标签库
+     * @param string $tagLib 要解析的标签库
      * @param  string $content 要解析的模板内容
-     * @param  boolen $hide    是否隐藏标签库前缀
+     * @param  boolen $hide 是否隐藏标签库前缀
      * @return string
      */
     public function parseTagLib($tagLib, &$content, $hide = false)
@@ -477,9 +477,9 @@ class Template
     /**
      * 解析标签库的标签
      * 需要调用对应的标签库文件解析类
-     * @param  string       $tagLib  标签库名称
-     * @param  string       $tag     标签名
-     * @param  string       $attr    标签属性
+     * @param string $tagLib 标签库名称
+     * @param string $tag    标签名
+     * @param string $attr   标签属性
      * @param  string       $content 标签内容
      * @return string|false
      */
@@ -807,7 +807,7 @@ class Template
     /**
      * 加载公共模板并缓存 和当前模板在同一路径，否则使用相对路径
      * @param  string $tmplPublicName 公共模板文件名
-     * @param  array  $vars           要传递的变量列表
+     * @param  array  $vars 要传递的变量列表
      * @return string
      */
     private function parseIncludeItem($tmplPublicName, $vars = array())

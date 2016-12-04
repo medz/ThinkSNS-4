@@ -806,8 +806,8 @@ class WebMessageModel
 
     /**
      * 根据用户Id，获取全部客户端连接ID
-     * @param  string|array $uids              用户ID列表，逗号分隔或一个数组
-     * @param  bool         $removeCurrentUser 如果为false，那么如果查询结果有当前用户将会保留
+     * @param string|array $uids              用户ID列表，逗号分隔或一个数组
+     * @param bool         $removeCurrentUser 如果为false，那么如果查询结果有当前用户将会保留
      * @return array        返回一个包含指定用户id的客户端连接Id数组
      */
     public function getClientByUser($uids, $removeCurrentUser = true)

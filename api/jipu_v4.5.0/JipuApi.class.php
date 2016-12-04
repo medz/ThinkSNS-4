@@ -53,7 +53,7 @@ class JipuApi extends Api
                     $data['oauth_token'] = $login['oauth_token'];
                     $data['oauth_token_secret'] = $login['oauth_token_secret'];
                 }
-                
+
                 $data['status'] = 1;
 
                 return $data;
@@ -77,8 +77,9 @@ class JipuApi extends Api
     {
         if ($this->mid && ($this->mid == $this->data['uid'])) {
             $user = model('User')->getUserInfo($this->mid);
+
             return array('status' => 1, 'user' => $user);
-        }else {
+        } else {
             return array('status' => 0, 'msg' => '参数错误');
         }
     }
@@ -272,6 +273,7 @@ class JipuApi extends Api
                         'status' => 0,
                         'msg' => model('Register')->getLastError(),
                 );
+
                 return $return;
             }
             $save ['phone'] = $phone;

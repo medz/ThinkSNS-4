@@ -102,7 +102,7 @@ class UserBlacklistModel extends Model
 
     /**
      * 清除用户的黑名单缓存信息
-     * @param  array $uids 用户UID数组
+     * @param array $uids 用户UID数组
      * @return bool  缓存是否清除成功
      */
     public function cleanCache($uids)

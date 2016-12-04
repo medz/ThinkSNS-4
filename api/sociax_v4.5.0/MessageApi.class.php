@@ -293,8 +293,8 @@ class MessageApi extends Api
     /**
      * 获取群聊信息 --using
      *
-     * @param  int   $list_id
-     *                        群聊ID
+     * @param int $list_id
+     *                     群聊ID
      * @return array 成员、及群聊创建者的信息
      */
     public function get_list_info()

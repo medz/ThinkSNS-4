@@ -403,9 +403,9 @@ class PHPMailer
 
   /**
    * Adds a "To" address.
-   * @param string $address
-   * @param string $name
-   * @return bool true on success, false if address already used
+   * @param  string $address
+   * @param  string $name
+   * @return bool   true on success, false if address already used
    */
   public function AddAddress($address, $name = '')
   {
@@ -415,9 +415,9 @@ class PHPMailer
   /**
    * Adds a "Cc" address.
    * Note: this function works with the SMTP mailer on win32, not with the "mail" mailer.
-   * @param string $address
-   * @param string $name
-   * @return bool true on success, false if address already used
+   * @param  string $address
+   * @param  string $name
+   * @return bool   true on success, false if address already used
    */
   public function AddCC($address, $name = '')
   {
@@ -427,9 +427,9 @@ class PHPMailer
   /**
    * Adds a "Bcc" address.
    * Note: this function works with the SMTP mailer on win32, not with the "mail" mailer.
-   * @param string $address
-   * @param string $name
-   * @return bool true on success, false if address already used
+   * @param  string $address
+   * @param  string $name
+   * @return bool   true on success, false if address already used
    */
   public function AddBCC($address, $name = '')
   {
@@ -438,8 +438,8 @@ class PHPMailer
 
   /**
    * Adds a "Reply-to" address.
-   * @param string $address
-   * @param string $name
+   * @param  string $address
+   * @param  string $name
    * @return bool
    */
   public function AddReplyTo($address, $name = '')
@@ -450,10 +450,10 @@ class PHPMailer
   /**
    * Adds an address to one of the recipient arrays
    * Addresses that have been added already return false, but do not throw exceptions
-   * @param string $kind One of 'to', 'cc', 'bcc', 'ReplyTo'
-   * @param string $address The email address to send to
-   * @param string $name
-   * @return bool true on success, false if address already used or invalid in some way
+   * @param  string $kind    One of 'to', 'cc', 'bcc', 'ReplyTo'
+   * @param  string $address The email address to send to
+   * @param  string $name
+   * @return bool   true on success, false if address already used or invalid in some way
    */
   private function AddAnAddress($kind, $address, $name = '')
   {
@@ -491,8 +491,8 @@ class PHPMailer
 
   /**
    * Set the From and FromName properties
-   * @param string $address
-   * @param string $name
+   * @param  string $address
+   * @param  string $name
    * @return bool
    */
   public function SetFrom($address, $name = '', $auto = 1)
@@ -528,7 +528,7 @@ class PHPMailer
    * Tries to use PHP built-in validator in the filter extension (from PHP 5.2), falls back to a reasonably competent regex validator
    * Conforms approximately to RFC2822
    * @link http://www.hexillion.com/samples/#Regex Original pattern found here
-   * @param string $address The email address to check
+   * @param  string $address The email address to check
    * @return bool
    * @static
    */
@@ -604,8 +604,8 @@ class PHPMailer
 
   /**
    * Sends mail using the $Sendmail program.
-   * @param string $header The message headers
-   * @param string $body The message body
+   * @param  string $header The message headers
+   * @param  string $body   The message body
    * @return bool
    */
   protected function SendmailSend($header, $body)
@@ -651,8 +651,8 @@ class PHPMailer
 
   /**
    * Sends mail using the PHP mail() function.
-   * @param string $header The message headers
-   * @param string $body The message body
+   * @param  string $header The message headers
+   * @param  string $body   The message body
    * @return bool
    */
   protected function MailSend($header, $body)
@@ -709,7 +709,7 @@ class PHPMailer
    * Sends mail via SMTP using PhpSMTP
    * Returns false if there is a bad MAIL FROM, RCPT, or DATA input.
    * @param string $header The message headers
-   * @param string $body The message body
+   * @param string $body   The message body
    * @uses SMTP
    * @return bool
    */
@@ -861,7 +861,7 @@ class PHPMailer
   /**
    * Sets the language for all class error messages.
    * Returns false if it cannot load the language file.  The default language is English.
-   * @param string $langcode ISO 639-1 2-character language code (e.g. Portuguese: "br")
+   * @param string $langcode  ISO 639-1 2-character language code (e.g. Portuguese: "br")
    * @param string $lang_path Path to the language file directory
    */
   public function SetLanguage($langcode = 'en', $lang_path = 'language/')
@@ -943,9 +943,9 @@ class PHPMailer
    * Wraps message for use with mailers that do not
    * automatically perform wrapping and for quoted-printable.
    * Original written by philippe.
-   * @param string $message The message to wrap
-   * @param int $length The line length to wrap to
-   * @param bool $qp_mode Whether to run in Quoted-Printable mode
+   * @param  string $message The message to wrap
+   * @param  int    $length  The line length to wrap to
+   * @param  bool   $qp_mode Whether to run in Quoted-Printable mode
    * @return string
    */
   public function WrapText($message, $length, $qp_mode = false)
@@ -1026,8 +1026,8 @@ class PHPMailer
    * Finds last character boundary prior to maxLength in a utf-8
    * quoted (printable) encoded string.
    * Original written by Colin Brown.
-   * @param string $encodedText utf-8 QP text
-   * @param int    $maxLength   find last character boundary prior to this length
+   * @param  string $encodedText utf-8 QP text
+   * @param  int    $maxLength   find last character boundary prior to this length
    * @return int
    */
   public function UTF8CharBoundary($encodedText, $maxLength)
@@ -1354,10 +1354,10 @@ class PHPMailer
    * Adds an attachment from a path on the filesystem.
    * Returns false if the file could not be found
    * or accessed.
-   * @param string $path Path to the attachment.
-   * @param string $name Overrides the attachment name.
-   * @param string $encoding File encoding (see $Encoding).
-   * @param string $type File extension (MIME) type.
+   * @param  string $path     Path to the attachment.
+   * @param  string $name     Overrides the attachment name.
+   * @param  string $encoding File encoding (see $Encoding).
+   * @param  string $type     File extension (MIME) type.
    * @return bool
    */
   public function AddAttachment($path, $name = '', $encoding = 'base64', $type = 'application/octet-stream')
@@ -1475,7 +1475,7 @@ class PHPMailer
   /**
    * Encodes attachment in requested format.
    * Returns an empty string on failure.
-   * @param string $path The full path to the file
+   * @param string $path     The full path to the file
    * @param string $encoding The encoding to use; one of 'base64', '7bit', '8bit', 'binary', 'quoted-printable'
    * @see EncodeFile()
    * @return string
@@ -1513,8 +1513,8 @@ class PHPMailer
   /**
    * Encodes string to requested format.
    * Returns an empty string on failure.
-   * @param string $str The text to encode
-   * @param string $encoding The encoding to use; one of 'base64', '7bit', '8bit', 'binary', 'quoted-printable'
+   * @param  string $str      The text to encode
+   * @param  string $encoding The encoding to use; one of 'base64', '7bit', '8bit', 'binary', 'quoted-printable'
    * @return string
    */
   public function EncodeString($str, $encoding = 'base64')
@@ -1608,7 +1608,7 @@ class PHPMailer
 
   /**
    * Checks if a string contains multibyte characters.
-   * @param string $str multi-byte text to wrap encode
+   * @param  string $str multi-byte text to wrap encode
    * @return bool
    */
   public function HasMultiBytes($str)
@@ -1624,7 +1624,7 @@ class PHPMailer
    * Correctly encodes and wraps long multibyte strings for mail headers
    * without breaking lines within a character.
    * Adapted from a function by paravoid at http://uk.php.net/manual/en/function.mb-encode-mimeheader.php
-   * @param string $str multi-byte text to wrap encode
+   * @param  string $str multi-byte text to wrap encode
    * @return string
    */
   public function Base64EncodeWrapMB($str)
@@ -1663,8 +1663,8 @@ class PHPMailer
   /**
    * Encode string to quoted-printable.
    * Only uses standard PHP, slow, but will always work
-   * @param string $string the text to encode
-   * @param int $line_max Number of chars allowed on a line before wrapping
+   * @param  string $string   the text to encode
+   * @param  int    $line_max Number of chars allowed on a line before wrapping
    * @return string
    */
   public function EncodeQPphp($input = '', $line_max = 76, $space_conv = false)
@@ -1714,9 +1714,9 @@ class PHPMailer
    * Uses a PHP5 stream filter to do the encoding about 64x faster than the old version
    * Also results in same content as you started with after decoding
    * @see EncodeQPphp()
-   * @param string $string the text to encode
-   * @param int $line_max Number of chars allowed on a line before wrapping
-   * @param bool $space_conv Dummy param for compatibility with existing EncodeQP function
+   * @param  string $string     the text to encode
+   * @param  int    $line_max   Number of chars allowed on a line before wrapping
+   * @param  bool   $space_conv Dummy param for compatibility with existing EncodeQP function
    * @return string
    * @author Marcus Bointon
    */
@@ -1746,8 +1746,8 @@ class PHPMailer
   /**
    * Encode string to q encoding.
    * @link http://tools.ietf.org/html/rfc2047
-   * @param string $str the text to encode
-   * @param string $position Where the text is going to be used, see the RFC for what that means
+   * @param  string $str      the text to encode
+   * @param  string $position Where the text is going to be used, see the RFC for what that means
    * @return string
    */
   public function EncodeQ($str, $position = 'text')
@@ -1780,10 +1780,10 @@ class PHPMailer
    * Adds a string or binary attachment (non-filesystem) to the list.
    * This method can be used to attach ascii or binary data,
    * such as a BLOB record from a database.
-   * @param string $string String attachment data.
+   * @param string $string   String attachment data.
    * @param string $filename Name of the attachment.
    * @param string $encoding File encoding (see $Encoding).
-   * @param string $type File extension (MIME) type.
+   * @param string $type     File extension (MIME) type.
    */
   public function AddStringAttachment($string, $filename, $encoding = 'base64', $type = 'application/octet-stream')
   {
@@ -1805,12 +1805,12 @@ class PHPMailer
    * just about any other document.  Make sure to set the $type to an
    * image type.  For JPEG images use "image/jpeg" and for GIF images
    * use "image/gif".
-   * @param string $path Path to the attachment.
-   * @param string $cid Content ID of the attachment.  Use this to identify
-   *        the Id for accessing the image in an HTML form.
-   * @param string $name Overrides the attachment name.
-   * @param string $encoding File encoding (see $Encoding).
-   * @param string $type File extension (MIME) type.
+   * @param  string $path     Path to the attachment.
+   * @param  string $cid      Content ID of the attachment.  Use this to identify
+   *                          the Id for accessing the image in an HTML form.
+   * @param  string $name     Overrides the attachment name.
+   * @param  string $encoding File encoding (see $Encoding).
+   * @param  string $type     File extension (MIME) type.
    * @return bool
    */
   public function AddEmbeddedImage($path, $cid, $name = '', $encoding = 'base64', $type = 'application/octet-stream')
@@ -2176,9 +2176,9 @@ class PHPMailer
    * Usage Example:
    * $page->set('X-Priority', '3');
    *
-   * @param string $name Parameter Name
-   * @param mixed $value Parameter Value
-   * NOTE: will not work with arrays, there are no arrays to set/reset
+   * @param string $name  Parameter Name
+   * @param mixed  $value Parameter Value
+   *                      NOTE: will not work with arrays, there are no arrays to set/reset
    * @todo Should this not be using __set() magic function?
    */
   public function set($name, $value = '')
@@ -2201,7 +2201,7 @@ class PHPMailer
 
   /**
    * Strips newlines to prevent header injection.
-   * @param string $str String
+   * @param  string $str String
    * @return string
    */
   public function SecureHeader($str)
@@ -2216,7 +2216,7 @@ class PHPMailer
    * Set the private key file and password to sign the message.
    *
    * @param string $key_filename Parameter File Name
-   * @param string $key_pass Password for private key
+   * @param string $key_pass     Password for private key
    */
   public function Sign($cert_filename, $key_filename, $key_pass)
   {
@@ -2229,7 +2229,7 @@ class PHPMailer
    * Set the private key file and password to sign the message.
    *
    * @param string $key_filename Parameter File Name
-   * @param string $key_pass Password for private key
+   * @param string $key_pass     Password for private key
    */
   public function DKIM_QP($txt)
   {
@@ -2310,8 +2310,8 @@ class PHPMailer
    * Create the DKIM header, body, as new header
    *
    * @param string $headers_line Header lines
-   * @param string $subject Subject
-   * @param string $body Body
+   * @param string $subject      Subject
+   * @param string $body         Body
    */
   public function DKIM_Add($headers_line, $subject, $body)
   {

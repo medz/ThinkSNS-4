@@ -585,8 +585,8 @@ function L($key, $data = array())
  * 如果end标记位没有定义，则会自动以当前作为标记位
  * 其中统计内存使用需要 MEMORY_LIMIT_ON 常量为true才有效
  * </code>
- * @param  string     $start 开始标签
- * @param  string     $end   结束标签
+ * @param string $start 开始标签
+ * @param string $end   结束标签
  * @param  int|string $dec   小数位或者m
  * @return mixed
  */
@@ -694,7 +694,7 @@ function t($text)
 /**
  * h函数用于过滤不安全的html标签，输出安全的html
  * @param  string $text 待过滤的字符串
- * @param  string $type 保留的标签格式
+ * @param string $type 保留的标签格式
  * @return string 处理后内容
  */
 function h($text, $type = 'html')
@@ -1151,7 +1151,7 @@ function byte_format($size, $dec = 2)
 
 /**
  * 获取客户端IP地址
- * @param  int   $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
+ * @param int $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
  * @param  bool  $adv  是否进行高级模式获取（有可能被伪装）
  * @return mixed
  */
@@ -1213,8 +1213,8 @@ function LogRecord($app_group, $action, $data, $isAdmin = false)
 
 /**
  * 验证权限方法
- * @param string       $load   应用 - 模块 字段
- * @param string       $action 权限节点字段
+ * @param string $load   应用 - 模块 字段
+ * @param string $action 权限节点字段
  * @param unknown_type $group  是否指定应用内部用户组
  */
 function CheckPermission($load = '', $action = '', $group = '')
@@ -1427,8 +1427,8 @@ function auto_charset($fContents, $from, $to)
  * 友好的时间显示
  *
  * @param  int    $sTime 待显示的时间
- * @param  string $type  类型. normal | mohu | full | ymd | other
- * @param  string $alt   已失效
+ * @param  string $type 类型. normal | mohu | full | ymd | other
+ * @param  string $alt  已失效
  * @return string
  */
 function friendlyDate($sTime, $type = 'normal', $alt = 'false')
@@ -1557,7 +1557,7 @@ function parseForApi($html)
 /**
  * 格式化分享,替换话题
  * @param  string $content 待格式化的内容
- * @param  bool   $url     是否替换URL
+ * @param  bool   $url 是否替换URL
  * @return string
  */
 function format($content, $url = false)
@@ -2248,13 +2248,13 @@ function isInvite()
 
 /**
  * 传统形式显示无限极分类树
- * @param  array  $data     树形结构数据
- * @param  string $stable   所操作的数据表
- * @param  int    $left     样式偏移
+ * @param array  $data   树形结构数据
+ * @param string $stable 所操作的数据表
+ * @param int    $left   样式偏移
  * @param  array  $delParam 删除关联信息参数，app、module、method
- * @param  int    $level    添加子分类层级，默认为0，则可以添加无限子分类
+ * @param int $level 添加子分类层级，默认为0，则可以添加无限子分类
  * @param  int    $times    用于记录递归层级的次数，默认为1，调用函数时，不需要传入值。
- * @param  int    $limit    分类限制字数。
+ * @param  int    $limit 分类限制字数。
  * @return string 树形结构的HTML数据
  */
 function showTreeCategory($data, $stable, $left, $delParam, $level = 0, $ext = '', $times = 1, $limit = 0)
@@ -2324,11 +2324,11 @@ function encodeCategoryExtra($ext, $defExt)
 
 /**
  * 返回解析空间地址
- * @param  int    $uid    用户ID
- * @param  string $class  样式类
- * @param  string $target 是否进行跳转
+ * @param int    $uid    用户ID
+ * @param string $class  样式类
+ * @param string $target 是否进行跳转
  * @param  string $text   标签内的相关内容
- * @param  boolen $icon   是否显示用户组图标，默认为true
+ * @param  boolen $icon 是否显示用户组图标，默认为true
  * @return string 解析空间地址HTML
  */
 function getUserSpace($uid, $class, $target, $text, $icon = true)

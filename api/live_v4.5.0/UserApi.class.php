@@ -306,16 +306,16 @@ class UserApi extends Api
     /**
      * 用户粉丝列表 --using
      *
-     * @param  int     $user_id
-     *                          用户UID
-     * @param  varchar $uname
-     *                          用户名
-     * @param  varchar $key
+     * @param int     $user_id
+     *                         用户UID
+     * @param varchar $uname
+     *                         用户名
+     * @param varchar $key
      *                          搜索关键字
-     * @param  int     $max_id
+     * @param int $max_id
      *                          上次返回的最后一条关注ID
-     * @param  int     $count
-     *                          粉丝个数
+     * @param int $count
+     *                   粉丝个数
      * @return array   用户信息+关注状态
      */
     public function user_follower()
@@ -382,15 +382,15 @@ class UserApi extends Api
     /**
      * 用户关注列表 --using
      *
-     * @param  int     $user_id
-     *                          用户UID
-     * @param  varchar $uname
-     *                          用户名
-     * @param  varchar $key
+     * @param int     $user_id
+     *                         用户UID
+     * @param varchar $uname
+     *                         用户名
+     * @param varchar $key
      *                          搜索关键字
-     * @param  int     $max_id
+     * @param int $max_id
      *                          上次返回的最后一条关注ID
-     * @param  int     $count
+     * @param int $count
      *                          关注个数
      * @return array   用户信息+关注状态
      */
@@ -455,16 +455,16 @@ class UserApi extends Api
     /**
      * 用户好友列表(相互关注) --using
      *
-     * @param  int     $user_id
-     *                          用户UID
-     * @param  varchar $uname
-     *                          用户名
-     * @param  varchar $key
+     * @param int     $user_id
+     *                         用户UID
+     * @param varchar $uname
+     *                         用户名
+     * @param varchar $key
      *                          搜索关键字
-     * @param  int     $max_id
+     * @param int $max_id
      *                          上次返回的最后一条关注ID
-     * @param  int     $count
-     *                          好友个数
+     * @param int $count
+     *                   好友个数
      * @return array   用户信息+关注状态
      */
     public function user_friend()
@@ -690,10 +690,10 @@ class UserApi extends Api
      *                     用户UIDuname
      * @param varchar $
      *        	用户名
-     * @param  int   $max_id
-     *                       上次返回的最后一条附件ID
-     * @param  int   $count
-     *                       图片个数
+     * @param int $max_id
+     *                    上次返回的最后一条附件ID
+     * @param int $count
+     *                    图片个数
      * @return array 照片列表
      */
     public function user_photo($uid_param)

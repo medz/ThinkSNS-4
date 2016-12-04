@@ -9,7 +9,7 @@ class ThirdpartyShareWidget extends Widget
     /**
      * 渲染可能感兴趣的人页面
      *
-     * @param  array  $data
+     * @param array $data
      *                      配置相关数据
      * @return string 渲染页面的HTML
      */

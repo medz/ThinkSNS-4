@@ -584,8 +584,8 @@ class Db extends Think
      * 通过Select方式插入记录
      * @param  string $fields 要插入的数据表字段名
      * @param  string $table  要插入的数据表名
-     * @param  array  $option 查询数据参数
-     * @return false  | integer
+     * @param  array $option 查询数据参数
+     * @return false | integer
      */
     public function selectInsert($fields, $table, $options = array())
     {

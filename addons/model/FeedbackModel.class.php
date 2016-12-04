@@ -84,7 +84,7 @@ class FeedbackModel extends Model
     /**
      * 添加反馈
      *
-     * @param  int    $type    反馈的类型
+     * @param int $type 反馈的类型
      * @param  string $content 反馈的内容
      * @param  int    $uid     反馈的UID，默认为0，兼容某些地方，可以匿名反馈
      * @return bool
@@ -147,8 +147,8 @@ class FeedbackModel extends Model
     /**
      * 更具type类型获取分页数据
      *
-     * @param  int   $type   类型
-     * @param  int   $number 每页显示的数量
+     * @param int $type   类型
+     * @param int $number 每页显示的数量
      * @param  bool  $asc    是否按照时间正序排列，默认为false，以时间倒叙
      * @return array
      * @author Medz Seven <lovevipdsw@vip.qq.com>

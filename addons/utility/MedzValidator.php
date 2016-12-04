@@ -30,7 +30,7 @@ class MedzValidator
      * 国际区号-手机号码
      *
      * @param  string $number 待验证的号码
-     * @return bool   如果验证失败返回false,验证成功返回true
+     * @return bool 如果验证失败返回false,验证成功返回true
      */
     public static function isTelNumber($number)
     {
@@ -44,7 +44,7 @@ class MedzValidator
      * QQ号码必须是以1-9的数字开头，并且长度5-15为的数字串
      *
      * @param  string $qq 待验证的qq号码
-     * @return bool   如果验证成功返回true，否则返回false
+     * @return bool 如果验证成功返回true，否则返回false
      */
     public static function isQQ($qq)
     {
@@ -57,7 +57,7 @@ class MedzValidator
      * 邮政编码是4-8个长度的数字串
      *
      * @param  string $zipcode 待验证的邮编
-     * @return bool   如果验证成功返回true，否则返回false
+     * @return bool 如果验证成功返回true，否则返回false
      */
     public static function isZipcode($zipcode)
     {
@@ -67,8 +67,8 @@ class MedzValidator
     /**
      * 验证是否是有合法的email
      *
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果,默认为array()
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果,默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false即仅进行一次匹配
      * @return bool   如果匹配成功返回true，否则返回false
      */
@@ -81,7 +81,7 @@ class MedzValidator
      * 验证是否是合法的email
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是email则返回true，否则返回false
+     * @return bool 如果是email则返回true，否则返回false
      */
     public static function isEmail($string)
     {
@@ -91,8 +91,8 @@ class MedzValidator
     /**
      * 验证是否有合法的身份证号
      *
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果,默认为array()
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果,默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false即仅进行一次匹配
      * @return bool   如果匹配成功返回true，否则返回false
      */
@@ -105,7 +105,7 @@ class MedzValidator
      * 验证是否是合法的身份证号
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是合法的身份证号则返回true，否则返回false
+     * @return bool 如果是合法的身份证号则返回true，否则返回false
      */
     public static function isIdCard($string)
     {
@@ -115,8 +115,8 @@ class MedzValidator
     /**
      * 验证是否有合法的URL
      *
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果,默认为array()
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果,默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false即仅进行一次匹配
      * @return bool   如果匹配成功返回true，否则返回false
      */
@@ -129,7 +129,7 @@ class MedzValidator
      * 验证是否是合法的url
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是合法的url则返回true，否则返回false
+     * @return bool 如果是合法的url则返回true，否则返回false
      */
     public static function isUrl($string)
     {
@@ -139,8 +139,8 @@ class MedzValidator
     /**
      * 验证是否有中文
      *
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果,默认为array()
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果,默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false即仅进行一次匹配
      * @return bool   如果匹配成功返回true，否则返回false
      */
@@ -153,7 +153,7 @@ class MedzValidator
      * 验证是否是中文
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是中文则返回true，否则返回false
+     * @return bool 如果是中文则返回true，否则返回false
      */
     public static function isChinese($string)
     {
@@ -163,8 +163,8 @@ class MedzValidator
     /**
      * 验证是否有html标记
      *
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果,默认为array()
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果,默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false即仅进行一次匹配
      * @return bool   如果匹配成功返回true，否则返回false
      */
@@ -177,7 +177,7 @@ class MedzValidator
      * 验证是否是合法的html标记
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是合法的html标记则返回true，否则返回false
+     * @return bool 如果是合法的html标记则返回true，否则返回false
      */
     public static function isHtml($string)
     {
@@ -187,8 +187,8 @@ class MedzValidator
     /**
      * 验证是否有合法的ipv4地址
      *
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果,默认为array()
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果,默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false即仅进行一次匹配
      * @return bool   如果匹配成功返回true，否则返回false
      */
@@ -201,7 +201,7 @@ class MedzValidator
      * 验证是否是合法的IP
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是合法的IP则返回true，否则返回false
+     * @return bool 如果是合法的IP则返回true，否则返回false
      */
     public static function isIpv4($string)
     {
@@ -211,8 +211,8 @@ class MedzValidator
     /**
      * 验证是否有合法的ipV6
      *
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果,默认为array()
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果,默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false即仅进行一次匹配
      * @return bool   如果匹配成功返回true，否则返回false
      */
@@ -238,7 +238,7 @@ class MedzValidator
      * 验证是否是合法的ipV6
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是合法的ipV6则返回true，否则返回false
+     * @return bool 如果是合法的ipV6则返回true，否则返回false
      */
     public static function isIpv6($string)
     {
@@ -261,8 +261,8 @@ class MedzValidator
     /**
      * 验证是否有客户端脚本
      *
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果,默认为array()
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果,默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false即仅进行一次匹配
      * @return bool   如果匹配成功返回true，否则返回false
      */
@@ -275,7 +275,7 @@ class MedzValidator
      * 验证是否是合法的客户端脚本
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是合法的客户端脚本则返回true，否则返回false
+     * @return bool 如果是合法的客户端脚本则返回true，否则返回false
      */
     public static function isScript($string)
     {
@@ -319,7 +319,7 @@ class MedzValidator
      * 验证是否是不能为空
      *
      * @param  mixed $value 待判断的数据
-     * @return bool  如果为空则返回false,不为空返回true
+     * @return bool 如果为空则返回false,不为空返回true
      */
     public static function isRequired($value)
     {
@@ -329,9 +329,9 @@ class MedzValidator
     /**
      * 在 $string 字符串中搜索与 $regExp 给出的正则表达式相匹配的内容。
      *
-     * @param  string $regExp  搜索的规则(正则)
-     * @param  string $string  被搜索的 字符串
-     * @param  array  $matches 会被搜索的结果，默认为array()
+     * @param string $regExp  搜索的规则(正则)
+     * @param string $string  被搜索的 字符串
+     * @param array  $matches 会被搜索的结果，默认为array()
      * @param  bool   $ifAll   是否进行全局正则表达式匹配，默认为false不进行完全匹配
      * @return int    返回匹配的次数
      */

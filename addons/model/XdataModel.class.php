@@ -18,7 +18,7 @@ class XdataModel extends Model
 
     /**
      * 写入参数列表
-     * @param  string $listName 参数列表list
+     * @param string $listName 参数列表list
      * @param  array  $listData 存入的数据，形式为key=>value
      * @return bool   是否写入成功
      */
@@ -82,8 +82,8 @@ class XdataModel extends Model
 
     /**
      * 写入单个数据
-     * @param  string $key     要存储的参数list:key
-     * @param  string $value   要存储的参数的值
+     * @param string $key   要存储的参数list:key
+     * @param string $value 要存储的参数的值
      * @param  bool   $replace false为插入新参数，ture为更新已有参数，默认为true
      * @return bool   是否写入成功
      */

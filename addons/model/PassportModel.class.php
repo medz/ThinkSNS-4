@@ -428,7 +428,7 @@ class PassportModel
 
     /**
      * 加密函数
-     * @param  string $txt 需加密的字符串
+     * @param string $txt 需加密的字符串
      * @param  string $key 加密密钥，默认读取SECURE_CODE配置
      * @return string 加密后的字符串
      */

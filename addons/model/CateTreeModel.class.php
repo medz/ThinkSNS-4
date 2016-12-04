@@ -147,11 +147,11 @@ class CateTreeModel
 
     /**
      * 移动一个树形节点，即更改一个节点的父节点，移动规则：父节点不能移动到自己的子树下面
-     * @param  int   $id      节点ID
-     * @param  int   $newPid  新的父节点ID
-     * @param  int   $newSort 新的排序值
+     * @param int $id      节点ID
+     * @param int $newPid  新的父节点ID
+     * @param int $newSort 新的排序值
      * @param  array $data    表示其他需要保存的字段，由实现此model的类完成
-     * @return bool  是否移动成功
+     * @return bool 是否移动成功
      */
     public function moveTree($id, $newPid, $newSort = '255', $data = array())
     {

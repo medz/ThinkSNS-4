@@ -808,7 +808,7 @@ class OauthApi extends Api
      * 验证是否是合法的email
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是email则返回true，否则返回false
+     * @return bool 如果是email则返回true，否则返回false
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      * @link http://medz.cn
      */

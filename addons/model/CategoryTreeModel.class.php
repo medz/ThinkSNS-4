@@ -245,10 +245,10 @@ class CategoryTreeModel extends Model
 
     /**
      * 添加子分类操作
-     * @param  int    $pid   父级分类ID
-     * @param  string $title 分类名称
+     * @param int    $pid   父级分类ID
+     * @param string $title 分类名称
      * @param  array  $extra 插入数据时，带入的相关信息
-     * @return bool   添加分类是否成功
+     * @return bool 添加分类是否成功
      */
     public function addTreeCategory($pid, $title, $extra = array())
     {
@@ -280,10 +280,10 @@ class CategoryTreeModel extends Model
 
     /**
      * 更新分类信息操作
-     * @param  int    $cid   分类ID
-     * @param  string $title 分类名称
+     * @param int    $cid   分类ID
+     * @param string $title 分类名称
      * @param  array  $extra 插入数据时，带入的相关信息
-     * @return bool   更新分类是否成功
+     * @return bool 更新分类是否成功
      */
     public function upTreeCategory($cid, $title, $extra = array())
     {
@@ -372,7 +372,7 @@ class CategoryTreeModel extends Model
 
     /**
      * 获取全部分类Hash数组
-     * @param  int   $pid 父级分类ID
+     * @param int $pid 父级分类ID
      * @return array 全部分类Hash数组
      */
     public function getCategoryHash($pid = -1)
@@ -399,9 +399,9 @@ class CategoryTreeModel extends Model
 
     /**
      * 存储分类配置项操作
-     * @param  int   $cid   分类ID
+     * @param int $cid 分类ID
      * @param  array $extra 分类配置数据数组
-     * @return bool  是否存储成功
+     * @return bool 是否存储成功
      */
     public function doSetCategoryConf($cid, $ext)
     {
@@ -417,7 +417,7 @@ class CategoryTreeModel extends Model
 
     /**
      * 获取指定分类的相关配置信息
-     * @param  int   $cid 分类ID
+     * @param int $cid 分类ID
      * @return array 指定分类的相关配置信息
      */
     public function getCatgoryConf($cid)
@@ -447,7 +447,7 @@ class CategoryTreeModel extends Model
 
     /**
      * 获取详细的分类Hash数组 - 主要为了显示ext中的内容
-     * @param  int   $pid 父级分类ID
+     * @param int $pid 父级分类ID
      * @return array 详细的分类Hash数组 - 主要为了显示ext中的内容
      */
     public function getCategoryAllHash($pid = -1, $order = 'sort ASC')

@@ -212,14 +212,14 @@ class OauthApi extends Api
                 if ($user['is_active'] != 1) {
                     return array('status' => 0, 'msg' => '您的帐号尚未激活,请进入邮箱激活');
                 }
-                
+
                 //直播用户信息
                 $query['uid'] = $user['uid'];
                 if ($live_user_info = D('live_user_info')->where(array('uid' => $user['uid']))->find()) {
                     $query['ticket'] = $live_user_info['ticket'];
                 }
                 $params = http_build_query($query);
-                $live_user_info = file_get_contents(SITE_URL.'/api.php?api_type=live&mod=LiveUser&act=postUser&' . $params);
+                $live_user_info = file_get_contents(SITE_URL.'/api.php?api_type=live&mod=LiveUser&act=postUser&'.$params);
                 $live_user_info = json_decode($live_user_info, true);
                 $live_user_info['status'] == 1 && $ticket = $live_user_info['data']['ticket'];
 
@@ -839,7 +839,7 @@ class OauthApi extends Api
      * 验证是否是合法的email
      *
      * @param  string $string 待验证的字串
-     * @return bool   如果是email则返回true，否则返回false
+     * @return bool 如果是email则返回true，否则返回false
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      * @link http://medz.cn
      */

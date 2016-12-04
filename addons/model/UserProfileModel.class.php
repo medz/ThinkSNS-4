@@ -29,8 +29,8 @@ class UserProfileModel extends Model
 
     /**
      * 获取用户资料配置信息 - 不分页型
-     * @param  array  $map   查询条件
-     * @param  string $order 排序条件
+     * @param array  $map   查询条件
+     * @param string $order 排序条件
      * @return array  用户资料配置信息
      */
     public function getUserProfileSetting($map = null, $order = 'field_key, display_order ASC')
@@ -48,8 +48,8 @@ class UserProfileModel extends Model
 
     /**
      * 获取用户资料配置信息的树形结构，已分类进行树形分类
-     * @param  array  $map   查询条件
-     * @param  string $order 排序条件
+     * @param array  $map   查询条件
+     * @param string $order 排序条件
      * @return array  用户资料配置信息的树形结构，已分类进行树形分类
      */
     public function getUserProfileSettingTree($map = null, $order = 'field_key, display_order ASC')
@@ -63,7 +63,7 @@ class UserProfileModel extends Model
     /**
      * 删除指定的资料配置字段
      * @param  array $filed_ids 配置字段ID数组
-     * @return bool  是否删除成功
+     * @return bool 是否删除成功
      */
     public function deleteProfileSet($filed_ids)
     {
@@ -236,8 +236,8 @@ class UserProfileModel extends Model
 
     /**
      * 获取汇报关系，由上级至下级
-     * @param  int   $uid   用户UID
-     * @param  int   $level 显示的层级值
+     * @param int $uid   用户UID
+     * @param int $level 显示的层级值
      * @return array 汇报关系树形结构
      */
     public function getUserWorkDirectorTree($uid, $level = 3)
@@ -290,7 +290,7 @@ class UserProfileModel extends Model
     /**
      * 生成用户字段配置的树形结构，递归方法
      * @param  array $setting    用户字段配置信息
-     * @param  int   $parent_key 父级的Key值
+     * @param int $parent_key 父级的Key值
      * @return array 用户字段配置的树形结构
      */
     private function _makeUserProfileSettingTree($setting, $parent_key = 0)

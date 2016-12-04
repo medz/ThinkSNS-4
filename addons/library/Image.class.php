@@ -285,7 +285,7 @@ class Image
      +----------------------------------------------------------
      * @static
      +----------------------------------------------------------
-     * @param string $string  字符串
+     * @param string $string 字符串
      * @param string $size    图像大小 width,height 或者 array(width,height)
      * @param string $font    字体信息 fontface,fontsize 或者 array(fontface,fontsize)
      * @param string $type    图像格式 默认PNG
@@ -526,7 +526,7 @@ class Image
      * @param string $type 图像格式
      * @param string $type 图像格式
      * @param string $lw   单元宽度
-     * @param string $hi   条码高度
+     * @param string $hi 条码高度
      +----------------------------------------------------------
      * @return string
      +----------------------------------------------------------

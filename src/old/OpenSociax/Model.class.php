@@ -145,7 +145,7 @@ class Model extends Think
 
     /**
      * 动态切换扩展模型
-     * @param  string $type 模型类型名称
+     * @param string $type 模型类型名称
      * @param  mixed  $vars 要传入扩展模型的属性变量
      * @return Model
      */
@@ -330,7 +330,7 @@ class Model extends Think
      * 通过Select方式添加记录
      * @param  string $fields  要插入的数据表字段名
      * @param  string $table   要插入的数据表名
-     * @param  array  $options 表达式
+     * @param  array $options 表达式
      * @return bool
      */
     public function selectAdd($fields = '', $table = '', $options = array())

@@ -53,8 +53,8 @@ class RelatedUserModel extends Model
      * 5.职业信息推荐，TA跟你的职业信息相同
      * 6.地区信息推荐，TA与你在同一个地方，只实现三级匹配
      * 7.随机推荐
-     * @param  int   $show  显示个数，默认为4
-     * @param  int   $limit 查询缓存个数，默认为100
+     * @param int $show  显示个数，默认为4
+     * @param int $limit 查询缓存个数，默认为100
      * @return array 可能感兴趣的人数组
      */
     public function getRelatedUser($show = 4, $limit = 100)
@@ -159,8 +159,8 @@ class RelatedUserModel extends Model
      * 5.职业信息推荐，TA跟你的职业信息相同
      * 6.地区信息推荐，TA与你在同一个地方，只实现三级匹配
      * 7.随机推荐
-     * @param  int   $show  显示个数，默认为4
-     * @param  int   $limit 查询缓存个数，默认为100
+     * @param int $show  显示个数，默认为4
+     * @param int $limit 查询缓存个数，默认为100
      * @return array 可能感兴趣的人数组
      */
     public function getRelatedUserSquare($show = 4, $limit = 100)
@@ -237,8 +237,8 @@ class RelatedUserModel extends Model
 
     /**
      * 获取指定类型的关联用户
-     * @param  string $type  类型字符串
-     * @param  int    $limit 显示个数
+     * @param string $type  类型字符串
+     * @param int    $limit 显示个数
      * @return array  指定类型的关联用户
      */
     public function getRelatedUserByType($type, $limit)
@@ -444,7 +444,7 @@ class RelatedUserModel extends Model
 
     /**
      * 获取有共同好友的用户推荐
-     * @param  int   $limit 查询个人，默认为1
+     * @param int $limit 查询个人，默认为1
      * @return array 有共同好友的用户推荐
      */
     public function _getRelatedUserFromFollowing($limit = 2)

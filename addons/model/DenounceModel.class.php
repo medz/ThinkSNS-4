@@ -72,9 +72,9 @@ class DenounceModel extends Model
     /**
      * 添加举报信息
      * @param $id 举报的资源ID
-     * @param  int    $uid     举报用户ID
+     * @param int $uid 举报用户ID
      * @param  string $content 举报附加内容
-     * @param  string $type    举报资源类型
+     * @param  string $type 举报资源类型
      * @return mix    添加失败返回false，成功返回新添加的举报ID
      */
     public function autoDenounce($id, $uid, $content, $type = 'feed')

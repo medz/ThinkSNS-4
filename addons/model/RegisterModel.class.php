@@ -83,7 +83,7 @@ class RegisterModel extends Model
     /**
      * 验证邮箱内容的正确性
      *
-     * @param  string $email
+     * @param string $email
      *                           输入邮箱的信息
      * @param  string $old_email
      *                           原始邮箱的信息

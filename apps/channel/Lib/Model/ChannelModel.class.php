@@ -137,7 +137,7 @@ class ChannelModel extends Model
 
     /**
      * 获取指定分享已经加入的频道分类
-     * @param  int   $feedId 分享ID
+     * @param int $feedId 分享ID
      * @return array 已加入频道的分类数组
      */
     public function getSelectedChannels($feedId)
@@ -215,7 +215,7 @@ class ChannelModel extends Model
 
     /**
      * 获取指定频道分类下的相关数据 - 分页数据
-     * @param  int   $cid 频道分类ID
+     * @param int $cid 频道分类ID
      * @return array 指定频道分类下的相关数据
      */
     public function getDataWithCid($cid, $loadId, $limit = 20, $order, $loadCount)

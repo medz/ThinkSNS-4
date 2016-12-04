@@ -124,7 +124,7 @@ class InviteModel extends Model
 
     /**
      * 获取指定邀请码的相关信息
-     * @param  string $code 邀请码
+     * @param string $code 邀请码
      * @return array  指定邀请码的相关信息
      */
     public function getInviteCodeInfo($code)
@@ -137,9 +137,9 @@ class InviteModel extends Model
 
     /**
      * 获取指定用户可用的邀请码个数
-     * @param  int    $uid  用户ID
+     * @param int $uid 用户ID
      * @param  string $type 邀请码类型，email或者link
-     * @return int    指定用户可用的邀请码个数
+     * @return int 指定用户可用的邀请码个数
      */
     public function getAvailableCodeCount($uid, $type)
     {
@@ -159,8 +159,8 @@ class InviteModel extends Model
 
     /**
      * 检验验证码是否可用
-     * @param  string $code 验证码
-     * @param  string $type 注册类型
+     * @param string $code 验证码
+     * @param string $type 注册类型
      * @return int    邀请码使用情况，0：邀请码不存在，1：邀请码可用，2：邀请码已被使用
      */
     public function checkInviteCode($code, $type)
@@ -178,7 +178,7 @@ class InviteModel extends Model
 
     /**
      * 通过邀请码获取邀请人相关信息
-     * @param  string $code 邀请码
+     * @param string $code 邀请码
      * @return array  获取邀请人相关信息
      */
     public function getInviterInfoByCode($code)
@@ -248,11 +248,11 @@ class InviteModel extends Model
 
     /**
      * 邮件邀请注册
-     * @param  array  $email   被邀请人邮箱数组
+     * @param array $email 被邀请人邮箱数组
      * @param  string $detail  邀请相关信息
-     * @param  int    $uid     邀请人ID
-     * @param  bool   $isAdmin 是否为管理员邀请操作，默认为false
-     * @return bool   是否发送邀请成功
+     * @param  int  $uid     邀请人ID
+     * @param  bool $isAdmin 是否为管理员邀请操作，默认为false
+     * @return bool 是否发送邀请成功
      */
     public function doInvite($email, $detail, $uid, $isAdmin = false)
     {

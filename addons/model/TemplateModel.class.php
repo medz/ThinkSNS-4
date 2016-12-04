@@ -57,7 +57,7 @@ class TemplateModel extends Model
     /**
      * 添加模版操作
      * @param  array $data 模板相关数据
-     * @return bool  是否添加成功
+     * @return bool 是否添加成功
      */
     public function addTemplate($data)
     {
@@ -72,9 +72,9 @@ class TemplateModel extends Model
 
     /**
      * 编辑模板操作
-     * @param  int   $tplId 模板ID
+     * @param int $tplId 模板ID
      * @param  array $data  模板相关数据
-     * @return bool  是否添加成功
+     * @return bool 是否添加成功
      */
     public function upTemplate($tplId, $data)
     {

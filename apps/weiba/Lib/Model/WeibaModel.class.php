@@ -367,11 +367,11 @@ class WeibaModel extends Model
     /**
      * 格式化，用户的关注数据
      *
-     * @param  int   $uid
-     *                            用户ID
-     * @param  array $fids
-     *                            用户ID数组
-     * @param  array $follow_data
+     * @param int   $uid
+     *                           用户ID
+     * @param array $fids
+     *                           用户ID数组
+     * @param array $follow_data
      *                            关注状态数据
      * @return array 格式化后的用户关注状态数据
      */

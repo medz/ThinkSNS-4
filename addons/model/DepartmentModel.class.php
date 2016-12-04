@@ -48,8 +48,8 @@ class DepartmentModel extends Model
 
     /**
      * 获取指定子树的部门Hash数组
-     * @param  int   $pid   父级ID
-     * @param  int   $sid   资源节点ID
+     * @param int $pid 父级ID
+     * @param int $sid 资源节点ID
      * @param  int   $nosid 是否包含资源节点ID，默认为0
      * @return array 指定子树的部门Hash数组
      */
@@ -78,7 +78,7 @@ class DepartmentModel extends Model
     /**
      * 添加一个部门信息
      * @param  array $data 新部门相关信息
-     * @return bool  是否添加成功
+     * @return bool 是否添加成功
      */
     public function addDepart($data)
     {
@@ -106,7 +106,7 @@ class DepartmentModel extends Model
     /**
      * 获取指定分类的上级ID
      * @param  array $data 指定分类的相关数据
-     * @return int   指定分类的上级ID
+     * @return int 指定分类的上级ID
      */
     public function _getParent_dept($data)
     {

@@ -68,9 +68,9 @@ class AdSpaceModel extends Model
 
     /**
      * 编辑广告位操作
-     * @param  int   $id   广告位ID
+     * @param int $id 广告位ID
      * @param  array $data 广告位相关数据
-     * @return bool  是否编辑成功
+     * @return bool 是否编辑成功
      */
     public function doEditAdSpace($id, $data)
     {

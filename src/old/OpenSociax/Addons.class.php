@@ -21,7 +21,7 @@ class Addons
 
     /**
      * 调用插件Hook
-     * @param string $name  钩子名称
+     * @param string $name 钩子名称
      * @param array  $param 相关参数
      */
     public static function hook($name, $param = array())
@@ -81,7 +81,7 @@ class Addons
      * @param string $addonsName 插件名称
      * @param string $name       钩子名称
      * @param array  $param      相关参数
-     * @param bool   $admin      是否是管理员
+     * @param bool $admin 是否是管理员
      */
     public static function addonsHook($addonsName, $name, $param = array(), $admin = false)
     {
@@ -163,7 +163,7 @@ class Addons
 
     /**
      * 用于生成插件后台管理页面的URL
-     * @param  string $page  管理页面或操作
+     * @param string $page 管理页面或操作
      * @param  array  $param 相关参数
      * @return string 插件后台管理页面的URL
      */

@@ -53,7 +53,7 @@ class CommentModel extends Model
     }
     /**
      * 获取评论的种类，用于评论的Tab
-     * @param  array $map 查询条件
+     * @param array $map 查询条件
      * @return array 评论种类与其资源数目
      */
     public function getTab($map)
@@ -391,10 +391,10 @@ class CommentModel extends Model
 
     /**
      * 评论处理方法，包含彻底删除、假删除与恢复功能
-     * @param  int    $id    评论ID
-     * @param  string $type  操作类型，delComment假删除、deleteComment彻底删除、commentRecover恢复
+     * @param int    $id   评论ID
+     * @param string $type 操作类型，delComment假删除、deleteComment彻底删除、commentRecover恢复
      * @param  string $title 提示语言所附加的内容
-     * @return array  评论处理后，返回的数组操作信息
+     * @return array 评论处理后，返回的数组操作信息
      */
     public function doEditComment($id, $type, $title)
     {

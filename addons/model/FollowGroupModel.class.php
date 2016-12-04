@@ -13,7 +13,7 @@ class FollowGroupModel extends Model
 
     /**
      * 获取指定用户所有的关组分组
-     * @param  int   $uid 用户ID
+     * @param int $uid 用户ID
      * @return array 指定用户所有的关组分组
      */
     public function getGroupList($uid)
@@ -32,7 +32,7 @@ class FollowGroupModel extends Model
     }
     /**
      * 获取指定用户指定关注用户的所在分组信息
-     * @param  int   $uid 用户ID
+     * @param int $uid 用户ID
      * @param  int   $fid 关注用户ID
      * @return array 关注用户所在分组的信息
      */
@@ -58,7 +58,7 @@ class FollowGroupModel extends Model
     }
     /**
      * 获取指定用户与多个指定关注用户的所在分组信息
-     * @param  int    $uid  用户ID
+     * @param int $uid 用户ID
      * @param  string $fids 关注用户ID，多个用“,”分割
      * @return array  指定用户与多个指定关注用户的所在分组信息
      */
@@ -81,8 +81,8 @@ class FollowGroupModel extends Model
     }
     /**
      * 设置好友的分组状态
-     * @param int    $uid    操作用户ID
-     * @param int    $fid    被操作用户ID
+     * @param int $uid 操作用户ID
+     * @param int $fid 被操作用户ID
      * @param int    $gid    关注分组ID
      * @param string $action 操作状态类型，空、add、delete
      */
@@ -120,10 +120,10 @@ class FollowGroupModel extends Model
     }
     /**
      * 添加，修改制定用户的分组
-     * @param  int    $uid   用户ID
-     * @param  string $title 分组名称
+     * @param int    $uid   用户ID
+     * @param string $title 分组名称
      * @param  int    $gid   关注分组ID
-     * @return int    是否添加或修改成功
+     * @return int 是否添加或修改成功
      */
     public function setGroup($uid, $title, $gid = null)
     {
@@ -183,7 +183,7 @@ class FollowGroupModel extends Model
     }
     /**
      * 获取指定用户指定分组下的关注用户ID
-     * @param  int   $uid 用户ID
+     * @param int $uid 用户ID
      * @param  int   $gid 关注分组ID
      * @return array 指定用户指定分组下的关注用户ID
      */
@@ -207,7 +207,7 @@ class FollowGroupModel extends Model
     }
     /**
      * 获取指定用户指定分组下的关注用户ID - 分页型
-     * @param  int   $uid 用户ID
+     * @param int $uid 用户ID
      * @param  int   $gid 关注分组ID
      * @return array 指定用户指定分组下的关注用户ID
      */

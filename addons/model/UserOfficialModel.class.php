@@ -26,10 +26,10 @@ class UserOfficialModel extends Model
 
     /**
      * 添加官方用户信息
-     * @param  array  $uids 添加用户ID数组
-     * @param  int    $cid  官方用户分类ID
+     * @param array $uids 添加用户ID数组
+     * @param int   $cid  官方用户分类ID
      * @param  string $info 相关信息
-     * @return bool   是否添加成功
+     * @return bool 是否添加成功
      */
     public function addOfficialUser($uids, $cid, $info)
     {
