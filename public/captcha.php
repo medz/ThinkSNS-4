@@ -13,7 +13,7 @@ if (strtolower(ini_get('session.save_handler')) == 'files') {
 }
 session_start();
 $name = 'verify';
-    
+
 $font = dirname(dirname(__FILE__)).'/resources/assets/fonts/ariali.ttf';
 if (file_exists($font) && isset($_GET['type']) && $_GET['type'] == 'chinese') {
     Image::GBVerify(3, 'png', 140, 50, $font, $name);
