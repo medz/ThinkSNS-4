@@ -1,7 +1,9 @@
 <?php
 /**
- * 邀请控制器
+ * 邀请控制器.
+ *
  * @author jason <yangjs17@yeah.net>
+ *
  * @version TS3.0
  */
 class InviteAction extends Action
@@ -32,64 +34,64 @@ class InviteAction extends Action
         // 从数据库读取
         $profile_category_list = $this->_profile_model->getCategoryList();
 
-        $tab_list [] = array(
-            'field_key' => 'index',
+        $tab_list[] = array(
+            'field_key'  => 'index',
             'field_name' => L('PUBLIC_PROFILESET_INDEX'),
         ); // 基本资料
-        $tab_list [] = array(
-            'field_key' => 'tag',
+        $tab_list[] = array(
+            'field_key'  => 'tag',
             'field_name' => L('PUBLIC_PROFILE_TAG'),
         ); // 基本资料
         $tab_lists = $profile_category_list;
 
         foreach ($tab_lists as $v) {
-            $tab_list [] = $v; // 后台添加的资料配置分类
+            $tab_list[] = $v; // 后台添加的资料配置分类
         }
-        $tab_list [] = array(
-            'field_key' => 'avatar',
+        $tab_list[] = array(
+            'field_key'  => 'avatar',
             'field_name' => L('PUBLIC_IMAGE_SETTING'),
         ); // 头像设置
-        $tab_list [] = array(
-            'field_key' => 'domain',
+        $tab_list[] = array(
+            'field_key'  => 'domain',
             'field_name' => L('PUBLIC_DOMAIN_NAME'),
         ); // 个性域名
-        $tab_list [] = array(
-            'field_key' => 'authenticate',
+        $tab_list[] = array(
+            'field_key'  => 'authenticate',
             'field_name' => '申请认证',
         ); // 申请认证
-        $tab_list_score [] = array(
-            'field_key' => 'scoredetail',
+        $tab_list_score[] = array(
+            'field_key'  => 'scoredetail',
             'field_name' => L('积分规则'),
         ); // 积分规则
-        $tab_list_preference [] = array(
-            'field_key' => 'privacy',
+        $tab_list_preference[] = array(
+            'field_key'  => 'privacy',
             'field_name' => L('PUBLIC_PRIVACY'),
         ); // 隐私设置
-        $tab_list_preference [] = array(
-            'field_key' => 'notify',
+        $tab_list_preference[] = array(
+            'field_key'  => 'notify',
             'field_name' => '通知设置',
         ); // 通知设置
-        $tab_list_preference [] = array(
-            'field_key' => 'blacklist',
+        $tab_list_preference[] = array(
+            'field_key'  => 'blacklist',
             'field_name' => '黑名单',
         ); // 黑名单
-        $tab_list_security [] = array(
-            'field_key' => 'security',
+        $tab_list_security[] = array(
+            'field_key'  => 'security',
             'field_name' => L('PUBLIC_ACCOUNT_SECURITY'),
         ); // 帐号安全
         // 插件增加菜单
-        $tab_list_security [] = array(
-            'field_key' => 'bind',
+        $tab_list_security[] = array(
+            'field_key'  => 'bind',
             'field_name' => '帐号绑定',
         ); // 帐号绑定
 
-        $tab_list_invite [] = array(
-            'field_key' => 'invite',
+        $tab_list_invite[] = array(
+            'field_key'  => 'invite',
             'field_name' => '邮件邀请',
         ); // 邮件邀请
 
-        $tab_list_invite [] = array(
-            'field_key' => 'linvite',
+        $tab_list_invite[] = array(
+            'field_key'  => 'linvite',
             'field_name' => '链接邀请',
         ); // 链接邀请
 
@@ -101,7 +103,7 @@ class InviteAction extends Action
     }
 
     /**
-     * 邀请页面 - 页面
+     * 邀请页面 - 页面.
      */
     public function invite()
     {
@@ -141,7 +143,7 @@ class InviteAction extends Action
     }
 
     /**
-     * 邀请页面 - 页面
+     * 邀请页面 - 页面.
      */
     public function linvite()
     {
@@ -179,7 +181,7 @@ class InviteAction extends Action
     }
 
     /**
-     * 邮箱邀请相关数据
+     * 邮箱邀请相关数据.
      */
     private function _getInviteEmail()
     {
@@ -195,7 +197,7 @@ class InviteAction extends Action
     }
 
     /**
-     * 链接邀请相关数据
+     * 链接邀请相关数据.
      */
     private function _getInviteLink()
     {
@@ -211,7 +213,7 @@ class InviteAction extends Action
     }
 
     /**
-     * 邀请页面 - 弹窗
+     * 邀请页面 - 弹窗.
      */
     public function inviteBox()
     {
@@ -222,7 +224,8 @@ class InviteAction extends Action
     }
 
     /**
-     * 邀请操作
+     * 邀请操作.
+     *
      * @return json 返回操作后的JSON信息数据
      */
     public function doInvite()
@@ -240,7 +243,8 @@ class InviteAction extends Action
     }
 
     /**
-     * 验证邮箱地址是否可用
+     * 验证邮箱地址是否可用.
+     *
      * @return json 验证后的相关数据
      */
     public function checkInviteEmail()
@@ -251,7 +255,8 @@ class InviteAction extends Action
     }
 
     /**
-     * 获取邀请码接口
+     * 获取邀请码接口.
+     *
      * @return json 操作后的相关数据
      */
     public function applyInviteCode()

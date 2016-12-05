@@ -21,7 +21,7 @@ class WeibaReplyDiggModel extends Model
             return false;
         }
 
-        $data ['cTime'] = time();
+        $data['cTime'] = time();
         $res = $this->add($data);
         if ($res) {
             D('weiba_reply')->where('reply_id='.$row_id)->setInc('digg_count');
@@ -65,9 +65,11 @@ class WeibaReplyDiggModel extends Model
     }
 
     /**
-     * 返回指定用户是否赞了指定的分享
-     * @var    $row_ids 指定的分享数组
-     * @var    $uid     指定的用户
+     * 返回指定用户是否赞了指定的分享.
+     *
+     * @var 指定的分享数组
+     * @var $uid                  指定的用户
+     *
      * @return array
      */
     public function checkIsDigg($row_ids, $uid)
@@ -84,7 +86,7 @@ class WeibaReplyDiggModel extends Model
             $map['uid'] = $uid;
             $list = $this->where($map)->field('row_id')->findAll();
             foreach ($list as $v) {
-                $res [$v ['row_id']] = 1;
+                $res[$v['row_id']] = 1;
             }
             $this->setDiggCache($uid);
         } else {

@@ -5,9 +5,8 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 登陆记录
+ * 登陆记录.
  *
- * @package default
  * @author Seven Du <lovevipdsw@outlook.com>
  **/
 class Login extends Model

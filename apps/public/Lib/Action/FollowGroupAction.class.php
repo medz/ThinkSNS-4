@@ -1,14 +1,18 @@
 <?php
 /**
- * 关注分组控制器
+ * 关注分组控制器.
+ *
  * @author jason <yangjs17@yeah.net>
+ *
  * @version TS3.0
  */
 class FollowGroupAction extends Action
 {
     /**
-     * 分组选择数据加载操作
-     * @param  string $type 弹窗类型，box、list
+     * 分组选择数据加载操作.
+     *
+     * @param string $type 弹窗类型，box、list
+     *
      * @return [type] [description]
      */
     public function selector($type = 'box')
@@ -36,7 +40,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 分组选择页面，下拉式
+     * 分组选择页面，下拉式.
      */
     public function selectorList()
     {
@@ -45,7 +49,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 分组选择页面，弹窗式
+     * 分组选择页面，弹窗式.
      */
     public function selectorBox()
     {
@@ -55,6 +59,7 @@ class FollowGroupAction extends Action
 
     /**
      * 设置指定好友的关注分组状态
+     *
      * @return json 返回操作后的JSON信息数据
      */
     public function setFollowGroup()
@@ -66,7 +71,8 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 设置指定好友的关注分组状态 - 多个分组
+     * 设置指定好友的关注分组状态 - 多个分组.
+     *
      * @return json 返回操作后的JSON信息数据
      */
     public function setFollowGroups()
@@ -93,7 +99,8 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 设置指定用户的分组
+     * 设置指定用户的分组.
+     *
      * @param int    $gid    分组ID
      * @param int    $fid    用户ID
      * @param string $action 操作状态类型，空、add、delete
@@ -121,7 +128,8 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 添加关注分组操作
+     * 添加关注分组操作.
+     *
      * @return json 返回操作后的JSON信息数据
      */
     public function saveGroup()
@@ -151,7 +159,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 设置关注分组Tab页面
+     * 设置关注分组Tab页面.
      */
     public function setGroupTab()
     {
@@ -166,7 +174,8 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 保存用户备注操作
+     * 保存用户备注操作.
+     *
      * @return json 返回操作后的JSON信息数据
      */
     public function saveRemark()
@@ -186,7 +195,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 设置用户关注分组、修改关注分组操作
+     * 设置用户关注分组、修改关注分组操作.
      */
     public function setGroup()
     {
@@ -217,7 +226,8 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 删除指定用户的指定关注分组
+     * 删除指定用户的指定关注分组.
+     *
      * @return json 是否删除成功
      */
     public function deleteGroup()

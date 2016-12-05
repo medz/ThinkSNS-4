@@ -1,16 +1,19 @@
 <?php
 /**
- * 可能感兴趣的人Widget
+ * 可能感兴趣的人Widget.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 class OtherPostWidget extends Widget
 {
     /**
-     * 渲染可能感兴趣的人页面
+     * 渲染可能感兴趣的人页面.
      *
      * @param array $data
      *                      配置相关数据
+     *
      * @return string 渲染页面的HTML
      */
     public function render($data)
@@ -27,7 +30,7 @@ class OtherPostWidget extends Widget
     }
 
     /**
-     * 换一换数据处理
+     * 换一换数据处理.
      *
      * @return json 渲染页面所需的JSON数据
      */
@@ -44,10 +47,11 @@ class OtherPostWidget extends Widget
     }
 
     /**
-     * 获取用户的相关数据
+     * 获取用户的相关数据.
      *
      * @param array $data
      *                     配置相关数据
+     *
      * @return array 显示所需数据
      */
     private function _getRelatedGroup($data)

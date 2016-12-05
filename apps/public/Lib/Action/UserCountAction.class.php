@@ -1,12 +1,14 @@
 <?php
 /**
- * UserCountAction 用户统计模块
+ * UserCountAction 用户统计模块.
+ *
  * @version TS3.0
  */
 class UserCountAction extends Action
 {
     /**
-     * 用户的通知统计数目
+     * 用户的通知统计数目.
+     *
      * @return mix 通知统计状态和数目
      */
     public function getUnreadCount()

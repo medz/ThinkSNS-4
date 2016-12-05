@@ -1,14 +1,18 @@
 <?php
 /**
- * 频道内容渲染Widget
+ * 频道内容渲染Widget.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 class ContentWidget extends Widget
 {
     /**
-     * 模板渲染
+     * 模板渲染.
+     *
      * @param  array  $data 相关数据
+     *
      * @return string 频道内容渲染入口
      */
     public function render($data)
@@ -46,7 +50,8 @@ class ContentWidget extends Widget
     }
 
     /**
-     * 载入频道内容
+     * 载入频道内容.
+     *
      * @return json 频道渲染内容
      */
     public function loadMore()
@@ -95,8 +100,10 @@ class ContentWidget extends Widget
     }
 
     /**
-     * 处理分享附件数据
+     * 处理分享附件数据.
+     *
      * @param  array $data 频道关联数组信息
+     *
      * @return array 处理后的分享数据
      */
     private function _formatContent($data)
@@ -133,11 +140,11 @@ class ContentWidget extends Widget
                     $attach = model('Attach')->getAttachByIds($feedData['attach_id']);
                     foreach ($attach as $key => $val) {
                         $_attach = array(
-                                'attach_id' => $val['attach_id'],
-                                'name' => $val['name'],
+                                'attach_id'  => $val['attach_id'],
+                                'name'       => $val['name'],
                                 'attach_url' => getImageUrl($val['save_path'].$val['save_name'], '236'),
-                                'extension' => $val['extension'],
-                                'size' => $val['size'],
+                                'extension'  => $val['extension'],
+                                'size'       => $val['size'],
                             );
                         $value['attachInfo'][] = $_attach;
                     }
@@ -174,8 +181,10 @@ class ContentWidget extends Widget
     }
 
     /**
-     * 获取频道分类列表数据
-     * @param  int   $cid 频道分类ID
+     * 获取频道分类列表数据.
+     *
+     * @param int $cid 频道分类ID
+     *
      * @return array 频道分类列表数据
      */
     public function getListData($cid)

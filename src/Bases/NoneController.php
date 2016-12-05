@@ -3,22 +3,21 @@
 namespace Ts\Bases;
 
 /**
- * 空控制器
+ * 空控制器.
  *
- * @package Ts\Base\NoneController
  * @author Seven Du <lovevipdsw@outlook.com>
  **/
 abstract class NoneController extends Controller
 {
     /**
-     * 不存在控制器的运行方法
+     * 不存在控制器的运行方法.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     abstract protected function run();
 
     /**
-     * 实例化后的执行
+     * 实例化后的执行.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/

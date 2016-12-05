@@ -1,16 +1,20 @@
 <?php
 /**
- * 找人模型 - 业务逻辑模型
+ * 找人模型 - 业务逻辑模型.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 class PeopleModel extends model
 {
     /**
-     * 通过条件查询相应的用户信息
-     * @param  array  $data 相应的查询条件
-     * @param  string $type 查询类型
-     * @return array  相应的用户信息
+     * 通过条件查询相应的用户信息.
+     *
+     * @param array  $data 相应的查询条件
+     * @param string $type 查询类型
+     *
+     * @return array 相应的用户信息
      */
     public function getPeople($data, $type)
     {
@@ -139,11 +143,13 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取筛选用户数据列表
+     * 获取筛选用户数据列表.
+     *
      * @param  array  $data  筛选相关条件
-     * @param  string $field 字段数据
-     * @param  string $order 排序数据
-     * @return array  筛选用户数据列表
+     * @param string $field 字段数据
+     * @param string $order 排序数据
+     *
+     * @return array 筛选用户数据列表
      */
     /*private function _w3g_getFilterData($data, $field = 'u.uid', $order = 'u.uid DESC')
     {
@@ -232,11 +238,13 @@ class PeopleModel extends model
         return $list;
     }*/
     /**
-     * 获取筛选认证用数据列表
+     * 获取筛选认证用数据列表.
+     *
      * @param  array  $data  筛选相关条件
-     * @param  string $field 字段数据
-     * @param  string $order 排序数据
-     * @return array  筛选认证用数据列表
+     * @param string $field 字段数据
+     * @param string $order 排序数据
+     *
+     * @return array 筛选认证用数据列表
      */
     /*public function _w3g_getVerifyData($data, $field = 'u.uid, v.info', $order = 'u.uid DESC')
     {
@@ -277,11 +285,13 @@ class PeopleModel extends model
     }*/
 
     /**
-     * 获取筛选官方用户数据列表
+     * 获取筛选官方用户数据列表.
+     *
      * @param  array  $data  筛选相关条件
-     * @param  string $field 字段数据
-     * @param  string $order 排序数据
-     * @return array  筛选官方用户数据列表
+     * @param string $field 字段数据
+     * @param string $order 排序数据
+     *
+     * @return array 筛选官方用户数据列表
      */
     /*private function _w3g_getOfficialData($data, $field = 'u.uid, o.info', $order = 'u.uid DESC')
     {
@@ -305,12 +315,14 @@ class PeopleModel extends model
     }*/
 
     /**
-     * 获取筛选用户数据列表
+     * 获取筛选用户数据列表.
+     *
      * @param  array  $data  筛选相关条件
-     * @param  string $field 字段数据
-     * @param  string $order 排序数据
-     * @param  int    $page  分页个数
-     * @return array  筛选用户数据列表
+     * @param string $field 字段数据
+     * @param string $order 排序数据
+     * @param int    $page  分页个数
+     *
+     * @return array 筛选用户数据列表
      */
     private function _getFilterData($data, $field = 'u.uid', $order = 'u.uid DESC', $page = 30)
     {
@@ -383,7 +395,7 @@ class PeopleModel extends model
                 break;
 
             default:
-                # code...
+                // code...
                 break;
         }
 
@@ -395,12 +407,14 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取筛选认证用数据列表
+     * 获取筛选认证用数据列表.
+     *
      * @param  array  $data  筛选相关条件
-     * @param  string $field 字段数据
-     * @param  string $order 排序数据
-     * @param  int    $page  分页个数
-     * @return array  筛选认证用数据列表
+     * @param string $field 字段数据
+     * @param string $order 排序数据
+     * @param int    $page  分页个数
+     *
+     * @return array 筛选认证用数据列表
      */
     public function _getVerifyData($data, $field = 'u.uid, v.info', $order = 'u.uid DESC', $page = 30)
     {
@@ -428,12 +442,14 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取筛选官方用户数据列表
+     * 获取筛选官方用户数据列表.
+     *
      * @param  array  $data  筛选相关条件
-     * @param  string $field 字段数据
-     * @param  string $order 排序数据
-     * @param  int    $page  分页个数
-     * @return array  筛选官方用户数据列表
+     * @param string $field 字段数据
+     * @param string $order 排序数据
+     * @param int    $page  分页个数
+     *
+     * @return array 筛选官方用户数据列表
      */
     private function _getOfficialData($data, $field = 'u.uid, o.info', $order = 'u.uid DESC', $page = 30)
     {
@@ -457,8 +473,10 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取用户相关信息
+     * 获取用户相关信息.
+     *
      * @param array $uids 用户ID数组
+     *
      * @return array 用户相关数组
      */
     public function getUserInfos($uids, $data)
@@ -483,10 +501,12 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取指定用户的相关信息
+     * 获取指定用户的相关信息.
+     *
      * @param array  $uids  指定用户ID数组
      * @param string $type  指定类型
      * @param int    $limit 显示数据，默认为3
+     *
      * @return array  指定用户的相关信息
      */
     public function getTopUserInfos($uids, $type, $limit = 3)

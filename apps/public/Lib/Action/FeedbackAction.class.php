@@ -1,11 +1,11 @@
 <?php
 /**
- * 意见反馈控制器
+ * 意见反馈控制器.
  */
 class FeedbackAction extends Action
 {
     /**
-     * 添加意见反馈操作
+     * 添加意见反馈操作.
      */
     public function feedback()
     {

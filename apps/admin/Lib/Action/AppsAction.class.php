@@ -1,24 +1,25 @@
 <?php
 
 /**
- * 后台应用管理
+ * 后台应用管理.
  *
  * @author jason
  */
 class AppsAction extends AdministratorAction
 {
     public $pageTitle = array(
-        'index' => '已安装应用列表',
-        'install' => '待安装应用列表',
-        'onLineApp' => '在线应用',
+        'index'         => '已安装应用列表',
+        'install'       => '待安装应用列表',
+        'onLineApp'     => '在线应用',
         'setCreditNode' => '积分节点设置',
-        'setPermNode' => '权限节点设置',
-        'setFeedNode' => '分享模板设置',
+        'setPermNode'   => '权限节点设置',
+        'setFeedNode'   => '分享模板设置',
     );
 
     private $appStatus = array('0' => '关闭', '1' => '开启');    //应用状态
     private $host_type_alias = array(0 => '本地应用', 1 => '远程应用');    //托管状态
     private $RemoteAppURL = '';
+
     public function _initialize()
     {
         $this->pageTitle['index'] = L('PUBLIC_INSTALLED_APPLIST');

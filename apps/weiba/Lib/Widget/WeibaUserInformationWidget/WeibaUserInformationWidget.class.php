@@ -1,14 +1,18 @@
 <?php
 /**
- * 用户信息显示Widget
+ * 用户信息显示Widget.
+ *
  * @author guolee226@gmail.com
+ *
  * @version TS3.0
  */
 class WeibaUserInformationWidget extends Widget
 {
     /**
-     * 模板渲染
+     * 模板渲染.
+     *
      * @param  array  $data 相关数据
+     *
      * @return string 用户身份选择模板
      */
     public function render($data)
@@ -88,7 +92,8 @@ class WeibaUserInformationWidget extends Widget
     }
 
     /**
-     * 将统计数据限定指定的数目
+     * 将统计数据限定指定的数目.
+     *
      * @param int $nums  指定的数目
      * @param int $limit 限定的数目
      */

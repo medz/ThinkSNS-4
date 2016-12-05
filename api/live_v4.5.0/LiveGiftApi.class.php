@@ -3,8 +3,10 @@
 use Ts\Models\CreditUser;
 
 /**
- * 签到API接口
+ * 签到API接口.
+ *
  * @author
+ *
  * @version  TS4.0
  */
 require_once 'LiveBaseApi.class.php';
@@ -13,17 +15,17 @@ class LiveGiftApi extends LiveBaseApi
     /**
      * @name 添加/更新一个直播用户
      * @params 依次传入 (string)usid,(int)sex,(string)uname,(boolean)ticket
+     *
      * @return array 结果信息
      */
-
     private $Service_User_Url = '';
     private $mod = '';
     private $live_user_mod = '';
     private $user_mod = '';
 
-
     /**
-     * 构造方法
+     * 构造方法.
+     *
      * @Author   Wayne[qiaobin@zhiyicx.com]
      * @DateTime 2016-10-12T21:50:08+0800
      */
@@ -37,9 +39,11 @@ class LiveGiftApi extends LiveBaseApi
     }
 
     /**
-     * 送礼物
+     * 送礼物.
+     *
      * @Author   Wayne[qiaobin@zhiyicx.com]
      * @DateTime 2016-10-12T21:55:46+0800
+     *
      * @return [type] [description]
      */
     public function haddleGift()
@@ -47,7 +51,7 @@ class LiveGiftApi extends LiveBaseApi
         if (!$this->is_ZhiboService()) {
             return array(
                     'status' => 0,
-                    'msg' => '授权错误',
+                    'msg'    => '授权错误',
                 );
         }
         $data = $_REQUEST;
@@ -61,14 +65,14 @@ class LiveGiftApi extends LiveBaseApi
 
         /* 接收订单详细信息 **/
         $gift = [
-            'num' => $data['num'],        //数量
-            'to_usid' => $data['to_usid'],    //接收礼物的用户标识
-            'usid' => $data['usid'],       //赠送礼物的用户标识
-            'type' => $data['type'],       //当前的消费类型
-            'order' => $data['order'],      //在直播服务器上生成的订单号
+            'num'         => $data['num'],        //数量
+            'to_usid'     => $data['to_usid'],    //接收礼物的用户标识
+            'usid'        => $data['usid'],       //赠送礼物的用户标识
+            'type'        => $data['type'],       //当前的消费类型
+            'order'       => $data['order'],      //在直播服务器上生成的订单号
             'description' => $data['description'], //礼物中文描述
-            'ctime' => $data['ctime'],      //订单创建时间
-            'order_type' => $data['order_type'], //订单类型
+            'ctime'       => $data['ctime'],      //订单创建时间
+            'order_type'  => $data['order_type'], //订单类型
         ];
         $map['usid'] = array(
                                     'IN',
@@ -82,7 +86,7 @@ class LiveGiftApi extends LiveBaseApi
         $gift['uid'] = $uids[$gift['usid']];
         $credit_mod = new CreditUser();
         $user_data = $credit_mod->where('uid', $gift['uid'])->select('score')->first();
-        if ($user_data ['score'] < $gift['num']) {
+        if ($user_data['score'] < $gift['num']) {
             return array('status' => 0, 'message' => '金币数量不足');
         }
         $live_gift_log = M('live_gift_log');

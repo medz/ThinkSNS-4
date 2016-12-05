@@ -5,9 +5,8 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 用户数据模型
+ * 用户数据模型.
  *
- * @package Ts\Models\User
  * @author Seven Du <lovevipdsw@outlook.com>
  **/
 class User extends Model

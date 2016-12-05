@@ -6,6 +6,7 @@ class MyloveAction extends Action
     {
         header('Content-Type:text/html; charset=UTF8');
     }
+
     public function index()
     {
         $url = 'http://i/dz3/api/mobile/index.php?module=myfavthread&version=1&page=1&mobile=no';

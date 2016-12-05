@@ -1,8 +1,8 @@
 <?php
 /**
- * 任务操作类
- * @author Stream
+ * 任务操作类.
  *
+ * @author Stream
  */
 class TaskAction extends Action
 {
@@ -31,6 +31,7 @@ class TaskAction extends Action
         $this->display();
         //页面显示列表
     }
+
     public function customIndex()
     {
         $list = model('TaskCustom')->getList();
@@ -78,8 +79,9 @@ class TaskAction extends Action
         $this->assign('list', $list);
         $this->display();
     }
+
     /**
-     * 完成自定义任务领取奖励
+     * 完成自定义任务领取奖励.
      */
     public function completeCustom()
     {
@@ -124,8 +126,9 @@ class TaskAction extends Action
             exit(2);
         }
     }
+
     /**
-     * 领取奖励
+     * 领取奖励.
      */
     public function complete_task()
     {
@@ -166,6 +169,7 @@ class TaskAction extends Action
             echo 0;
         }
     }
+
     public function complete_step()
     {
         $id = intval($_POST['id']);
@@ -201,6 +205,7 @@ class TaskAction extends Action
             }
         }
     }
+
     public function postTaskFeedCustom()
     {
         $id = intval($_POST['id']);
@@ -228,6 +233,7 @@ class TaskAction extends Action
         $data['body'] = $str;
         model('Feed')->put($this->mid, 'public', $feedtype, $data);
     }
+
     public function postTaskFeed()
     {
         $type = intval($_POST['type']);
@@ -260,6 +266,7 @@ class TaskAction extends Action
         $data['body'] = $str;
         model('Feed')->put($this->mid, 'public', $feedtype, $data);
     }
+
     public function test()
     {
         //		dump(file_exists(UPLOAD_URL.'/avatar'.model('Avatar')->convertUidToPath($GLOBALS['ts']['mid']).'/original.jpg'));

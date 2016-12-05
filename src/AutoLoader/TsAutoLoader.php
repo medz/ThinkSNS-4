@@ -5,18 +5,19 @@ namespace Ts\AutoLoader;
 use Ts;
 
 /**
- * Ts核心自动加载
+ * Ts核心自动加载.
  *
- * @package Ts\AutoLoader\TsAutoLoader
  * @author Seven Du <lovevipdsw@vip.qq.com>
  **/
 class TsAutoLoader
 {
     /**
-     * 自动加载入口
+     * 自动加载入口.
      *
-     * @param  string $namespace 命名空间
+     * @param string $namespace 命名空间
+     *
      * @return bool
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public static function entry($namespace)
@@ -35,10 +36,12 @@ class TsAutoLoader
     }
 
     /**
-     * Ts自身文件加载
+     * Ts自身文件加载.
      *
-     * @param  array $namespace 切割成数组的命名空间
+     * @param array $namespace 切割成数组的命名空间
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public static function autoLoader(array $namespace)
@@ -55,10 +58,12 @@ class TsAutoLoader
     }
 
     /**
-     * 原有Ts的命名空间加载
+     * 原有Ts的命名空间加载.
      *
-     * @param  array $namespace 切割成数组的命名空间
+     * @param array $namespace 切割成数组的命名空间
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public static function TsOldAutoLoader(array $namespace)

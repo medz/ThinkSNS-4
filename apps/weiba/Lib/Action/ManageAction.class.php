@@ -1,13 +1,15 @@
 <?php
 /**
- * 前台微吧管理控制器
+ * 前台微吧管理控制器.
+ *
  * @author
+ *
  * @version TS3.0
  */
 class ManageAction extends Action
 {
     /**
-     * 初始化，验证当前登录用户权限
+     * 初始化，验证当前登录用户权限.
      */
     public function _initialize()
     {
@@ -29,7 +31,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 微吧管理首页-修改微吧信息
+     * 微吧管理首页-修改微吧信息.
      */
     public function index()
     {
@@ -47,7 +49,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 执行编辑微吧
+     * 执行编辑微吧.
      */
     public function doWeibaEdit()
     {
@@ -103,7 +105,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 微吧成员管理
+     * 微吧成员管理.
      */
     public function member()
     {
@@ -156,7 +158,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 设置微吧成员等级
+     * 设置微吧成员等级.
      */
     public function editLevel()
     {
@@ -208,7 +210,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 移出成员
+     * 移出成员.
      */
     public function moveOut()
     {
@@ -234,7 +236,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 加入黑名单
+     * 加入黑名单.
      */
     public function moveTo()
     {
@@ -260,7 +262,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 移除黑名单
+     * 移除黑名单.
      */
     public function moveOutTo()
     {
@@ -285,7 +287,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 处理用户申请圈主或小主
+     * 处理用户申请圈主或小主.
      */
     public function verify()
     {
@@ -330,7 +332,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 公告发布
+     * 公告发布.
      */
     public function notify()
     {
@@ -346,7 +348,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 修改公告
+     * 修改公告.
      */
     public function doNotify()
     {
@@ -370,7 +372,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 微吧管理知识
+     * 微吧管理知识.
      */
     public function log()
     {
@@ -392,7 +394,8 @@ class ManageAction extends Action
     }
 
     /**
-     * 解散微吧
+     * 解散微吧.
+     *
      * @return array 操作成功状态和提示信息
      */
     public function delWeiba()

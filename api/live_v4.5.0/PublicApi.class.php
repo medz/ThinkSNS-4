@@ -3,9 +3,8 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * 公开api接口
+ * 公开api接口.
  *
- * @package ThinkSNS\Api\Public
  * @author Medz Seven <lovevipdsw@vip.qq.com>
  **/
 class PublicApi extends Api
@@ -16,11 +15,14 @@ class PublicApi extends Api
     }
 
     /**
-     * 按照层级获取地区列表
+     * 按照层级获取地区列表.
      *
      * @request int     $pid     地区ID
-     * @param  bool  $notsort 是否不排序，默认排序
+     *
+     * @param bool $notsort 是否不排序，默认排序
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getArea()
@@ -31,7 +33,7 @@ class PublicApi extends Api
 
         isset($this->data['notsort']) or
         $notsort = false;
-        $notsort = (boolean) $this->data['notsort'];
+        $notsort = (bool) $this->data['notsort'];
 
         $list = model('Area')->getAreaList($pid);
 
@@ -59,9 +61,10 @@ class PublicApi extends Api
     }
 
     /**
-     * 获取application幻灯数据
+     * 获取application幻灯数据.
      *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function getSlideShow()
@@ -77,7 +80,7 @@ class PublicApi extends Api
     }
 
     /**
-     * 获取关于我们HTML信息
+     * 获取关于我们HTML信息.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -97,11 +100,11 @@ class PublicApi extends Api
         exit;
     }
 
-
     /**
-     * 发现
+     * 发现.
      *
      * @return array
+     *
      * @author hhh <missu082500@163.com>
      **/
     public function discover()
@@ -116,7 +119,7 @@ class PublicApi extends Api
             // 轮播图
             if (in_array('1', $open_arr)) {
                 $banners = $this->getSlideShow();
-                $list ['banner'] = $banners ? $banners : array();
+                $list['banner'] = $banners ? $banners : array();
             }
 
             // 微吧
@@ -129,49 +132,49 @@ class PublicApi extends Api
                 $weiba_id = getSubByKey($weiba_recommend, 'weiba_id');
                 $followStatus = api('Weiba')->getFollowStateByWeibaids($this->mid, $weiba_id);
                 foreach ($weiba_recommend as $k => $v) {
-                    $weiba_recommend [$k]['logo'] = getImageUrlByAttachId($v ['logo'], 200, 200);
-                    $weiba_recommend [$k]['following'] = $followStatus [$v ['weiba_id']] ['following'];
-                    if ($v ['new_day'] != date('Y-m-d', time())) {
-                        $weiba_recommend [$k] ['new_count'] = 0;
-                        $this->setNewcount($v ['weiba_id'], 0);
+                    $weiba_recommend[$k]['logo'] = getImageUrlByAttachId($v['logo'], 200, 200);
+                    $weiba_recommend[$k]['following'] = $followStatus[$v['weiba_id']]['following'];
+                    if ($v['new_day'] != date('Y-m-d', time())) {
+                        $weiba_recommend[$k]['new_count'] = 0;
+                        $this->setNewcount($v['weiba_id'], 0);
                     }
-                    $weiba_recommend [$k]['title'] = formatEmoji(false, $weiba_recommend [$k]['title']);
-                    $weiba_recommend [$k]['content'] = formatEmoji(false, $weiba_recommend [$k]['content']);
+                    $weiba_recommend[$k]['title'] = formatEmoji(false, $weiba_recommend[$k]['title']);
+                    $weiba_recommend[$k]['content'] = formatEmoji(false, $weiba_recommend[$k]['content']);
                 }
-                $list ['weibas'] = $weiba_recommend ? $weiba_recommend : array();
+                $list['weibas'] = $weiba_recommend ? $weiba_recommend : array();
             }
 
             // 话题
             if (in_array('3', $open_arr)) {
-                $tmap ['recommend'] = 1;
-                $tmap ['lock'] = 0;
+                $tmap['recommend'] = 1;
+                $tmap['lock'] = 0;
                 $topic_recommend = D('FeedTopic')->where($tmap)->order('count desc')->limit(8)->field('topic_id,topic_name,pic')->findAll();
 
                 foreach ($topic_recommend as $key => $value) {
                     if ($value['pic'] != null) {
-                        $topic_recommend [$key]['pic'] = getImageUrlByAttachId($value['pic'], 100, 100);
+                        $topic_recommend[$key]['pic'] = getImageUrlByAttachId($value['pic'], 100, 100);
                     } else {
-                        $topic_recommend [$key]['pic'] = '';
+                        $topic_recommend[$key]['pic'] = '';
                     }
                 }
-                $list ['topics'] = $topic_recommend ? $topic_recommend : array();
+                $list['topics'] = $topic_recommend ? $topic_recommend : array();
             }
 
             //频道
             if (in_array('4', $open_arr)) {
-                $cmap ['pid'] = 0;
+                $cmap['pid'] = 0;
                 $channel_recommend = D('ChannelCategory')->where($cmap)->order('sort asc')->limit(8)->field('channel_category_id,title,ext')->findAll();
 
                 foreach ($channel_recommend as $key => $value) {
                     $serialize = unserialize($value['ext']);
                     if ($serialize['attach'] != '') {
-                        $channel_recommend [$key]['pic'] = getImageUrlByAttachId($serialize['attach'], 100, 100);
+                        $channel_recommend[$key]['pic'] = getImageUrlByAttachId($serialize['attach'], 100, 100);
                     } else {
-                        $channel_recommend [$key]['pic'] = '';
+                        $channel_recommend[$key]['pic'] = '';
                     }
-                    unset($channel_recommend [$key]['ext']);
+                    unset($channel_recommend[$key]['ext']);
                 }
-                $list ['channels'] = $channel_recommend ? $channel_recommend : array();
+                $list['channels'] = $channel_recommend ? $channel_recommend : array();
             }
 
             //资讯
@@ -181,11 +184,11 @@ class PublicApi extends Api
                 if ($hotTime > 0) {
                     $hotTime = 60 * 60 * 24 * $hotTime;
                     $hotTime = time() - $hotTime;
-                    $imap ['ctime'] = array('gt', intval($hotTime));
+                    $imap['ctime'] = array('gt', intval($hotTime));
                 }
 
-                $imap ['isPre'] = 0;
-                $imap ['isDel'] = 0;
+                $imap['isPre'] = 0;
+                $imap['isDel'] = 0;
                 $information_recommend = D('InformationList')->where($imap)->order('hits desc')->limit(8)->field('id,subject,content')->findAll();
 
                 foreach ($information_recommend as $key => $value) {
@@ -197,11 +200,11 @@ class PublicApi extends Api
                             $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
                         }
                     }
-                    $information_recommend [$key]['pic'] = !empty($image) ? $image : '';
-                    $information_recommend [$key]['url'] = sprintf('%s/api.php?mod=Information&act=reader&id=%d', SITE_URL, intval($value['id']));
-                    unset($information_recommend [$key]['content']);
+                    $information_recommend[$key]['pic'] = !empty($image) ? $image : '';
+                    $information_recommend[$key]['url'] = sprintf('%s/api.php?mod=Information&act=reader&id=%d', SITE_URL, intval($value['id']));
+                    unset($information_recommend[$key]['content']);
                 }
-                $list ['information'] = $information_recommend ? $information_recommend : array();
+                $list['information'] = $information_recommend ? $information_recommend : array();
             }
 
             //找人
@@ -210,14 +213,14 @@ class PublicApi extends Api
                 $user_list = array();
 
                 foreach ($user as $k => $v) {
-                    $user_list [$k] ['uid'] = $v ['userInfo'] ['uid'];
-                    $user_list [$k] ['uname'] = $v ['userInfo'] ['uname'];
-                    $user_list [$k] ['remark'] = $v ['userInfo'] ['remark'];
-                    $user_list [$k] ['avatar'] = $v ['userInfo'] ['avatar_big'];
-                    $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v ['userInfo']['uid']);
-                    $user_list [$k] ['space_privacy'] = $privacy['space'];
+                    $user_list[$k]['uid'] = $v['userInfo']['uid'];
+                    $user_list[$k]['uname'] = $v['userInfo']['uname'];
+                    $user_list[$k]['remark'] = $v['userInfo']['remark'];
+                    $user_list[$k]['avatar'] = $v['userInfo']['avatar_big'];
+                    $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['userInfo']['uid']);
+                    $user_list[$k]['space_privacy'] = $privacy['space'];
                 }
-                $list ['users'] = $user_list;
+                $list['users'] = $user_list;
             }
 
             //附近的人
@@ -225,15 +228,15 @@ class PublicApi extends Api
                 $users = api('FindPeople')->around();
 
                 foreach ($users['data'] as $key => $value) {
-                    $findp ['uid'] = $value['uid'];
-                    $findp ['uname'] = $value['username'];
-                    $findp ['remark'] = $value['remark'];
-                    $findp ['avatar'] = $value['avatar'];
+                    $findp['uid'] = $value['uid'];
+                    $findp['uname'] = $value['username'];
+                    $findp['remark'] = $value['remark'];
+                    $findp['avatar'] = $value['avatar'];
                     $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
-                    $findp ['space_privacy'] = $privacy['space'];
-                    $fpeople [] = $findp;
+                    $findp['space_privacy'] = $privacy['space'];
+                    $fpeople[] = $findp;
                 }
-                $list ['near_users'] = $fpeople ? $fpeople : array();
+                $list['near_users'] = $fpeople ? $fpeople : array();
             }
 
             //积分商城
@@ -242,10 +245,10 @@ class PublicApi extends Api
 
                 foreach ($giftlogs as $key => $value) {
                     $gift = D('Gift')->where(array('id' => $value['gid']))->field('id,name,image')->find();
-                    $gift ['image'] = getImageUrlByAttachId($gift ['image']);
+                    $gift['image'] = getImageUrlByAttachId($gift['image']);
                     $gifts[] = $gift;
                 }
-                $list ['gifts'] = $gifts ? $gifts : array();
+                $list['gifts'] = $gifts ? $gifts : array();
             }
 
             S('api_discover_'.$type, $list, 3600);
@@ -266,34 +269,34 @@ class PublicApi extends Api
                     //用户信息
                     $uid = D('live_user_info')->where(array('usid' => $value['user']['usid']))->getField('uid');
                     $userInfo = api('User')->get_user_info($uid);
-                    $user_info ['uid'] = (string) $userInfo ['uid'];
-                    $user_info ['uname'] = $userInfo ['uname'];
-                    $user_info ['sex'] = $userInfo ['sex'];
-                    $user_info ['intro'] = $userInfo ['intro'] ? formatEmoji(false, $userInfo ['intro']) : '';
-                    $user_info ['location'] = $userInfo ['location'] ? $userInfo ['location'] : '';
-                    $user_info ['avatar'] = (object) array($userInfo ['avatar'] ['avatar_big']);
-                    $user_info ['gold'] = intval($userInfo ['user_credit'] ['credit'] ['score'] ['value']);
-                    $user_info ['fans_count'] = intval($userInfo ['user_data'] ['follower_count']);
-                    $user_info ['is_verified'] = 0;
-                    $user_info ['usid'] = $value['user']['usid'];
+                    $user_info['uid'] = (string) $userInfo['uid'];
+                    $user_info['uname'] = $userInfo['uname'];
+                    $user_info['sex'] = $userInfo['sex'];
+                    $user_info['intro'] = $userInfo['intro'] ? formatEmoji(false, $userInfo['intro']) : '';
+                    $user_info['location'] = $userInfo['location'] ? $userInfo['location'] : '';
+                    $user_info['avatar'] = (object) array($userInfo['avatar']['avatar_big']);
+                    $user_info['gold'] = intval($userInfo['user_credit']['credit']['score']['value']);
+                    $user_info['fans_count'] = intval($userInfo['user_data']['follower_count']);
+                    $user_info['is_verified'] = 0;
+                    $user_info['usid'] = $value['user']['usid'];
                     $credit_mod = M('credit_user');
                     $credit = $credit_mod->where(array('uid' => $uid))->find();
-                    $user_info ['zan_count'] = $credit ['zan_remain'];
-                    $user_info ['live_time'] = $credit ['live_time'];
+                    $user_info['zan_count'] = $credit['zan_remain'];
+                    $user_info['live_time'] = $credit['live_time'];
                     $res = model('Follow')->getFollowStateByFids($this->mid, intval($uid));
-                    $user_info ['is_follow'] = $res[$uid]['following'];
+                    $user_info['is_follow'] = $res[$uid]['following'];
                     /* # 获取用户封面 */
                     $cover = D('user_data')->where('`key` LIKE "application_user_cover" AND `uid` = '.$v)->field('value')->getField('value');
-                    $user_info ['cover'] = $cover ? (object) array($cover) : (object) array();
+                    $user_info['cover'] = $cover ? (object) array($cover) : (object) array();
                     $value['user'] = $user_info;
 
                     $icon = $value['stream']['icon'];
                     $value['stream']['icon'] = $icon ? (object) $icon : (object) array();
                     $lives[] = $value;
                 }
-                $list ['lives'] = $lives;
+                $list['lives'] = $lives;
             } else {
-                $list ['lives'] = array();
+                $list['lives'] = array();
             }
         }
 

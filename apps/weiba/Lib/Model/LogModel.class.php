@@ -1,7 +1,9 @@
 <?php
 /**
- * 微吧管理知识模型 - 数据对象模型
+ * 微吧管理知识模型 - 数据对象模型.
+ *
  * @author jason <yangjs17@yeah.net>
+ *
  * @version TS3.0
  */
 class LogModel extends Model
@@ -13,11 +15,13 @@ class LogModel extends Model
                         );
 
     /**
-     * 记录知识
-     * @param  [type] $gid     [description]
-     * @param  [type] $uid     [description]
-     * @param  [type] $content [description]
-     * @param  string $type    [description]
+     * 记录知识.
+     *
+     * @param [type] $gid     [description]
+     * @param [type] $uid     [description]
+     * @param [type] $content [description]
+     * @param string $type    [description]
+     *
      * @return [type] [description]
      */
     public function writeLog($weiba_id, $uid, $content, $type = 'topic')

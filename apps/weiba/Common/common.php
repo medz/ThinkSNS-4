@@ -1,13 +1,15 @@
 <?php
 /**
  * 微吧获取图片存在相对地址
- * @param  int    $attachid 附件ID
+ *
+ * @param int $attachid 附件ID
+ *
  * @return string 附件存储相对地址
  */
 function getImageUrlByAttachIdByWeiba($attachid)
 {
     if ($attachInfo = model('Attach')->getAttachById($attachid)) {
-        return $attachInfo ['save_path'].$attachInfo ['save_name'];
+        return $attachInfo['save_path'].$attachInfo['save_name'];
     } else {
         return false;
     }
@@ -15,29 +17,29 @@ function getImageUrlByAttachIdByWeiba($attachid)
 
 function updateWeiBaCount($weiba_id)
 {
-    $map ['weiba_id'] = intval($weiba_id);
-    $map ['is_del'] = 0;
+    $map['weiba_id'] = intval($weiba_id);
+    $map['is_del'] = 0;
 
-    $save ['thread_count'] = M('weiba_post')->where($map)->count();
-    $save ['post_count'] = M('weiba_reply')->where($map)->count();
+    $save['thread_count'] = M('weiba_post')->where($map)->count();
+    $save['post_count'] = M('weiba_reply')->where($map)->count();
 
     $time = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-    $map ['post_time'] = array(
+    $map['post_time'] = array(
             'gt',
             $time,
     );
     $post_count = M('weiba_post')->where($map)->count();
-    unset($map ['post_time']);
+    unset($map['post_time']);
 
-    $map ['time'] = array(
+    $map['time'] = array(
             'gt',
             $time,
     );
     $reply_count = M('weiba_reply')->where($map)->count();
 
-    $save ['today_count'] = $post_count + $reply_count;
+    $save['today_count'] = $post_count + $reply_count;
 
-    unset($map ['time']);
+    unset($map['time']);
     $res = D('weiba')->where($map)->save($save);
     // dump($res);
     // dump(D('weiba')->getLastSql());exit;
@@ -45,47 +47,47 @@ function updateWeiBaCount($weiba_id)
 
 function refreshWeibaCount($weiba_id = 0, $field = array('follow_count', 'thread_count', 'post_count', 'today_count'))
 {
-    $map ['weiba_id'] = $maps ['weiba_id'] = $weiba_id;
+    $map['weiba_id'] = $maps['weiba_id'] = $weiba_id;
 
     // 会员数
-    in_array('follow_count', $field) && $data ['follow_count'] = M('weiba_follow')->where($map)->count();
+    in_array('follow_count', $field) && $data['follow_count'] = M('weiba_follow')->where($map)->count();
     // 主题数
-    $map ['is_del'] = 0;
-    in_array('thread_count', $field) && $data ['thread_count'] = M('weiba_post')->where($map)->count();
+    $map['is_del'] = 0;
+    in_array('thread_count', $field) && $data['thread_count'] = M('weiba_post')->where($map)->count();
     // 帖子数
-    in_array('post_count', $field) && $data ['post_count'] = M('weiba_reply')->where($map)->count();
+    in_array('post_count', $field) && $data['post_count'] = M('weiba_reply')->where($map)->count();
 
     if (in_array('today_count', $field)) {
         // 今日帖子数--昨日帖子数
         $time = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
         $ytime = mktime(0, 0, 0, date('m'), date('d') - 1, date('Y'));
 
-        $map ['post_time'] = array(
+        $map['post_time'] = array(
                 'gt',
                 $time,
         );
-        $data ['today_count'] = M('weiba_post')->where($map)->count();
+        $data['today_count'] = M('weiba_post')->where($map)->count();
 
-        $map ['post_time'] = array(
+        $map['post_time'] = array(
                 'gt',
                 $ytime,
         );
-        $data ['yesterday_count'] = M('weiba_post')->where($map)->count();
+        $data['yesterday_count'] = M('weiba_post')->where($map)->count();
 
-        unset($map ['post_time']);
-        $map ['ctime'] = array(
+        unset($map['post_time']);
+        $map['ctime'] = array(
                 'gt',
                 $time,
         );
-        $data ['today_count'] = M('weiba_reply')->where($map)->count() + $data ['today_count'];
+        $data['today_count'] = M('weiba_reply')->where($map)->count() + $data['today_count'];
 
-        $map ['ctime'] = array(
+        $map['ctime'] = array(
                 'gt',
                 $ytime,
         );
-        $data ['yesterday_count'] = M('weiba_reply')->where($map)->count() + $data ['yesterday_count'] - $data ['today_count'];
+        $data['yesterday_count'] = M('weiba_reply')->where($map)->count() + $data['yesterday_count'] - $data['today_count'];
 
-        $data ['today_date'] = date('Ymd');
+        $data['today_date'] = date('Ymd');
     }
     $res = M('weiba')->where($maps)->save($data);
 
@@ -271,8 +273,6 @@ function parsemedia($params, $url)
                 return '<a href="'.$url.'" target="_blank">'.$url.'</a>';
         }
     }
-
-    return;
 }
 
 function bbcodeurl($url, $tags)
@@ -295,7 +295,7 @@ function parseurl($url, $text, $scheme)
         $url = $matches[0];
         $length = 65;
         if (strlen($url) > $length) {
-            $text = substr($url, 0, intval($length * 0.5)).' ... '.substr($url, - intval($length * 0.3));
+            $text = substr($url, 0, intval($length * 0.5)).' ... '.substr($url, -intval($length * 0.3));
         }
 
         return '<a href="'.(substr(strtolower($url), 0, 4) == 'www.' ? 'http://'.$url : $url).'" target="_blank">'.$text.'</a>';

@@ -1,8 +1,8 @@
 <?php
 /**
- * 微吧分类
- * @author Stream
+ * 微吧分类.
  *
+ * @author Stream
  */
 class WeibaCategoryModel extends Model
 {

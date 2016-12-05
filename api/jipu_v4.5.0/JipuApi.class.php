@@ -1,16 +1,17 @@
 <?php
 /**
- *
  * @author Foreach
- *
  */
 class JipuApi extends Api
 {
     /********** 登录 **********/
+
     /**
-     * 认证方法 --using
+     * 认证方法 --using.
+     *
      * @param varchar login 手机号或用户名
      * @param varchar password 密码
+     *
      * @return array 状态+提示
      */
     public function authorize()
@@ -43,7 +44,7 @@ class JipuApi extends Api
                 $data['uid'] = $user['uid'];
                 $data['user'] = model('User')->getUserInfo($data['uid']);
                 $login = D('')->table(C('DB_PREFIX').'login')->where('uid='.$user['uid']." AND type='location'")->find();
-                if (! $login) {
+                if (!$login) {
                     $data['oauth_token'] = getOAuthToken($user['uid']);
                     $data['oauth_token_secret'] = getOAuthTokenSecret();
                     $savedata['type'] = 'location';
@@ -65,12 +66,14 @@ class JipuApi extends Api
         }
     }
 
-
     /********** 验证 **********/
+
     /**
-     * 认证方法 --using
+     * 认证方法 --using.
+     *
      * @param varchar oauth_token
      * @param varchar oauth_token_secret
+     *
      * @return array 状态+提示
      */
     public function login_check()
@@ -84,12 +87,14 @@ class JipuApi extends Api
         }
     }
 
-
     /********** 注册 **********/
+
     /**
-     * 认证方法 --using
+     * 认证方法 --using.
+     *
      * @param varchar oauth_token
      * @param varchar oauth_token_secret
+     *
      * @return array 状态+提示
      */
     public function register()
@@ -108,21 +113,21 @@ class JipuApi extends Api
         if (!$register->isValidPhone($phone)) {
             return array(
                 'status' => 0,
-                'msg' => $register->getLastError(),
+                'msg'    => $register->getLastError(),
             );
 
         /* 判断用户名是否可用 */
         } elseif (!$register->isValidName($username)) {
             return array(
                 'status' => 0,
-                'msg' => $register->getLastError(),
+                'msg'    => $register->getLastError(),
             );
 
         /* 密码判断 */
         } elseif (!$register->isValidPasswordNoRepeat($password)) {
             return array(
                 'status' => 0,
-                'msg' => $register->getLastError(),
+                'msg'    => $register->getLastError(),
             );
         }
 
@@ -154,7 +159,7 @@ class JipuApi extends Api
         if (!$uid) {
             return array(
                 'status' => 0,
-                'msg' => '注册失败',
+                'msg'    => '注册失败',
             );
         }                                     // 注册失败的提示
 
@@ -180,12 +185,12 @@ class JipuApi extends Api
 
         return array(
             'status' => 1,
-            'msg' => '注册成功',
+            'msg'    => '注册成功',
         );
     }
 
     /**
-     * 修改用户信息 --using
+     * 修改用户信息 --using.
      *
      * @param string $uname
      *                             用户名
@@ -203,83 +208,83 @@ class JipuApi extends Api
         $uid = $this->data['uid'];
         $save = array();
         // 修改用户昵称
-        if (isset($this->data ['uname'])) {
-            $uname = t($this->data ['uname']);
-            $save ['uname'] = filter_keyword($uname);
-            $oldName = t($this->data ['old_name']);
+        if (isset($this->data['uname'])) {
+            $uname = t($this->data['uname']);
+            $save['uname'] = filter_keyword($uname);
+            $oldName = t($this->data['old_name']);
             $res = model('Register')->isValidName($uname);
-            if (! $res) {
+            if (!$res) {
                 $error = model('Register')->getLastError();
 
                 return array(
                         'status' => 0,
-                        'msg' => $error,
+                        'msg'    => $error,
                 );
             }
             // 如果包含中文将中文翻译成拼音
-            if (preg_match('/[\x7f-\xff]+/', $save ['uname'])) {
+            if (preg_match('/[\x7f-\xff]+/', $save['uname'])) {
                 // 昵称和呢称拼音保存到搜索字段
-                $save ['search_key'] = $save ['uname'].' '.model('PinYin')->Pinyin($save ['uname']);
+                $save['search_key'] = $save['uname'].' '.model('PinYin')->Pinyin($save['uname']);
             } else {
-                $save ['search_key'] = $save ['uname'];
+                $save['search_key'] = $save['uname'];
             }
         }
         // 修改性别
-        if (isset($this->data ['sex'])) {
-            $save ['sex'] = (1 == intval($this->data ['sex'])) ? 1 : 2;
+        if (isset($this->data['sex'])) {
+            $save['sex'] = (1 == intval($this->data['sex'])) ? 1 : 2;
         }
         // 修改密码
-        if ($this->data ['password']) {
+        if ($this->data['password']) {
             $regmodel = model('Register');
             // 验证格式
-            if (! $regmodel->isValidPassword($this->data ['password'], $this->data ['password'])) {
+            if (!$regmodel->isValidPassword($this->data['password'], $this->data['password'])) {
                 $msg = $regmodel->getLastError();
                 $return = array(
                         'status' => 0,
-                        'msg' => $msg,
+                        'msg'    => $msg,
                 );
 
                 return $return;
             }
             // 验证新密码与旧密码是否一致
-            if ($this->data ['password'] == $this->data ['old_password']) {
+            if ($this->data['password'] == $this->data['old_password']) {
                 $return = array(
                         'status' => 0,
-                        'msg' => L('PUBLIC_PASSWORD_SAME'),
+                        'msg'    => L('PUBLIC_PASSWORD_SAME'),
                 );
 
                 return $return;
             }
             // 验证原密码是否正确
             $user = model('User')->where('`uid`='.$uid)->find();
-            if (md5(md5($this->data ['old_password']).$user ['login_salt']) != $user ['password']) {
+            if (md5(md5($this->data['old_password']).$user['login_salt']) != $user['password']) {
                 $return = array(
                         'status' => 0,
-                        'msg' => L('PUBLIC_ORIGINAL_PASSWORD_ERROR'),
+                        'msg'    => L('PUBLIC_ORIGINAL_PASSWORD_ERROR'),
                 ); // 原始密码错误
                 return $return;
             }
             $login_salt = rand(11111, 99999);
-            $save ['login_salt'] = $login_salt;
-            $save ['password'] = md5(md5($this->data ['password']).$login_salt);
+            $save['login_salt'] = $login_salt;
+            $save['password'] = md5(md5($this->data['password']).$login_salt);
         }
 
         //修改手机号
         if ($this->data['phone']) {
-            $phone = t($this->data ['phone']);
+            $phone = t($this->data['phone']);
             $userPhone = model('User')->where('`uid`='.$uid)->getField('phone');
-            if (! model('Register')->isValidPhone($phone, $userPhone)) {
+            if (!model('Register')->isValidPhone($phone, $userPhone)) {
                 return array(
                         'status' => 0,
-                        'msg' => model('Register')->getLastError(),
+                        'msg'    => model('Register')->getLastError(),
                 );
 
                 return $return;
             }
-            $save ['phone'] = $phone;
+            $save['phone'] = $phone;
         }
 
-        if (! empty($save)) {
+        if (!empty($save)) {
             $res = model('User')->where('`uid`='.$this->data['uid'])->save($save);
             $res !== false && model('User')->cleanCache($uid);
             $user_feeds = model('Feed')->where('uid='.$uid)->field('feed_id')->findAll();
@@ -291,7 +296,7 @@ class JipuApi extends Api
 
         return array(
                 'status' => 1,
-                'msg' => '修改成功',
+                'msg'    => '修改成功',
         );
     }
 }

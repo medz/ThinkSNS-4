@@ -1,17 +1,23 @@
 <?php
 /**
- * 某人关注的微吧Widget
+ * 某人关注的微吧Widget.
+ *
  * @example W('ManageWeibaList', array('manage_uid'=>10000))
+ *
  * @author jason <yangjs17@yeah.net>
+ *
  * @version TS3.0
  */
 class ManageWeibaListWidget extends Widget
 {
     /**
      * 渲染关注按钮模板
+     *
      * @example
      * $data['manage_uid'] integer 用户ID
+     *
      * @param  array  $data 渲染的相关配置参数
+     *
      * @return string 渲染后的模板数据
      */
     public function render($data)

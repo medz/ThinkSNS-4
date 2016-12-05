@@ -1,7 +1,9 @@
 <?php
 /**
- * 后台，用户管理控制器
+ * 后台，用户管理控制器.
+ *
  * @author liuxiaoqing <liuxiaoqing@zhishisoft.com>
+ *
  * @version TS3.0
  */
 // 加载后台控制器
@@ -11,7 +13,7 @@ class UserAction extends AdministratorAction
     public $pageTitle = array();
 
     /**
-     * 初始化，初始化页面表头信息，用于双语
+     * 初始化，初始化页面表头信息，用于双语.
      */
     public function _initialize()
     {
@@ -46,7 +48,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - 用户列表
+     * 用户管理 - 用户列表.
      */
     public function index()
     {
@@ -65,7 +67,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - 待审列表
+     * 用户管理 - 待审列表.
      */
     public function pending()
     {
@@ -82,7 +84,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - 禁用列表
+     * 用户管理 - 禁用列表.
      */
     public function dellist()
     {
@@ -114,7 +116,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - 在线用户列表
+     * 用户管理 - 在线用户列表.
      */
     public function online()
     {
@@ -144,7 +146,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - 查看IP列表
+     * 用户管理 - 查看IP列表.
      */
     public function viewIP()
     {
@@ -167,7 +169,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - 登录知识
+     * 用户管理 - 登录知识.
      */
     public function loginLog()
     {
@@ -192,7 +194,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取在线用户列表数据
+     * 获取在线用户列表数据.
      */
     private function _getUserOnlineList($limit, $map)
     {
@@ -226,7 +228,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 初始化用户列表管理菜单
+     * 初始化用户列表管理菜单.
+     *
      * @param string $type 列表类型，index、pending、dellist
      */
     private function _initUserListAdminMenu($type = null)
@@ -274,11 +277,13 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 解析用户列表数据
-     * @param  int    $limit 结果集数目，默认为20
-     * @param  array  $map   查询条件
-     * @param  string $type  格式化数据类型，index、pending、dellist
-     * @return array  解析后的用户列表数据
+     * 解析用户列表数据.
+     *
+     * @param int    $limit 结果集数目，默认为20
+     * @param array  $map   查询条件
+     * @param string $type  格式化数据类型，index、pending、dellist
+     *
+     * @return array 解析后的用户列表数据
      */
     private function _getUserList($limit = 20, array $map = array(), $type = 'index')
     {
@@ -467,7 +472,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - 添加用户
+     * 用户管理 - 添加用户.
      */
     public function addUser()
     {
@@ -500,7 +505,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 添加新用户操作
+     * 添加新用户操作.
      */
     public function doAddUser()
     {
@@ -520,7 +525,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 编辑用户页面
+     * 编辑用户页面.
      */
     public function editUser()
     {
@@ -575,7 +580,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 更新用户信息
+     * 更新用户信息.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -641,7 +646,7 @@ class UserAction extends AdministratorAction
         model('Cache')->rm('perm_user_'.$uid);
 
         $this->assign('jumpUrl', U('admin/User/editUser', array(
-            'uid' => $uid,
+            'uid'     => $uid,
             'tabHash' => 'editUser',
         )));
         $this->success(L('PUBLIC_SYSTEM_MODIFY_SUCCESS'));
@@ -700,7 +705,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户账号禁用操作
+     * 用户账号禁用操作.
+     *
      * @return json 操作后的JSON数据
      */
     public function doDeleteUser()
@@ -722,8 +728,10 @@ class UserAction extends AdministratorAction
         }
         exit(json_encode($return));
     }
+
     /**
-     * 彻底删除用户账号操作
+     * 彻底删除用户账号操作.
+     *
      * @return json 操作后的JSON数据
      */
     public function doTrueDeleteUser()
@@ -744,8 +752,10 @@ class UserAction extends AdministratorAction
         }
         exit(json_encode($return));
     }
+
     /**
-     * 用户账号恢复操作
+     * 用户账号恢复操作.
+     *
      * @return json 操作后的JSON数据
      */
     public function doRebackUser()
@@ -985,6 +995,7 @@ class UserAction extends AdministratorAction
         $this->displayConfig($detail);
         // $this->addProfileField(true);
     }
+
     /*
      * 新增资料字段/分类
      * @access public
@@ -1149,7 +1160,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 初始化用户认证菜单
+     * 初始化用户认证菜单.
      */
     public function _initVerifyAdminMenu()
     {
@@ -1164,7 +1175,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取待认证用户列表
+     * 获取待认证用户列表.
      */
     public function verify()
     {
@@ -1199,7 +1210,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取待认证机构列表
+     * 获取待认证机构列表.
      */
     public function verifyGroup()
     {
@@ -1234,7 +1245,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取已认证用户列表
+     * 获取已认证用户列表.
      */
     public function verified()
     {
@@ -1270,7 +1281,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取已认证机构列表
+     * 获取已认证机构列表.
      */
     public function verifiedGroup()
     {
@@ -1306,7 +1317,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 驳回理由窗口
+     * 驳回理由窗口.
      */
     public function getVerifyBox()
     {
@@ -1318,6 +1329,7 @@ class UserAction extends AdministratorAction
 
     /**
      * 执行认证
+     *
      * @return json 返回操作后的JSON信息数据
      */
     public function doVerify()
@@ -1431,7 +1443,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 添加认证用户或认证企业
+     * 添加认证用户或认证企业.
      */
     public function addVerify()
     {
@@ -1560,7 +1572,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 通过时编辑认证资料
+     * 通过时编辑认证资料.
      */
     public function editVerifyInfo()
     {
@@ -1572,7 +1584,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 编辑认证资料
+     * 编辑认证资料.
      */
     public function editVerify()
     {
@@ -1605,7 +1617,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 执行编辑认证资料
+     * 执行编辑认证资料.
      */
     public function doEditVerify()
     {
@@ -1652,7 +1664,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 推荐标签 - 列表显示
+     * 推荐标签 - 列表显示.
      */
     public function category()
     {
@@ -1663,7 +1675,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 认证分类展示页面
+     * 认证分类展示页面.
      */
     public function verifyCategory()
     {
@@ -1699,7 +1711,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 添加认证分类
+     * 添加认证分类.
      */
     public function addVerifyCategory()
     {
@@ -1709,7 +1721,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 编辑认证分类
+     * 编辑认证分类.
      */
     public function editVerifyCategory()
     {
@@ -1722,7 +1734,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 执行添加认证分类
+     * 执行添加认证分类.
      */
     public function doAddVerifyCategory()
     {
@@ -1745,7 +1757,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 执行编辑认证分类
+     * 执行编辑认证分类.
      */
     public function doEditVerifyCategory()
     {
@@ -1776,7 +1788,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 删除认证分类
+     * 删除认证分类.
      */
     public function delVerifyCategory()
     {
@@ -1793,7 +1805,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 认证用户基本配置
+     * 认证用户基本配置.
      */
     public function verifyConfig()
     {
@@ -1824,7 +1836,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 官方用户配置
+     * 官方用户配置.
      */
     public function official()
     {
@@ -1839,7 +1851,7 @@ class UserAction extends AdministratorAction
     /*** 官方用户 ***/
 
     /**
-     * 官方用户分类
+     * 官方用户分类.
      */
     public function officialCategory()
     {
@@ -1855,7 +1867,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 官方用户列表
+     * 官方用户列表.
      */
     public function officialList()
     {
@@ -1880,7 +1892,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 添加官方用户界面
+     * 添加官方用户界面.
      */
     public function officialAddUser()
     {
@@ -1899,7 +1911,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 添加官方用户操作
+     * 添加官方用户操作.
      */
     public function doOfficialAddUser()
     {
@@ -1923,7 +1935,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 移除官方用户操作
+     * 移除官方用户操作.
+     *
      * @return json 操作后返回的JSON数据
      */
     public function doRemoveOfficialUser()
@@ -1949,7 +1962,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 初始化官方用户Tab标签选项
+     * 初始化官方用户Tab标签选项.
      */
     private function _officialInit()
     {

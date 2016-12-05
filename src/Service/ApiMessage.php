@@ -5,7 +5,7 @@ namespace Ts\Service;
 //return ApiMessage::withArray(status, message, data);
 
 /**
- * Api消息类
+ * Api消息类.
  */
 class ApiMessage
 {
@@ -48,9 +48,9 @@ class ApiMessage
     public function toArray()
     {
         return array(
-            'status' => $this->status,
+            'status'  => $this->status,
             'message' => $this->message,
-            'data' => $this->data,
+            'data'    => $this->data,
         );
     }
 

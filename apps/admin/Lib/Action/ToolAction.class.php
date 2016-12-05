@@ -9,6 +9,7 @@ class ToolAction extends AdministratorAction
     {
         $this->display();
     }
+
     //删除异常数据
     public function cleanErrorData()
     {
@@ -24,6 +25,7 @@ class ToolAction extends AdministratorAction
         }
         $this->success('操作完成！');
     }
+
     //刷新评论楼层
     public function refreshCommentOrder()
     {
@@ -37,20 +39,21 @@ class ToolAction extends AdministratorAction
         }
         $this->success('操作完成！');
     }
+
     //清除幽灵粉丝
     public function cleanErrorFollow()
     {
         $info = model('Xdata')->get('admin_config:register');
-        $map ['uid'] = array(
+        $map['uid'] = array(
                 'in',
-                $info ['default_follow'],
+                $info['default_follow'],
         );
         $user = M('User')->where($map)->field('uid')->findAll();
         if (empty($user)) {
-            $info ['default_follow'] = '';
+            $info['default_follow'] = '';
         } else {
             $uids = getSubByKey($user, 'uid');
-            $info ['default_follow'] = implode(',', $uids);
+            $info['default_follow'] = implode(',', $uids);
         }
         unset($map);
 
@@ -63,20 +66,21 @@ class ToolAction extends AdministratorAction
         }
 
         foreach ($list as $vo) {
-            $follow_id [] = $vo ['follow_id'];
-            $map ['uid'] = $vo ['uid'];
-            $map ['key'] = 'following_count';
+            $follow_id[] = $vo['follow_id'];
+            $map['uid'] = $vo['uid'];
+            $map['key'] = 'following_count';
             M('user_data')->where($map)->setDec('value');
         }
         unset($map);
 
-        $map ['follow_id'] = array(
+        $map['follow_id'] = array(
                 'in',
                 $follow_id,
         );
         $res = M('user_follow')->where($map)->delete();
         $this->success('操作完成！');
     }
+
     /*
      * 工具 - 数据备份
      */
@@ -90,11 +94,11 @@ class ToolAction extends AdministratorAction
                         if (substr($filename, strrpos($filename, '.')) == '.sql' || substr($filename, strrpos($filename, '.')) == '.php') {
                             $file = $dir.$filename;
                             $filemtime = date('Y-m-d H:i:s', filemtime($file));
-                            $addtime [] = $filemtime;
-                            $log [] = array(
+                            $addtime[] = $filemtime;
+                            $log[] = array(
                                     'filename' => $filename,
                                     'filesize' => admin_formatsize(filesize($file)),
-                                    'addtime' => $filemtime,
+                                    'addtime'  => $filemtime,
                                     'filepath' => C('SITE_URL').$file,
                             );
                         }
@@ -111,36 +115,37 @@ class ToolAction extends AdministratorAction
         $this->assign('table', D('Database')->getTableList());
         $this->display();
     }
+
     public function doBackUp()
     {
-        if (empty($_REQUEST ['backup_type'])) {
+        if (empty($_REQUEST['backup_type'])) {
             $this->error('参数错误');
         }
 
         $tables = array();
         // 当前卷号
-        $volume = isset($_GET ['volume']) ? (intval($_GET ['volume']) + 1) : 1;
+        $volume = isset($_GET['volume']) ? (intval($_GET['volume']) + 1) : 1;
         // 备份文件的文件名
         $filename = date('ymd').'_'.substr(md5(uniqid(rand())), 0, 10);
 
-        $_REQUEST ['backup_type'] = t($_REQUEST ['backup_type']) == 'custom' ? 'custom' : 'all';
+        $_REQUEST['backup_type'] = t($_REQUEST['backup_type']) == 'custom' ? 'custom' : 'all';
 
-        if ($_REQUEST ['backup_type'] == 'all') {
+        if ($_REQUEST['backup_type'] == 'all') {
             $tables = D('Database')->getTableList();
             $tables = getSubByKey($tables, 'Name');
-        } elseif ($_REQUEST ['backup_type'] == 'custom') {
-            if ($_POST ['backup_table']) {
-                $tables = $_POST ['backup_table'];
-                $_SESSION ['backup_custom_table'] = $tables;
+        } elseif ($_REQUEST['backup_type'] == 'custom') {
+            if ($_POST['backup_table']) {
+                $tables = $_POST['backup_table'];
+                $_SESSION['backup_custom_table'] = $tables;
             } else {
-                $tables = $_SESSION ['backup_custom_table'];
+                $tables = $_SESSION['backup_custom_table'];
             }
         }
 
-        $filename = trim($_REQUEST ['filename']) ? trim($_REQUEST ['filename']) : $filename;
-        $startfrom = intval($_REQUEST ['startform']);
-        $tableid = intval($_REQUEST ['tableid']);
-        $sizelimit = intval($_REQUEST ['sizelimit']) ? intval($_REQUEST ['sizelimit']) : 1000;
+        $filename = trim($_REQUEST['filename']) ? trim($_REQUEST['filename']) : $filename;
+        $startfrom = intval($_REQUEST['startform']);
+        $tableid = intval($_REQUEST['tableid']);
+        $sizelimit = intval($_REQUEST['sizelimit']) ? intval($_REQUEST['sizelimit']) : 1000;
         $tablenum = count($tables);
         $filesize = $sizelimit * 1000;
         $complete = true;
@@ -150,18 +155,18 @@ class ToolAction extends AdministratorAction
             $this->error('请选择备份的表');
         }
 
-        for (; $complete && ($tableid < $tablenum) && strlen($tabledump) + 500 < $filesize; $tableid ++) {
-            $sqlDump = D('Database')->getTableSql($tables [$tableid], $startfrom, $filesize, strlen($tabledump), $complete);
+        for (; $complete && ($tableid < $tablenum) && strlen($tabledump) + 500 < $filesize; $tableid++) {
+            $sqlDump = D('Database')->getTableSql($tables[$tableid], $startfrom, $filesize, strlen($tabledump), $complete);
 
-            $tabledump .= $sqlDump ['tabledump'];
-            $complete = $sqlDump ['complete'];
-            $startfrom = intval($sqlDump ['startform']);
+            $tabledump .= $sqlDump['tabledump'];
+            $complete = $sqlDump['complete'];
+            $startfrom = intval($sqlDump['startform']);
             if ($complete) {
                 $startfrom = 0;
             }
         }
 
-        ! $complete && $tableid --;
+        !$complete && $tableid--;
 
         if (trim($tabledump)) {
             // $filepath = DATA_PATH . '/database/'.$filename."_$volume".'.sql';
@@ -169,42 +174,42 @@ class ToolAction extends AdministratorAction
             $fp = @fopen($filepath, 'ab');
             fwrite($fp, "#<?php exit;?>\n\n");
             fwrite($fp, $tabledump);
-            if (! fwrite($fp, $tabledump)) {
+            if (!fwrite($fp, $tabledump)) {
                 $this->error('文件目录写入失败, 请检查data目录是否可写');
             } else {
                 $url_param = array(
-                        'filename' => $filename,
-                        'backup_type' => $_REQUEST ['backup_type'],
-                        'sizelimit' => $sizelimit,
-                        'tableid' => $tableid,
-                        'startform' => $startfrom,
-                        'volume' => $volume,
+                        'filename'    => $filename,
+                        'backup_type' => $_REQUEST['backup_type'],
+                        'sizelimit'   => $sizelimit,
+                        'tableid'     => $tableid,
+                        'startform'   => $startfrom,
+                        'volume'      => $volume,
                 );
 
                 $url = U('admin/Tool/doBackUp', $url_param);
                 $this->assign('jumpUrl', $url);
 
-                if ($_POST ['backup_type'] == 'custom') {
-                    $_LOG ['uid'] = $this->mid;
-                    $_LOG ['type'] = '1';
-                    $data [] = '扩展 - 工具 - 数据备份';
-                    if ($_POST ['__hash__']) {
-                        unset($_POST ['__hash__']);
+                if ($_POST['backup_type'] == 'custom') {
+                    $_LOG['uid'] = $this->mid;
+                    $_LOG['type'] = '1';
+                    $data[] = '扩展 - 工具 - 数据备份';
+                    if ($_POST['__hash__']) {
+                        unset($_POST['__hash__']);
                     }
-                    $data [] = $_POST;
-                    $_LOG ['data'] = serialize($data);
-                    $_LOG ['ctime'] = time();
+                    $data[] = $_POST;
+                    $_LOG['data'] = serialize($data);
+                    $_LOG['ctime'] = time();
                     M('AdminLog')->add($_LOG);
                 }
-                if ($_POST ['backup_type'] == 'all') {
-                    $_LOG ['uid'] = $this->mid;
-                    $_LOG ['type'] = '1';
-                    $data [] = '扩展 - 工具 - 数据备份';
-                    $data [] = array(
+                if ($_POST['backup_type'] == 'all') {
+                    $_LOG['uid'] = $this->mid;
+                    $_LOG['type'] = '1';
+                    $data[] = '扩展 - 工具 - 数据备份';
+                    $data[] = array(
                             '全部数据表都备份成功',
                     );
-                    $_LOG ['data'] = serialize($data);
-                    $_LOG ['ctime'] = time();
+                    $_LOG['data'] = serialize($data);
+                    $_LOG['ctime'] = time();
                     M('AdminLog')->add($_LOG);
                 }
 
@@ -216,23 +221,24 @@ class ToolAction extends AdministratorAction
             $this->success('备份成功');
         }
     }
+
     public function doDeleteBackUp()
     {
-        $_POST ['selected'] = explode(',', t($_POST ['selected']));
+        $_POST['selected'] = explode(',', t($_POST['selected']));
 
-        foreach ($_POST ['selected'] as $file) {
+        foreach ($_POST['selected'] as $file) {
             // $file = DATA_PATH . '/database/'.$file.'.sql';
             $file = basename($file);
             $file = DATA_PATH.'/database/'.$file.'.php';
             file_exists($file) && @unlink($file);
         }
 
-        $_LOG ['uid'] = $this->mid;
-        $_LOG ['type'] = '2';
-        $data [] = '扩展 - 工具 - 数据备份';
-        $data [] = $_POST ['selected'];
-        $_LOG ['data'] = serialize($data);
-        $_LOG ['ctime'] = time();
+        $_LOG['uid'] = $this->mid;
+        $_LOG['type'] = '2';
+        $data[] = '扩展 - 工具 - 数据备份';
+        $data[] = $_POST['selected'];
+        $_LOG['data'] = serialize($data);
+        $_LOG['ctime'] = time();
         M('AdminLog')->add($_LOG);
 
         echo 1;
@@ -241,7 +247,7 @@ class ToolAction extends AdministratorAction
     // 导入备份
     public function import()
     {
-        $filename = basename($_GET ['filename']);
+        $filename = basename($_GET['filename']);
         $sqldump = '';
         $file = DATA_PATH.'/database/'.$filename;
         if (file_exists($file)) {
@@ -258,13 +264,15 @@ class ToolAction extends AdministratorAction
             $this->error('导入失败');
         }
     }
+
     public function dbconvert()
     {
         $this->display();
     }
+
     public function doDbconvert()
     {
-        if ($_POST ['doDbconvert'] != 1) {
+        if ($_POST['doDbconvert'] != 1) {
             $this->error('参数错误');
         }
 
@@ -288,7 +296,7 @@ class ToolAction extends AdministratorAction
             $appids = getSubByKey($appids, 'appid');
 
             unset($map);
-            $map ['id'] = array(
+            $map['id'] = array(
                     'in',
                     $appids,
             );
@@ -297,18 +305,18 @@ class ToolAction extends AdministratorAction
             $sql = array();
             foreach ($app_titles as $app_detail) {
                 unset($data);
-                $data ['title'] = $app_detail ['title'];
-                $data ['url'] = ($app == 'blog') ? U('blog/Index/show', array(
-                        'id' => $app_detail ['id'],
-                        'mid' => $app_detail ['uid'],
+                $data['title'] = $app_detail['title'];
+                $data['url'] = ($app == 'blog') ? U('blog/Index/show', array(
+                        'id'  => $app_detail['id'],
+                        'mid' => $app_detail['uid'],
                 )) : U('vote/Index/pollDetail', array(
-                        'id' => $app_detail ['id'],
+                        'id' => $app_detail['id'],
                 ));
-                $data ['table'] = $app;
-                $data ['id_field'] = 'id';
-                $data ['comment_count_field'] = 'commentCount';
+                $data['table'] = $app;
+                $data['id_field'] = 'id';
+                $data['comment_count_field'] = 'commentCount';
 
-                if (! $dao->where("`type`='{$app}' AND `appid`={$app_detail['id']}")->setField('data', serialize($data))) {
+                if (!$dao->where("`type`='{$app}' AND `appid`={$app_detail['id']}")->setField('data', serialize($data))) {
                     echo '转换程序出现错误, SQL: '.$dao->getLastSql();
                     exit();
                 }
@@ -318,9 +326,10 @@ class ToolAction extends AdministratorAction
         $this->assign('jumpUlr', U('admin/Tool/dbconvert'));
         $this->success('转换成功');
     }
+
     public function doDownload()
     {
-        $filename = basename($_REQUEST ['filename']);
+        $filename = basename($_REQUEST['filename']);
         // 下载函数
         $file_path = DATA_PATH.'/database'.'/'.$filename;
 
@@ -331,6 +340,7 @@ class ToolAction extends AdministratorAction
             $this->error('数据不存在！');
         }
     }
+
     public function checkdir()
     {
         set_time_limit(0);
@@ -338,6 +348,7 @@ class ToolAction extends AdministratorAction
 
         $this->_checkdir(SITE_PATH);
     }
+
     public function _checkdir($basedir)
     {
         if ($dh = opendir($basedir)) {
@@ -354,12 +365,13 @@ class ToolAction extends AdministratorAction
             closedir($dh);
         }
     }
+
     public function _checkFile($filename)
     {
         $str = file_get_contents($filename);
         preg_match_all("/L\(\'([a-zA-Z0-9_]+)\'\)/i", $str, $match);
 
-        $match = $match [1];
+        $match = $match[1];
         if (empty($match)) {
             return true;
         }
@@ -368,49 +380,52 @@ class ToolAction extends AdministratorAction
         $arr = explode('/', $path);
         foreach ($arr as $k => $vo) {
             if (strtolower($vo) == 'apps') {
-                $app = strtoupper($arr [$k + 1]);
+                $app = strtoupper($arr[$k + 1]);
             }
         }
         if (empty($app)) {
             $app = 'PUBLIC';
         }
 
-        substr($filename, - 3, 3) == '.js' ? $filetype = 1 : $filetype = 0;
+        substr($filename, -3, 3) == '.js' ? $filetype = 1 : $filetype = 0;
 
         foreach ($match as $m) {
             $m = strtoupper($m);
             $this->_langIsExist($filename, $m, $app, $filetype);
         }
     }
+
     public function _langIsExist($filename, $key, $app = '', $filetype = 0)
     {
         static $_lang;
         if (empty($_lang)) {
             $list = model('Lang')->field('`key`, appname, filetype')->findAll();
             foreach ($list as $v) {
-                $k = strtoupper($v ['key']);
-                $app = strtoupper($v ['appname']);
-                $_lang [$k] [$app] [$v ['filetype']] = true;
+                $k = strtoupper($v['key']);
+                $app = strtoupper($v['appname']);
+                $_lang[$k][$app][$v['filetype']] = true;
             }
             unset($list);
         }
 
-        if (! isset($_lang [$key] [$app] [$filetype]) && ! isset($_lang [$key] ['PUBLIC'] [$filetype])) {
-            $_lang [$key] [$app] [$filetype] = true;
+        if (!isset($_lang[$key][$app][$filetype]) && !isset($_lang[$key]['PUBLIC'][$filetype])) {
+            $_lang[$key][$app][$filetype] = true;
             $this->_addLang($filename, $key, $app, $filetype);
         }
     }
+
     public function _addLang($filename, $key, $appname, $filetype = 0)
     {
-        $data ['key'] = strtoupper($key);
-        $data ['appname'] = strtoupper($appname);
-        $data ['filetype'] = $filetype;
-        $data ['zh-cn'] = '==**==';
-        $data ['en'] = '==**==';
-        $data ['zh-tw'] = $filename;
+        $data['key'] = strtoupper($key);
+        $data['appname'] = strtoupper($appname);
+        $data['filetype'] = $filetype;
+        $data['zh-cn'] = '==**==';
+        $data['en'] = '==**==';
+        $data['zh-tw'] = $filename;
 
         model('Lang')->add($data);
     }
+
     /*
      * 工具 - 缓存文件清理
      */
@@ -434,7 +449,7 @@ class ToolAction extends AdministratorAction
 
     public function _rmdirr($dirname)
     {
-        if (! file_exists($dirname)) {
+        if (!file_exists($dirname)) {
             return false;
         }
         if (is_file($dirname) || is_link($dirname)) {
@@ -463,13 +478,13 @@ class ToolAction extends AdministratorAction
         $list = M()->query($sql);
 
         foreach ($list as $v) {
-            $default = empty($v ['COLUMN_DEFAULT']) && $v ['COLUMN_DEFAULT'] != ' ' ? '' : ' 默认值：'.$v ['COLUMN_DEFAULT'];
-            $exter = $v ['EXTRA'] == 'auto_increment' ? ' 自增长字段' : '';
-            $arr [$v ['TABLE_NAME']] [$v ['ORDINAL_POSITION']] = array(
-                    'COLUMN_NAME' => $v ['COLUMN_NAME'],
-                    'COLUMN_TYPE' => $v ['COLUMN_TYPE'],
-                    'IS_NULLABLE' => $v ['IS_NULLABLE'],
-                    'COLUMN_COMMENT' => $v ['COLUMN_COMMENT'].$default.$exter,
+            $default = empty($v['COLUMN_DEFAULT']) && $v['COLUMN_DEFAULT'] != ' ' ? '' : ' 默认值：'.$v['COLUMN_DEFAULT'];
+            $exter = $v['EXTRA'] == 'auto_increment' ? ' 自增长字段' : '';
+            $arr[$v['TABLE_NAME']][$v['ORDINAL_POSITION']] = array(
+                    'COLUMN_NAME'    => $v['COLUMN_NAME'],
+                    'COLUMN_TYPE'    => $v['COLUMN_TYPE'],
+                    'IS_NULLABLE'    => $v['IS_NULLABLE'],
+                    'COLUMN_COMMENT' => $v['COLUMN_COMMENT'].$default.$exter,
             );
         }
         /*
@@ -479,6 +494,7 @@ class ToolAction extends AdministratorAction
         $this->assign('arr', $arr);
         $this->display();
     }
+
     public function test()
     {
         makeMd5File('apps/page', 'app', 'merge');

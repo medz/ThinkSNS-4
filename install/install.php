@@ -2,7 +2,6 @@
 /**
  * ThinkSNS安装文件，修改自pbdigg。
  */
-
 error_reporting(0);
 set_time_limit(600);
 
@@ -526,7 +525,7 @@ if ($thinksns_rebuild) {
                 $name = preg_replace('/CREATE TABLE ([A-Z ]*)`([a-z0-9_]+)` .*/is', '\\2', $query);
                 echo '<p>'.$i_message['create_table'].' '.$name.' ... <span class="blue">OK</span></p>';
                 @mysql_query(createtable($query, $db_charset));
-                $tablenum ++;
+                $tablenum++;
             } else {
                 @mysql_query($query);
             }

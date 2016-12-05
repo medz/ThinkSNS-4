@@ -5,9 +5,8 @@ namespace Ts\Helper;
 use Exception;
 
 /**
- * 控制器帮助类
+ * 控制器帮助类.
  *
- * @package Ts\Helper\Controller;
  * @author Seven Du <lovevipdsw@outlook.com>
  **/
 class Controller
@@ -20,49 +19,49 @@ class Controller
     const ACTION_SUFFIX = 'Action';
 
     /**
-     * 运行的应用名称
+     * 运行的应用名称.
      *
      * @var string
      **/
     protected $appName;
 
     /**
-     * 运行的控制器名称
+     * 运行的控制器名称.
      *
      * @var string
      **/
     protected $controllerName;
 
     /**
-     * 运行的控制器动作名称
+     * 运行的控制器动作名称.
      *
      * @var string
      **/
     protected $appAction;
 
     /**
-     * 运行是缓存的参数
+     * 运行是缓存的参数.
      *
      * @var string
      **/
     protected $appParams = array();
 
     /**
-     * 控制器缓存
+     * 控制器缓存.
      *
-     * @var Array
+     * @var array
      **/
     protected static $controllers = array();
 
     /**
-     * 需要兼容的控制器命名空间
+     * 需要兼容的控制器命名空间.
      *
      * @var array
      **/
     protected static $controllerClass = array(
         'Ts-2016' => 'App\\%s\\Controller\\%s',
         'Ts-2015' => 'Apps\\%s\\Controller\\%s',
-        'Ts-old' => '%sAction',
+        'Ts-old'  => '%sAction',
     );
 
     /**
@@ -127,11 +126,11 @@ class Controller
             throw new Exception(sprintf('%s:“%s”', L('_MODULE_NOT_EXIST_'), $oldControllerName), 1);
         }
 
-        return self::$controllers[$className] = new $className;
+        return self::$controllers[$className] = new $className();
     }
 
     /**
-     * 设置运行的应用
+     * 设置运行的应用.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
@@ -143,7 +142,7 @@ class Controller
     }
 
     /**
-     * 设置控制器名称
+     * 设置控制器名称.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
@@ -155,9 +154,10 @@ class Controller
     }
 
     /**
-     * 设置运行的控制器执行的动作
+     * 设置运行的控制器执行的动作.
      *
      * @return self
+     *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     public function setAction($actionName)
@@ -168,9 +168,10 @@ class Controller
     }
 
     /**
-     * 设置应用运行注入的参数
+     * 设置应用运行注入的参数.
      *
      * @return self
+     *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     public function setParams($params)
@@ -181,7 +182,7 @@ class Controller
     }
 
     /**
-     * 运行
+     * 运行.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/

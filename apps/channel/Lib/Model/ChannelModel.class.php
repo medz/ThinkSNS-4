@@ -1,7 +1,9 @@
 <?php
 /**
- * 频道分类模型 - 数据对象模型
+ * 频道分类模型 - 数据对象模型.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 class ChannelModel extends Model
@@ -9,8 +11,10 @@ class ChannelModel extends Model
     protected $tableName = 'channel';
 
     /**
-     * 获取资源列表
-     * @param  array $map 查询条件
+     * 获取资源列表.
+     *
+     * @param array $map 查询条件
+     *
      * @return array 获取资源列表
      */
     public function getChannelList($map)
@@ -53,20 +57,23 @@ class ChannelModel extends Model
     }
 
     /**
-     * 删除指定资源信息
-     * @param  array $rowId 资源ID数组
-     * @return bool  是否删除成功
+     * 删除指定资源信息.
+     *
+     * @param array $rowId 资源ID数组
+     *
+     * @return bool 是否删除成功
      */
     public function cancelRecommended($rowId)
     {
         $map['feed_id'] = array('IN', $rowId);
         $result = $this->where($map)->delete();
 
-        return (boolean) $result;
+        return (bool) $result;
     }
 
     /**
-     * 审核资源操作
+     * 审核资源操作.
+     *
      * @return array $rowId 资源ID数组
      * @return bool  是否审核成功
      */
@@ -76,12 +83,14 @@ class ChannelModel extends Model
         $save['status'] = 1;
         $result = $this->where($map)->save($save);
 
-        return (boolean) $result;
+        return (bool) $result;
     }
 
     /**
-     * 获取指定分类的记录数目
-     * @param  int $cid 频道分类ID
+     * 获取指定分类的记录数目.
+     *
+     * @param int $cid 频道分类ID
+     *
      * @return int 指定分类的记录数目
      */
     public function getChannelCount($cid)
@@ -94,8 +103,10 @@ class ChannelModel extends Model
     }
 
     /**
-     * 获取指定频道分类下的列表数据
-     * @param  int   $cid 分类ID
+     * 获取指定频道分类下的列表数据.
+     *
+     * @param int $cid 分类ID
+     *
      * @return array 指定频道分类下的列表数据
      */
     public function getChannelFindPage($cid)
@@ -108,9 +119,11 @@ class ChannelModel extends Model
     }
 
     /**
-     * 获取指定分类下，用户贡献最高的用户数组
-     * @param  int   $cid   频道分类ID
-     * @param  int   $limit 结果集数目，默认为10
+     * 获取指定分类下，用户贡献最高的用户数组.
+     *
+     * @param int $cid   频道分类ID
+     * @param int $limit 结果集数目，默认为10
+     *
      * @return array 用户贡献最高数组
      */
     public function getTopList($cid, $limit = 10)
@@ -136,8 +149,10 @@ class ChannelModel extends Model
     }
 
     /**
-     * 获取指定分享已经加入的频道分类
+     * 获取指定分享已经加入的频道分类.
+     *
      * @param int $feedId 分享ID
+     *
      * @return array 已加入频道的分类数组
      */
     public function getSelectedChannels($feedId)
@@ -149,11 +164,13 @@ class ChannelModel extends Model
     }
 
     /**
-     * 添加频道与分享的关联信息
-     * @param  int   $sourceId   分享ID
-     * @param  array $channelIds 频道分类ID数组
-     * @param  bool  $isAdmin    是否需要审核，默认为true
-     * @return bool  是否添加成功
+     * 添加频道与分享的关联信息.
+     *
+     * @param int   $sourceId   分享ID
+     * @param array $channelIds 频道分类ID数组
+     * @param bool  $isAdmin    是否需要审核，默认为true
+     *
+     * @return bool 是否添加成功
      */
     public function setChannel($feedId, $channelIds, $isAdmin = true)
     {
@@ -214,11 +231,13 @@ class ChannelModel extends Model
     }
 
     /**
-     * 获取指定频道分类下的相关数据 - 分页数据
+     * 获取指定频道分类下的相关数据 - 分页数据.
+     *
      * @param int $cid 频道分类ID
+     *
      * @return array 指定频道分类下的相关数据
      */
-    public function getDataWithCid($cid, $loadId, $limit = 20, $order, $loadCount)
+    public function getDataWithCid($cid, $loadId, $limit, $order, $loadCount)
     {
         $map['status'] = $countmap['status'] = 1;
         !empty($cid) && $map['channel_category_id'] = $countmap['channel_category_id'] = $cid;
@@ -246,9 +265,11 @@ class ChannelModel extends Model
     }
 
     /**
-     * 格式化图片的大小，使瀑布流图片显示正常
+     * 格式化图片的大小，使瀑布流图片显示正常.
+     *
      * @param  array $data  频道数据数组，包含宽高数据
-     * @param  int   $width 格式化后的宽度，默认300px
+     * @param int $width 格式化后的宽度，默认300px
+     *
      * @return array 格式化宽高后的数据
      */
     private function _formatImageSize($data, $width = 236)
@@ -265,8 +286,10 @@ class ChannelModel extends Model
     }
 
     /**
-     * 删除分享与频道的关联
-     * @param  int  $feedId 分享ID
+     * 删除分享与频道的关联.
+     *
+     * @param int $feedId 分享ID
+     *
      * @return bool 是否删除成功
      */
     public function deleteChannelLink($feedId)
@@ -279,12 +302,14 @@ class ChannelModel extends Model
         $map['feed_id'] = intval($feedId);
         $result = $this->where($map)->delete();
 
-        return (boolean) $result;
+        return (bool) $result;
     }
 
     /**
-     * 获取指定用户所绑定频道分类的数组
-     * @param  int   $uid 用户ID
+     * 获取指定用户所绑定频道分类的数组.
+     *
+     * @param int $uid 用户ID
+     *
      * @return array 指定用户所绑定频道分类的数组
      */
     public function getCategoryByUserBind($uid)
@@ -302,8 +327,10 @@ class ChannelModel extends Model
     }
 
     /**
-     * 获取指定话题所绑定频道分类的数组
-     * @param  array $topics 话题名称数组
+     * 获取指定话题所绑定频道分类的数组.
+     *
+     * @param array $topics 话题名称数组
+     *
      * @return array 指定话题所绑定频道分类的数组
      */
     public function getCategoryByTopicBind($topics)
@@ -324,8 +351,10 @@ class ChannelModel extends Model
     }
 
     /**
-     * 删除分类关联信息
-     * @param  int  $cid 分类ID
+     * 删除分类关联信息.
+     *
+     * @param int $cid 分类ID
+     *
      * @return bool 是否删除成功
      */
     public function deleteAssociatedData($cid)

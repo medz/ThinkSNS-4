@@ -1,13 +1,15 @@
 <?php
 /**
- * 频道首页控制器
+ * 频道首页控制器.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 class IndexAction extends Action
 {
     /**
-     * 频道首页页面
+     * 频道首页页面.
      */
     public function index()
     {
@@ -72,7 +74,7 @@ class IndexAction extends Action
     }
 
     /**
-     * 获取分类数据列表
+     * 获取分类数据列表.
      */
     public function getCategoryData()
     {
@@ -90,7 +92,7 @@ class IndexAction extends Action
     }
 
     /**
-     * 投稿发布框
+     * 投稿发布框.
      */
     public function contributeBox()
     {

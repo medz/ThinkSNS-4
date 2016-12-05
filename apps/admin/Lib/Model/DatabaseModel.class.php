@@ -9,7 +9,7 @@ class DatabaseModel extends Model
         return M('')->query('SHOW TABLE STATUS LIKE "'.C('DB_PREFIX').'%"');
     }
 
-    public function getTableSql($table, $startfrom = 0, $filesize, $currentsize, $complete = true)
+    public function getTableSql($table, $startfrom, $filesize, $currentsize, $complete = true)
     {
         $tabledump = '';
         $offset = 200;
@@ -53,7 +53,7 @@ class DatabaseModel extends Model
                         if ($first_field['Extra'] == 'auto_increment') {
                             $startfrom = $oneRow[$first_field['Field']];
                         } else {
-                            $startfrom ++;
+                            $startfrom++;
                         }
                         $tabledump .= 'INSERT INTO '.$table." VALUES ($dumpsql);\n";
                     } else {

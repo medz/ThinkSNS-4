@@ -1,7 +1,9 @@
 <?php
 /**
- * 安装频道应用
+ * 安装频道应用.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 if (!defined('SITE_PATH')) {

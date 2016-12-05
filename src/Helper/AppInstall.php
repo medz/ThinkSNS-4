@@ -2,20 +2,19 @@
 
 namespace Ts\Helper;
 
-use Ts;
 use Exception;
 use Medz\Component\Filesystem\Filesystem;
+use Ts;
 
 /**
- * 应用安装器
+ * 应用安装器.
  *
- * @package Ts\Helper\AppInstall
  * @author Seven Du <lovevipdsw@outlook.com>
  **/
 class AppInstall
 {
     /**
-     * 需要安装的应用名称
+     * 需要安装的应用名称.
      *
      * @var string
      **/
@@ -29,23 +28,24 @@ class AppInstall
     protected static $instances = array();
 
     /**
-     * 应用目录
+     * 应用目录.
      *
      * @var string
      **/
     protected static $applicationDir;
 
     /**
-     * 应用详情
+     * 应用详情.
      *
      * @var array
      **/
     protected static $appInfo;
 
     /**
-     * 获取应用实例化的单例
+     * 获取应用实例化的单例.
      *
      * @return self
+     *
      * @author Seven Du <lovevipdswoutlook.com>
      **/
     public static function getInstance($appName)
@@ -55,14 +55,14 @@ class AppInstall
             !isset(self::$instances[self::$appName]) ||
             !(self::$instances[self::$appName] instanceof self)
         ) {
-            self::$instances[self::$appName] = new self;
+            self::$instances[self::$appName] = new self();
         }
 
         return self::$instances[self::$appName];
     }
 
     /**
-     * 构造方法
+     * 构造方法.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
@@ -93,8 +93,10 @@ class AppInstall
     }
 
     /**
-     * 复制应用的公开静态资源
+     * 复制应用的公开静态资源.
+     *
      * @return self
+     *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     public function moveResources()
@@ -108,7 +110,7 @@ class AppInstall
     }
 
     /**
-     * 移动Ts中应用中所有的静态资源
+     * 移动Ts中应用中所有的静态资源.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/

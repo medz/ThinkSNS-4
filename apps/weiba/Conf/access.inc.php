@@ -5,10 +5,10 @@
 return array(
     'access' => array(
         // 微吧
-        'weiba/Index/index' => true,
-        'weiba/Index/detail' => true,
+        'weiba/Index/index'      => true,
+        'weiba/Index/detail'     => true,
         'weiba/Index/postDetail' => true,
-        'weiba/Index/postList' => true,
-        'weiba/Index/weibaList' => true,
+        'weiba/Index/postList'   => true,
+        'weiba/Index/weibaList'  => true,
     ),
 );

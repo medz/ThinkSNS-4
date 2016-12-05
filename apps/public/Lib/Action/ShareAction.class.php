@@ -1,20 +1,22 @@
 <?php
 /**
- * ShareAction 分享控制器
+ * ShareAction 分享控制器.
+ *
  * @author    jason <yangjs17@yeah.net>
+ *
  * @version   TS3.0
  */
 class ShareAction extends Action
 {
     /**
-     * _initialize 模块初始化
+     * _initialize 模块初始化.
      */
     protected function _initialize()
     {
     }
 
     /**
-     * 分享控制
+     * 分享控制.
      */
     public function index()
     {
@@ -55,11 +57,11 @@ class ShareAction extends Action
         }
         if ($shareInfo['sid'] != $shareInfo['curid']) {
             //获取被评论的分享信息
-                $source = model('Feed')->get($shareInfo ['sid']);
+                $source = model('Feed')->get($shareInfo['sid']);
                 //判断是否有权限评论当前用户
-                if ($this->mid != $source ['uid']) {
-                    $userPrivacy = model('UserPrivacy')->getPrivacy($this->mid, $source ['uid']);
-                    if ($userPrivacy ['comment_weibo'] == 1) {
+                if ($this->mid != $source['uid']) {
+                    $userPrivacy = model('UserPrivacy')->getPrivacy($this->mid, $source['uid']);
+                    if ($userPrivacy['comment_weibo'] == 1) {
                         $shareInfo['cancomment'] = 0;
                     } else {
                         $shareInfo['cancomment'] = 1;
@@ -77,7 +79,8 @@ class ShareAction extends Action
     }
 
     /**
-     * 分享信息
+     * 分享信息.
+     *
      * @return mix 分享状态和提示
      */
     public function shareMessage()
@@ -110,7 +113,7 @@ class ShareAction extends Action
     }
 
     /**
-     * 分享到分享
+     * 分享到分享.
      */
     public function shareToFeed()
     {
@@ -131,11 +134,11 @@ class ShareAction extends Action
             $attach = model('Attach')->getAttachByIds($attachIds);
             foreach ($attach as $ak => $av) {
                 $_attach = array(
-                    'attach_id' => $av['attach_id'],
+                    'attach_id'   => $av['attach_id'],
                     'attach_name' => $av['name'],
-                    'attach_url' => getImageUrl($av['save_path'].$av['save_name']),
-                    'extension' => $av['extension'],
-                    'size' => $av['size'],
+                    'attach_url'  => getImageUrl($av['save_path'].$av['save_name']),
+                    'extension'   => $av['extension'],
+                    'size'        => $av['size'],
                 );
                 if (in_array($av['extension'], array('jpg', 'png', 'gif', 'bmp'))) {
                     $_attach['attach_small'] = getImageUrl($av['save_path'].$av['save_name'], 100, 100, true);

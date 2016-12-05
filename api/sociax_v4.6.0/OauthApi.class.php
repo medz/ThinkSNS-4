@@ -3,7 +3,7 @@
 class OauthApi extends Api
 {
     /**
-     * 新 注册接口
+     * 新 注册接口.
      *
      * @request int    $phone     用户注册手机号码
      * @request int    $code      用户注册手机验证码
@@ -18,7 +18,9 @@ class OauthApi extends Api
      * @request string $avatarUrl 用户头像URL
      * @request int    $avatarW   用户头像宽度
      * @request int    $avatarH   用户头像宽度
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     public function signIn()
@@ -48,49 +50,49 @@ class OauthApi extends Api
         /* 判断用户手机号码可用性 */
         if (!$register->isValidPhone($phone)) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => $register->getLastError(),
             );
 
         /* 判断用户名是否可用 */
         } elseif (!$register->isValidName($username)) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => $register->getLastError(),
             );
 
         /* 判断验证码是否正确 */
         } elseif (!$register->isValidRegCode($code, $phone)) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => $register->getLastError(),
             );
 
         /* 判断头像传递信息是否完整 */
         } elseif (!$avatarUrl or !$avatarW or !$avatarH) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '用户头像上传不完整',
             );
 
         /* 密码判断 */
         } elseif (!$register->isValidPasswordNoRepeat($password)) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => $register->getLastError(),
             );
 
         /* 格式化地区地址判断 */
         } elseif (!$location) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '格式化地区地址不能为空',
             );
 
         /* 地区判断 */
         } elseif (!$province or !$city) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '请完整的选择地区',
             );
         }
@@ -127,7 +129,7 @@ class OauthApi extends Api
         $uid = model('User')->add($userData); // 添加用户数据
         if (!$uid) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '注册失败',
             );
         }                                     // 注册失败的提示
@@ -154,7 +156,7 @@ class OauthApi extends Api
 
         /* 保存用户头像 */
         $avatarData = array(
-            'picurl' => $avatarUrl, // 用户头像地址
+            'picurl'   => $avatarUrl, // 用户头像地址
             'picwidth' => $avatarW,    // 用户头像宽度
         );
         $scaling = 5;              // 未知参数
@@ -174,7 +176,7 @@ class OauthApi extends Api
         }
 
         return array(
-            'status' => 2,
+            'status'  => 2,
             'message' => '注册成功，请等待审核',
         );
     }
@@ -182,9 +184,11 @@ class OauthApi extends Api
 /********** 登录注销 **********/
 
     /**
-     * 认证方法 --using
+     * 认证方法 --using.
+     *
      * @param varchar login 手机号或用户名
      * @param varchar password 密码
+     *
      * @return array 状态+提示
      */
     public function authorize()
@@ -218,7 +222,7 @@ class OauthApi extends Api
                 $data['oauth_token_secret'] = getOAuthTokenSecret();
                 $data['uid'] = $user['uid'];
                 $login = D('')->table(C('DB_PREFIX').'login')->where('uid='.$user['uid']." AND type='location'")->find();
-                if (! $login) {
+                if (!$login) {
                     $savedata['type'] = 'location';
                     $savedata = array_merge($savedata, $data);
                     D('')->table(C('DB_PREFIX').'login')->add($savedata);
@@ -239,10 +243,11 @@ class OauthApi extends Api
         }
     }
 
-
     /**
-     * 注销帐号，刷新token --using
+     * 注销帐号，刷新token --using.
+     *
      * @param varchar login 手机号或用户名
+     *
      * @return array 状态+提示
      */
     public function logout()
@@ -273,6 +278,7 @@ class OauthApi extends Api
      * 发送短信验证码
      *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function sendCodeByPhone()
@@ -286,26 +292,27 @@ class OauthApi extends Api
 
         if (!$phone) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '该用户没有绑定手机号码，或者用户不存在！',
             );
         } elseif (!model('Sms')->sendCaptcha($phone, false)) {
             return array(
-                'status' => -1,
+                'status'  => -1,
                 'message' => model('Sms')->getMessage(),
             );
         }
 
         return array(
-            'status' => 1,
+            'status'  => 1,
             'message' => '发送成功！',
         );
     }
 
     /**
-     * 判断手机验证码是否正确
+     * 判断手机验证码是否正确.
      *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function checkCodeByPhone()
@@ -320,23 +327,23 @@ class OauthApi extends Api
 
         if (!$phone) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '用户不存在或者没有绑定手机号码',
             );
         } elseif (!$code) {
             return array(
-                'status' => -1,
+                'status'  => -1,
                 'message' => '验证码不能为空',
             );
         } elseif (!model('Sms')->CheckCaptcha($phone, $code)) {
             return array(
-                'status' => -2,
+                'status'  => -2,
                 'message' => model('Sms')->getMessage(),
             );
         }
 
         return array(
-            'status' => 1,
+            'status'  => 1,
             'message' => '验证码正确',
         );
     }
@@ -345,6 +352,7 @@ class OauthApi extends Api
      * 保存用户密码
      *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function saveUserPasswordByPhone()
@@ -360,22 +368,22 @@ class OauthApi extends Api
 
         if (!$phone) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '用户不存在或者没有绑定手机号码',
             );
         } elseif (!$code) {
             return array(
-                'status' => -1,
+                'status'  => -1,
                 'message' => '验证码不能为空',
             );
         } elseif (!model('Register')->isValidPasswordNoRepeat($password)) {
             return array(
-                'status' => -2,
+                'status'  => -2,
                 'message' => model('Register')->getLastError(),
             );
         } elseif (!model('Sms')->CheckCaptcha($phone, $code)) {
             return array(
-                'status' => -3,
+                'status'  => -3,
                 'message' => model('Sms')->getMessage(),
             );
         }
@@ -386,13 +394,13 @@ class OauthApi extends Api
 
         if (model('User')->where('`phone` = '.$phone)->save($data)) {
             return array(
-                'status' => 1,
+                'status'  => 1,
                 'message' => '修改成功',
             );
         }
 
         return array(
-            'status' => -4,
+            'status'  => -4,
             'message' => '修改失败',
         );
     }
@@ -400,8 +408,10 @@ class OauthApi extends Api
 /********** 注册 **********/
 
     /**
-     * 发送注册验证码 --using
+     * 发送注册验证码 --using.
+     *
      * @param varchar phone 手机号
+     *
      * @return array 状态值+提示信息
      */
     // public function send_register_code(){
@@ -431,6 +441,7 @@ class OauthApi extends Api
      * 发送注册验证码
      *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function send_register_code()
@@ -441,20 +452,20 @@ class OauthApi extends Api
         if (!model('User')->isChangePhone($phone)) {
             $this->error(array(
                 'status' => 0,
-                'msg' => '该手机已经存在，无法再次注册',
+                'msg'    => '该手机已经存在，无法再次注册',
             ));
 
         /* # 检查是否发送失败 */
         } elseif (($sms = model('Sms')) and !$sms->sendCaptcha($phone, true)) {
             $this->error(array(
                 'status' => 0,
-                'msg' => $sms->getMessage(),
+                'msg'    => $sms->getMessage(),
             ));
         }
 
         return array(
             'status' => 1,
-            'msg' => '发送成功！',
+            'msg'    => '发送成功！',
         );
     }
 
@@ -477,9 +488,10 @@ class OauthApi extends Api
     // }
 
     /**
-     * 判断手机注册验证码是否正确
+     * 判断手机注册验证码是否正确.
      *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function check_register_code()
@@ -492,18 +504,19 @@ class OauthApi extends Api
         if ($sms->CheckCaptcha($phone, $code)) {
             return array(
                 'status' => 1,
-                'msg' => '验证通过',
+                'msg'    => '验证通过',
             );
         }
 
         return array(
             'status' => 0,
-            'msg' => $sms->getMessage(),
+            'msg'    => $sms->getMessage(),
         );
     }
 
     /**
-     * 注册上传头像 --using
+     * 注册上传头像 --using.
+     *
      * @return array 状态值+提示信息
      */
     public function register_upload_avatar()
@@ -515,7 +528,8 @@ class OauthApi extends Api
     }
 
     /**
-     * 注册帐号 --using
+     * 注册帐号 --using.
+     *
      * @param varchar phone 手机号
      * @param varchar regCode 验证码
      * @param varchar uname 用户名
@@ -524,6 +538,7 @@ class OauthApi extends Api
      * @param varchar avatar_url 头像地址
      * @param int avatar_width 头像宽度
      * @param int avatar_height 头像高度
+     *
      * @return array 状态值+提示信息
      */
     public function register()
@@ -553,7 +568,7 @@ class OauthApi extends Api
         if (($sms = model('Sms')) and !$sms->CheckCaptcha($phone, $regCode)) {
             return array(
                 'status' => 0,
-                'msg' => $sms->getMessage(),
+                'msg'    => $sms->getMessage(),
             );
         }
         unset($sms);
@@ -666,12 +681,14 @@ class OauthApi extends Api
     // }
 
     /**
-     * 记录或获取第三方登录接口获取到的信息 --using
+     * 记录或获取第三方登录接口获取到的信息 --using.
+     *
      * @param varchar type 帐号类型
      * @param varchar type_uid 第三方用户标识
      * @param varchar access_token 第三方access token
      * @param varchar refresh_token 第三方refresh token（选填，根据第三方返回值）
      * @param varchar expire_in 过期时间（选填，根据第三方返回值）
+     *
      * @return array 状态+提示信息/数据
      */
     public function get_other_login_info()
@@ -714,7 +731,8 @@ class OauthApi extends Api
     }
 
     /**
-     * 绑定第三方帐号，生成新账号 --using
+     * 绑定第三方帐号，生成新账号 --using.
+     *
      * @param varchar uname 用户名
      * @param varchar password 密码
      * @param varchar type 帐号类型
@@ -804,12 +822,16 @@ class OauthApi extends Api
     }
 
 /********** 其他公用操作API **********/
+
     /**
-     * 验证是否是合法的email
+     * 验证是否是合法的email.
      *
      * @param  string $string 待验证的字串
+     *
      * @return bool 如果是email则返回true，否则返回false
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
+     *
      * @link http://medz.cn
      */
     public function isEmail($string)
@@ -818,8 +840,10 @@ class OauthApi extends Api
     }
 
     /**
-     * 验证字符串是否是手机号 --using
+     * 验证字符串是否是手机号 --using.
+     *
      * @param varchar phone 手机号
+     *
      * @return bool
      */
     public function isValidPhone($phone)
@@ -828,12 +852,16 @@ class OauthApi extends Api
     }
 
 /*===============E-Mail API satrt==================*/
+
     /**
      * 获取邮箱验证码
      *
      * @request string email 邮箱地址
+     *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
+     *
      * @link http://medz.cn
      **/
     public function getEmailCode()
@@ -848,7 +876,7 @@ class OauthApi extends Api
          */
         if (!$this->isEmail($email)) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '不是合法的E-Mail地址',
             );
 
@@ -857,7 +885,7 @@ class OauthApi extends Api
          */
         } elseif (model('User')->hasUser($email) and !$this->data['notreg']) {
             return array(
-                'status' => -1,
+                'status'  => -1,
                 'message' => '该邮箱用户已经存在，无法使用',
             );
 
@@ -866,14 +894,14 @@ class OauthApi extends Api
          */
         } elseif (($sms = model('Sms')) and !$sms->sendEmaillCaptcha($email, true)) {
             return array(
-                'status' => -2,
+                'status'  => -2,
                 'message' => $sms->getMessage(),
             );
         }
         unset($sms);
 
         return array(
-            'status' => 1,
+            'status'  => 1,
             'message' => '发送成功，请注意查收',
         );
     }
@@ -883,7 +911,9 @@ class OauthApi extends Api
      *
      * @reuqest string email 邮箱
      * @request string code 验证码
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function hasCodeByEmail()
@@ -905,7 +935,7 @@ class OauthApi extends Api
          */
         if (!$this->isEmail($email)) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '不合法的E-mail地址',
             );
 
@@ -914,7 +944,7 @@ class OauthApi extends Api
          */
         } elseif (!$code) {
             return array(
-                'status' => -1,
+                'status'  => -1,
                 'message' => '验证码不能为空',
             );
 
@@ -923,27 +953,30 @@ class OauthApi extends Api
          */
         } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
             return array(
-                'status' => -3,
+                'status'  => -3,
                 'message' => $sms->getMessage(),
             );
         }
         unset($sms);
 
         return array(
-            'status' => 1,
+            'status'  => 1,
             'message' => '正确，可以注册',
         );
     }
 
     /**
-     * 以邮箱方式注册
+     * 以邮箱方式注册.
      *
      * @request string email 邮箱地址
      * @request strin username 用户名
      * @request string password 用户密码
      * @request int code 验证码
+     *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
+     *
      * @link http://medz.cn
      **/
     public function signUp2Email()
@@ -974,8 +1007,8 @@ class OauthApi extends Api
 
         /* # 用户头像信息 */
         $avatar = array(
-            'picurl' => $this->data['picurl'],
-            'picwidth' => $this->data['picwidth'],
+            'picurl'    => $this->data['picurl'],
+            'picwidth'  => $this->data['picwidth'],
             'picheight' => $this->data['picheight'],
         );
 
@@ -987,7 +1020,7 @@ class OauthApi extends Api
          */
         if (!$this->isEmail($email)) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '不合法的E-mail地址',
             );
 
@@ -996,14 +1029,14 @@ class OauthApi extends Api
          */
         } elseif (!$code) {
             return array(
-                'status' => -1,
+                'status'  => -1,
                 'message' => '验证码不能为空',
             );
 
         /* # 判断性别是否不符合 */
         } elseif (!in_array($sex, array(0, 1, 2))) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '性别参数错误',
             );
 
@@ -1012,7 +1045,7 @@ class OauthApi extends Api
          */
         } elseif (model('User')->hasUser($email)) {
             return array(
-                'status' => -2,
+                'status'  => -2,
                 'message' => '该邮箱用户已经存在，无法注册',
             );
 
@@ -1021,7 +1054,7 @@ class OauthApi extends Api
          */
         } elseif (model('User')->hasUser($username)) {
             return array(
-                'status' => -3,
+                'status'  => -3,
                 'message' => '该用户名已经被注册',
             );
 
@@ -1030,7 +1063,7 @@ class OauthApi extends Api
          */
         } elseif (!preg_match('/^[a-zA-Z0-9]+$/', $password)) {
             return array(
-                'status' => -4,
+                'status'  => -4,
                 'message' => '密码非法，只能是大小写英文和数字组成',
             );
 
@@ -1039,7 +1072,7 @@ class OauthApi extends Api
          */
         } elseif (($plen = strlen($password)) and $plen < 6) {
             return array(
-                'status' => -5,
+                'status'  => -5,
                 'message' => '密码太短，最少需要6位',
             );
 
@@ -1048,14 +1081,14 @@ class OauthApi extends Api
          */
         } elseif ($plen > 15) {
             return array(
-                'status' => -6,
+                'status'  => -6,
                 'message' => '密码太长，最多15位',
             );
 
         /* # 判断是否没有上传头像 */
         } elseif (!$avatar['picurl']) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '请上传头像',
             );
 
@@ -1064,7 +1097,7 @@ class OauthApi extends Api
          */
         } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
             return array(
-                'status' => -7,
+                'status'  => -7,
                 'message' => $sms->getMessage(),
             );
         }
@@ -1217,7 +1250,7 @@ class OauthApi extends Api
         unset($userData);
 
         return array(
-            'status' => -8,
+            'status'  => -8,
             'message' => '注册失败',
         );
     }
@@ -1228,7 +1261,9 @@ class OauthApi extends Api
      * @request string email 邮箱地址
      * @request int    code  验证码
      * @request string password 密码
+     *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function findPassword2Email()
@@ -1259,7 +1294,7 @@ class OauthApi extends Api
          */
         if (!$this->isEmail($email)) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '不是合法的E-Mail地址',
             );
 
@@ -1268,7 +1303,7 @@ class OauthApi extends Api
          */
         } elseif (!$code) {
             return array(
-                'status' => -1,
+                'status'  => -1,
                 'message' => '验证码不能为空',
             );
 
@@ -1277,7 +1312,7 @@ class OauthApi extends Api
          */
         } elseif (!($uid = model('User')->where('`email` = \''.t($email).'\'')->field('`uid`')->getField('uid'))) {
             return array(
-                'status' => -2,
+                'status'  => -2,
                 'message' => '用户不存在',
             );
 
@@ -1286,7 +1321,7 @@ class OauthApi extends Api
          */
         } elseif (!preg_match('/^[a-zA-Z0-9]+$/', $password)) {
             return array(
-                'status' => -3,
+                'status'  => -3,
                 'message' => '密码非法，只能是大小写英文和数字组成',
             );
 
@@ -1295,7 +1330,7 @@ class OauthApi extends Api
          */
         } elseif (($plen = strlen($password)) and $plen < 6) {
             return array(
-                'status' => -4,
+                'status'  => -4,
                 'message' => '密码太短，最少需要6位',
             );
 
@@ -1304,7 +1339,7 @@ class OauthApi extends Api
          */
         } elseif ($plen > 15) {
             return array(
-                'status' => -5,
+                'status'  => -5,
                 'message' => '密码太长，最多15位',
             );
 
@@ -1313,7 +1348,7 @@ class OauthApi extends Api
          */
         } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
             return array(
-                'status' => -6,
+                'status'  => -6,
                 'message' => $sms->getMessage(),
             );
         }
@@ -1350,13 +1385,13 @@ class OauthApi extends Api
              * 返回修改成功信息
              */
             return array(
-                'status' => 1,
+                'status'  => 1,
                 'message' => '密码找回并修改成功',
             );
         }
 
         return array(
-            'status' => -7,
+            'status'  => -7,
             'message' => '密码找回失败',
         );
     }
@@ -1373,16 +1408,17 @@ class OauthApi extends Api
 
         if (!$emailSuffix) {
             return array(
-                'status' => 2,
+                'status'  => 2,
                 'message' => '无邮箱后缀限制',
             );
         }
 
         return array(
-            'status' => 1,
+            'status'  => 1,
             'message' => '成功',
-            'data' => explode(',', $emailSuffix),
+            'data'    => explode(',', $emailSuffix),
         );
     }
+
 /*===============E-Mail API end  ==================*/
 }

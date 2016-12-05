@@ -23,6 +23,7 @@ class GlobalAction extends AdministratorAction
         $this->assign('creditType', $creditType);
         $this->display();
     }
+
     public function editCreditType()
     {
         $type = t($_GET['type']);
@@ -43,6 +44,7 @@ class GlobalAction extends AdministratorAction
 
         $this->display();
     }
+
     public function doAddCreditType()
     {
         // if ( !$this->__isValidRequest('name') ) $this->error('数据不完整');
@@ -86,6 +88,7 @@ class GlobalAction extends AdministratorAction
             $this->error('保存失败');
         }
     }
+
     public function doEditCreditType()
     {
         // if ( !$this->__isValidRequest('id,name') ) $this->error('数据不完整');
@@ -136,6 +139,7 @@ class GlobalAction extends AdministratorAction
             $this->error('保存失败');
         }
     }
+
     public function doDeleteCreditType()
     {
         $ids = t($_POST['ids']);
@@ -143,7 +147,7 @@ class GlobalAction extends AdministratorAction
         if (empty($ids)) {
             echo 0;
 
-            return ;
+            return;
         }
 
         $map['id'] = array('in', $ids);
@@ -183,6 +187,7 @@ class GlobalAction extends AdministratorAction
             echo 0;
         }
     }
+
     //积分规则设置
     public function credit()
     {
@@ -200,6 +205,7 @@ class GlobalAction extends AdministratorAction
         $this->assign('type', 'add');
         $this->display('editCredit');
     }
+
     public function doAddCredit()
     {
         $name = trim($_POST['name']);
@@ -241,6 +247,7 @@ class GlobalAction extends AdministratorAction
             $this->error('保存失败');
         }
     }
+
     public function editCredit()
     {
         $cid = intval($_GET['cid']);
@@ -257,6 +264,7 @@ class GlobalAction extends AdministratorAction
 
         $this->display();
     }
+
     public function doEditCredit()
     {
         $name = trim($_POST['name']);
@@ -303,6 +311,7 @@ class GlobalAction extends AdministratorAction
             $this->error('保存失败');
         }
     }
+
     public function doDeleteCredit()
     {
         $ids = t($_POST['ids']);
@@ -310,7 +319,7 @@ class GlobalAction extends AdministratorAction
         if (empty($ids)) {
             echo 0;
 
-            return ;
+            return;
         }
 
         $map['id'] = array('in', $ids);
@@ -332,6 +341,7 @@ class GlobalAction extends AdministratorAction
             echo 0;
         }
     }
+
     //批量用户积分设置
     public function creditUser()
     {
@@ -340,6 +350,7 @@ class GlobalAction extends AdministratorAction
         $this->assign('grounlist', model('UserGroup')->getUserGroupByMap('', 'user_group_id, user_group_name'));
         $this->display();
     }
+
     public function doCreditUser()
     {
         set_time_limit(0);
@@ -504,6 +515,7 @@ class GlobalAction extends AdministratorAction
             $this->error('编辑失败');
         }
     }
+
     public function doDeleteCreditLevel()
     {
         $ids = t($_POST['ids']);
@@ -511,7 +523,7 @@ class GlobalAction extends AdministratorAction
         if (empty($ids)) {
             echo 0;
 
-            return ;
+            return;
         }
 
         $list = model('Xdata')->get('admin_Credit:level');

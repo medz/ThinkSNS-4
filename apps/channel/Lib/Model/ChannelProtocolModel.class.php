@@ -1,8 +1,7 @@
 <?php
 /**
      * ChannelProtocolModel
-     * 提供给TS核心调用的协议类
-     *
+     * 提供给TS核心调用的协议类.
      */
 class ChannelProtocolModel extends Model
 {
@@ -10,10 +9,12 @@ class ChannelProtocolModel extends Model
     public function deleteUserAppData($uidArr)
     {
     }
+
     // 恢复假删除的用户数据
     public function rebackUserAppData($uidArr)
     {
     }
+
     // 彻底删除用户数据
     public function trueDeleteUserAppData($uidArr)
     {
@@ -21,7 +22,7 @@ class ChannelProtocolModel extends Model
             return false;
         }
 
-        $map ['uid'] = array(
+        $map['uid'] = array(
                 'in',
                 $uidArr,
         );
@@ -31,8 +32,10 @@ class ChannelProtocolModel extends Model
     }
 
     /**
-     * 在个人空间里查看该应用的内容列表
-     * @param  int   $uid 用户UID
+     * 在个人空间里查看该应用的内容列表.
+     *
+     * @param int $uid 用户UID
+     *
      * @return array 个人空间数据列表
      */
     public function profileContent($uid)

@@ -5,7 +5,7 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 咨询列表数据模型
+ * 咨询列表数据模型.
  *
  * @author Seven Du <lovevipdsw@outlook.com>
  **/

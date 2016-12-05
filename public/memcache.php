@@ -37,10 +37,10 @@ $MEMCACHE_SERVERS[] = '127.0.0.1:11211'; // add more as an array
 ///////////////// Password protect ////////////////////////////////////////////////////////////////
 if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) ||
            $_SERVER['PHP_AUTH_USER'] != ADMIN_USERNAME || $_SERVER['PHP_AUTH_PW'] != ADMIN_PASSWORD) {
-    Header('WWW-Authenticate: Basic realm="Memcache Login"');
-    Header('HTTP/1.0 401 Unauthorized');
+    header('WWW-Authenticate: Basic realm="Memcache Login"');
+    header('HTTP/1.0 401 Unauthorized');
 
-    echo <<<EOB
+    echo <<<'EOB'
 				<html><body>
 				<h1>Rejected!</h1>
 				<big>Wrong Username or Password!</big>
@@ -327,7 +327,7 @@ function menu_entry($ob, $title)
 
 function getHeader()
 {
-    $header = <<<EOB
+    $header = <<<'EOB'
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head><title>MEMCACHE INFO</title>
@@ -549,7 +549,7 @@ EOB;
     menu_entry(1, 'View Host Stats'),
     menu_entry(2, 'Variables');
 
-    echo <<<EOB
+    echo <<<'EOB'
 	</ol>
 	<br/>
 EOB;
@@ -674,17 +674,17 @@ if (isset($_GET['IMG'])) {
                 if ($free > 0) {
                     // draw free
                     $angle_to = ($free * 360) / $tsize;
-                    $perc = sprintf('%.2f%%', ($free * 100) / $tsize) ;
+                    $perc = sprintf('%.2f%%', ($free * 100) / $tsize);
 
                     fill_arc($image, $x, $y, $size, $angle_from, $angle_from + $angle_to, $col_black, $col_green, $perc);
-                    $angle_from = $angle_from + $angle_to ;
+                    $angle_from = $angle_from + $angle_to;
                 }
                 if ($used > 0) {
                     // draw used
                     $angle_to = ($used * 360) / $tsize;
-                    $perc = sprintf('%.2f%%', ($used * 100) / $tsize) ;
+                    $perc = sprintf('%.2f%%', ($used * 100) / $tsize);
                     fill_arc($image, $x, $y, $size, $angle_from, $angle_from + $angle_to, $col_black, $col_red, '('.$perc.')');
-                    $angle_from = $angle_from + $angle_to ;
+                    $angle_from = $angle_from + $angle_to;
                 }
             }
 
@@ -694,7 +694,7 @@ if (isset($_GET['IMG'])) {
 
             $hits = ($memcacheStats['get_hits'] == 0) ? 1 : $memcacheStats['get_hits'];
             $misses = ($memcacheStats['get_misses'] == 0) ? 1 : $memcacheStats['get_misses'];
-            $total = $hits + $misses ;
+            $total = $hits + $misses;
 
                fill_box($image, 30, $size, 50, -$hits * ($size - 21) / $total, $col_black, $col_green, sprintf('%.1f%%', $hits * 100 / $total));
             fill_box($image, 130, $size, 50, -max(4, ($total - $hits) * ($size - 21) / $total), $col_black, $col_red, sprintf('%.1f%%', $misses * 100 / $total));
@@ -752,7 +752,7 @@ EOB;
         echo "</td></tr>\n";
         echo '<tr class=tr-1><td class=td-0>Total Memcache Cache</td><td>'.bsize($memcacheStats['limit_maxbytes'])."</td></tr>\n";
 
-    echo <<<EOB
+    echo <<<'EOB'
 		</tbody></table>
 		</div>
 
@@ -768,7 +768,7 @@ EOB;
             echo '<tr class=tr-0><td class=td-0>Total Cache Size</td><td>',bsize($memcacheStatsSingle[$server]['STAT']['limit_maxbytes']),'</td></tr>';
             echo '</tbody></table>';
         }
-    echo <<<EOB
+    echo <<<'EOB'
 
 		</div>
 		<div class="graph div3"><h2>Host Status Diagrams</h2>
@@ -776,7 +776,7 @@ EOB;
 EOB;
 
     $size = 'width='.(GRAPH_SIZE + 50).' height='.(GRAPH_SIZE + 10);
-    echo <<<EOB
+    echo <<<'EOB'
 		<tr>
 		<td class=td-0>Cache Usage</td>
 		<td class=td-1>Hits &amp; Misses</td>
@@ -857,7 +857,7 @@ EOB;
                 echo '</td></tr>';
                 $m = 1 - $m;
             }
-            echo <<<EOB
+            echo <<<'EOB'
 			</tbody></table>
 			</div><hr/>
 EOB;
@@ -879,7 +879,7 @@ EOB;
         $theserver = $MEMCACHE_SERVERS[(int) $_GET['server']];
         list($h, $p) = explode(':', $theserver);
         $r = sendMemcacheCommand($h, $p, 'get '.$theKey);
-        echo <<<EOB
+        echo <<<'EOB'
         <div class="info"><table cellspacing=0><tbody>
 			<tr><th>Server<th>Key</th><th>Value</th><th>Delete</th></tr>
 EOB;
@@ -888,7 +888,7 @@ EOB;
              ' <br/>Size:',bsize($r['VALUE'][$theKey]['stat']['size']),
              '</td><td>',chunk_split($r['VALUE'][$theKey]['value'], 40),'</td>',
              '<td><a href="',$PHP_SELF,'&op=5&server=',(int) $_GET['server'],'&key=',base64_encode($theKey),'">Delete</a></td>','</tr>';
-        echo <<<EOB
+        echo <<<'EOB'
 			</tbody></table>
 			</div><hr/>
 EOB;

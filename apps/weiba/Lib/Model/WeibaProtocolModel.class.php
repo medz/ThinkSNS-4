@@ -1,7 +1,7 @@
 <?php
 /**
  * ProtocolModel
- * 提供给Ts核心调用的协议类
+ * 提供给Ts核心调用的协议类.
  */
 class WeibaProtocolModel extends Model
 {
@@ -180,20 +180,20 @@ class WeibaProtocolModel extends Model
 
         $follow_states = $this->_formatFollowState($uid, $weiba_ids, $follow_data);
 
-        return $follow_states [$uid];
+        return $follow_states[$uid];
     }
 
     private function _formatFollowState($uid, $weiba_ids, $follow_data)
     {
-        ! is_array($weiba_ids) && $fids = explode(',', $weiba_ids);
+        !is_array($weiba_ids) && $fids = explode(',', $weiba_ids);
         foreach ($weiba_ids as $weiba_ids) {
-            $follow_states [$uid] [$weiba_ids] = array(
+            $follow_states[$uid][$weiba_ids] = array(
                     'following' => 0,
             );
         }
         foreach ($follow_data as $r_v) {
-            if ($r_v ['follower_uid'] == $uid) {
-                $follow_states [$r_v ['follower_uid']] [$r_v ['weiba_id']] ['following'] = 1;
+            if ($r_v['follower_uid'] == $uid) {
+                $follow_states[$r_v['follower_uid']][$r_v['weiba_id']]['following'] = 1;
             }
         }
 

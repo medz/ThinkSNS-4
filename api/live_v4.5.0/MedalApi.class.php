@@ -1,16 +1,16 @@
 <?php
 /**
- * 勋章API
+ * 勋章API.
  *
- * @package ThinkSNS\Api\Medal
  * @author Medz Seven <lovevipdsw@vip.qq.com>
  **/
 class MedalApi extends Api
 {
     /**
-     * 获取全部勋章
+     * 获取全部勋章.
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getAll()
@@ -26,10 +26,12 @@ class MedalApi extends Api
     }
 
     /**
-     * 获取用户勋章
+     * 获取用户勋章.
      *
      * @request int [$uid] 获取的用户ID，默认可以不传则表示获取当前登录用户
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getUser()
@@ -56,11 +58,13 @@ class MedalApi extends Api
     }
 
     /**
-     * 格式化出需要的数据
+     * 格式化出需要的数据.
      *
      * @param array $medals 数据库原始勋章数据
      * @param array [$data] 额外携带的数据
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     private function formatMedal(array $medals, array $data = array())

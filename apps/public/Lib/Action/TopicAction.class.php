@@ -59,8 +59,8 @@ class TopicAction extends Action
     {
         $key = '';
         // 为使搜索条件在分页时也有效，将搜索条件记录到SESSION中
-        if (isset($_REQUEST ['k']) && !empty($_REQUEST['k'])) {
-            if (t($_GET ['k'])) {
+        if (isset($_REQUEST['k']) && !empty($_REQUEST['k'])) {
+            if (t($_GET['k'])) {
                 $key = urldecode($_GET['k']);
             } elseif (t($_POST['k'])) {
                 $key = $_POST['k'];
@@ -70,9 +70,9 @@ class TopicAction extends Action
             if (mb_strlen($key, 'UTF8') > 200) {
                 $key = mb_substr($key, 0, 200, 'UTF8');
             }
-            $_SESSION ['home_user_search_key'] = serialize($key);
-        } elseif (is_numeric($_GET [C('VAR_PAGE')])) {
-            $key = unserialize($_SESSION ['home_user_search_key']);
+            $_SESSION['home_user_search_key'] = serialize($key);
+        } elseif (is_numeric($_GET[C('VAR_PAGE')])) {
+            $key = unserialize($_SESSION['home_user_search_key']);
         } else {
             //unset($_SESSION['home_user_search_key']);
         }

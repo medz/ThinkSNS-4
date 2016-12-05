@@ -2,9 +2,9 @@
 
 tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
 /**
- * 后台勋章管理类
- * @author Stream
+ * 后台勋章管理类.
  *
+ * @author Stream
  */
 class MedalAction extends AdministratorAction
 {
@@ -18,8 +18,9 @@ class MedalAction extends AdministratorAction
         $this->pageTitle['editUserMedal'] = '编辑用户勋章';
         parent::_initialize();
     }
+
     /**
-     * 勋章列表
+     * 勋章列表.
      */
     public function index()
     {
@@ -35,8 +36,9 @@ class MedalAction extends AdministratorAction
         $this->pageButton[] = array('title' => '删除', 'onclick' => 'admin.deletemedal()');
         $this->displayList($list);
     }
+
     /**
-     * 添加勋章
+     * 添加勋章.
      */
     public function addMedal()
     {
@@ -45,8 +47,9 @@ class MedalAction extends AdministratorAction
         $this->notEmpty = array('name', 'src');
         $this->displayConfig();
     }
+
     /**
-     * 添加勋章到数据库
+     * 添加勋章到数据库.
      */
     public function doAddMedal()
     {
@@ -95,8 +98,9 @@ class MedalAction extends AdministratorAction
             $this->error('已存在相同名称的勋章');
         }
     }
+
     /**
-     * 编辑勋章
+     * 编辑勋章.
      */
     public function editMedal()
     {
@@ -114,8 +118,9 @@ class MedalAction extends AdministratorAction
         $this->notEmpty = array('name', 'src');
         $this->displayConfig($medal);
     }
+
     /**
-     * 保存勋章到数据库
+     * 保存勋章到数据库.
      */
     public function doEditMedal()
     {
@@ -163,8 +168,9 @@ class MedalAction extends AdministratorAction
             $this->error('已存在相同名称的勋章');
         }
     }
+
     /**
-     * 用户勋章列表
+     * 用户勋章列表.
      */
     public function userMedal()
     {
@@ -192,6 +198,7 @@ class MedalAction extends AdministratorAction
         $this->opt['medal'] = $medals;
         $this->displayList($list);
     }
+
     public function editUserMedal()
     {
         $id = intval($_GET['id']);
@@ -205,6 +212,7 @@ class MedalAction extends AdministratorAction
 
         $this->displayConfig($data);
     }
+
     public function doEditUserMedal()
     {
         $id = intval($_POST['id']);
@@ -219,8 +227,9 @@ class MedalAction extends AdministratorAction
             $this->error('编辑失败');
         }
     }
+
     /**
-     * 添加用户勋章
+     * 添加用户勋章.
      */
     public function addUserMedal()
     {
@@ -236,6 +245,7 @@ class MedalAction extends AdministratorAction
         $data['type'] = 1;
         $this->displayConfig($data);
     }
+
     public function doAddUserMedal()
     {
         $desc = t($_POST['desc']);
@@ -291,8 +301,9 @@ class MedalAction extends AdministratorAction
             $this->error('没有选择勋章');
         }
     }
+
     /**
-     * 删除勋章
+     * 删除勋章.
      */
     public function doDeleteMedal()
     {
@@ -311,8 +322,9 @@ class MedalAction extends AdministratorAction
         }
         exit(json_encode($return));
     }
+
     /**
-     * 删除用户勋章
+     * 删除用户勋章.
      */
     public function doDeleteUserMedal()
     {

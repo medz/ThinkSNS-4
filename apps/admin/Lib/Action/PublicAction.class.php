@@ -1,7 +1,9 @@
 <?php
 /**
- * 后台公共方法
+ * 后台公共方法.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
@@ -14,6 +16,7 @@ class PublicAction extends AdministratorAction
         }
         $this->assign('isAdmin', 1);    //是否后台
     }
+
     /**
      * 登录
      * Enter description here ...
@@ -60,7 +63,7 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 通用部门选择数据接口
+     * 通用部门选择数据接口.
      */
     public function selectDepartment()
     {
@@ -93,8 +96,10 @@ class PublicAction extends AdministratorAction
     }
 
     /*** 分类模板接口 ***/
+
     /**
-     * 移动分类顺序API
+     * 移动分类顺序API.
+     *
      * @return json 返回相关的JSON信息
      */
     public function moveTreeCategory()
@@ -116,7 +121,7 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 添加分类窗口API
+     * 添加分类窗口API.
      */
     public function addTreeCategory()
     {
@@ -133,7 +138,8 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 添加分类操作API
+     * 添加分类操作API.
+     *
      * @return json 返回相关的JSON信息
      */
     public function doAddTreeCategory()
@@ -156,7 +162,7 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 编辑分类窗口API
+     * 编辑分类窗口API.
      */
     public function upTreeCategory()
     {
@@ -180,7 +186,8 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 编辑分类操作API
+     * 编辑分类操作API.
+     *
      * @return json 返回相关的JSON信息
      */
     public function doUpTreeCategory()
@@ -205,7 +212,8 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 删除分类API
+     * 删除分类API.
+     *
      * @return json 返回相关的JSON信息
      */
     public function rmTreeCategory()
@@ -230,7 +238,7 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 设置分类配置页面
+     * 设置分类配置页面.
      */
     public function setCategoryConf()
     {
@@ -276,7 +284,7 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 存储分类配置操作
+     * 存储分类配置操作.
      */
     public function doSetCategoryConf()
     {
@@ -313,7 +321,7 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 删除用户脏数据（昵称重复）
+     * 删除用户脏数据（昵称重复）.
      */
     public function delTrashUser()
     {

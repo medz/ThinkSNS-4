@@ -1,7 +1,9 @@
 <?php
 /**
- * 微吧模型 - 数据对象模型
+ * 微吧模型 - 数据对象模型.
+ *
  * @author jason <yangjs17@yeah.net>
+ *
  * @version TS3.0
  */
 class WeibaPostModel extends Model
@@ -9,18 +11,20 @@ class WeibaPostModel extends Model
     protected $tableName = 'weiba_post';
     protected $error = '';
     protected $fields = array(
-                            0 => 'post_id', 1 => 'weiba_id', 2 => 'post_uid', 3 => 'title', 4 => 'content', 5 => 'post_time',
-                            6 => 'reply_count', 7 => 'read_count', 8 => 'last_reply_uid', 9 => 'last_reply_time', 10 => 'digest', 11 => 'top', 12 => 'lock',
+                            0  => 'post_id', 1 => 'weiba_id', 2 => 'post_uid', 3 => 'title', 4 => 'content', 5 => 'post_time',
+                            6  => 'reply_count', 7 => 'read_count', 8 => 'last_reply_uid', 9 => 'last_reply_time', 10 => 'digest', 11 => 'top', 12 => 'lock',
                             13 => 'api_key', 14 => 'domain', 15 => 'is_index', 16 => 'index_img', 17 => 'reg_ip',
                             18 => 'is_del', 19 => 'feed_id', 20 => 'reply_all_count', 21 => 'attach', 22 => 'form', 23 => 'top_time', 24 => 'is_index_time', '_autoinc' => true, '_pk' => 'post_id',
                         );
 
     /**
-     * 发帖同步到分享
+     * 发帖同步到分享.
+     *
      * @param int post_id 帖子ID
      * @param string title 帖子标题
      * @param string content 帖子内容
      * @param int uid 发布者uid
+     *
      * @return int feed_id 分享ID
      */
     public function syncToFeed($post_id, $title, $content, $uid)
@@ -33,7 +37,8 @@ class WeibaPostModel extends Model
     }
 
     /**
-     * 发表帖子forapi
+     * 发表帖子forapi.
+     *
      * @param int weiba_id 微吧ID
      * @param varchar title 帖子标题
      * @param varchar content 帖子内容
@@ -61,7 +66,8 @@ class WeibaPostModel extends Model
     }
 
     /**
-     * 收藏帖子
+     * 收藏帖子.
+     *
      * @param int post_id 帖子ID
      */
     public function favoriteForApi($post_id)
@@ -80,7 +86,8 @@ class WeibaPostModel extends Model
     }
 
     /**
-     * 取消收藏帖子
+     * 取消收藏帖子.
+     *
      * @param int post_id 帖子ID
      */
     public function unfavoriteForApi($post_id)
@@ -95,7 +102,8 @@ class WeibaPostModel extends Model
     }
 
     /**
-     * 为feed提供应用数据来源信息 - 与模板weiba_post.feed.php配合使用
+     * 为feed提供应用数据来源信息 - 与模板weiba_post.feed.php配合使用.
+     *
      * @param int row_id 帖子ID
      * @param bool _forApi 提供给API的数据
      */

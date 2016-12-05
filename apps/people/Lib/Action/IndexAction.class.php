@@ -1,7 +1,9 @@
 <?php
 /**
- * 找人首页控制器
+ * 找人首页控制器.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 class IndexAction extends Action
@@ -86,7 +88,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 获取指定父分类的树形结构
+     * 获取指定父分类的树形结构.
+     *
      * @return int   $pid 父分类ID
      * @return array 指定父分类的树形结构
      */
