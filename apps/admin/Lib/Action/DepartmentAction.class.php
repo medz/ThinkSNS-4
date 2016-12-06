@@ -2,7 +2,7 @@
 
 tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
 /**
- * 后台部门管理
+ * 后台部门管理.
  *
  * @author jason
  */
@@ -17,6 +17,7 @@ class DepartmentAction extends AdministratorAction
         $this->pageTitle['index'] = L('PUBLIC_DEPARTMENT_SETTING');
         parent::_initialize();
     }
+
     public function index()
     {
         if (!empty($_POST)) {
@@ -44,11 +45,13 @@ class DepartmentAction extends AdministratorAction
 
         $this->displayCateTree($department);
     }
+
     //修改名称
     public function editDepartment()
     {
         $this->delDepartment();
     }
+
     public function doeditDepartment()
     {
         $id = intval($_POST['id']);
@@ -79,11 +82,13 @@ class DepartmentAction extends AdministratorAction
         echo json_encode($return);
         exit();
     }
+
     //移动部门
     public function moveDepartment()
     {
         $this->delDepartment();
     }
+
     public function domoveDepartment()
     {
         $id = intval($_POST['id']);
@@ -110,6 +115,7 @@ class DepartmentAction extends AdministratorAction
         echo json_encode($return);
         exit();
     }
+
     //删除部门
     public function delDepartment()
     {
@@ -122,6 +128,7 @@ class DepartmentAction extends AdministratorAction
         $this->assign('info', $info);
         $this->display();
     }
+
     //删除部门操作
     public function dodelDepartment()
     {

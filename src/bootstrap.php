@@ -29,15 +29,14 @@ define('TS_APP_DEV', false);
 define('SITE_PATH', TS_ROOT);
 
 /**
- * 自动加载
+ * 自动加载.
  */
 $file = dirname(__FILE__).'/vendor/autoload.php';
 if (!file_exists($file)) {
     echo '<pre>';
     echo 'You must set up the project dependencies, run the following commands:', PHP_EOL,
          'curl -sS https://getcomposer.org/installer | php', PHP_EOL,
-         'php composer.phar install', PHP_EOL
-    ;
+         'php composer.phar install', PHP_EOL;
     echo '</pre>';
     exit;
 }

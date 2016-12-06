@@ -5,11 +5,11 @@ class ToolAction extends Action
     // 获取官方服务器上应用的信息给本地服务器
     public function downloadApp()
     {
-        $map ['develop_id'] = intval($_GET ['develop_id']);
+        $map['develop_id'] = intval($_GET['develop_id']);
         $dao = D('develop', 'develop');
 
-        $info = $dao->getDetailDevelop($map ['develop_id']);
-        $info ['packageURL'] = getAttachUrl($info ['file'] ['filename']);
+        $info = $dao->getDetailDevelop($map['develop_id']);
+        $info['packageURL'] = getAttachUrl($info['file']['filename']);
         $info['app_name'] = $info['package'];
 
         // 记录下载数
@@ -30,7 +30,8 @@ class ToolAction extends Action
     }
 
     /**
-     * 验证站点是否在官方服务器上注册
+     * 验证站点是否在官方服务器上注册.
+     *
      * @return JSON 返回相关数据
      */
     public function checkedHost()

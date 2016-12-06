@@ -3,15 +3,14 @@
 tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
 
 /**
- * 升级程序
+ * 升级程序.
  *
- * @package ThinkSNS.admin.upgrade
  * @author Medz Seven <lovevipdsw@vip.qq.com>
  **/
 class UpgradeAction extends AdministratorAction
 {
     /**
-     * 执行前
+     * 执行前.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -23,7 +22,7 @@ class UpgradeAction extends AdministratorAction
     }
 
     /**
-     * 后台检测
+     * 后台检测.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -40,7 +39,7 @@ class UpgradeAction extends AdministratorAction
     }
 
     /**
-     * 检查是否有更新
+     * 检查是否有更新.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -81,12 +80,13 @@ class UpgradeAction extends AdministratorAction
     }
 
     /**
-     * 显示消息
+     * 显示消息.
      *
      * @param string $message 消息
      * @param string $type    [success|error] 消息类型
      * @param string $url     跳转的url
      * @param int    $s       等待的时间
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function showMessage($message, $type, $url = false, $s = 3)
@@ -100,10 +100,11 @@ class UpgradeAction extends AdministratorAction
     }
 
     /**
-     * 显示正确消息
+     * 显示正确消息.
      *
      * @param string $message        消息
      * @param string $defaultMessage 默认消息
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     private function showSuccess($message = '', $defaultMessage = '正确')
@@ -113,10 +114,11 @@ class UpgradeAction extends AdministratorAction
     }
 
     /**
-     * 显示错误消息
+     * 显示错误消息.
      *
      * @param string $message        消息
      * @param string $defaultMessage 默认消息
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     private function showError($message = '', $defaultMessage = '错误')
@@ -126,7 +128,7 @@ class UpgradeAction extends AdministratorAction
     }
 
     /**
-     * 显示升级信息
+     * 显示升级信息.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -153,13 +155,13 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
 <pre/>';
         $this->onsubmit = 'confirm(\'确定要升级吗？\')';
         $this->displayConfig(array(
-            'log' => $log,
+            'log'  => $log,
             'tips' => $this->opt['tips'],
         ));
     }
 
     /**
-     * 升级程序第一步 下载增量包
+     * 升级程序第一步 下载增量包.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -186,7 +188,6 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
             $this->showError('更新包校验失败，请重新执行升级.');
         }
 
-
         $sqlPath = dirname($path).'/'.'upgrade.sql';
         $delFile = dirname($path).'/'.'deleteFiles.php';
 
@@ -194,7 +195,7 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
         file_exists($sqlPath) and file_put_contents($sqlPath, '-- 暂无升级 SQL --');
 
         // # 解压增量包
-        $zip = new MedzZip;
+        $zip = new MedzZip();
         $zip->init() or $this->showError('初始化解压程序失败！');
 
         $list = $zip->extract($path);
@@ -217,7 +218,7 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
     }
 
     /**
-     * 升级程序第二步 - 执行文件替换
+     * 升级程序第二步 - 执行文件替换.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -227,7 +228,7 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
         $filename = urldecode($filename);
         $filename = DATA_PATH.'/'.'upgrade/'.$filename;
 
-        $zip = new MedzZip;
+        $zip = new MedzZip();
         $zip->init();
 
         foreach ($zip->extract($filename) as $info) {
@@ -248,7 +249,7 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
     }
 
     /**
-     * 升级第三步 - 删除升级标记需要删除的文件 和执行sql文件
+     * 升级第三步 - 删除升级标记需要删除的文件 和执行sql文件.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -283,11 +284,13 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
     }
 
     /**
-     * 删除函数，自带递归
+     * 删除函数，自带递归.
      *
-     * @param  string $path      删除的地址
-     * @param  bool   $recursive 是否递归 [true]
+     * @param string $path      删除的地址
+     * @param bool   $recursive 是否递归 [true]
+     *
      * @return bool
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     protected function rm($path, $recursive = true)

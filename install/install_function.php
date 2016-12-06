@@ -102,12 +102,12 @@ function PWriteFile($filename, $content, $mode = 'ab')
             return false;
         }
     }
-    $fp = @ fopen($filename, $mode);
+    $fp = @fopen($filename, $mode);
     if ($fp) {
         flock($fp, LOCK_EX);
         fwrite($fp, $content);
         fclose($fp);
-        @ chmod($filename, 0777);
+        @chmod($filename, 0777);
 
         return true;
     }
@@ -168,7 +168,7 @@ function iswaf_create_key()
 
 function iswaf_random($length, $numeric = 0)
 {
-    PHP_VERSION < '4.2.0' && mt_srand((double) microtime() * 1000000);
+    PHP_VERSION < '4.2.0' && mt_srand((float) microtime() * 1000000);
     if ($numeric) {
         $hash = sprintf('%0'.$length.'d', mt_rand(0, pow(10, $length) - 1));
     } else {

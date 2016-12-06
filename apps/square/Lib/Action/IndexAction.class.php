@@ -2,9 +2,11 @@
 /**
  * IndexAction
  * blog的Action.接收和过滤网页传参
+ *
  * @uses Action
- * @package
+ *
  * @version $id$
+ *
  * @copyright 2009-2011 SamPeng
  * @author SamPeng <sampeng87@gmail.com>
  * @license PHP Version 5.2 {@link www.sampeng.cn}
@@ -13,16 +15,15 @@ class IndexAction extends Action
 {
     /**
      * __initialize
-     * 初始化
-     *
+     * 初始化.
      */
     public function _initialize()
     {
     }
+
     /**
      * index
-     * 好友的广场
-     *
+     * 好友的广场.
      */
     public function index()
     {

@@ -6,12 +6,12 @@ use Ts\Models as Model;
 
 /**
  * 资讯接口api类
- * Wayne qiaobinloverabbi@gmail.com
+ * Wayne qiaobinloverabbi@gmail.com.
  */
 class InformationApi extends Api
 {
     /**
-     * 阅读资讯详情
+     * 阅读资讯详情.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      * @datetime 2016-05-08T11:37:33+0800
@@ -25,7 +25,7 @@ class InformationApi extends Api
 
         if (!$info) {
             return array(
-                'status' => 0,
+                'status'  => 0,
                 'message' => '访问的资讯不存在！',
             );
         }
@@ -112,7 +112,8 @@ class InformationApi extends Api
     }
 
     /**
-     * 新闻列表接口
+     * 新闻列表接口.
+     *
      * @ wayne qiaobinloverabbi@gmail.com
      * @DateTime  2016-04-27T09:26:55+0800
      */
@@ -124,7 +125,7 @@ class InformationApi extends Api
         $map['isPre'] = 0;
         $map['isDel'] = 0;
         $this->data['max_id'] && $map['id'] = array('lt', $this->data['max_id']);
-        $this->data['limit'] && $limit = $this->data['limit'] ? $this->data['limit'] : 10 ;
+        $this->data['limit'] && $limit = $this->data['limit'] ? $this->data['limit'] : 10;
         $newsList = $newsModel->where($map)->field('id,cid,subject,abstract,author,ctime,hits,content')->limit($limit)->order('id desc')->select();
         if (!empty($newsList)) {
             foreach ($newsList as &$subject) {
@@ -149,7 +150,8 @@ class InformationApi extends Api
     }
 
     /**
-     * 咨询分类
+     * 咨询分类.
+     *
      * @Author Wayne qiaobinloverabbi@gmail.com
      * @DateTime  2016-04-27T09:49:19+0800
      */
@@ -159,30 +161,32 @@ class InformationApi extends Api
         $cates = $cateModel->where(['isDel' => 0])->order('rank asc')->select();
         if (!empty($cates)) {
             array_unshift($cates, array(
-                'id' => 0,
-                'name' => '全部',
+                'id'    => 0,
+                'name'  => '全部',
                 'isDel' => 0,
-                'rank' => 0
+                'rank'  => 0,
             ));
-            $return ['msg'] = '获取分类成功';
-            $return ['status'] = 1;
-            $return ['data'] = $cates;
+            $return['msg'] = '获取分类成功';
+            $return['status'] = 1;
+            $return['data'] = $cates;
 
             return $return;
         } else {
-            $return ['msg'] = '没有找到分类';
-            $return ['status'] = 0;
-            $return ['data'] = '';
+            $return['msg'] = '没有找到分类';
+            $return['status'] = 0;
+            $return['data'] = '';
 
             return $return;
         }
     }
 
     /**
-     * 获取评论数
+     * 获取评论数.
      *
-     * @param  int $sid 主题ID
+     * @param int $sid 主题ID
+     *
      * @return int 评论数
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     private function _getComentNum($sid)

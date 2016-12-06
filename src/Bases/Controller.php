@@ -5,15 +5,14 @@ namespace Ts\Bases;
 use Action as BaseController;
 
 /**
- * undocumented class
+ * undocumented class.
  *
- * @package default
  * @author
  **/
 abstract class Controller extends BaseController
 {
     /**
-     * 构造方法
+     * 构造方法.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
@@ -38,7 +37,7 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * 析构方法
+     * 析构方法.
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
@@ -50,10 +49,11 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * 重载方法
+     * 重载方法.
      *
      * @param string $method 方法名称
      * @param array  $params 方法参数
+     *
      * @author Seven Du <lovevipdsw@outlook.com>
      **/
     final public function __call($method, array $params = array())

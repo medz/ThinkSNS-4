@@ -1,6 +1,7 @@
 <?php
 /**
- * WebMessageAction Web消息模块
+ * WebMessageAction Web消息模块.
+ *
  * @version TS4.0
  */
 class WebMessageAction extends Action
@@ -147,8 +148,8 @@ class WebMessageAction extends Action
     {
         // 关联未读数量
         $keys = array(
-            'feed' => 'unread_digg',
-            'weiba_post' => 'unread_digg_weibapost',
+            'feed'        => 'unread_digg',
+            'weiba_post'  => 'unread_digg_weibapost',
             'weiba_reply' => 'unread_digg_weibareply',
         );
         $unreadCount = array();
@@ -156,8 +157,8 @@ class WebMessageAction extends Action
         //存在APP
         if (D('App')->isAppNameExist('weiba')) {
             $types = array(
-                'feed' => '分享',
-                'weiba_post' => '微吧帖子',
+                'feed'        => '分享',
+                'weiba_post'  => '微吧帖子',
                 'weiba_reply' => '微吧回复',
             );
         } else { //不存在
@@ -215,7 +216,7 @@ class WebMessageAction extends Action
     }
 
     /**
-     * At me消息
+     * At me消息.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -390,8 +391,8 @@ class WebMessageAction extends Action
         ignore_user_abort(true);
         $webMessage = model('WebMessage');
         $result = $webMessage->sendMessage(array(
-            'room_id' => $_POST['room_id'],
-            'content' => $_POST['content'],
+            'room_id'      => $_POST['room_id'],
+            'content'      => $_POST['content'],
             'message_type' => 'text',
         ));
 
@@ -413,8 +414,8 @@ class WebMessageAction extends Action
         if (isset($attachs[0])) {
             $webMessage = model('WebMessage');
             $result = $webMessage->sendMessage(array(
-                'room_id' => $_GET['room_id'],
-                'attach_id' => $attachs[0],
+                'room_id'      => $_GET['room_id'],
+                'attach_id'    => $attachs[0],
                 'message_type' => 'image',
             ));
             if ($result) {

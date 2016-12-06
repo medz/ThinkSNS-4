@@ -47,8 +47,8 @@ if (!function_exists('getClientIp')) {
             $ip = getenv('HTTP_X_FORWARDED_FOR');
         } elseif (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
             $ip = getenv('REMOTE_ADDR');
-        } elseif (isset($_SERVER ['REMOTE_ADDR']) && $_SERVER ['REMOTE_ADDR'] && strcasecmp($_SERVER ['REMOTE_ADDR'], 'unknown')) {
-            $ip = $_SERVER ['REMOTE_ADDR'];
+        } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+            $ip = $_SERVER['REMOTE_ADDR'];
         } else {
             $ip = 'unknown';
         }
@@ -152,7 +152,7 @@ if (!function_exists('cookie')) {
         $config = array(
             'prefix' => isset($GLOBALS['config']['COOKIE_PREFIX']) ?: '', // cookie 名称前缀
             'expire' => isset($GLOBALS['config']['COOKIE_EXPIRE']) ?: 3600, // cookie 保存时间
-            'path' => '/',   // cookie 保存路径
+            'path'   => '/',   // cookie 保存路径
             'domain' => '', // cookie 有效域名
         );
 
@@ -239,19 +239,18 @@ if ($_GET['action'] == 'trace') {
         ->insert(
             array(
                 // 'day' => 'CURRENT_DATE',
-                'day' => date('Y-m-d'),
-                'uid' => $uid,
-                'uname' => $uname,
-                'action' => $action,
-                'refer' => $refer,
-                'isGuest' => $isGuest,
+                'day'        => date('Y-m-d'),
+                'uid'        => $uid,
+                'uname'      => $uname,
+                'action'     => $action,
+                'refer'      => $refer,
+                'isGuest'    => $isGuest,
                 'isIntranet' => $isIntranet,
-                'ip' => $ip,
-                'agent' => $agent,
-                'ext' => $ext,
+                'ip'         => $ip,
+                'agent'      => $agent,
+                'ext'        => $ext,
             )
-        )
-    ;
+        );
 
     /* ===================================== step 2 update hits ========================================== */
 
@@ -273,8 +272,7 @@ if ($_GET['action'] == 'trace') {
         } else {
             $online
                 ->where('uid', '=', 0, 'and')
-                ->where('ip', '=', $ip)
-            ;
+                ->where('ip', '=', $ip);
         }
         $result = $online->select('uid')->get();
 
@@ -282,15 +280,15 @@ if ($_GET['action'] == 'trace') {
         if ($result) {
             $result = $online->update(array(
                 'activeTime' => $cTime,
-                'ip' => $ip,
+                'ip'         => $ip,
             ));
         } else {
             $result = $online->insert(array(
-                'uid' => $uid,
-                'uname' => $uname,
-                'app' => $app,
-                'ip' => $ip,
-                'agent' => $agent,
+                'uid'        => $uid,
+                'uname'      => $uname,
+                'app'        => $app,
+                'ip'         => $ip,
+                'agent'      => $agent,
                 'activeTime' => $cTime,
             ));
         }

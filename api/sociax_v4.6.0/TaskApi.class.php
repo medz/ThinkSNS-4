@@ -1,8 +1,7 @@
 <?php
 /**
- * 任务API
+ * 任务API.
  *
- * @package ThinkSNS\Api\Task
  * @author Seven Du <lovevipdsw@vip.qq.com>
  **/
 class TaskApi extends OldTaskApi
@@ -23,10 +22,12 @@ class TaskApi extends OldTaskApi
 
     /**
      * 每日任务
-     * 和主线任务复用
+     * 和主线任务复用.
      *
      * @param  int   $type 只有两个类型，类已经定义，self::DAILY为每日，self::MAINLINE为主线，这个方法是TS以前任务遗留定义，后续会修改，现在先这么写！
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function daily($type = self::DAILY)
@@ -103,19 +104,21 @@ class TaskApi extends OldTaskApi
      * 主线任务，代码复用每日任务
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function mainLine()
-    {   
+    {
         $return = $this->daily(self::MAINLINE);
 
         return Ts\Service\ApiMessage::withArray($return, 1, '');
     }
 
     /**
-     * 自定义任务（副本任务）API
+     * 自定义任务（副本任务）API.
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function custom()
@@ -231,14 +234,12 @@ class TaskApi extends OldTaskApi
 
 /*====================下面是老的API接口======================*/
 /**
- *
  * @author jason
- *
  */
 class OldTaskApi extends Api
 {
     /**
-     * 获取当前用户积分	--using
+     * 获取当前用户积分	--using.
      *
      * @return array 任务列表
      */
@@ -247,15 +248,15 @@ class OldTaskApi extends Api
         $uid = $this->mid;
         $list = M('task_user')->where(' uid='.$this->mid)->findAll();
         foreach ($list as $u) {
-            $my [$u ['tid']] = $u;
-            if ($u ['status'] == 1) {
-                if ($u ['receive'] == 1) {
-                    $my [$u ['tid']] ['status'] = 2; // 已领取奖励
+            $my[$u['tid']] = $u;
+            if ($u['status'] == 1) {
+                if ($u['receive'] == 1) {
+                    $my[$u['tid']]['status'] = 2; // 已领取奖励
                 } else {
-                    $my [$u ['tid']] ['status'] = 1; // 已完成，未领取奖励
+                    $my[$u['tid']]['status'] = 1; // 已完成，未领取奖励
                 }
             } else {
-                $my [$u ['tid']] ['status'] = 0; // 未完成
+                $my[$u['tid']]['status'] = 0; // 未完成
             }
         }
 
@@ -263,40 +264,40 @@ class OldTaskApi extends Api
         $has_del = false;
         // 增加用户数据
         foreach ($list as $k => $vo) {
-            if (isset($my [$vo ['id']])) {
+            if (isset($my[$vo['id']])) {
 
                 // 每日任务数据初始化
                 $time = strtotime(date('Ymd'));
-                if ($vo ['task_type'] == 1 && $my [$vo ['id']] ['ctime'] < $time && $has_del == false) {
+                if ($vo['task_type'] == 1 && $my[$vo['id']]['ctime'] < $time && $has_del == false) {
                     // 删除历史
-                    $dmap ['task_type'] = 1;
-                    $dmap ['uid'] = $uid;
+                    $dmap['task_type'] = 1;
+                    $dmap['uid'] = $uid;
                     M('task_user')->where($dmap)->delete();
                     $has_del = true;
-                    $list [$k] ['status'] = 0;
+                    $list[$k]['status'] = 0;
                 } else {
-                    $list [$k] ['status'] = $my [$vo ['id']] ['status'];
+                    $list[$k]['status'] = $my[$vo['id']]['status'];
                 }
             } else {
-                $list [$k] ['status'] = 0;
+                $list[$k]['status'] = 0;
 
                 // 每日任务数据初始化
-                if ($vo ['task_type'] == 1 && $has_del == false) {
+                if ($vo['task_type'] == 1 && $has_del == false) {
                     // 删除历史
-                    $dmap ['task_type'] = 1;
-                    $dmap ['uid'] = $uid;
+                    $dmap['task_type'] = 1;
+                    $dmap['uid'] = $uid;
                     M('task_user')->where($dmap)->delete();
                     $has_del = true;
                 }
                 // 初始化新的数据
-                $udata ['uid'] = $uid;
-                $udata ['tid'] = $vo ['id'];
-                $udata ['task_level'] = $vo ['task_level'];
-                $udata ['task_type'] = $vo ['task_type'];
-                $udata ['ctime'] = $_SERVER ['REQUEST_TIME'];
-                $udata ['status'] = 0;
-                $udata ['desc'] = '';
-                $udata ['receview'] = 0;
+                $udata['uid'] = $uid;
+                $udata['tid'] = $vo['id'];
+                $udata['task_level'] = $vo['task_level'];
+                $udata['task_type'] = $vo['task_type'];
+                $udata['ctime'] = $_SERVER['REQUEST_TIME'];
+                $udata['status'] = 0;
+                $udata['desc'] = '';
+                $udata['receview'] = 0;
                 // 加入任务表
                 M('task_user')->add($udata);
             }
@@ -306,81 +307,81 @@ class OldTaskApi extends Api
         $userdata = model('UserData')->getUserData($uid);
         $model = model('Task');
         foreach ($list as $k => $t) {
-            if ($t ['status'] != 0) {
+            if ($t['status'] != 0) {
                 continue;
             }
 
-            $condition = json_decode($t ['condition']);
+            $condition = json_decode($t['condition']);
             $conkey = key($condition);
             // 判断任务是否完成
-            $res = $model->_executeTask($conkey, $condition->$conkey, $uid, $t ['task_type'], $userdata);
-            $list [$k] ['conkey'] = array_shift(array_keys((array) json_decode($t ['condition'])));
-            $list [$k] ['progress_rate'] = $model->getAmountHash($list [$k] ['conkey']);
+            $res = $model->_executeTask($conkey, $condition->$conkey, $uid, $t['task_type'], $userdata);
+            $list[$k]['conkey'] = array_shift(array_keys((array) json_decode($t['condition'])));
+            $list[$k]['progress_rate'] = $model->getAmountHash($list[$k]['conkey']);
             if ($res) {
                 // 刷新用户任务执行状态
-                M('task_user')->setField('status', 1, 'tid='.$t ['id'].' and uid='.$uid);
-                $list [$k] ['status'] = 1;
+                M('task_user')->setField('status', 1, 'tid='.$t['id'].' and uid='.$uid);
+                $list[$k]['status'] = 1;
             }
         }
 
         // dump($list);
         $task_list = array();
         foreach ($list as $vo) {
-            $key = $vo ['task_type'].$vo ['task_level'];
+            $key = $vo['task_type'].$vo['task_level'];
 
-            $task_list [$key] ['title'] = $vo ['task_name'];
-            $task_list [$key] ['task_type'] = $vo ['task_type'];
-            $task_list [$key] ['task_level'] = $vo ['task_level'];
+            $task_list[$key]['title'] = $vo['task_name'];
+            $task_list[$key]['task_type'] = $vo['task_type'];
+            $task_list[$key]['task_level'] = $vo['task_level'];
 
-            $task ['task_id'] = $vo ['id'];
-            $task ['task_name'] = $vo ['step_name'];
-            $task ['step_desc'] = $vo ['step_desc'];
-            $score = json_decode($vo ['reward'], true);
-            $task ['reward'] = $score ['score'];
-            $task ['status'] = $vo ['status'];
+            $task['task_id'] = $vo['id'];
+            $task['task_name'] = $vo['step_name'];
+            $task['step_desc'] = $vo['step_desc'];
+            $score = json_decode($vo['reward'], true);
+            $task['reward'] = $score['score'];
+            $task['status'] = $vo['status'];
 
-            $task ['conkey'] = $vo ['conkey'];
-            $task ['progress_rate'] = empty($vo ['progress_rate']) ? '0 / 1' : $vo ['progress_rate'];
-            $score ['medal'] = (array) $score ['medal'];
-            if (! empty($vo ['headface'])) {
-                $attach = explode('|', $vo ['headface']);
+            $task['conkey'] = $vo['conkey'];
+            $task['progress_rate'] = empty($vo['progress_rate']) ? '0 / 1' : $vo['progress_rate'];
+            $score['medal'] = (array) $score['medal'];
+            if (!empty($vo['headface'])) {
+                $attach = explode('|', $vo['headface']);
                 // $task ['img'] = getImageUrl ( $attach [1] );
                 $task['img'] = (string) getImageUrlByAttachId($attach[0]);
             } else {
-                $task ['img'] = '';
+                $task['img'] = '';
             }
 
-            $task_list [$key] ['list'] [] = $task;
+            $task_list[$key]['list'][] = $task;
         }
         $res = array();
         foreach ($task_list as $k => $v) {
             $count = $num = 0;
-            foreach ($v ['list'] as $vv) {
-                $num += $vv ['status'] > 0 ? 1 : 0;
-                $num2 += $vv ['status'] == 2 ? 1 : 0;
+            foreach ($v['list'] as $vv) {
+                $num += $vv['status'] > 0 ? 1 : 0;
+                $num2 += $vv['status'] == 2 ? 1 : 0;
                 $count += 1;
             }
-            $v ['receive'] = 0; // 未领取完
-            $v ['status'] = 0; // 未开始
+            $v['receive'] = 0; // 未领取完
+            $v['status'] = 0; // 未开始
             if ($k < 22) {
                 if ($count == $num) {
-                    $v ['status'] = 2; // 已完成
-                    $num2 == $count && $v ['receive'] = 1;
+                    $v['status'] = 2; // 已完成
+                    $num2 == $count && $v['receive'] = 1;
                 } elseif ($num == 0) {
-                    $v ['status'] = 0; // 未开始
+                    $v['status'] = 0; // 未开始
                 } else {
-                    $v ['status'] = 1; // 进行中
+                    $v['status'] = 1; // 进行中
                 }
-                $res [] = $v;
+                $res[] = $v;
             } else {
                 $i = count($res) - 1;
                 if ($count == $num) {
-                    $v ['status'] = 2; // 已完成
-                    $num2 == $count && $v ['receive'] = 1;
-                    $res [] = $v;
-                } elseif ($res [$i] ['status'] == 2) {
-                    $v ['status'] = 1;
-                    $res [] = $v;
+                    $v['status'] = 2; // 已完成
+                    $num2 == $count && $v['receive'] = 1;
+                    $res[] = $v;
+                } elseif ($res[$i]['status'] == 2) {
+                    $v['status'] = 1;
+                    $res[] = $v;
                 }
             }
         }
@@ -482,7 +483,7 @@ class OldTaskApi extends Api
     // }
 
     /**
-     * 领取奖励	--using
+     * 领取奖励	--using.
      *
      * @param
      *        	integer task_id 任务ID
@@ -490,19 +491,19 @@ class OldTaskApi extends Api
      *        	string task_type 任务ID
      * @param
      *        	string task_level 任务ID
+     *
      * @return [type] [description]
      */
     public function complete_step()
     {
-        $task_id = intval($this->data ['task_id']);
+        $task_id = intval($this->data['task_id']);
         $id = M('task_user')->where('uid='.$this->mid.' and tid='.$task_id)->getField('id');
         // dump ( M ( 'task_user' )->getLastSql () );
         // dump ( $id );
         if ($id) {
             $status = D('task_user')->where('uid='.$this->mid.' and ( status=0 or receive=1 ) and id='.$id)->find();
             $taskexist = D('task_user')->where('uid='.$this->mid.' and id='.$id)->find();
-            if ($status || ! $taskexist) {
-
+            if ($status || !$taskexist) {
                 return Ts\Service\ApiMessage::withArray('', 0, '参数错误');
                 // return array(
                 //         'status' => 0,
@@ -512,8 +513,8 @@ class OldTaskApi extends Api
             $res = D('task_user')->setField('receive', 1, 'id='.$id);
             if ($res) {
                 $allcomplete = true;
-                if ($this->data ['task_type'] == 2) {
-                    $tasklevel = intval($this->data ['task_level']);
+                if ($this->data['task_type'] == 2) {
+                    $tasklevel = intval($this->data['task_level']);
                     $exist = D('task_user')->where('uid='.$this->mid.' and task_type=2 and task_level='.$tasklevel.' and receive=0')->find();
                     $exist && $allcomplete = false;
                 }
@@ -525,7 +526,7 @@ class OldTaskApi extends Api
                 $info = '经验+'.$reward->exp.' 积分+'.$reward->score;
                 $reward->medal->name && $info .= ' 获得勋章‘'.$reward->medal->name.'’';
                 // 获得奖励
-                model('Task')->getReward($reward->exp, $reward->score, $reward->medal->id, $GLOBALS ['ts'] ['mid']);
+                model('Task')->getReward($reward->exp, $reward->score, $reward->medal->id, $GLOBALS['ts']['mid']);
                 // $res = array('allcomplete'=> $allcomplete , 'tasktype'=>$this->data['task_type'] ,'info'=>$info);
                 // echo json_encode($res);
                 return Ts\Service\ApiMessage::withArray('', 1, '领取成功');
@@ -541,7 +542,6 @@ class OldTaskApi extends Api
                 // );
             }
         } else {
-
             return Ts\Service\ApiMessage::withArray('', 0, '参数错误');
             // return array(
             //         'status' => 0,

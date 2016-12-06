@@ -1,8 +1,8 @@
 <?php
 /**
- * 勋章馆
- * @author Stream
+ * 勋章馆.
  *
+ * @author Stream
  */
 class MedalAction extends Action
 {
@@ -13,6 +13,7 @@ class MedalAction extends Action
             $this->error('该页面不存在！');
         }
     }
+
     public function index()
     {
         $type = $_GET['type'] ? intval($_GET['type']) : 1;
@@ -69,8 +70,9 @@ class MedalAction extends Action
         $this->assign($list);
         $this->display();
     }
+
     /**
-     * 勋章详细
+     * 勋章详细.
      */
     public function showdetail()
     {
@@ -101,7 +103,7 @@ class MedalAction extends Action
     }
 
     /**
-     * 炫耀勋章
+     * 炫耀勋章.
      */
     public function flaunt($id)
     {

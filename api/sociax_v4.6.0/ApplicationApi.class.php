@@ -1,7 +1,7 @@
 <?php
 /**
  * app 提现充值模块
- * bs
+ * bs.
  */
 use Ts\Models as Model;
 
@@ -19,7 +19,8 @@ class ApplicationApi extends Api
         } else {
             $version = 1; //未配置  初始版本
         }
-        return Ts\Service\ApiMessage::withArray($version,1,'');
+
+        return Ts\Service\ApiMessage::withArray($version, 1, '');
         // return $this->rd($version);
     }
 
@@ -45,7 +46,7 @@ class ApplicationApi extends Api
             }
         }
 
-        return Ts\Service\ApiMessage::withArray($info,1,'');
+        return Ts\Service\ApiMessage::withArray($info, 1, '');
     }
 
     //生成提现订单号
@@ -54,11 +55,11 @@ class ApplicationApi extends Api
         //暂用这种简单的订单号生成办法。。。。请求密集时可能出现订单号重复？
         $number = date('YmdHis').rand(1000, 9999);
 
-       return Ts\Service\ApiMessage::withArray($number,1,'');
+        return Ts\Service\ApiMessage::withArray($number, 1, '');
     }
 
     /**
-     * 发布提现申请
+     * 发布提现申请.
      */
     public function createOrder()
     {
@@ -81,7 +82,7 @@ class ApplicationApi extends Api
          //     return $this->rd('','请填写提现账户',1);
          // }
          if (!$data['gold']) {
-            return Ts\Service\ApiMessage::withArray('', 0, '请填写提现金额');
+             return Ts\Service\ApiMessage::withArray('', 0, '请填写提现金额');
              // return $this->rd('', '请填写提现金额', 1);
          }
         $score = D('credit_user')->where(array('uid' => $this->mid))->getField('score');
@@ -113,7 +114,7 @@ class ApplicationApi extends Api
 
     /**
      * 绑定/解绑账户
-     * bs
+     * bs.
      */
     public function setUserAccount()
     {
@@ -121,7 +122,7 @@ class ApplicationApi extends Api
         if ($status == 1) {
             $data['account'] = $this->data['account'];
             if (!$data['account']) {
-                return Ts\Service\ApiMessage::withArray('', 0,'请输入需要绑定的账户');
+                return Ts\Service\ApiMessage::withArray('', 0, '请输入需要绑定的账户');
                 // return $this->rd('', '请输入需要绑定的账户', 1);
             }
             $data['type'] = intval($this->data['type']) ?: 1; //1-支付宝 2-微信
@@ -136,7 +137,7 @@ class ApplicationApi extends Api
                 return Ts\Service\ApiMessage::withArray('', 1, '绑定成功');
                 // return $this->rd('', '绑定成功', 0);
             } else {
-                return Ts\Service\ApiMessage::withArray('', 0,'绑定失败，请稍后再试');
+                return Ts\Service\ApiMessage::withArray('', 0, '绑定失败，请稍后再试');
                 // return $this->rd('', '绑定失败，请稍后再试', 1);
             }
         } else {
@@ -156,7 +157,7 @@ class ApplicationApi extends Api
     }
 
     /**
-     * 查看提现账户
+     * 查看提现账户.
      */
     public function getUserAccount()
     {
@@ -168,7 +169,7 @@ class ApplicationApi extends Api
             $data['account'] = $info->account;
             $data['type'] = $info->type;
 
-            return Ts\Service\ApiMessage::withArray($data,1,'');
+            return Ts\Service\ApiMessage::withArray($data, 1, '');
             // return $this->rd($data);
         }
     }

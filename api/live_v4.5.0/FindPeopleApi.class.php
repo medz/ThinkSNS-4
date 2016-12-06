@@ -7,71 +7,73 @@ class FindPeopleApi extends Api
     public function rank_score()
     {
         $user = model('User')->getUserInfo($this->mid);
-        $my ['uname'] = $user ['uname'];
-        $my ['remark'] = $user ['remark'];
-        $my ['avatar'] = $user ['avatar_big'];
+        $my['uname'] = $user['uname'];
+        $my['remark'] = $user['remark'];
+        $my['avatar'] = $user['avatar_big'];
 
         // 积分排行
         $scoreuids = M('credit_user')->field('uid,`score`')->order('`score` desc,uid')->limit(10000)->findAll();
         $iscore = 0;
         foreach ($scoreuids as $key => $gu) {
-            $iscore ++;
+            $iscore++;
 
-            $gu ['uid'] == $this->mid && $rank = $iscore;
+            $gu['uid'] == $this->mid && $rank = $iscore;
             if ($key < 14) {
-                $gu ['rank'] = (string) $iscore;
-                $user = model('User')->getUserInfo($gu ['uid']);
-                $gu ['uname'] = $user ['uname'];
-                $gu ['avatar'] = $user ['avatar_big'];
+                $gu['rank'] = (string) $iscore;
+                $user = model('User')->getUserInfo($gu['uid']);
+                $gu['uname'] = $user['uname'];
+                $gu['avatar'] = $user['avatar_big'];
 
-                $map ['key'] = 'weibo_count';
-                $map ['uid'] = $gu ['uid'];
-                $gu ['weibo_count'] = (string) M('user_data')->where($map)->getField('value');
+                $map['key'] = 'weibo_count';
+                $map['uid'] = $gu['uid'];
+                $gu['weibo_count'] = (string) M('user_data')->where($map)->getField('value');
 
-                $lists [] = $gu;
+                $lists[] = $gu;
             }
         }
         empty($rank) && $rank = 10000; // 一万名后不再作排名，以提高性能
 
-        $my ['rank'] = '排名：'.$rank;
-        $my ['lists'] = $lists;
+        $my['rank'] = '排名：'.$rank;
+        $my['lists'] = $lists;
 
         return $my;
     }
+
     public function rank_medal()
     {
         $user = model('User')->getUserInfo($this->mid);
-        $my ['uname'] = $user ['uname'];
-        $my ['remark'] = $user ['remark'];
-        $my ['avatar'] = $user ['avatar_big'];
+        $my['uname'] = $user['uname'];
+        $my['remark'] = $user['remark'];
+        $my['avatar'] = $user['avatar_big'];
 
         // 勋章排行
         $medaluids = M('medal_user')->field('uid,count(medal_id) as mcount')->group('uid')->order('mcount desc,uid')->limit(10000)->findAll();
         $imedal = 0;
         foreach ($medaluids as $key => $mu) {
-            $imedal ++;
+            $imedal++;
 
-            $mu ['uid'] == $this->mid && $rank = $imedal;
+            $mu['uid'] == $this->mid && $rank = $imedal;
             if ($key < 14) {
-                $mu ['rank'] = (string) $imedal;
-                $mu ['mcount'] = (string) $mu ['mcount'];
-                $user = model('User')->getUserInfo($mu ['uid']);
-                $mu ['uname'] = $user ['uname'];
-                $mu ['avatar'] = $user ['avatar_big'];
-                $mu ['remark'] = $user ['remark'];
+                $mu['rank'] = (string) $imedal;
+                $mu['mcount'] = (string) $mu['mcount'];
+                $user = model('User')->getUserInfo($mu['uid']);
+                $mu['uname'] = $user['uname'];
+                $mu['avatar'] = $user['avatar_big'];
+                $mu['remark'] = $user['remark'];
 
-                $lists [] = $mu;
+                $lists[] = $mu;
             }
         }
         // empty ( $rank ) && $rank = 10000; // 一万名后不再作排名，以提高性能
 
-        $my ['rank'] = '排名：'.$rank;
-        $my ['lists'] = $lists;
+        $my['rank'] = '排名：'.$rank;
+        $my['lists'] = $lists;
 
         return $my;
     }
+
     /**
-     * 找人首页-搜索用户 --using
+     * 找人首页-搜索用户 --using.
      *
      * @param string $key
      *                       搜索关键词
@@ -80,6 +82,7 @@ class FindPeopleApi extends Api
      * @param string $count
      *                       数量
      * @request int $rus 感兴趣的人返回个数，default：5
+     *
      * @return array 用户列表
      */
     public function search_user()
@@ -89,71 +92,71 @@ class FindPeopleApi extends Api
         $rus or
         $rus = 5;
 
-        $key = trim(t($this->data ['key']));
+        $key = trim(t($this->data['key']));
         if ($key) {
             /* 注销，可以搜索自己~ */
             // $map ['uid'] = array(
             //         'neq',
             //         $this->mid,
             // );
-            $map ['is_init'] = 1;
-            $map ['is_audit'] = 1;
-            $map ['is_active'] = 1;
-            $map ['is_del'] = 0;
+            $map['is_init'] = 1;
+            $map['is_audit'] = 1;
+            $map['is_active'] = 1;
+            $map['is_del'] = 0;
             $max_id = $this->max_id ? intval($this->max_id) : 0;
             $count = $this->count ? intval($this->count) : 20;
             $map2 = $map;
-            $map2 ['uname'] = $key;
+            $map2['uname'] = $key;
             $uid_arr = model('User')->where($map2)->field('uid,uname,intro')->findAll(); // 先搜索和key一致的，优先显示
             if ($uid_arr) {
-                $map ['uid'] = array(
+                $map['uid'] = array(
                         'neq',
-                        $uid_arr [0] ['uid'],
+                        $uid_arr[0]['uid'],
                 );
                 if (!empty($key)) {
-                    $_map ['search_key'] = array('like', '%'.$key.'%');
+                    $_map['search_key'] = array('like', '%'.$key.'%');
 
                     //备注
                     $ruid_arr = D('UserRemark')->searchRemark($this->mid, t($this->data['key']));
                     if ($ruid_arr) {
-                        $_map ['uid'] = array('IN', $ruid_arr);
-                        $_map ['_logic'] = 'OR';
+                        $_map['uid'] = array('IN', $ruid_arr);
+                        $_map['_logic'] = 'OR';
                     }
 
                     $map['_complex'] = $_map;
                 }
 
-                if (! $max_id) {
+                if (!$max_id) {
                     $user_list = (array) model('User')->where($map)->field('uid,uname,intro')->order('uid desc')->limit($count - 1)->findAll();
                     $user_list = array_merge($uid_arr, $user_list);
                 } else {
-                    $map ['uid'] = array(
+                    $map['uid'] = array(
                             array(
                                     'lt',
                                     $max_id,
                             ),
                             array(
                                     'neq',
-                                    $uid_arr [0] ['uid'],
+                                    $uid_arr[0]['uid'],
                             ),
                             'AND',
                     );
                     $user_list = (array) model('User')->where($map)->field('uid,uname,intro')->order('uid desc')->limit($count)->findAll();
                 }
             } else {
-                ! empty($max_id) && $map ['uid'] = array(
+                !empty($max_id) && $map['uid'] = array(
                         'lt',
                         $max_id,
                 );
 
                 if (!empty($key)) {
-                    $_map ['search_key'] = array('like', '%'.$key.'%');
+                    $_map['search_key'] = array('like', '%'.$key.'%');
 
                     //备注
                     $ruid_arr = D('UserRemark')->searchRemark($this->mid, t($this->data['key']));
                     if ($ruid_arr) {
-                        $_map ['uid'] = array('IN', $ruid_arr);
-                        $_map ['_logic'] = 'OR';
+                        $_map['uid'] = array('IN', $ruid_arr);
+                        $_map['_logic'] = 'OR';
                     }
 
                     $map['_complex'] = $_map;
@@ -164,24 +167,24 @@ class FindPeopleApi extends Api
             }
             $follow_status = model('Follow')->getFollowStateByFids($this->mid, getSubByKey($user_list, 'uid'));
             foreach ($user_list as $k => $v) {
-                $user_list [$k] ['uid'] = $v['uid'];
-                $user_list [$k] ['uname'] = $v['uname'];
-                $user_list [$k] ['remark'] = D('UserRemark')->getRemark($this->mid, $v['uid']);
-                $user_list [$k] ['intro'] = $user_list [$k] ['intro'] ? formatEmoji(false, $user_list [$k] ['intro']) : '';
-                $user_list [$k] ['follow_status'] = $follow_status [$v ['uid']];
-                $user_info = api('User')->get_user_info($v ['uid']);
-                $user_list [$k] ['avatar'] = $user_info ['avatar'] ['avatar_big'];
+                $user_list[$k]['uid'] = $v['uid'];
+                $user_list[$k]['uname'] = $v['uname'];
+                $user_list[$k]['remark'] = D('UserRemark')->getRemark($this->mid, $v['uid']);
+                $user_list[$k]['intro'] = $user_list[$k]['intro'] ? formatEmoji(false, $user_list[$k]['intro']) : '';
+                $user_list[$k]['follow_status'] = $follow_status[$v['uid']];
+                $user_info = api('User')->get_user_info($v['uid']);
+                $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
             }
         } else { // 获取感兴趣的5个人
             $user = model('RelatedUser')->getRelatedUser($rus);
             $user_list = array();
             foreach ($user as $k => $v) {
-                $user_list [$k] ['uid'] = $v ['userInfo'] ['uid'];
-                $user_list [$k] ['uname'] = $v ['userInfo'] ['uname'];
-                $user_list [$k] ['remark'] = $v ['userInfo'] ['remark'];
-                $user_list [$k] ['avatar'] = $v ['userInfo'] ['avatar_big'];
-                $user_list [$k] ['intro'] = $v ['info'] ['msg'] ? formatEmoji(false, $v ['info'] ['msg']) : '';
-                $user_list [$k] ['follow_status'] = model('Follow')->getFollowState($this->mid, $v ['userInfo'] ['uid']);
+                $user_list[$k]['uid'] = $v['userInfo']['uid'];
+                $user_list[$k]['uname'] = $v['userInfo']['uname'];
+                $user_list[$k]['remark'] = $v['userInfo']['remark'];
+                $user_list[$k]['avatar'] = $v['userInfo']['avatar_big'];
+                $user_list[$k]['intro'] = $v['info']['msg'] ? formatEmoji(false, $v['info']['msg']) : '';
+                $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['userInfo']['uid']);
             }
         }
 
@@ -189,7 +192,7 @@ class FindPeopleApi extends Api
     }
 
     /**
-     * 按标签搜索 --using
+     * 按标签搜索 --using.
      *
      * @return array 所有标签分类
      */
@@ -198,40 +201,41 @@ class FindPeopleApi extends Api
         $level1 = D('user_category')->where('pid=0')->order('sort asc,user_category_id asc')->findAll();
         $categoryTree = array();
         foreach ($level1 as $k => $v) {
-            $categoryTree [$k] ['title'] = $v ['title'];
-            $categoryTree [$k] ['child'] = D('user_category')->where('pid='.$v ['user_category_id'])->field('user_category_id as id,title')->findAll();
+            $categoryTree[$k]['title'] = $v['title'];
+            $categoryTree[$k]['child'] = D('user_category')->where('pid='.$v['user_category_id'])->field('user_category_id as id,title')->findAll();
         }
 
         return $categoryTree;
     }
 
     /**
-     * 按标签搜索用户 --using
+     * 按标签搜索用户 --using.
      *
      * @param
      *        	integer tag_id 标签ID
      * @param
      *        	integer max_id 上次返回的最后一个用户ID
-     * @param  string $count
-     *                       数量
-     * @return array  用户列表
+     * @param string $count
+     *                      数量
+     *
+     * @return array 用户列表
      */
     public function search_by_tag()
     {
         $max_id = $this->max_id ? intval($this->max_id) : 0;
         $count = $this->count ? intval($this->count) : 20;
-        $cid = intval($this->data ['tag_id']);
-        if (! $cid) {
+        $cid = intval($this->data['tag_id']);
+        if (!$cid) {
             return array(
                     'status' => 0,
-                    'msg' => '请选择标签',
+                    'msg'    => '请选择标签',
             );
         }
         $pid = M('UserCategory')->where('user_category_id='.$cid)->getField('pid');
         if ($pid == 0) {
             $cids = M('UserCategory')->where('pid='.$cid)->getAsFieldArray('user_category_id');
 
-            $cmap ['user_category_id'] = array(
+            $cmap['user_category_id'] = array(
                     'IN',
                     $cids,
             );
@@ -239,33 +243,33 @@ class FindPeopleApi extends Api
             $title = M('UserCategory')->where($cmap)->findAll();
 
             foreach ($title as $key => $value) {
-                $amap ['name'] = array(
+                $amap['name'] = array(
                         'LIKE',
-                        $value ['title'],
+                        $value['title'],
                 );
                 $tag = M('tag')->where($amap)->getField('tag_id');
                 if ($tag) {
-                    $tag_id [] = $tag;
+                    $tag_id[] = $tag;
                 }
             }
-            $tmap ['tag_id'] = array(
+            $tmap['tag_id'] = array(
                     'IN',
                     $tag_id,
             );
         } else {
-            $cmap ['user_category_id'] = intval($cid);
+            $cmap['user_category_id'] = intval($cid);
             $title = M('UserCategory')->where($cmap)->find();
-            $amap ['name'] = array(
+            $amap['name'] = array(
                     'LIKE',
-                    $title ['title'],
+                    $title['title'],
             );
-            $tag_id [] = M('tag')->where($amap)->getField('tag_id');
-            $tmap ['tag_id'] = array(
+            $tag_id[] = M('tag')->where($amap)->getField('tag_id');
+            $tmap['tag_id'] = array(
                     'IN',
                     $tag_id,
             );
         }
-        ! empty($max_id) && $tmap ['row_id'] = array(
+        !empty($max_id) && $tmap['row_id'] = array(
                 'lt',
                 $max_id,
         );
@@ -273,21 +277,20 @@ class FindPeopleApi extends Api
 
         $user_list = array();
         foreach ($uids as $k => $v) {
-            $user_info = api('User')->get_user_info($v ['row_id']);
-            $user_list [$k] ['uid'] = $user_info ['uid'];
-            $user_list [$k] ['uname'] = $user_info ['uname'];
-            $user_list [$k] ['remark'] = $user_info ['remark'];
-            $user_list [$k] ['avatar'] = $user_info ['avatar'] ['avatar_big'];
-            $user_list [$k] ['intro'] = $user_info ['intro'] ? formatEmoji(false, $user_info ['intro']) : '';
-            $user_list [$k] ['follow_status'] = model('Follow')->getFollowState($this->mid, $v ['row_id']);
+            $user_info = api('User')->get_user_info($v['row_id']);
+            $user_list[$k]['uid'] = $user_info['uid'];
+            $user_list[$k]['uname'] = $user_info['uname'];
+            $user_list[$k]['remark'] = $user_info['remark'];
+            $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
+            $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
+            $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['row_id']);
         }
 
         return $user_list;
     }
 
-
     /**
-     * 按性别搜索用户 --using
+     * 按性别搜索用户 --using.
      *
      * @param
      *         integer sex 性别
@@ -295,6 +298,7 @@ class FindPeopleApi extends Api
      *         integer max_id 上次返回的最后一个用户ID
      * @param
      *         string $count 数量
+     *
      * @return
      *         array  用户列表
      */
@@ -303,18 +307,18 @@ class FindPeopleApi extends Api
         $max_id = $this->max_id ? intval($this->max_id) : 0;
         $count = $this->count ? intval($this->count) : 20;
 
-        if ($this->data ['sex'] == '') {
+        if ($this->data['sex'] == '') {
             return array(
                     'status' => 0,
-                    'msg' => '请选择性别',
+                    'msg'    => '请选择性别',
             );
         }
-        $sex = intval($this->data ['sex']);
+        $sex = intval($this->data['sex']);
 
         //0查全部
         $sex != 0 && $map['sex'] = $sex;
 
-        ! empty($max_id) && $map ['uid'] = array(
+        !empty($max_id) && $map['uid'] = array(
                 'lt',
                 $max_id,
         );
@@ -322,20 +326,20 @@ class FindPeopleApi extends Api
 
         $user_list = array();
         foreach ($uids as $k => $v) {
-            $user_info = api('User')->get_user_info($v ['uid']);
-            $user_list [$k] ['uid'] = $user_info ['uid'];
-            $user_list [$k] ['uname'] = $user_info ['uname'];
-            $user_list [$k] ['remark'] = $user_info ['remark'];
-            $user_list [$k] ['avatar'] = $user_info ['avatar'] ['avatar_big'];
-            $user_list [$k] ['intro'] = $user_info ['intro'] ? formatEmoji(false, $user_info ['intro']) : '';
-            $user_list [$k] ['follow_status'] = model('Follow')->getFollowState($this->mid, $v ['uid']);
+            $user_info = api('User')->get_user_info($v['uid']);
+            $user_list[$k]['uid'] = $user_info['uid'];
+            $user_list[$k]['uname'] = $user_info['uname'];
+            $user_list[$k]['remark'] = $user_info['remark'];
+            $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
+            $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
+            $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['uid']);
         }
 
         return $user_list;
     }
 
     /**
-     * 获取地区(按字母) --using
+     * 获取地区(按字母) --using.
      *
      * @return array 城市列表
      */
@@ -344,51 +348,51 @@ class FindPeopleApi extends Api
         $my = model('User')->where('`uid` = '.$this->mid)->getField('city');
         $letters = array(
                 'my' => array(),
-                'A' => array(),
-                'B' => array(),
-                'C' => array(),
-                'D' => array(),
-                'E' => array(),
-                'F' => array(),
-                'G' => array(),
-                'H' => array(),
-                'I' => array(),
-                'J' => array(),
-                'K' => array(),
-                'L' => array(),
-                'M' => array(),
-                'N' => array(),
-                'O' => array(),
-                'P' => array(),
-                'Q' => array(),
-                'R' => array(),
-                'S' => array(),
-                'T' => array(),
-                'U' => array(),
-                'V' => array(),
-                'W' => array(),
-                'X' => array(),
-                'Y' => array(),
-                'Z' => array(),
+                'A'  => array(),
+                'B'  => array(),
+                'C'  => array(),
+                'D'  => array(),
+                'E'  => array(),
+                'F'  => array(),
+                'G'  => array(),
+                'H'  => array(),
+                'I'  => array(),
+                'J'  => array(),
+                'K'  => array(),
+                'L'  => array(),
+                'M'  => array(),
+                'N'  => array(),
+                'O'  => array(),
+                'P'  => array(),
+                'Q'  => array(),
+                'R'  => array(),
+                'S'  => array(),
+                'T'  => array(),
+                'U'  => array(),
+                'V'  => array(),
+                'W'  => array(),
+                'X'  => array(),
+                'Y'  => array(),
+                'Z'  => array(),
         );
         $provinces = D('area')->where('pid=0')->findAll();
-        $map ['pid'] = array(
+        $map['pid'] = array(
                 'in',
                 getSubByKey($provinces, 'area_id'),
         );
-        $map ['title'] = array(
+        $map['title'] = array(
                 'exp',
                 'not in("市辖区","县","市","省直辖县级行政单位" ,"省直辖行政单位")',
         );
         $citys = D('area')->where($map)->findAll();
 
         foreach ($citys as $k => $v) {
-            $first_letter = getFirstLetter($v ['title']);
-            $letters [$first_letter] [$v ['area_id']] ['city_id'] = $v ['area_id'];
-            $letters [$first_letter] [$v ['area_id']] ['city_name'] = $v ['title'];
+            $first_letter = getFirstLetter($v['title']);
+            $letters[$first_letter][$v['area_id']]['city_id'] = $v['area_id'];
+            $letters[$first_letter][$v['area_id']]['city_name'] = $v['title'];
             if ($v['area_id'] == $my) {
-                $letters ['my'] [$v ['area_id']] ['city_id'] = $v ['area_id'];
-                $letters ['my'] [$v ['area_id']] ['city_name'] = $v ['title'];
+                $letters['my'][$v['area_id']]['city_id'] = $v['area_id'];
+                $letters['my'][$v['area_id']]['city_name'] = $v['title'];
             }
             unset($first_letter);
         }
@@ -397,50 +401,51 @@ class FindPeopleApi extends Api
     }
 
     /**
-     * 按地区搜索用户 --using
+     * 按地区搜索用户 --using.
      *
      * @param
      *        	integer city_id 城市ID
      * @param
      *        	integer max_id 上次返回的最后一个用户ID
-     * @param  string $count
-     *                       数量
-     * @return array  用户列表
+     * @param string $count
+     *                      数量
+     *
+     * @return array 用户列表
      */
     public function search_by_city()
     {
         $max_id = $this->max_id ? intval($this->max_id) : 0;
         $count = $this->count ? intval($this->count) : 20;
-        $city_id = intval($this->data ['city_id']);
-        if (! $city_id) {
+        $city_id = intval($this->data['city_id']);
+        if (!$city_id) {
             return array(
                     'status' => 0,
-                    'msg' => '请选择地区',
+                    'msg'    => '请选择地区',
             );
         }
-        ! empty($max_id) && $map ['uid'] = array(
+        !empty($max_id) && $map['uid'] = array(
                 'lt',
                 $max_id,
         );
-        $map ['city'] = $city_id;
-        $map ['is_init'] = 1;
+        $map['city'] = $city_id;
+        $map['is_init'] = 1;
         $uids = model('User')->where($map)->order('uid desc')->field('uid')->limit($count)->findAll();
         $user_list = array();
         foreach ($uids as $k => $v) {
-            $user_info = api('User')->get_user_info($v ['uid']);
-            $user_list [$k] ['uid'] = $user_info ['uid'];
-            $user_list [$k] ['uname'] = $user_info ['uname'];
-            $user_list [$k] ['remark'] = $user_info ['remark'];
-            $user_list [$k] ['avatar'] = $user_info ['avatar'] ['avatar_big'];
-            $user_list [$k] ['intro'] = $user_info ['intro'] ? formatEmoji(false, $user_info ['intro']) : '';
-            $user_list [$k] ['follow_status'] = model('Follow')->getFollowState($this->mid, $v ['uid']);
+            $user_info = api('User')->get_user_info($v['uid']);
+            $user_list[$k]['uid'] = $user_info['uid'];
+            $user_list[$k]['uname'] = $user_info['uname'];
+            $user_list[$k]['remark'] = $user_info['remark'];
+            $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
+            $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
+            $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['uid']);
         }
 
         return $user_list;
     }
 
     /**
-     * 获取认证分类 --using
+     * 获取认证分类 --using.
      *
      * @return array 所有认证分类
      */
@@ -448,14 +453,14 @@ class FindPeopleApi extends Api
     {
         $categoryTree = model('UserGroup')->where('is_authenticate=1')->field('user_group_id as verify_id,user_group_name as title')->findAll();
         foreach ($categoryTree as $k => $v) {
-            $child = D('user_verified_category')->where('pid='.$v ['verify_id'])->field('user_verified_category_id,title')->findAll();
+            $child = D('user_verified_category')->where('pid='.$v['verify_id'])->field('user_verified_category_id,title')->findAll();
             if ($child) {
                 foreach ($child as $k1 => $v1) {
-                    $categoryTree [$k] ['child'] [$k1] ['verify_id'] = $v ['verify_id'].'_'.$v1 ['user_verified_category_id'];
-                    $categoryTree [$k] ['child'] [$k1] ['title'] = $v1 ['title'];
+                    $categoryTree[$k]['child'][$k1]['verify_id'] = $v['verify_id'].'_'.$v1['user_verified_category_id'];
+                    $categoryTree[$k]['child'][$k1]['title'] = $v1['title'];
                 }
             } else {
-                $categoryTree [$k] ['child'] = array();
+                $categoryTree[$k]['child'] = array();
             }
         }
 
@@ -463,58 +468,60 @@ class FindPeopleApi extends Api
     }
 
     /**
-     * 按认证搜索用户 --using
+     * 按认证搜索用户 --using.
      *
      * @param
      *        	integer verify_id 认证类型ID
      * @param
      *        	integer max_id 上次返回的最后一个ID
-     * @param  string $count
-     *                       数量
-     * @return array  用户列表
+     * @param string $count
+     *                      数量
+     *
+     * @return array 用户列表
      */
     public function search_by_verify()
     {
         $max_id = $this->max_id ? intval($this->max_id) : 0;
         $count = $this->count ? intval($this->count) : 20;
-        $verify_id = t($this->data ['verify_id']);
-        if (! $verify_id) {
+        $verify_id = t($this->data['verify_id']);
+        if (!$verify_id) {
             return array(
                     'status' => 0,
-                    'msg' => '请选择认证类型',
+                    'msg'    => '请选择认证类型',
             );
         }
 
         $verify_arr = explode('_', $verify_id);
-        $map ['usergroup_id'] = intval($verify_arr [0]);
-        if ($verify_arr [1]) {
-            $map ['user_verified_category_id'] = intval($verify_arr [1]);
+        $map['usergroup_id'] = intval($verify_arr[0]);
+        if ($verify_arr[1]) {
+            $map['user_verified_category_id'] = intval($verify_arr[1]);
         }
-        ! empty($max_id) && $map ['id'] = array(
+        !empty($max_id) && $map['id'] = array(
                 'lt',
                 $max_id,
         );
-        $map ['verified'] = 1;
+        $map['verified'] = 1;
         $uids = D('user_verified')->where($map)->field('id,uid')->order('id desc')->limit($count)->findAll();
         $user_list = array();
         foreach ($uids as $k => $v) {
-            $user_list [$k] ['id'] = $v ['id'];
-            $user_info = api('User')->get_user_info($v ['uid']);
-            $user_list [$k] ['uid'] = $user_info ['uid'];
-            $user_list [$k] ['uname'] = $user_info ['uname'];
-            $user_list [$k] ['remark'] = $user_info ['remark'];
-            $user_list [$k] ['avatar'] = $user_info ['avatar'] ['avatar_big'];
-            $user_list [$k] ['intro'] = $user_info ['intro'] ? formatEmoji(false, $user_info ['intro']) : '';
-            $user_list [$k] ['follow_status'] = model('Follow')->getFollowState($this->mid, $v ['uid']);
+            $user_list[$k]['id'] = $v['id'];
+            $user_info = api('User')->get_user_info($v['uid']);
+            $user_list[$k]['uid'] = $user_info['uid'];
+            $user_list[$k]['uname'] = $user_info['uname'];
+            $user_list[$k]['remark'] = $user_info['remark'];
+            $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
+            $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
+            $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['uid']);
         }
 
         return $user_list;
     }
 
     /**
-     * 更新用户当前地理位置信息
+     * 更新用户当前地理位置信息.
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function updateUserLocation()
@@ -535,38 +542,39 @@ class FindPeopleApi extends Api
         if (!D('mobile_user')->where('`uid` = '.$this->mid)->field('uid')->count()) {
             $userData = model('User')->where('`uid` = '.$this->mid)->field('`uname`, `intro`, `sex`')->find();
             D('mobile_user')->add(array(
-                'nickname' => $userData['uname'],
+                'nickname'   => $userData['uname'],
                 'infomation' => $userData['intro'],
-                'sex' => $userData['sex'],
-                'uid' => $this->mid,
+                'sex'        => $userData['sex'],
+                'uid'        => $this->mid,
             ));
 
             return array(
-                'status' => 1,
+                'status'  => 1,
                 'message' => '位置添加成功',
             );
 
         /* 判断是否更新成功 */
         } elseif (D('mobile_user')->where('`uid` = '.$this->mid)->save(array(
-            'last_latitude' => $lat,
+            'last_latitude'  => $lat,
             'last_longitude' => $lng,
         ))) {
             return array(
-                'status' => 1,
+                'status'  => 1,
                 'message' => '位置更新成功',
             );
         }
 
         return array(
-            'status' => 0,
+            'status'  => 0,
             'message' => '位置未改变',
         );
     }
 
     /**
-     * 附近的人API
+     * 附近的人API.
      *
      * @return array 附近的人列表
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     public function around()
@@ -677,13 +685,15 @@ class FindPeopleApi extends Api
     }
 
     /**
-     * 获取用户与当前位置之间的距离 单位m
+     * 获取用户与当前位置之间的距离 单位m.
      *
-     * @param  float  $nowLat  当前纬度
-     * @param  float  $nowLng  当前经度
-     * @param  float  $userLat 计算的用户纬度
-     * @param  float  $userLng 计算的用户经度
+     * @param float $nowLat  当前纬度
+     * @param float $nowLng  当前经度
+     * @param float $userLat 计算的用户纬度
+     * @param float $userLng 计算的用户经度
+     *
      * @return string 单位数值
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     protected function getDistinct($nowLat, $nowLng, $userLat, $userLng)
@@ -721,16 +731,17 @@ class FindPeopleApi extends Api
     }
 
     /**
-     * 根据经纬度获取两点之间的距离 --using
+     * 根据经纬度获取两点之间的距离 --using.
      *
-     * @param  float $myLat
-     *                        纬度
-     * @param  float $myLng
-     *                        经度
-     * @param  float $userLat
-     *                        纬度
-     * @param  float $userLng
-     *                        经度
+     * @param float $myLat
+     *                       纬度
+     * @param float $myLng
+     *                       经度
+     * @param float $userLat
+     *                       纬度
+     * @param float $userLng
+     *                       经度
+     *
      * @return float 距离
      */
     // private function getDistinct($myLat, $myLng, $userLat, $userLng) {
@@ -748,15 +759,16 @@ class FindPeopleApi extends Api
     // }
 
     /**
-     * 根据通讯录搜索用户 --using
+     * 根据通讯录搜索用户 --using.
      *
      * @param
      *        	string tel 以逗号连接的手机号码串
+     *
      * @return array
      */
     public function search_by_tel()
     {
-        $tel_array = array_unique(array_filter(explode(',', $this->data ['tel'])));
+        $tel_array = array_unique(array_filter(explode(',', $this->data['tel'])));
         $data = array();
         $user_list = array();
         $user_list1 = array();
@@ -767,16 +779,16 @@ class FindPeopleApi extends Api
                             'phone' => t($v),
                     ))->getField('uid')) {
                         $user_info = api('User')->get_user_info($uid);
-                        $user_list [$k] ['tel'] = $v;
-                        $user_list [$k] ['uid'] = $user_info ['uid'];
-                        $user_list [$k] ['uname'] = $user_info ['uname'];
-                        $user_list [$k] ['remark'] = $user_info ['remark'];
-                        $user_list [$k] ['avatar'] = $user_info ['avatar'] ['avatar_big'];
-                        $user_list [$k] ['intro'] = $user_info ['intro'] ? formatEmoji(false, $user_info ['intro']) : '';
-                        $user_list [$k] ['follow_status'] = model('Follow')->getFollowState($this->mid, $user_info ['uid']);
+                        $user_list[$k]['tel'] = $v;
+                        $user_list[$k]['uid'] = $user_info['uid'];
+                        $user_list[$k]['uname'] = $user_info['uname'];
+                        $user_list[$k]['remark'] = $user_info['remark'];
+                        $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
+                        $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
+                        $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $user_info['uid']);
                     } else {
-                        $user_list1 [$k] ['uid'] = 0;
-                        $user_list1 [$k] ['tel'] = $v;
+                        $user_list1[$k]['uid'] = 0;
+                        $user_list1[$k]['tel'] = $v;
                     }
                 }
             }
@@ -785,18 +797,19 @@ class FindPeopleApi extends Api
 
         return $data;
     }
+
     public function top_ad()
     {
-        $map ['place'] = 127;
-        $map ['display_type'] = 3;
+        $map['place'] = 127;
+        $map['display_type'] = 3;
 
         $info = M('ad')->where($map)->order('display_order desc, ctime desc')->find();
         // dump(M()->getLastSql());
-        $info ['content'] = unserialize($info ['content']);
+        $info['content'] = unserialize($info['content']);
         // 获取附件图片地址
-        foreach ($info ['content'] as &$val) {
-            $attachInfo = model('Attach')->getAttachById($val ['banner']);
-            $val ['bannerpic'] = getImageUrl($attachInfo ['save_path'].$attachInfo ['save_name']);
+        foreach ($info['content'] as &$val) {
+            $attachInfo = model('Attach')->getAttachById($val['banner']);
+            $val['bannerpic'] = getImageUrl($attachInfo['save_path'].$attachInfo['save_name']);
         }
         // dump ( $info );
 

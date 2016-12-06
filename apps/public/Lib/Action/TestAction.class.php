@@ -257,6 +257,7 @@ class TestAction extends Action
         }
         dump($findLang);
     }
+
     public function getDir($dir, $list = array())
     {
         $dirs = new Dir($dir);
@@ -273,6 +274,7 @@ class TestAction extends Action
 
         return $list;
     }
+
     //下面是一些demo
     public function demo()
     {
@@ -330,8 +332,8 @@ class TestAction extends Action
             $hash[$dv['id']] = $dv;
             $tree[$dv['id']] = $dv;
             !isset($child[$dv['id']]) && $child[$dv['id']] = array();
-            $tree[$dv['id']]['_child'] = & $child[$dv['id']];
-            $child[$dv['pid']][] = & $tree[$dv['id']];
+            $tree[$dv['id']]['_child'] = &$child[$dv['id']];
+            $child[$dv['pid']][] = &$tree[$dv['id']];
         }
 
         return $child[0];
@@ -375,7 +377,7 @@ class TestAction extends Action
     }
 
     /**
-     * 生成语言文件
+     * 生成语言文件.
      */
     public function createLangPhpFile()
     {
@@ -406,7 +408,7 @@ class TestAction extends Action
     }
 
     /**
-     * 获取生成的语言文件内容
+     * 获取生成的语言文件内容.
      */
     public function getzLang()
     {
@@ -590,7 +592,7 @@ class TestAction extends Action
     }
 
     /**
-     * 插入Ts2.8用户信息
+     * 插入Ts2.8用户信息.
      */
     public function insertTsUser()
     {
@@ -616,6 +618,7 @@ class TestAction extends Action
             model('UserGroupLink')->domoveUsergroup($result, 3);
         }
     }
+
     public function testpiny()
     {
         $unames = model('User')->field('uid,uname')->findAll();
@@ -694,7 +697,8 @@ class TestAction extends Action
     }
 
     /**
-     * Google翻译API
+     * Google翻译API.
+     *
      * @return [type] [description]
      */
     private function translatorGoogleAPI($text, $tl = 'zh-CN', $sl = 'auto', $ie = 'UTF-8')
@@ -723,6 +727,7 @@ class TestAction extends Action
             // dump($tw);
         }
     }
+
     public function upUserData()
     {
         set_time_limit(0);
@@ -773,7 +778,7 @@ class TestAction extends Action
                     } else {
                         $sql .= " , ($uid,'$key','$val')";
                     }
-                    $k ++;
+                    $k++;
                 }
                 $rr = M()->execute($sql);
                 dump($sql);
@@ -792,6 +797,7 @@ class TestAction extends Action
             echo '<script>window.location.href="'.U('public/Test/upUserData', array('p' => $p)).'";</script>';
         }
     }
+
     /**
      * 转移2.8头像为3.0头像地址
      */
@@ -831,7 +837,8 @@ class TestAction extends Action
     }
 
     /**
-     * 创建多级文件目录
+     * 创建多级文件目录.
+     *
      * @param string $path 路径名称
      */
     private function _createFolder($path)
@@ -843,7 +850,8 @@ class TestAction extends Action
     }
 
     /**
-     * 生成后台菜单配置文件
+     * 生成后台菜单配置文件.
+     *
      * @return [type] void
      */
     public function createSystemConfigPhpFile()
@@ -929,7 +937,8 @@ class TestAction extends Action
     }
 
     /**
-     * 获得后台菜单配置文件
+     * 获得后台菜单配置文件.
+     *
      * @return [type] void
      */
     public function getzLang1()

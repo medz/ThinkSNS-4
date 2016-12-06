@@ -12,10 +12,10 @@ return array(
         'public/Index/announcement' => true,
 
         // 个人主页
-        'public/Profile/index' => true,
+        'public/Profile/index'     => true,
         'public/Profile/following' => true,
-        'public/Profile/follower' => true,
-        'public/Profile/data' => true,
+        'public/Profile/follower'  => true,
+        'public/Profile/data'      => true,
         //分享配图
         'public/Profile/get_feed_img' => true,
 
@@ -33,7 +33,7 @@ return array(
         // 分享话题
         'public/Index/index' => true,
         //查看大图
-        'public/Feed/showBigImage' => true,
+        'public/Feed/showBigImage'  => true,
         'public/Feed/ajaxWeiboInfo' => true,
         'public/Feed/ajaxImageInfo' => true,
 

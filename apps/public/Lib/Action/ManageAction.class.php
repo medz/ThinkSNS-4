@@ -1,6 +1,7 @@
 <?php
 /**
- * ManageAction 用户管理的应用模块
+ * ManageAction 用户管理的应用模块.
+ *
  * @version TS3.0
  */
 class ManageAction extends Action
@@ -8,7 +9,7 @@ class ManageAction extends Action
     private $appList;
 
     /**
-     * 模块初始化,获取当前用户管理的应用
+     * 模块初始化,获取当前用户管理的应用.
      */
     public function _initialize()
     {
@@ -20,7 +21,7 @@ class ManageAction extends Action
     }
 
     /**
-     * 展示用户管理的应用
+     * 展示用户管理的应用.
      */
     public function index()
     {

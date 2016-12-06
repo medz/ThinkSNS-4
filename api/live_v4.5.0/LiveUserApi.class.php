@@ -1,7 +1,9 @@
 <?php
 /**
- * 签到API接口
+ * 签到API接口.
+ *
  * @author
+ *
  * @version  TS4.0
  */
 require_once 'LiveBaseApi.class.php';
@@ -13,9 +15,9 @@ class LiveUserApi extends LiveBaseApi
     /**
      * @name 添加/更新一个直播用户
      * @params 依次传入 (string)usid,(int)sex,(string)uname,(boolean)ticket
+     *
      * @return array 结果信息
      */
-
     private $Service_User_Url = '';
     private $mod = '';
 
@@ -32,7 +34,7 @@ class LiveUserApi extends LiveBaseApi
         if (!$this->checkStreamServiceUrl()) {
             return array(
                     'status' => 0,
-                    'msg' => '请先设置直播服务器地址',
+                    'msg'    => '请先设置直播服务器地址',
                 );
         }
         $uid = intval($_REQUEST['uid']);
@@ -51,10 +53,10 @@ class LiveUserApi extends LiveBaseApi
         //     'sex' => getUserField($uid, 'sex'),  //传递性别
         // ];
         //语法不能高于5.3.12.。。
-        if ($this->mod->where(array('usid' => $data['usid']))->count() && !isset($data[ 'ticket'])) {
+        if ($this->mod->where(array('usid' => $data['usid']))->count() && !isset($data['ticket'])) {
             return array(
                     'status' => 0,
-                    'msg' => '直播用户已经存在',
+                    'msg'    => '直播用户已经存在',
                 );
             die;
         }
@@ -63,7 +65,7 @@ class LiveUserApi extends LiveBaseApi
         if (in_array('', $data)) {
             return array(
                     'status' => 0,
-                    'msg' => '参数不完整',
+                    'msg'    => '参数不完整',
                 );
             die;
         }
@@ -81,32 +83,32 @@ class LiveUserApi extends LiveBaseApi
                     //写入直播用户数据失败
                     return array(
                             'status' => 0,
-                            'msg' => '直播用户注册失败',
+                            'msg'    => '直播用户注册失败',
                         );
                     die;
                 }
 
                 return array(
                         'status' => 1,
-                        'msg' => '直播用户注册成功',
-                        'data' => $add_data,
+                        'msg'    => '直播用户注册成功',
+                        'data'   => $add_data,
                     );
                 die;
             } else {
                 unset($add_data['ctime']);
-                if (!$this->mod->where(array('usid' => $add_data[ 'usid' ]))->save($add_data)) {
+                if (!$this->mod->where(array('usid' => $add_data['usid']))->save($add_data)) {
                     //写入直播用户数据失败
                     return array(
                             'status' => 0,
-                            'msg' => '直播用户更新失败',
+                            'msg'    => '直播用户更新失败',
                         );
                     die;
                 }
 
                 return array(
                         'status' => 1,
-                        'msg' => '直播用户更新成功',
-                        'data' => $add_data,
+                        'msg'    => '直播用户更新成功',
+                        'data'   => $add_data,
                     );
                 die;
             }
@@ -114,9 +116,11 @@ class LiveUserApi extends LiveBaseApi
     }
 
     /**
-     * 获取用户信息
+     * 获取用户信息.
+     *
      * @Author   Wayne[qiaobin@zhiyicx.com]
      * @DateTime 2016-10-13T00:27:51+0800
+     *
      * @return [type] [description]
      */
     public function getUserData()
@@ -134,40 +138,41 @@ class LiveUserApi extends LiveBaseApi
                                                     ->getField('uid');
         if (!$uid) {
             return array(
-                    'status' => 0,
+                    'status'  => 0,
                     'message' => '用户不存在',
                 );
         }
         // 用户不存在
         if (!$credit = M('credit_user')->where(array('uid' => $uid))->find()) {
             $data = array(
-                    'gold' => 0,
-                    'zan_count' => 0,
+                    'gold'       => 0,
+                    'zan_count'  => 0,
                     'zan_remain' => 0,
-                    'uname' => getUserName($uid),
-                    'sex' => getUserField($uid, 'sex'),
+                    'uname'      => getUserName($uid),
+                    'sex'        => getUserField($uid, 'sex'),
                 );
         } else {
             $data = array(
-                    'gold' => $credit['score'],
-                    'zan_count' => $credit['zan_count'],
+                    'gold'       => $credit['score'],
+                    'zan_count'  => $credit['zan_count'],
                     'zan_remain' => $credit['zan_remain'],
-                    'uname' => getUserName($uid),
-                    'sex' => getUserField($uid, 'sex'),
+                    'uname'      => getUserName($uid),
+                    'sex'        => getUserField($uid, 'sex'),
                 );
         }
 
         return array(
                 'status' => 1,
-                'data' => $data,
+                'data'   => $data,
             );
     }
 
-
     /**
-     * 同步数据
+     * 同步数据.
+     *
      * @Author   Wayne[qiaobin@zhiyicx.com]
      * @DateTime 2016-10-13T01:03:34+0800
+     *
      * @return [type] [description]
      */
     public function syncData()
@@ -183,16 +188,16 @@ class LiveUserApi extends LiveBaseApi
         $data = $_REQUEST['data'];
         if (!$usid || !$data) {
             return array(
-                    'status' => 0,
+                    'status'  => 0,
                     'message' => '参数传递错误',
                 );
         }
         $uid = M('live_user_info')->where(array('usid' => $usid))->getField('uid');
         $save_data = array(
                                     //'score'         => $data['gold'],
-                                    'zan_count' => $data['zan_count'],
+                                    'zan_count'  => $data['zan_count'],
                                     'zan_remain' => array('exp', 'zan_remain +'.$data['zan_remain']),
-                                    'live_time' => $data['live_time'],
+                                    'live_time'  => $data['live_time'],
             );
         $credit_mod = M('credit_user');
         $credit_mod->startTrans();
@@ -207,14 +212,16 @@ class LiveUserApi extends LiveBaseApi
 
         return array(
                     'status' => 1,
-                    'data' => array('is_sync' => 1),
+                    'data'   => array('is_sync' => 1),
                 );
     }
 
     /**
      * 直播推送
+     *
      * @Author Foreach
      * @DateTime 2016-10-13T01:03:34+0800
+     *
      * @return [type] [description]
      */
     public function pushLive()
@@ -230,7 +237,7 @@ class LiveUserApi extends LiveBaseApi
         $status = $_REQUEST['status'];
         if (!$usid) {
             return array(
-                    'status' => 0,
+                    'status'  => 0,
                     'message' => '参数传递错误',
                 );
         }
@@ -256,8 +263,8 @@ class LiveUserApi extends LiveBaseApi
      */
     public function updateTicket($usid)
     {
-        $data ['usid'] = $usid;
-        $data ['ticket'] = '';
+        $data['usid'] = $usid;
+        $data['ticket'] = '';
         var_dump($usid);
         $result = json_decode(tocurl($this->Service_User_Url, $this->curl_header, $data), true);
         var_dump($result);

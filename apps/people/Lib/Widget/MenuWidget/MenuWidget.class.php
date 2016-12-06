@@ -1,14 +1,18 @@
 <?php
 /**
- * 菜单选择Widget
+ * 菜单选择Widget.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 class MenuWidget extends Widget
 {
     /**
-     * 模板渲染
+     * 模板渲染.
+     *
      * @param  array  $data 相关数据
+     *
      * @return string 用户身份选择模板
      */
     public function render($data)

@@ -14,9 +14,9 @@ class IndexAction extends AdministratorAction
         $nav = array();
         foreach ($this->navList as $k => $v) {
             array_push($nav, array(
-                'name' => L('PUBLIC_APPNAME_'.strtoupper($k)),
+                'name'    => L('PUBLIC_APPNAME_'.strtoupper($k)),
                 'appname' => $k,
-                'url' => $v,
+                'url'     => $v,
             ));
         }
         $this->assign('nav', $nav);

@@ -1,7 +1,9 @@
 <?php
 /**
- * 微吧模型 - 数据对象模型
+ * 微吧模型 - 数据对象模型.
+ *
  * @author jason <yangjs17@yeah.net>
+ *
  * @version TS3.0
  */
 class WeibaReplyModel extends Model
@@ -14,11 +16,13 @@ class WeibaReplyModel extends Model
                         );
 
     /**
-     * 获取回复列表
-     * @param  array  $map   查询条件
-     * @param  string $order 排序条件，默认为comment_id ASC
-     * @param  int    $limit 结果集数目，默认为10
-     * @return array  评论列表信息
+     * 获取回复列表.
+     *
+     * @param array  $map   查询条件
+     * @param string $order 排序条件，默认为comment_id ASC
+     * @param int    $limit 结果集数目，默认为10
+     *
+     * @return array 评论列表信息
      */
     public function getReplyList($map = null, $order = 'reply_id desc', $limit = 10)
     {
@@ -40,11 +44,13 @@ class WeibaReplyModel extends Model
     }
 
     /**
-     * 获取回复列表forapi
-     * @param  array  $map   查询条件
-     * @param  string $order 排序条件，默认为comment_id ASC
-     * @param  int    $limit 结果集数目，默认为10
-     * @return array  评论列表信息
+     * 获取回复列表forapi.
+     *
+     * @param array  $map   查询条件
+     * @param string $order 排序条件，默认为comment_id ASC
+     * @param int    $limit 结果集数目，默认为10
+     *
+     * @return array 评论列表信息
      */
     public function getReplyListForApi($map = null, $order = 'reply_id desc', $limit = 20, $page = 1)
     {
@@ -64,10 +70,12 @@ class WeibaReplyModel extends Model
     }
 
     /**
-     * 添加帖子评论forApi
+     * 添加帖子评论forApi.
+     *
      * @param int post_id 帖子ID
      * @param int content 帖子内容
      * @param int uid 评论者UID
+     *
      * @return bool 是否评论成功
      */
     public function addReplyForApi($post_id, $content, $uid)
@@ -119,10 +127,12 @@ class WeibaReplyModel extends Model
     }
 
     /**
-     * 添加评论回复forApi
+     * 添加评论回复forApi.
+     *
      * @param int reply_id 评论ID
      * @param int content 回复内容
      * @param int uid 回复者UID
+     *
      * @return bool 是否回复成功
      */
     public function addReplyToCommentForApi($reply_id, $content, $uid)
@@ -171,8 +181,10 @@ class WeibaReplyModel extends Model
     }
 
     /**
-     * 删除评论forapi
+     * 删除评论forapi.
+     *
      * @param reply_id 评论ID
+     *
      * @return bool 是否回复成功
      */
     public function delReplyForApi($reply_id)

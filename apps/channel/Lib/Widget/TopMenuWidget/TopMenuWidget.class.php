@@ -1,14 +1,18 @@
 <?php
 /**
- * 频道顶部菜单Widget
+ * 频道顶部菜单Widget.
+ *
  * @author zivss <guolee226@gmail.com>
+ *
  * @version TS3.0
  */
 class TopMenuWidget extends Widget
 {
     /**
-     * 模板渲染
+     * 模板渲染.
+     *
      * @param  array  $data 相关数据
+     *
      * @return string 频道内容渲染入口
      */
     public function render($data)
@@ -34,7 +38,8 @@ class TopMenuWidget extends Widget
     }
 
     /**
-     * 频道关注状态修改接口
+     * 频道关注状态修改接口.
+     *
      * @return json 处理后返回的数据
      */
     public function upFollowStatus()

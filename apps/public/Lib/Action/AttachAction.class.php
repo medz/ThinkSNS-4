@@ -13,15 +13,15 @@ class AttachAction extends Action
     //兼容旧路径
     public function showdataimage()
     {
-        $savepath = t($_REQUEST ['savepath']);
-        $savename = t($_REQUEST ['savename']);
+        $savepath = t($_REQUEST['savepath']);
+        $savename = t($_REQUEST['savename']);
         //防止跨目录
         $savepath = str_ireplace('..', '', $savepath);
         $savename = str_ireplace('..', '', $savename);
 
         list($first, $extension) = explode('.', $savename);
         $imagetype = array('jpg', 'png', 'gif', 'bmp', 'jpeg');
-        if (! in_array(strtolower($extension), $imagetype)) {
+        if (!in_array(strtolower($extension), $imagetype)) {
             return;
         } else {
             if ($_REQUEST['temp'] == 1) {
@@ -284,24 +284,24 @@ class AttachAction extends Action
         //dump($smx1.','.$smy1.','.$smx2.','.$smy2.','.$src_w.','.$src_h.'|'.$dmx1.','.$dmy1.','.$dmx2.','.$dmy2.','.$dst_w.','.$dst_h);
 
         // 开始切割大方块头像
-        $dst_r = ImageCreateTrueColor($targ_w, $targ_h);
-        $back = ImageColorAllocate($dst_r, 255, 255, 255);
-        ImageFilledRectangle($dst_r, 0, 0, $targ_w, $targ_h, $back);
-        ImageCopyResampled($dst_r, $img_r, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+        $dst_r = imagecreatetruecolor($targ_w, $targ_h);
+        $back = imagecolorallocate($dst_r, 255, 255, 255);
+        imagefilledrectangle($dst_r, 0, 0, $targ_w, $targ_h, $back);
+        imagecopyresampled($dst_r, $img_r, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
 
-        ImagePNG($dst_r, $middle_name);  // 生成中图
+        imagepng($dst_r, $middle_name);  // 生成中图
         chmod($middle_name, 0777);
 
         // 开始切割大方块头像成小方块头像
-        $sdst_r = ImageCreateTrueColor($small_w, $small_h);
-        ImageCopyResampled($sdst_r, $dst_r, 0, 0, 0, 0, $small_w, $small_h, $targ_w, $targ_h);
+        $sdst_r = imagecreatetruecolor($small_w, $small_h);
+        imagecopyresampled($sdst_r, $dst_r, 0, 0, 0, 0, $small_w, $small_h, $targ_w, $targ_h);
 
-        ImagePNG($sdst_r, $small_name);  // 生成小图
+        imagepng($sdst_r, $small_name);  // 生成小图
         chmod($small_name, 0777);
 
-        ImageDestroy($dst_r);
-        ImageDestroy($sdst_r);
-        ImageDestroy($img_r);
+        imagedestroy($dst_r);
+        imagedestroy($sdst_r);
+        imagedestroy($img_r);
 
         $output = array('big' => $face_url.'/middle_face.jpg', 'small' => $face_url.'/small_face.jpg');
 

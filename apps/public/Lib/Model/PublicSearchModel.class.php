@@ -1,27 +1,31 @@
 <?php
 /**
- * 搜索引擎模型 - 核心应用
+ * 搜索引擎模型 - 核心应用.
+ *
  * @author jason <yangjs17@yeah.net>
+ *
  * @version TS3.0
  */
 class PublicSearchModel extends Model
 {
     protected $tableName = 'search';
-    protected $fields = array(0 => 'doc_id', 1 => 'app', 2 => 'type', 3 => 'string01', 4 => 'string02',
-                                5 => 'string03', 6 => 'string04', 7 => 'string05', 8 => 'int01', 9 => 'int02',
+    protected $fields = array(0    => 'doc_id', 1 => 'app', 2 => 'type', 3 => 'string01', 4 => 'string02',
+                                5  => 'string03', 6 => 'string04', 7 => 'string05', 8 => 'int01', 9 => 'int02',
                                 10 => 'int03', 11 => 'int04', 12 => 'int05', 13 => 'file_path', 14 => 'content',
                                 15 => 'mtime', 16 => 'data', 17 => 'int06', 18 => 'int07', 19 => 'int08', 20 => 'int09', 21 => 'int10', );
 
     public $appid = 0;                // 应用ID
 
     /**
-     * 搜索引擎接口
+     * 搜索引擎接口.
+     *
      * @param  string $key      查询关键字
-     * @param  int    $limit    结果集数目，默认为10
-     * @param  int    $type     搜索结果类型
-     * @param  string $tabkey   搜索Tab类型Key值
-     * @param  string $tabvalue 搜索Tab类型Value值
-     * @return array  搜索结果列表数据
+     * @param int    $limit    结果集数目，默认为10
+     * @param int    $type     搜索结果类型
+     * @param string $tabkey   搜索Tab类型Key值
+     * @param string $tabvalue 搜索Tab类型Value值
+     *
+     * @return array 搜索结果列表数据
      */
     public function search($key, $limit = 10, $type = 1, $tabkey = '', $tabvalue = '')
     {
@@ -60,8 +64,10 @@ class PublicSearchModel extends Model
     }
 
     /**
-     * 全站查找接口
+     * 全站查找接口.
+     *
      * @param  string $key 关键字
+     *
      * @return array 搜索结果列表数据
      */
     public function searchInAll($key)
@@ -101,10 +107,12 @@ class PublicSearchModel extends Model
     }
 
     /**
-     * 根据类型获取提供筛选的Tab数组
-     * @param  int    $type   数据类型
-     * @param  string $tabkey 选定的Tab的Key值
-     * @return array  提供筛选的Tab数组
+     * 根据类型获取提供筛选的Tab数组.
+     *
+     * @param int    $type   数据类型
+     * @param string $tabkey 选定的Tab的Key值
+     *
+     * @return array 提供筛选的Tab数组
      */
     public function getTablist($type, $tabkey = '')
     {
@@ -122,7 +130,7 @@ class PublicSearchModel extends Model
     }
 
     /**
-     * 初始化数据，用户数据与分享数据
+     * 初始化数据，用户数据与分享数据.
      */
     public function initData()
     {
@@ -133,9 +141,11 @@ class PublicSearchModel extends Model
     }
 
     /**
-     * 格式化搜索结果的数据
-     * @param  array $list 搜索的结果数据
-     * @param  int   $type 类型值
+     * 格式化搜索结果的数据.
+     *
+     * @param array $list 搜索的结果数据
+     * @param int   $type 类型值
+     *
      * @return array 格式化后的搜索结果数据
      */
     private function foramtList($list, $type)
@@ -194,11 +204,13 @@ class PublicSearchModel extends Model
     }
 
     /**
-     * 获取查询的Query的条件语句
+     * 获取查询的Query的条件语句.
+     *
      * @param  string $key      查询关键字
-     * @param  int    $type     搜索结果类型
-     * @param  string $tabkey   搜索Tab类型Key值
-     * @param  string $tabvalue 搜索Tab类型Value值
+     * @param int    $type     搜索结果类型
+     * @param string $tabkey   搜索Tab类型Key值
+     * @param string $tabvalue 搜索Tab类型Value值
+     *
      * @return string 查询的Query的条件语句
      */
     private function getWhere($key, $type, $tabkey, $tabvalue)
@@ -229,7 +241,8 @@ class PublicSearchModel extends Model
      * int06: is_audit 是否审核
      * int07: is_del 是否删除
      * int08: is_init  是否初始化
-     * content :用户配置数据组合进来int02: 1 表示用户数据
+     * content :用户配置数据组合进来int02: 1 表示用户数据.
+     *
      * @return array 初始化用户数据
      */
     private function initUser()
@@ -275,7 +288,8 @@ class PublicSearchModel extends Model
      * int06: publish_time
      * int07: is_del 是否删除
      * int08: from 数据来源（客户端还是网站）
-     * content :用户配置数据组合进来
+     * content :用户配置数据组合进来.
+     *
      * @return array 初始化分享数据
      */
     private function initFeed()

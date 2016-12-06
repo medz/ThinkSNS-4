@@ -5,21 +5,20 @@ namespace Api;
 defined('SITE_PATH') || exit('Forbidden');
 include_once SITE_PATH.'/apps/Gift/Common/common.php';
 
-use Apps\Gift\Common;
 use Api;
+use Apps\Gift\Common;
 use Apps\Gift\Model\Gift    as GiftModel;
 use Apps\Gift\Model\GiftLog as LogModel;
 
 /**
- * 礼物接口
+ * 礼物接口.
  *
- * @package ThinkSNS\Api\Gift;
  * @author Seven Du <lovevipdsw@vip.qq.com>
  **/
 class Gift extends Api
 {
     /**
-     * 初始化API方法
+     * 初始化API方法.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -29,12 +28,14 @@ class Gift extends Api
     }
 
     /**
-     * 列表获取礼物
+     * 列表获取礼物.
      *
      * @request int p 页码，默认值是1页
      * @request int cate 分类，值只有1和2，1代表虚拟礼物，2代表实体礼物，不传代表全部
      * @request int num 每页返回的数据条数 默认20条
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getList()
@@ -69,10 +70,12 @@ class Gift extends Api
     }
 
     /**
-     * 获取礼物详细
+     * 获取礼物详细.
      *
      * @request int $id 礼物ID
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getInfo()
@@ -93,7 +96,7 @@ class Gift extends Api
     }
 
     /**
-     * 兑换礼物
+     * 兑换礼物.
      *
      * @reuqest int id 礼物ID
      * @reuqest int uid 赠送的人的UID
@@ -101,7 +104,9 @@ class Gift extends Api
      * @reuqest string addres 邮寄地址
      * @request string say 祝福语
      * @request int type 类型
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function buy()
@@ -258,9 +263,10 @@ class Gift extends Api
     }
 
     /**
-     * 获取用户获得/赠送的礼物
+     * 获取用户获得/赠送的礼物.
      *
      * @param int type 0：获得的礼物 1：赠送的礼物
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getLog()
@@ -282,7 +288,7 @@ class Gift extends Api
     }
 
     /**
-     * 转增虚拟礼物
+     * 转增虚拟礼物.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/

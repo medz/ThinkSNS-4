@@ -1,8 +1,10 @@
 
 <?php
 /**
- * 签到API接口
+ * 签到API接口.
+ *
  * @author
+ *
  * @version  TS4.0
  */
 class LiveBaseApi extends Api
@@ -54,7 +56,6 @@ class LiveBaseApi extends Api
         }
     }
 
-
     /**
      * @name 检测是否是一个url地址
      */
@@ -62,7 +63,6 @@ class LiveBaseApi extends Api
     {
         return preg_match('/^http(s)?:\/\/.+/', $url) ? true : false;
     }
-
 
     /**
      * @name 获取直播服务器的地址

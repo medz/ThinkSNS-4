@@ -4,7 +4,7 @@
  */
 return array(
     'access' => array(
-        'square/Index/index' => true,
+        'square/Index/index'    => true,
             'square/Index/home' => true,
     ),
 );

@@ -6,14 +6,13 @@ include_once SITE_PATH.'/apps/Event/Common/common.php';
 use Api;
 use Apps\Event\Common;
 use Apps\Event\Model\Cate;
-use Apps\Event\Model\Event;
 use Apps\Event\Model\Enrollment;
+use Apps\Event\Model\Event;
 use Apps\Event\Model\Star;
 
 /**
- * 活动API
+ * 活动API.
  *
- * @package Api\Event
  * @author Seven Du <lovevipdsw@vip.qq.com>
  **/
 class EventApi extends Api
@@ -22,6 +21,7 @@ class EventApi extends Api
      * 获取有活动的日期
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getEventDays()
@@ -35,9 +35,10 @@ class EventApi extends Api
     }
 
     /**
-     * 提交活动评论
+     * 提交活动评论.
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function postComment()
@@ -46,39 +47,39 @@ class EventApi extends Api
         $info = Event::getInstance()->get($eid);
         $info or
         self::error(array(
-            'data' => '',
+            'data'   => '',
             'status' => 0,
-            'msg' => '活动已经删除',
+            'msg'    => '活动已经删除',
         ));
         $data = array(
-            'app' => 'Event',
-            'table' => 'event_list',
-            'app_uid' => $info['uid'],
-            'content' => t($content),
-            'row_id' => intval($eid),
-            'to_uid' => intval($ruid),
-            'to_comment_id' => intval($tocid),
-            'app_row_table' => 'event_list',
-            'app_row_id' => intval($eid),
-            'app_detail_url' => U('Event/Info/index', array('id' => $eid)),
+            'app'                => 'Event',
+            'table'              => 'event_list',
+            'app_uid'            => $info['uid'],
+            'content'            => t($content),
+            'row_id'             => intval($eid),
+            'to_uid'             => intval($ruid),
+            'to_comment_id'      => intval($tocid),
+            'app_row_table'      => 'event_list',
+            'app_row_id'         => intval($eid),
+            'app_detail_url'     => U('Event/Info/index', array('id' => $eid)),
             'app_detail_summary' => $info['name'],
         );
         if (model('Comment')->addComment($data, true)) {
             self::success(array(
-                'data' => '',
+                'data'   => '',
                 'status' => 1,
-                'msg' => '回复成功',
+                'msg'    => '回复成功',
             ));
         }
         self::error(array(
-            'data' => '',
+            'data'   => '',
             'status' => 0,
-            'msg' => model('Comment')->getError(),
+            'msg'    => model('Comment')->getError(),
         ));
     }
 
     /**
-     * 取消关注活动
+     * 取消关注活动.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -87,20 +88,20 @@ class EventApi extends Api
         $eid = Common::getInput('eid', 'post');
         if (Star::getInstance()->un($eid, $this->mid)) {
             self::success(array(
-                'data' => '',
+                'data'   => '',
                 'status' => 1,
-                'msg' => '取消关注成功',
+                'msg'    => '取消关注成功',
             ));
         }
         self::error(array(
-            'data' => '',
+            'data'   => '',
             'status' => 0,
-            'msg' => Star::getInstance()->getError(),
+            'msg'    => Star::getInstance()->getError(),
         ));
     }
 
     /**
-     * 关注一个活动
+     * 关注一个活动.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -109,62 +110,70 @@ class EventApi extends Api
         $eid = Common::getInput('eid', 'post');
         if (Star::getInstance()->add($eid, $this->mid)) {
             self::success(array(
-                'data' => '',
+                'data'   => '',
                 'status' => 1,
-                'msg' => '关注成功',
+                'msg'    => '关注成功',
             ));
         }
         self::error(array(
-            'data' => '',
+            'data'   => '',
             'status' => 0,
-            'msg' => Star::getInstance()->getError(),
+            'msg'    => Star::getInstance()->getError(),
         ));
     }
 
     /**
-     * 我发起的活动
+     * 我发起的活动.
      *
      * @request int $page 分页
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function myPost()
-    {   
-        return Ts\Service\ApiMessage::withArray($this->findEvendByType(1), 1, '');  
+    {
+        return Ts\Service\ApiMessage::withArray($this->findEvendByType(1), 1, '');
         // return $this->findEvendByType(1);
     }
 
     /**
-     * 我参与的活动
+     * 我参与的活动.
      *
      * @request int $page 分页
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function myEnrollment()
     {
-        return Ts\Service\ApiMessage::withArray($this->findEvendByType(0), 1, '');  
+        return Ts\Service\ApiMessage::withArray($this->findEvendByType(0), 1, '');
         // return $this->findEvendByType(0);
     }
 
     /**
-     * 我关注的活动
+     * 我关注的活动.
      *
      * @request int $page 分页
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function myStar()
     {
-        return Ts\Service\ApiMessage::withArray($this->findEvendByType(2), 1, '');  
+        return Ts\Service\ApiMessage::withArray($this->findEvendByType(2), 1, '');
         // return $this->findEvendByType(2);
     }
 
     /**
-     * 更具类型，返回列表数据
+     * 更具类型，返回列表数据.
      *
      * @param  int   $type 获取的类型， 0我参与的活动 1我发起的活动， 2我关注的活动
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     protected function findEvendByType($type = 0)
@@ -199,14 +208,15 @@ class EventApi extends Api
             $list['data'][$key] = $value;
         }
 
-        return Ts\Service\ApiMessage::withArray($list, 1, '');  
+        return Ts\Service\ApiMessage::withArray($list, 1, '');
         // return $list;
     }
 
     /**
-     * 上传图片
+     * 上传图片.
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function uploadImage()
@@ -215,12 +225,14 @@ class EventApi extends Api
     }
 
     /**
-     * 上传文件
+     * 上传文件.
      *
      * @param string $uploadType 上传文件的类型
      * @param string $attachType 保存文件的类型
      * @param string [$param, $param ...] 限制文件上传的类型
+     *
      * @return array
+     *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
     protected function uploadFile($uploadType, $attachType)
@@ -231,7 +243,7 @@ class EventApi extends Api
 
         $option = array(
             'attach_type' => $attachType,
-            'app_name' => 'Event',
+            'app_name'    => 'Event',
         );
         count($ext) and $option['allow_exts'] = implode(',', $ext);
 
@@ -241,8 +253,7 @@ class EventApi extends Api
 
         // # 判断是否有上传
         if (count($info['info']) <= 0) {
-
-            return Ts\Service\ApiMessage::withArray('', 0, '没有上传的文件');  
+            return Ts\Service\ApiMessage::withArray('', 0, '没有上传的文件');
             // return array(
             //     'status' => '-1',
             //     'msg' => '没有上传的文件',
@@ -250,15 +261,14 @@ class EventApi extends Api
 
         // # 判断是否上传成功
         } elseif ($info['status'] == false) {
-
-            return Ts\Service\ApiMessage::withArray('', 0, $info['info']);  
+            return Ts\Service\ApiMessage::withArray('', 0, $info['info']);
             // return array(
             //     'status' => '0',
             //     'msg' => $info['info'],
             // );
         }
 
-        return Ts\Service\ApiMessage::withArray(array_pop($info['info']), 1, '');  
+        return Ts\Service\ApiMessage::withArray(array_pop($info['info']), 1, '');
         // return array(
         //     'status' => 1,
         //     'data' => array_pop($info['info']),
@@ -266,9 +276,10 @@ class EventApi extends Api
     }
 
     /**
-     * 创建活动
+     * 创建活动.
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function create()
@@ -296,19 +307,19 @@ class EventApi extends Api
                                 ->add())) {
             self::message(array(
                 'status' => 1,
-                'msg' => '发布成功',
-                'data' => $id,
+                'msg'    => '发布成功',
+                'data'   => $id,
             ));
         }
         self::error(array(
-            'data' => '',
+            'data'   => '',
             'status' => 0,
-            'msg' => Event::getInstance()->getError(),
+            'msg'    => Event::getInstance()->getError(),
         ));
     }
 
     /**
-     * 活动报名
+     * 活动报名.
      *
      * @request int $eid 活动id
      * @request string $name 称呼
@@ -316,7 +327,9 @@ class EventApi extends Api
      * @request int $num 报名数量
      * @request string $phone 联系方式
      * @request string $note 备注
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function enrollment()
@@ -324,24 +337,26 @@ class EventApi extends Api
         list($eid, $name, $sex, $num, $phone, $note) = Common::getInput(array('eid', 'name', 'sex', 'num', 'phone', 'note'));
         if (Enrollment::getInstance()->add($this->mid, $eid, $name, $sex, $num, $phone, $note, time())) {
             self::success(array(
-                'data' => '',
+                'data'   => '',
                 'status' => 1,
-                'msg' => '报名成功',
+                'msg'    => '报名成功',
             ));
         }
         self::error(array(
-            'data' => '',
+            'data'   => '',
             'status' => 0,
-            'msg' => Enrollment::getInstance()->getError(),
+            'msg'    => Enrollment::getInstance()->getError(),
         ));
     }
 
     /**
-     * 获取活动回复列表
+     * 获取活动回复列表.
      *
      * @request int $eid 活动id
      * @request int $page 分页参数
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getReply()
@@ -354,14 +369,17 @@ class EventApi extends Api
                                ->getCommentList(array(
                                        'row_id' => array('eq', $eid),
                                    ), 'comment_id DESC');
-        return Ts\Service\ApiMessage::withArray($return, 1, '');  
+
+        return Ts\Service\ApiMessage::withArray($return, 1, '');
     }
 
     /**
-     * 获取活动详情
+     * 获取活动详情.
      *
      * @request int $eid 活动id
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getInfo()
@@ -369,9 +387,9 @@ class EventApi extends Api
         $id = Common::getInput('eid');
         if (!$id or !($data = Event::getInstance()->get($id)) or $data['del']) {
             self::error(array(
-                'data' => '',
+                'data'   => '',
                 'status' => 0,
-                'msg' => '您访问的活动不存在，或者已经被删除！',
+                'msg'    => '您访问的活动不存在，或者已经被删除！',
             ));
         }
 
@@ -400,19 +418,21 @@ class EventApi extends Api
         /* 封面 */
         $data['image'] = getImageUrlByAttachId($data['image']);
 
-        return Ts\Service\ApiMessage::withArray($data, 1, '');  
+        return Ts\Service\ApiMessage::withArray($data, 1, '');
         // return $data;
     }
 
     /**
-     * 获取活动列表 - 按照最新发布排序
+     * 获取活动列表 - 按照最新发布排序.
      *
      * @request int $cid 分类id
      * @request int $area 地区ID
      * @request string $time 时间，格式化时间或者时间戳
      * @request string  $wd 关键词
      * @request int $page 分页，默认是 1
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getList()
@@ -430,15 +450,17 @@ class EventApi extends Api
             $data['data'][$key] = $value;
         }
 
-        return Ts\Service\ApiMessage::withArray($data, 1, '');  
+        return Ts\Service\ApiMessage::withArray($data, 1, '');
         // return $data;
     }
 
     /**
-     * 获取推荐活动
+     * 获取推荐活动.
      *
      * @request int $num 获取的数量，默认5条
+     *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getTopEvent()
@@ -457,14 +479,15 @@ class EventApi extends Api
             $data[$key] = $value;
         }
 
-        return Ts\Service\ApiMessage::withArray($data, 1, '');  
+        return Ts\Service\ApiMessage::withArray($data, 1, '');
         // return $data;
     }
 
     /**
-     * 获取地区信息
+     * 获取地区信息.
      *
      * @request pid 地区父ID 默认是0
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getArea()
@@ -475,37 +498,39 @@ class EventApi extends Api
 
         $return = model('Area')->getAreaList($pid);
 
-        return Ts\Service\ApiMessage::withArray($return, 1, '');  
+        return Ts\Service\ApiMessage::withArray($return, 1, '');
     }
 
     /**
-     * 获取全部不重复，活动已经使用的地区
+     * 获取全部不重复，活动已经使用的地区.
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getAreaAll()
     {
         $return = Event::getInstance()->getArea();
 
-        return Ts\Service\ApiMessage::withArray($return, 1, '');  
+        return Ts\Service\ApiMessage::withArray($return, 1, '');
     }
 
     /**
-     * 获取所有分类
+     * 获取所有分类.
      *
      * @return array
+     *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
     public function getCateAll()
     {
         $return = Cate::getInstance()->getAll();
 
-        return Ts\Service\ApiMessage::withArray($return, 1, '');  
+        return Ts\Service\ApiMessage::withArray($return, 1, '');
     }
 
     /**
-     * 初始化API方法
+     * 初始化API方法.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/

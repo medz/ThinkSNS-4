@@ -2,9 +2,9 @@
 
 tsload(APPS_PATH.'/admin/Lib/Action/AdministratorAction.class.php');
 /**
- * 任务后台管理
- * @author Stream
+ * 任务后台管理.
  *
+ * @author Stream
  */
 class TaskAction extends AdministratorAction
 {
@@ -21,8 +21,10 @@ class TaskAction extends AdministratorAction
         $this->pageTitle['taskConfig'] = '任务配置';
         parent::_initialize();
     }
+
     /**
-     * 初始化列表管理菜单
+     * 初始化列表管理菜单.
+     *
      * @param string $type 列表类型，index、pending、dellist
      */
     private function _initListAdminMenu()
@@ -32,8 +34,9 @@ class TaskAction extends AdministratorAction
         $this->pageTab[] = array('title' => '主线任务', 'tabHash' => 'mainIndex', 'url' => U('admin/Task/mainIndex'));
         $this->pageTab[] = array('title' => '副本任务', 'tabHash' => 'customIndex', 'url' => U('admin/Task/customIndex'));
     }
+
     /**
-     * 任务列表
+     * 任务列表.
      */
     public function index()
     {
@@ -60,6 +63,7 @@ class TaskAction extends AdministratorAction
         $this->allSelected = false;
         $this->displayList($list);
     }
+
     /**
      * 副本任务
      */
@@ -95,7 +99,7 @@ class TaskAction extends AdministratorAction
                             $condesc .= '领取时间：'.$endtime[0].' - '.$endtime[1].'</br>';
                             break;
                         case 'userlevel':
-                            $condesc .= '用户等级：T( '.$condition->userlevel.' )'.'</br>' ;
+                            $condesc .= '用户等级：T( '.$condition->userlevel.' )'.'</br>';
                             break;
                         case 'usergroup':
                             $groups = explode(',', $condition->usergroup);
@@ -104,15 +108,15 @@ class TaskAction extends AdministratorAction
                                 $ginfo = model('UserGroup')->getUserGroup($g);
                                 $gname .= ' '.$ginfo['user_group_name'];
                             }
-                            $condesc .= '用户组：'.$gname.'</br>' ;
+                            $condesc .= '用户组：'.$gname.'</br>';
                             break;
                         case 'regtime':
                             $regtime = explode('|', $condition->regtime);
-                            $condesc .= '用户注册时间：'.$regtime[0].' - '.$regtime[1].'</br>' ;
+                            $condesc .= '用户注册时间：'.$regtime[0].' - '.$regtime[1].'</br>';
                             break;
                         case 'topic':
                             $topic = $condition->topic;
-                            $condesc .= '发布指定话题：'.$topic.'</br>' ;
+                            $condesc .= '发布指定话题：'.$topic.'</br>';
                             break;
                     }
             }
@@ -125,6 +129,7 @@ class TaskAction extends AdministratorAction
         $this->pageButton[] = array('title' => '删除', 'onclick' => 'admin.delcustomtask()');
         $this->displayList($list);
     }
+
     /**
      * 删除任务
      */
@@ -142,6 +147,7 @@ class TaskAction extends AdministratorAction
         }
         exit(json_encode($return));
     }
+
     public function mainIndex()
     {
         $this->_initListAdminMenu();
@@ -165,6 +171,7 @@ class TaskAction extends AdministratorAction
         $this->allSelected = false;
         $this->displayList($list);
     }
+
     public function addTask()
     {
         $this->_initListAdminMenu();
@@ -174,7 +181,7 @@ class TaskAction extends AdministratorAction
                 'userlevel',
                 'usergroup', array('reg_time1', 'reg_time2'), 'topic', 'task_condition', 'num', 'exp', 'score', 'attach_id', 'share_card', 'medal_name', 'medal_desc', );
 
-        $this->opt['userlevel'] = array(1 => 'T1', 2 => 'T2', 3 => 'T3', 4 => 'T4', 5 => 'T5', 6 => 'T6', 7 => 'T7', 8 => 'T8', 9 => 'T9', 10 => 'T10', );
+        $this->opt['userlevel'] = array(1 => 'T1', 2 => 'T2', 3 => 'T3', 4 => 'T4', 5 => 'T5', 6 => 'T6', 7 => 'T7', 8 => 'T8', 9 => 'T9', 10 => 'T10');
         $this->opt['usergroup'] = $groups;
         $this->opt['task_condition'] = array(0 => '无', '1-1' => '每日任务', '2-1' => '新手任务', '2-2' => '进阶任务', '2-3' => '达人任务', '2-4' => '高手任务 ', '2-5' => '终极任务 ');
 
@@ -185,8 +192,8 @@ class TaskAction extends AdministratorAction
         $data['usergroup'] = array(1, 2, 3, 5, 6, 7);
         $this->displayConfig($data);
     }
+
     /**
-     *
      * @param unknown_type $data
      */
     private function validate($data)
@@ -195,6 +202,7 @@ class TaskAction extends AdministratorAction
             $this->error('任务名称不能为空！');
         }
     }
+
     public function doAddTask()
     {
         $taskname = t($_POST['task_name']);
@@ -253,10 +261,10 @@ class TaskAction extends AdministratorAction
 
         $condition = array();
         if ($_POST['end_time1'][0] || $_POST['end_time1'][1]) {
-            $condition['endtime'] = t($_POST['end_time1'][0]).'|'.t($_POST['end_time1'][1]) ;
+            $condition['endtime'] = t($_POST['end_time1'][0]).'|'.t($_POST['end_time1'][1]);
         }
         if ($_POST['reg_time1'][0] || $_POST['reg_time1'][1]) {
-            $condition['regtime'] = t($_POST['reg_time1'][0]).'|'.t($_POST['reg_time1'][1]) ;
+            $condition['regtime'] = t($_POST['reg_time1'][0]).'|'.t($_POST['reg_time1'][1]);
         }
         if ($_POST['userlevel']) {
             $condition['userlevel'] = implode(',', $_POST['userlevel']);
@@ -279,6 +287,7 @@ class TaskAction extends AdministratorAction
             $this->error('添加失败');
         }
     }
+
     /**
      * 编辑自定义任务
      */
@@ -291,7 +300,7 @@ class TaskAction extends AdministratorAction
                 'userlevel',
                 'usergroup', array('reg_time1', 'reg_time2'), 'topic', 'task_condition', 'num', 'exp', 'medal_id', 'medal_name', 'medal_src', 'score', );
 
-        $this->opt['userlevel'] = array(1 => 'T1', 2 => 'T2', 3 => 'T3', 4 => 'T4', 5 => 'T5', 6 => 'T6', 7 => 'T7', 8 => 'T8', 9 => 'T9', 10 => 'T10', );
+        $this->opt['userlevel'] = array(1 => 'T1', 2 => 'T2', 3 => 'T3', 4 => 'T4', 5 => 'T5', 6 => 'T6', 7 => 'T7', 8 => 'T8', 9 => 'T9', 10 => 'T10');
         $this->opt['usergroup'] = $groups;
         $this->opt['task_condition'] = array(0 => '无', '1-1' => '每日任务', '2-1' => '新手任务', '2-2' => '进阶任务', '2-3' => '达人任务', '2-4' => '高手任务 ', '2-5' => '终极任务 ');
         $this->notEmpty = array('task_name');
@@ -314,6 +323,7 @@ class TaskAction extends AdministratorAction
         $this->savePostUrl = U('admin/Task/doEditCustomTask');
         $this->displayConfig($task);
     }
+
     public function doEditCustomTask()
     {
         $taskname = t($_POST['task_name']);
@@ -358,11 +368,11 @@ class TaskAction extends AdministratorAction
         $iscondition = false;
         $condition = array();
         if ($_POST['end_time1'][0] || $_POST['end_time1'][1]) {
-            $condition['endtime'] = t($_POST['end_time1'][0]).'|'.t($_POST['end_time1'][1]) ;
+            $condition['endtime'] = t($_POST['end_time1'][0]).'|'.t($_POST['end_time1'][1]);
             $iscondition = true;
         }
         if ($_POST['reg_time1'][0] || $_POST['reg_time1'][1]) {
-            $condition['regtime'] = t($_POST['reg_time1'][0]).'|'.t($_POST['reg_time1'][1]) ;
+            $condition['regtime'] = t($_POST['reg_time1'][0]).'|'.t($_POST['reg_time1'][1]);
             $iscondition = true;
         }
         if ($_POST['userlevel']) {
@@ -393,6 +403,7 @@ class TaskAction extends AdministratorAction
             $this->error('编辑失败');
         }
     }
+
     /**
      * 编辑任务
      */
@@ -427,6 +438,7 @@ class TaskAction extends AdministratorAction
         $this->savePostUrl = U('admin/Task/doEditTask');
         $this->displayConfig($taskinfo);
     }
+
     public function doEditTask()
     {
         $exp = intval($_REQUEST['exp']);
@@ -475,8 +487,9 @@ class TaskAction extends AdministratorAction
             $this->error('编辑失败');
         }
     }
+
     /**
-     * 任务奖励列表
+     * 任务奖励列表.
      */
     public function reward()
     {
@@ -495,8 +508,9 @@ class TaskAction extends AdministratorAction
         $this->allSelected = false;
         $this->displayList($list);
     }
+
     /**
-     * 编辑任务奖励
+     * 编辑任务奖励.
      */
     public function editReward()
     {
@@ -523,6 +537,7 @@ class TaskAction extends AdministratorAction
         $this->savePostUrl = U('admin/Task/doEditReward');
         $this->displayConfig($data);
     }
+
     public function doEditReward()
     {
         $tasktype = $_REQUEST['task_type'];
@@ -550,6 +565,7 @@ class TaskAction extends AdministratorAction
         $this->assign('jumpUrl', U('admin/Task/reward'));
         $this->success(L('编辑成功'));
     }
+
     public function taskConfig()
     {
         if ($_POST) {
