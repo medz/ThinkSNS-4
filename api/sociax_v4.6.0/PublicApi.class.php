@@ -12,6 +12,7 @@ class PublicApi extends Api
     public function getAreaAll()
     {
         $return = Capsule::table('area')->get();
+
         return Ts\Service\ApiMessage::withArray($return, 1, '');
     }
 
@@ -39,7 +40,6 @@ class PublicApi extends Api
         $list = model('Area')->getAreaList($pid);
 
         if ($notsort) {
-
             return Ts\Service\ApiMessage::withArray($list, 1, '');
             // return $list;
         }

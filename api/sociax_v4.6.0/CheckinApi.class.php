@@ -43,7 +43,7 @@ class CheckinApi extends Api
             model('Cache')->set('check_info_'.$uid.'_'.date('Ymd'), $data);
         }
 
-        return Ts\Service\ApiMessage::withArray($data, 1, '');  
+        return Ts\Service\ApiMessage::withArray($data, 1, '');
         // return $data;
     }
 
@@ -58,7 +58,7 @@ class CheckinApi extends Api
             $v['remark'] = D('UserRemark')->getRemark($this->mid, $v['uid']);
         }
 
-        return Ts\Service\ApiMessage::withArray($list, 1, '');  
+        return Ts\Service\ApiMessage::withArray($list, 1, '');
         // return $list;
     }
 
@@ -130,7 +130,7 @@ class CheckinApi extends Api
             }
         }
 
-        // return Ts\Service\ApiMessage::withArray($this->get_check_info(), 1, '');  
+        // return Ts\Service\ApiMessage::withArray($this->get_check_info(), 1, '');
         return $this->get_check_info();
     }
 
@@ -164,8 +164,7 @@ class CheckinApi extends Api
             // dump($res);
         }
 
-
-        return Ts\Service\ApiMessage::withArray('', intval($res), '');  
+        return Ts\Service\ApiMessage::withArray('', intval($res), '');
         // return array(
         //         'status' => intval($res),
         // );

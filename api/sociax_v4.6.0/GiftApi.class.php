@@ -130,7 +130,6 @@ class Gift extends Api
 
         /* # 判断是否登陆 */
         if (!$this->mid) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '请先登录后再兑换');
             // return array(
             //     'status' => 0,
@@ -139,7 +138,6 @@ class Gift extends Api
 
         /* # 判断物品是否不存在 */
         } elseif (!$id || !($gift = GiftModel::getInstance()->getById($id))) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '兑换的该物品不存在');
             // return array(
             //     'status' => -1,
@@ -148,7 +146,6 @@ class Gift extends Api
 
         /* # 判断赠送的用户是否不存在 */
         } elseif (!$uid || !model('User')->hasUser($uid, true)) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '对不起，您赠送的用户不存在');
             // return array(
             //     'status' => -2,
@@ -157,7 +154,6 @@ class Gift extends Api
 
         /* # 判断是否赠送过了 */
         } elseif (LogModel::getInstance()->hasGive($id, $uid, $this->mid)) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '您已经赠送过给该用户，请勿重复赠送');
             // return array(
             //     'status' => -3,
@@ -166,7 +162,6 @@ class Gift extends Api
 
         /* # 判断积分是否充足 */
         } elseif ($gift['score'] > $score) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '您的积分余额不足，请先充值积分，或者做任务获得积分。');
             // return array(
             //     'status' => -4,
@@ -175,7 +170,6 @@ class Gift extends Api
 
         /* # 判断数量是否少于1 */
         } elseif ($num < 1) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '赠送数量不得少于1份');
             // return array(
             //     'status' => -5,
@@ -184,7 +178,6 @@ class Gift extends Api
 
         /* # 判断是否超出库存 */
         } elseif ($gift['stock'] < $num) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '数量超出库存数量：'.$gift['stock']);
             // return array(
             //         'status' => -7,
@@ -193,7 +186,6 @@ class Gift extends Api
 
         /* # 判断是否超出限购 */
         } elseif ($gift['max'] < $num && $gift['max']) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '数量超出限购数量：'.$gift['max']);
             // return array(
             //         'status' => -6,
@@ -202,7 +194,6 @@ class Gift extends Api
 
         /* # 判断是否缺少祝福语 */
         } elseif (!$say) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '请输入祝福语');
             // return array(
             //     'status' => -8,
@@ -211,7 +202,6 @@ class Gift extends Api
 
         /* # 判断真实姓名是否为空 */
         } elseif (!$name && $gift['cate'] == 2) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '用户真实姓名不能为空');
             // return array(
             //     'status' => -12,
@@ -220,7 +210,6 @@ class Gift extends Api
 
         /* # 判断是否输入了联系方式 */
         } elseif (!$phone && $gift['cate'] == 2) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '用户联系方式不能为空');
             // return array(
             //     'status' => -13,
@@ -229,7 +218,6 @@ class Gift extends Api
 
         /* # 判断是否输入了地址 */
         } elseif (!$addres && $gift['cate'] == 2) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '请输入正确的收货地址');
             // return array(
             //     'status' => -9,
@@ -238,7 +226,6 @@ class Gift extends Api
 
         /* # 判断是否是不允许的赠送类型 */
         } elseif (!in_array($type, array(1, 2, 3))) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '不允许的赠送类型，请在页面上正确的选择赠送类型');
             // return array(
             //     'status' => -10,
@@ -247,7 +234,6 @@ class Gift extends Api
 
         /* # 判断是否兑换失败 */
         } elseif (!LogModel::getInstance()->add($uid, $this->mid, $id, $type, $say, $num, $addres)) {
-
             return Ts\Service\ApiMessage::withArray('', 0, LogModel::getInstance()->getError());
             // return array(
             //     'status' => -11,
@@ -268,7 +254,6 @@ class Gift extends Api
             }
         }
         LogModel::getInstance()->sendMessage($uid, $message);
-
 
         return Ts\Service\ApiMessage::withArray('', 1, '恭喜您，成功的为您的好友送出了礼物！您可以去充值或者完成任务获得更多积分哦！');
         // return array(
@@ -324,25 +309,21 @@ class Gift extends Api
 
         /* # 判断赠送的用户是否不存在 */
         } elseif (!$uid || !model('User')->hasUser($uid, true)) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '对不起，您赠送的用户不存在');
             // return array('status' => 0, 'message' => '对不起，您赠送的用户不存在');
 
         /* # 判断祝福语是否为空 */
         } elseif (!$say) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '请输入祝福语');
             // return array('status' => 0, 'message' => '请输入祝福语');
 
         /* # 判断是否不是虚拟礼物 */
         } elseif ($data['cate'] != 1) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '您转账的礼物不是虚拟物品！');
             // return array('status' => 0, 'message' => '您转账的礼物不是虚拟物品！');
 
         /* # 判断礼物是否属于自己 */
         } elseif ($data['inUid'] != $this->mid || $data['notIn'] == 1) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '该礼物不属于您！');
             // return array('status' => 0, 'message' => '该礼物不属于您！');
 
@@ -357,13 +338,11 @@ class Gift extends Api
 
         /* # 判断转赠类似是否不合法 */
         } elseif (!in_array($type, array(1, 2, 3))) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '不允许的赠送类型，请在页面上正确的选择赠送类型');
             // return array('status' => 0, 'message' => '不允许的赠送类型，请在页面上正确的选择赠送类型');
 
         /* # 检查是否转增失败 */
         } elseif (!LogModel::getInstance()->transfer($id, $uid, $say, $num, $type)) {
-
             return Ts\Service\ApiMessage::withArray('', 0, '转赠失败！');
             // return array('status' => 0, 'message' => '转增失败！');
         }
