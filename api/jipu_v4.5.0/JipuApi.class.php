@@ -45,7 +45,7 @@ class JipuApi extends Api
                 $data['user'] = model('User')->getUserInfo($data['uid']);
                 $passport = D('User')->where(array('uid'=>$user['uid']))->field('password,login_salt')->find();
                 $data['user']['login_salt'] = $passport['login_salt'];
-                $data['user']['password'] = $passport['password'];     
+                $data['user']['password'] = $passport['password'];
 
                 $login = D('')->table(C('DB_PREFIX').'login')->where('uid='.$user['uid']." AND type='location'")->find();
                 if (!$login) {
@@ -59,7 +59,7 @@ class JipuApi extends Api
                     $data['oauth_token_secret'] = $login['oauth_token_secret'];
                 }
 
-                $data['status'] = 1;           
+                $data['status'] = 1;
 
                 return $data;
             } else {

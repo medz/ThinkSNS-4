@@ -519,7 +519,7 @@ class IndexAction extends Action
         $Config_attach = model('Xdata')->get('admin_Config:attach');
         $attach_update_config['attach_max_size'] = ($Config_attach['attach_max_size'] < ini_get('post_max_size')) ? $Config_attach['attach_max_size'] : ini_get('post_max_size');
         $attach_update_config['attach_allow_extension'] = str_replace(',', '、', $Config_attach['attach_allow_extension']);
-        $this->assign('attach_update_config',$attach_update_config);
+        $this->assign('attach_update_config', $attach_update_config);
         unset($Config_attach, $attach_update_config);
         $this->display();
     }
@@ -576,7 +576,7 @@ class IndexAction extends Action
         $Config_attach = model('Xdata')->get('admin_Config:attach');
         $attach_update_config['attach_max_size'] = ($Config_attach['attach_max_size'] < ini_get('post_max_size')) ? $Config_attach['attach_max_size'] : ini_get('post_max_size');
         $attach_update_config['attach_allow_extension'] = str_replace(',', '、', $Config_attach['attach_allow_extension']);
-        $this->assign('attach_update_config',$attach_update_config);
+        $this->assign('attach_update_config', $attach_update_config);
         unset($Config_attach, $attach_update_config);
 
         $this->setTitle('发表帖子 '.$weiba['weiba_name']);
@@ -923,7 +923,7 @@ class IndexAction extends Action
             $Config_attach = model('Xdata')->get('admin_Config:attach');
             $attach_update_config['attach_max_size'] = ($Config_attach['attach_max_size'] < ini_get('post_max_size')) ? $Config_attach['attach_max_size'] : ini_get('post_max_size');
             $attach_update_config['attach_allow_extension'] = str_replace(',', '、', $Config_attach['attach_allow_extension']);
-            $this->assign('attach_update_config',$attach_update_config);
+            $this->assign('attach_update_config', $attach_update_config);
             unset($Config_attach, $attach_update_config);
 
             $this->setTitle('编辑帖子 '.$weiba['weiba_name']);
