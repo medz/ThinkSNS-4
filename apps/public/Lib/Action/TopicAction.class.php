@@ -61,7 +61,7 @@ class TopicAction extends Action
         // 为使搜索条件在分页时也有效，将搜索条件记录到SESSION中
         if (isset($_REQUEST['k']) && !empty($_REQUEST['k'])) {
             if (t($_GET['k'])) {
-                $key = urldecode($_GET['k']);
+                $key = t($_GET['k']);
             } elseif (t($_POST['k'])) {
                 $key = $_POST['k'];
             }

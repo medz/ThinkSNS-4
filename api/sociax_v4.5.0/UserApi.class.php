@@ -136,7 +136,7 @@ class UserApi extends Api
         $user_info['sex'] = $userInfo['sex'] == 1 ? '男' : '女';
         $user_info['intro'] = $userInfo['intro'] ? formatEmoji(false, $userInfo['intro']) : '';
         $user_info['location'] = $userInfo['location'] ? $userInfo['location'] : '';
-        $user_info['avatar'] = $userInfo['avatar']['avatar_big'];
+        $user_info['avatar'] = $userInfo['avatar']['avatar_original'];
         $user_info['experience'] = t($userInfo['user_credit']['credit']['experience']['value']);
         $user_info['charm'] = t($userInfo['user_credit']['credit']['charm']['value']);
         $user_info['weibo_count'] = t(intval($userInfo['user_data']['weibo_count']));

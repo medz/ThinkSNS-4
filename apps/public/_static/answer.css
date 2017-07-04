@@ -1,0 +1,112 @@
+/* ts 底部修正 */
+.login-footer .foot dl, .footer p{margin-bottom: 0px;}
+/* 个人中心回答侧边栏 */
+.hide-txt{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.asw-sidebar-data-item{padding:5px;height: 38px;line-height: 38px;color: #333;border-bottom: 1px solid #f3f3f3;}
+.asw-sidebar-data-item:last-child{border-bottom: 0px;}
+/* 个人中心问答列表 -- 已回答 */
+.asw-feed-item{background-color: white;padding: 20px 20px 0px 20px;}
+.post-title{font-size: 18px;line-height: 1.7;font-weight: 400;}
+.post-title>a{color: #3D70AF;}
+.asw-feed-item .post-face{float: left;width: 69px;padding: 12px 0 12px 2px;position: relative;}
+.post-face img{width: 40px;height: 40px;}
+.asw-feed-item .asw-content{font-size: 14px;line-height: 25px;margin: 0px 0 0 42px;padding: 12px 20px;}
+.asw-feed-item .author{display: inline-block;margin-bottom: 5px;}
+.asw-feed-item .asw-xline{border-top: 1px solid #E8E8E8;}
+.asw-feed-item .post-operate{line-height: 45px;position: relative;}
+.asw-feed-item .post-media-img{float: left;width: 150px;border-radius: 5px;margin: 5px 14px 5px 0;}
+.meta-item{color: #999;margin-left: 15px;}
+.meta-item:first-child{margin-left: 0;}
+.asw-btn-avtive{width: 72px;line-height: 1.42;border:0;border-radius: 4px;background-color: #2E93E6;color: white;padding: 9px 12px;}
+.asw-loading-more{height: 48px;line-height: 48px;text-align: center;margin: 20px auto;}
+.asw-loading-more>img{width: 20px;height: 20px;vertical-align: middle;}
+/*  我的问题列表 */
+.asw-question-item{padding: 20px;display: block;background-color: white;}
+.asw-question-list .tag-group{height: 32px;line-height: 32px;}
+.asw-choose-tags{display: inline-block;padding: 0px 10px;margin-right: 8px;border: 1px solid #D9F1FF;border-radius: 16px;height: 26px;line-height: 26px;color: #609CC5;}
+.asw-choose-tags:hover{background-color: #D9F1FF;}
+.asw-xline{border-top: 1px solid #E8E8E8;margin: 0 20px;}
+
+/*分享回答*/
+.asw-content .infopen {margin:1px 0 0 -80px; height:1px; background:#F5F5F5; border-bottom:1px solid #FAFAFA; border-top:1px solid #ECECEC; padding:0; overflow:visible; position:relative; display:none;}
+.asw-content .infopen .trigon {width:17px; height:11px; overflow:hidden; position:absolute; top:-8px; margin-left:71px; background:#FFF url(image/index-ico.png) -32px -300px no-repeat;}
+.asw-content .forward_box {height:48px; overflow:hidden; display:none; position:relative;}
+.asw-content .repeat {padding:10px 0 0 0; font-size:12px; margin:15px 0 0 0; -webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;}
+.asw-content .share_question {padding:10px 0 0 0; zoom:1; position:absolute; top:0;}
+.asw-content .share_question a {float:left; width:55px; height:34px; background-image:url(image/ico-account.png); background-repeat:no-repeat; background-position:0 0; cursor:pointer; font-size:12px; color:#888; padding:36px 0 0 0; margin:0 0 0 10px; text-decoration:none; overflow:hidden; display:block; text-align:center; line-height:46px;}
+
+.asw-content .share_question a.bds_count{display:none}
+.asw-content .share_question .bds_tsina{background-position:-36px -482px;}
+.asw-content .share_question .bds_weixin{background-position:-83px -482px;}
+.asw-content .share_question .bds_tqq{background-position:-128px -482px;}
+.asw-content .share_question .bds_qzone{background-position:-175px -482px;}
+.asw-content .share_question .bds_renren{background-position:-220px -482px;}
+.asw-content .share_question .bds_douban{background-position:-267px -482px;}
+.asw-content .share_question .repost{background-position:-359px -482px;}
+
+.asw-content .share_question .bds_tsina:hover{background-position:-36px -562px;}
+.asw-content .share_question .bds_weixin:hover{background-position:-83px -562px;}
+.asw-content .share_question .bds_tqq:hover{background-position:-128px -562px;}
+.asw-content .share_question .bds_qzone:hover{background-position:-175px -562px;}
+.asw-content .share_question .bds_renren:hover{background-position:-220px -562px;}
+.asw-content .share_question .bds_douban:hover{background-position:-267px -562px;}
+.asw-content .share_question .repost:hover{background-position:-359px -562px;}
+
+.asw-content p.info a,.minh p.info a{ color:#888;}
+
+.asw-content .col-md-offset-3{float:right; margin-top:-45px;}
+.asw-content .text-right{text-align:right;}
+.asw-content .row{margin-right:-15px; margin-left:-15px;}
+.asw-content .post-content .post-content-p{min-height:115px;}
+
+.asw-content .btn-normal {
+    min-width: 76px;
+    height: 34px;
+    padding: 0 10px;
+    line-height: 34px;
+    font-size: 14px;
+}
+.asw-content .btn-default {
+    /*//border-color: #CDD8E2;*/
+    border: 1px solid transparent;
+    background-color: #fff;
+    color: #868FA6;
+}
+.asw-content .btn-default:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #ccc;
+}
+.asw-content .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid #CDD8E2;
+    border-radius: 4px;
+}
+.asw-content .glyphicon-star:before{content:"\e006"}
+.asw-content .glyphicon-pencil:before{content:"\270f"}
+@font-face{font-family:'Glyphicons Halflings';src:url(fonts/glyphicons-halflings-regular.eot);src:url(fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'),url(fonts/glyphicons-halflings-regular.woff) format('woff'),url(fonts/glyphicons-halflings-regular.ttf) format('truetype'),url(fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')}
+.asw-content .glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

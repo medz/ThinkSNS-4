@@ -607,7 +607,7 @@ class EventApi extends Api
         $type = intval($this->data['type']) ?: 1;
 
         if ($type == 1) {
-            $list = Model\Comment::where('app', 'Event')->where('table', 'event_list')->where('app_uid', $this->mid);
+            $list = Model\Comment::where('app', 'Event')->where('table', 'event_list')->where('is_del', 0)->where('app_uid', $this->mid);
         } else {
             $eid = intval($this->data['eid']);
             if (!$eid) {
@@ -616,7 +616,7 @@ class EventApi extends Api
                     'message' => '参数错误',
                     );
             }
-            $list = Model\Comment::where('app', 'Event')->where('table', 'event_list')->where('row_id', $eid);
+            $list = Model\Comment::where('app', 'Event')->where('table', 'event_list')->where('is_del', 0)->where('row_id', $eid);
         }
 
         if (!empty($max_id)) {
@@ -709,5 +709,24 @@ class EventApi extends Api
                 'message' => Event::getInstance()->getError(),
                 );
         }
+    }
+
+    /**
+     * 删除活动评论
+     *
+     * @return array
+     * @author zsy
+     */
+    public function delComment()
+    {
+        $comment_id = intval($this->data['comment_id']);
+
+        $res = model('Comment')->deleteComment($comment_id, null, 'Event');
+        if (!$res) {
+
+            return array('status' => 0, 'msg' => '删除失败');
+        }
+
+        return array('status' => 1, 'msg' => '删除成功');
     }
 } // END class EventApi extends Api

@@ -1,0 +1,111 @@
+<include file="__THEME__/public_header" />
+<script src="{:SITE_URL}/apps/Wenda/_static/js/index.js"></script>
+
+<div id="page-wrap">
+  <div id="main-wrap">
+    <div class="clearfix"> <if condition="$mid==$uid"><include file="_top"/> <else /> <include file="_othertop"/></if></div>
+    <div id="col" class="st-grid">
+      <php>if($userPrivacy['space'] != 1){</php>
+      <include file="_asw_data"/>
+      <div id="col5" class="st-index-main">
+        <div class="st-bg cc"> 
+          <div class="feed-nav clearfix border-b">
+            <div class="mod-feed-tab" id="mod-feed-tab">
+              <php>$sexName = ($uid == $GLOBALS['ts']['mid']) ? '我' : ($user_info[$uid]['sex']==2 ? '她' : '他');</php>
+              <ul class="inner-feed-nav">
+                  <php>if ($uid == $GLOBALS['ts']['mid']) :</php>
+                  <li 
+                  <eq name='asw_type' value='read'>class="current"</eq>
+                  ><a href="{:U('public/Profile/wenda',array('tab'=>'wenda', 'asw_type'=>'read','addPage'=>$addPage,'uid'=>$uid))}">未阅回答 ( {$noReplyCount} )</a>
+                  </li>
+                  <php>endif;</php>
+                  <li 
+                  <eq name='asw_type' value='my_question'>class="current"</eq>
+                  ><a href="{:U('public/Profile/wenda',array('tab'=>'wenda', 'asw_type'=>'my_question','addPage'=>$addPage,'uid'=>$uid))}">{$sexName}的问题</a>
+                  </li>
+                  <li 
+                  <eq name='asw_type' value='my_answer'>class="current"</eq>
+                  ><a href="{:U('public/Profile/wenda',array('tab'=>'wenda', 'asw_type'=>'my_answer','addPage'=>$addPage,'uid'=>$uid))}">{$sexName}的回答</a>
+                  </li>
+                  <li 
+                  <eq name='asw_type' value='my_collect'>class="current"</eq>
+                  ><a href="{:U('public/Profile/wenda',array('tab'=>'wenda', 'asw_type'=>'my_collect','addPage'=>$addPage,'uid'=>$uid))}">{$sexName}的关注</a>
+                  </li>
+                  <li
+                  <eq name='asw_type' value='collect_answer'>class="current"</eq>
+                  ><a href="{:U('public/Profile/wenda',array('tab'=>'wenda', 'asw_type'=>'collect_answer','addPage'=>$addPage,'uid'=>$uid))}">{$sexName}的收藏</a>
+                  </li>
+              </ul>
+            </div>
+          </div>
+          </div>
+          <div class="asw-feed-list">
+
+            <!-- 未阅读的回答列表 start-->
+            <eq name="asw_type" value="read">
+              <volist name="list" id="vo">{$vo}</volist>
+            </eq>
+            <!-- 未阅读的回答列表  end-->
+
+            <!-- 我的问题列表 start-->
+            <eq name="asw_type" value="my_question">
+              <volist name="list" id="vo">{$vo}</volist>
+            </eq>
+            <!-- 我的问题列表 end -->
+
+            <!-- 我回答的列表 start-->
+            <eq name="asw_type" value="my_answer">
+              <volist name="list" id="vo">{$vo}</volist>
+            </eq>
+            <!-- 我回答的列表  end-->
+
+            <!-- 我的关注 start -->
+            <eq name="asw_type" value="my_collect">
+              <volist name="list" id="vo">{$vo}</volist>
+            </eq>
+            <!-- 我的关注 end -->
+            <!-- 我的收藏的回答 start -->
+            <eq name="asw_type" value="collect_answer">
+              <volist name="list" id="vo">{$vo}</volist>
+            </eq>
+            <!-- 我的收藏的回答 end -->
+          </div>
+        <php>if ($loadmore == 1) :</php>
+        <div class="asw-loading-more margin20 bg">
+          <a href="javascript:;" data-p="{$addPage}" class="js-loading-more" id="j-my-more">加载更多</a>
+          <img class="" src="__THEME__/image/ico-load.png">
+        </div>
+        <php>endif;</php>
+      </div>
+      <php>}else{</php>
+      <p class="extend">-_-。sorry！根据对方隐私设置，您无权查看TA的主页</p>
+      <php>}</php>
+    </div>
+  </div>
+</div>
+<script>
+  $('#j-my-more').on('click', function (event) {
+    event.preventDefault();
+    var _this = $(this),
+        uid = '{$uid}',
+        asw_type = '{$asw_type}',
+        p = parseInt(_this.data('p'));
+    _this.html('正在加载....');
+
+    $.post(U('public/Profile/wenda')+'&p='+p, {ajax: true, uid: uid, asw_type: asw_type}, function (data) {
+      //console.log(data);
+      for(var i in data.data){
+        $('.asw-feed-list').append(data.data[i]);
+      }
+
+      if(data['totalPages'] > data['nowPage']){
+        _this.html('加载更多');
+        _this.data('p', (p+1));
+      } else {
+        $('.asw-loading-more').remove();
+      }
+    }, 'json')
+  });
+</script>
+<script src="__THEME__/js/module.weibo.js"></script>
+<include file="__THEME__/public_footer" /> 

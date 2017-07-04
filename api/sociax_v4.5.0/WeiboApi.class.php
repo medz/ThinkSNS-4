@@ -377,6 +377,7 @@ class WeiboApi extends Api
             $comment_info['digg_count'] = $v['digg_count'];
             $diggarr = model('CommentDigg')->checkIsDigg($v['comment_id'], $GLOBALS['ts']['mid']);
             $comment_info['is_digg'] = t($diggarr[$v['comment_id']] ? 1 : 0);
+            $comment_info ['to_uid'] = $v['to_uid'];
 
             /* # 将评论里面的emoji解析 */
             $comment_info['content'] = formatEmoji(false, $comment_info['content']);
@@ -1899,7 +1900,7 @@ class WeiboApi extends Api
         }
         if ($data['is_del'] == 0) {
             $feed_info['status'] = 'no';
-            $feed_data = unserialize($data['feed_data']);
+            $feed_data = unserialize(stripcslashes($data['feed_data']));
             // 微博信息
             $feed_info['feed_id'] = $data['feed_id'];
             $feed_info['uid'] = $data['uid'];
@@ -1927,7 +1928,7 @@ class WeiboApi extends Api
                         $from = '来自手机';
                         break;
                     case 2:
-                        $from = '来自Android';
+                        $from = '来自移动端';
                         break;
                     case 3:
                         $from = '来自iPhone';

@@ -1068,6 +1068,7 @@ class WeibaApi extends Api
             // $diggarr = model('CommentDigg')->checkIsDigg($v ['comment_id'], $GLOBALS ['ts'] ['mid']);
             $diggarr = D('WeibaReplyDigg', 'weiba')->checkIsDigg($v['reply_id'], $GLOBALS['ts']['mid']);
             $comment_info['is_digg'] = t($diggarr[$v['reply_id']] ? 1 : 0);
+            $comment_info['to_uid'] = $v['to_uid'];
             $comment_list[] = $comment_info;
         }
 
@@ -1106,6 +1107,7 @@ class WeibaApi extends Api
             $digg_list[$k]['intro'] = $user_info['intro'];
             $digg_list[$k]['avatar'] = $user_info['avatar']['avatar_middle'];
             $digg_list[$k]['follow_status'] = $follow_status[$v['uid']];
+            $digg_list [$k] ['space_privacy'] = $user_info ['space_privacy'] ;
             unset($digg_list[$k]['post_id']);
         }
 
@@ -1131,6 +1133,7 @@ class WeibaApi extends Api
             //个人空间隐私权限
         $privacy = model('UserPrivacy')->getPrivacy($this->mid, $uid);
         $user_info['space_privacy'] = $privacy['space'];
+        $user_info['comment_weibo'] = $privacy['comment_weibo'];
 
         return $user_info;
     }
@@ -1320,7 +1323,8 @@ class WeibaApi extends Api
         $data['post_uid'] = intval($feed_detail['post_uid']);
         if (!empty($this->data['to_comment_id'])) {
             $data['to_reply_id'] = intval($this->data['to_comment_id']);
-            $data['to_uid'] = model('Comment')->where('comment_id='.intval($this->data['to_comment_id']))->getField('uid');
+            $data ['to_uid'] = D('weiba_reply')->where('reply_id = '.$data ['to_reply_id'])->getField('uid');
+            //$data['to_uid'] = model('Comment')->where('comment_id='.intval($this->data['to_comment_id']))->getField('uid');
         }
         $data['uid'] = $this->mid;
         $data['ctime'] = time();
@@ -1644,7 +1648,7 @@ class WeibaApi extends Api
             $this->error($filterContentStatus['data'], true);
         }
         $data['content'] = $filterContentStatus['data'];
-
+        $data['from'] = $this->data['from'] ? intval($this->data['from']) : '0';
         $res = D('weiba_post')->add($data);
         if ($res) {
             D('weiba')->where('weiba_id='.$data['weiba_id'])->setInc('thread_count');
@@ -1668,5 +1672,39 @@ class WeibaApi extends Api
         } else {
             $this->error('发布失败');
         }
+    }
+
+    /**
+     * 删除帖子评论
+     *
+     * @return array
+     * @author zsy
+     */
+    public function delReply()
+    {
+        $reply_id = $this->data['reply_id'] ? intval($this->data['reply_id']) : intval($this->data['comment_id']);
+        if ($reply_id < 1) {
+
+            return array('status' => 0, 'msg' => '请选择需要删除的评论');
+        }
+
+        if (!CheckPermission('core_admin', 'comment_del')) {
+            $map['reply_id'] = $reply_id;
+            $map['uid'] = $this->mid;
+            $map['is_del'] = 0;
+            $count = D('weiba_reply', 'weiba')->where($map)->count();
+            if (!CheckPermission('weiba_normal', 'weiba_del_reply') || $count <= 0) {
+
+                return array('status' => 0, 'msg' => '你没有权限删除评论');
+            }
+        }
+        $comment_id = D('weiba_reply', 'weiba')->where('reply_id='.$reply_id)->getField('comment_id');
+        $res = model('Comment')->deleteComment($comment_id, '', 'weiba');
+        if (!$res) {
+
+            return array('status' => 0, 'msg' => '删除失败');
+        }
+
+        return array('status' => 1, 'msg' => '操作成功');
     }
 }

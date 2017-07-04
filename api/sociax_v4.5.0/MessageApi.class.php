@@ -321,6 +321,7 @@ class MessageApi extends Api
         if (!$members) {
             return $this->error('没有任何用户');
         }
+        $list_info['title'] = \Medz\Component\EmojiFormat::de($list_info['title']);
         foreach ($members as $k => $v) {
             $user_info_whole = model('User')->getUserInfo($v['member_uid']);
             $user_info['uid'] = $user_info_whole['uid'];

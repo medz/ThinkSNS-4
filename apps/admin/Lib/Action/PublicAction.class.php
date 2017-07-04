@@ -153,6 +153,7 @@ class PublicAction extends AdministratorAction
         if ($result) {
             $res['status'] = 1;
             $res['data'] = '添加分类成功';
+            S('api_discover_system', null);
         } else {
             $res['status'] = 0;
             $res['data'] = '添加分类失败';
@@ -203,6 +204,7 @@ class PublicAction extends AdministratorAction
         if ($result) {
             $res['status'] = 1;
             $res['data'] = '编辑分类成功';
+            S('api_discover_system', null);
         } else {
             $res['status'] = 0;
             $res['data'] = '编辑分类失败，编辑的名称可能已经存在于当前级别。';
@@ -229,6 +231,7 @@ class PublicAction extends AdministratorAction
         if ($result) {
             $res['status'] = 1;
             $res['data'] = $msg;
+            S('api_discover_system', null);
         } else {
             $res['status'] = 0;
             $res['data'] = $msg;

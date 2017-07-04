@@ -6,6 +6,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
 use Ts\AutoLoader\TsAutoLoader;
 
+require_once 'Paginator.php';
+
 /**
  * 新入口核心.
  *
@@ -124,6 +126,11 @@ final class Ts
         self::$capsule->bootEloquent();
         // 关闭日志功能
         self::$capsule->connection()->disableQueryLog();
+        // 分页
+        self::$capsule->connection()->setPaginator(function () {
+
+            return new Pagination\Paginator();
+        });
     }
 
     /**

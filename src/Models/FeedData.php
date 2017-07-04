@@ -42,6 +42,6 @@ class FeedData extends Model
 
     public function getFeedDataObjectAttribute()
     {
-        return (object) unserialize($this->feed_data);
+        return (object) unserialize(EmojiFormat::en($this->feed_data));
     }
 } // END class FeedData extends Model

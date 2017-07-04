@@ -31,7 +31,8 @@ class IndexAction extends Action
         $map = array();
         if ($setting['channel'] == '1') {
             //频道
-            $setting['channelid'] = explode(',', $setting['channelid']);
+            $setting['channelid'] = empty($setting['channelid']) ? null : explode(',', $setting['channelid']);
+
             $map['status'] = 1;
             if (!$setting['channelid']) {
                 $list = D('Channel', 'channel')->where($map)->order('rand()')->limit(8)->findAll();

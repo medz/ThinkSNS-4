@@ -1,4 +1,9 @@
 <?php
+
+use Apps\Wenda\Model\Question;
+use Apps\Wenda\Model\ProFile     as ProFileModel;
+use Apps\Wenda\Model\Answer;
+
 /**
  * ProfileAction 个人档案模块.
  *
@@ -29,6 +34,8 @@ class ProfileAction extends Action
         $weibaIfOpen = $weibaIfOpen['status'];
         $channelIfOpen = model('App')->getAppByName('channel');
         $channelIfOpen = $channelIfOpen['status'];
+        $wendaIfOpen = model('App')->getAppByName('wenda');
+        $this->assign('wendaIfOpen', $wendaIfOpen['status']);
         $this->assign('weibaIfOpen', $weibaIfOpen);
         $this->assign('channelIfOpen', $channelIfOpen);
     }
@@ -441,7 +448,7 @@ class ProfileAction extends Action
             // $feedInfo['from'] = getFromClient( $feedInfo['from'] , $feedInfo['app']);
             // 分享图片
             if ($feedInfo['type'] === 'postimage') {
-                $var = unserialize($feedInfo['feed_data']);
+                $var = unserialize(formatEmoji(true, $feedInfo['feed_data']));
                 $feedInfo['image_body'] = $var['body'];
                 if (!empty($var['attach_id'])) {
                     $var['attachInfo'] = model('Attach')->getAttachByIds($var['attach_id']);
@@ -1111,4 +1118,149 @@ class ProfileAction extends Action
 
         echo json_encode($res);
     }
+
+    //***************************** 问答start ***********************************//
+
+    public function wenda()
+    {
+        array_push($this->appCssList, 'answer.css');
+        $uid = $_REQUEST['uid'] ? $_REQUEST['uid'] : $this->mid;
+        $this->_top();
+        $this->_assignUserInfo($uid);
+        if ($uid == $this->mid) {
+            $asw_type = $_REQUEST['asw_type'] ? $_REQUEST['asw_type'] : 'read';
+        } else {
+            $asw_type = $_REQUEST['asw_type'] ? $_REQUEST['asw_type'] : 'my_question';
+        }
+        $ajax = $_REQUEST['ajax'];
+
+        if ($asw_type == 'my_question') {
+            $list = $this->questionList();
+        } elseif ($asw_type == 'my_answer') {
+            $list = $this->answerList();
+        } elseif ($asw_type == 'my_collect') {
+            $list = $this->questionListByCollect();
+        } elseif ($asw_type == 'collect_answer') {
+            $list = $this->answersByCollect();
+        } else {
+            if ($uid == $this->mid) {
+                $list = $this->answerNoRead();
+            }
+        }
+
+        if ($ajax) {
+            exit(json_encode($list));
+        }
+        if ($uid == $this->mid) {
+            // 获取未阅回答数
+            $noReplyCount = $list['noReplyCount'] ?: ProFileModel::getInstance()
+                ->setUid($uid)
+                ->getNoReadCount();
+            $this->assign('noReplyCount', $noReplyCount);
+        }
+
+        // 获取采纳、提问、问题被关注数量
+        $user = \Apps\Wenda\Model\User::getInstance()
+            ->setUid($uid)
+            ->userByUid();
+        $this->assign('user', $user);
+        $list['nowPage'] = $list['nowPage'] < 1 ? 1 : $list['nowPage'];
+        $this->assign('uid', $uid);
+        $this->assign('asw_type', $asw_type);
+        if ($list['totalPages'] > $list['nowPage']) {
+            $this->assign('addPage', ($list['nowPage'] + 1));
+            $this->assign('loadmore', 1);
+        }
+        $this->assign('list', $list['data']);
+        $this->display();
+
+    }
+
+    /**
+     * 未阅回答
+     */
+    public function answerNoRead()
+    {
+        $uid = $_REQUEST['uid'] ? $_REQUEST['uid'] : $this->mid;
+        $list = ProFileModel::getInstance()
+            ->setUid($uid)
+            ->setLimit(10)
+            ->answerUnReadList();
+
+        return $list;
+    }
+
+    /**
+     * 我提的问题
+     */
+    public function questionList()
+    {
+        $uid = $_REQUEST['uid'] ? $_REQUEST['uid'] : $this->mid;
+        $list = Question::getInstance()
+            ->setUid($uid)
+            ->setOrderField('question_id')
+            ->setOrderAsc('DESC')
+            ->setLimit(10)
+            ->setFields('question_id', 'title')
+            ->questionTplList($this->mid);
+
+        return $list;
+    }
+
+    /**
+     * 我关注的问题
+     */
+    public function questionListByCollect()
+    {
+        $uid = $_REQUEST['uid'] ? $_REQUEST['uid'] : $this->mid;
+        $list = ProFileModel::getInstance()
+            ->setType(1)
+            ->setUid($uid)
+            ->setFields('uid', 'row_id')
+            ->setLimit(10)
+            ->questionListByCollect();
+
+        if ($list['data'][0]) {
+            foreach ($list['data'] as &$v) {
+                $v = '<div class="asw-question-item"><h4 class="post-title hide-txt"><a href="'.U('Wenda/Index/question', array('question_id' => $v['question_id'])).'">'.$v['title'].'</a></h4></div><div class="asw-xline"></div>';
+            }
+        }
+
+        return $list;
+    }
+
+    /**
+     * 我的回答列表
+     */
+    public function answerList()
+    {
+        $uid = $_REQUEST['uid'] ? $_REQUEST['uid'] : $this->mid;
+        $list = Answer::getInstance()
+            ->setUid($uid)
+            ->setOrderField('answer_id')
+            ->setOrderAsc('DESC')
+            ->setFields('answer_id', 'reply_count', 'uid', 'question_id', 'content', 'is_adopt', 'rtime')
+            ->setLimit(10)
+            ->answerListTpl($this->mid);
+
+        return $list;
+    }
+
+    /**
+     * 我收藏的回答列表
+     */
+    public function answersByCollect()
+    {
+        $uid = $_REQUEST['uid'] ? $_REQUEST['uid'] : $this->mid;
+        $list = ProFileModel::getInstance()
+            ->setType(2)
+            ->setUid($uid)
+            ->setFields('uid', 'row_id')
+            ->setLimit(10)
+            ->answerListByCollect();
+
+        return $list;
+    }
+
+    //***************************** 问答end ***********************************//
 }

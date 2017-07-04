@@ -732,6 +732,10 @@ class OauthApi extends Api
             }
 
             if ($user && $user['uid'] > 0) {
+                if (model('DisableUser')->isDisableUser($user['uid'])) {
+
+                    return array('status' => -1, 'msg' => '您的帐号被已管理员禁用');
+                }
                 $data['oauth_token'] = getOAuthToken($user['uid']);
                 $data['oauth_token_secret'] = getOAuthTokenSecret();
                 $data['uid'] = $user['uid'];
@@ -766,7 +770,7 @@ class OauthApi extends Api
 
                 return $data;
             } else {
-                return array('status' => 0, 'msg' => '帐号尚未绑定');
+                return array('status' => 1, 'msg' => '帐号尚未绑定');
             }
         } else {
             return array('status' => 0, 'msg' => '参数错误');
@@ -848,7 +852,7 @@ class OauthApi extends Api
 
             //保存头像
             if ($_REQUEST['other_avatar']) {
-                model('Avatar')->saveRemoteAvatar(t($_REQUEST['other_avatar']), $uid);
+                model('Avatar')->saveRemoteAvatar(urldecode($_REQUEST['other_avatar']), $uid);
             }
             // 添加至默认的用户组
             $userGroup = empty($registerConfig['default_user_group']) ? C('DEFAULT_GROUP_ID') : $registerConfig['default_user_group'];

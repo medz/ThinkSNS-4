@@ -15,6 +15,10 @@ class WebMessageAction extends Action
             if ($v['appname'] != 'public') {
                 $list['data'][$k]['app'] = model('App')->getAppByName($v['appname']);
             }
+            if ($v['node'] == 'wenda_answer') {
+                $v['body'] = preg_replace('/\<img(.*?)\/?\>/is', '<img$1style="max-width:100%"/>', $v['body']);
+                $list['data'][$k]['body'] = preg_replace('/\<img(.*?)width\=\"\w+\"\s*height\=\"\w+\"(.*?)\/?\>/is', '<img$1$2/>', $v['body']);
+            }
         }
         model('Notify')->setRead($this->mid);
         $this->assign('list', $list);

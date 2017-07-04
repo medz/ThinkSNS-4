@@ -48,8 +48,10 @@
     <?php } ?>
     <li style="width:16.66%"><a class="{$tagClass[collect]}" href="{:U('public/Profile/collection',array('tab'=>'collect'))}">收藏</a></li>
     <li style="width:16.66%"><a class="{$tagClass[following]}" href="{:U('public/Profile/following', array('tab'=>'following','uid'=>$uid))}">关注</a></li>
-    <li style="width:16.66%;"><a class="{$tagClass[follow]}" href="{:U('public/Profile/follower', array('tab'=>'follow','uid'=>$uid))}" style="border-right:none;">粉丝</a></li>
-  </ul>
+    <li style="width:16.66%;"><a class="{$tagClass[follow]}" href="{:U('public/Profile/follower', array('tab'=>'follow','uid'=>$uid))}" <php>if (!$wendaIfOpen) {echo 'style="border-right:none;"';}</php>>粉丝</a></li>
+    <?php if($wendaIfOpen) { ?>
+    <li style="width:14.25%;"><a class="{$tagClass[wenda]}" href="{:U('public/Profile/wenda', array('tab'=>'wenda','uid'=>$uid))}" style="border-right:none;">问答</a></li>
+    <?php } ?>  </ul>
 </div>
 <script type="text/javascript">
 $(function() {

@@ -56,6 +56,9 @@
     <?php } ?>
     <li><a class="{$tagClass[following]}" href="{:U('public/Profile/following',array('tab'=>'following','uid'=>$uid))}">{$sexName}的关注</a></li>
     <li><a class="{$tagClass[follower]}" href="{:U('public/Profile/follower',array('tab'=>'follower','uid'=>$uid))}">{$sexName}的粉丝</a></li>
+    <?php if($wendaIfOpen) { ?>
+    <li><a class="{$tagClass[wenda]}" href="{:U('public/Profile/wenda', array('tab'=>'wenda','uid'=>$uid))}">{$sexName}的问答</a></li>
+    <?php } ?>
   </ul>
 </div>
 <script type="text/javascript">

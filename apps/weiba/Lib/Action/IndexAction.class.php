@@ -656,8 +656,8 @@ class IndexAction extends Action
             $this->error('帖子内容不能为空，等待返回添加内容', $type);
         }
         preg_match_all('/./us', t($_POST['title']), $match);
-        if (count($match[0]) > 25) {     //汉字和字母都为一个字
-            $this->error('帖子标题不能超过25个字，等待返回修改标题', $type);
+        if (count($match[0]) > 100) {     //汉字和字母都为一个字(改为100)
+            $this->error('帖子标题不能超过100个字，等待返回修改标题', $type);
         }
 
         /* # 帖子内容 */
@@ -967,8 +967,8 @@ class IndexAction extends Action
             $this->error('帖子内容不能为空', true);
         }
         preg_match_all('/./us', t($_POST['title']), $match);
-        if (count($match[0]) > 25) {     //汉字和字母都为一个字
-            $this->error('帖子标题不能超过25个字', true);
+        if (count($match[0]) > 100) {     //汉字和字母都为一个字
+            $this->error('帖子标题不能超过100个字', true);
         }
         $post_id = intval($_POST['post_id']);
         $data['title'] = t($_POST['title']);
@@ -2194,6 +2194,51 @@ class IndexAction extends Action
             echo 1;
         } else {
             echo 0;
+        }
+    }
+    //下载源码
+    public function checkDownload()
+    {
+        if (IS_POST){
+            $mobile = t($_POST['mobile']);
+            $code = $_POST['verifiy'];
+            if (!preg_match("/^[1][34578]\d{9}$/", $mobile)) {
+                $this->ajaxReturn(null, '无效的手机号', 0);
+            }
+            $result = model('Sms')->CheckCaptcha($mobile, $code);
+            $data = array();
+            if($result){
+                $insertArr = array();
+                $insertArr['phone'] = $mobile;
+                $insertArr['ctime'] = time();
+                M('check_download')->add($insertArr);
+
+                $data['url'] = "http://korean.zhibocloud.cn/20170303.zip";
+                $data['info'] = '验证成功';
+
+                $this->ajaxReturn($data, '验证成功', 1);
+            }else{
+                $data['info'] = '验证码不正确';
+
+                $this->ajaxReturn($data, '验证失败', 0);
+            }
+        }
+
+        $this->display();
+    }
+
+    public function getVerifiyCode()
+    {
+        if (IS_POST){
+            $phone = t($_POST['mobile']);
+            /* # 检查是否是手机号码 */
+            if (!preg_match("/^[1][34578]\d{9}$/", $phone)) {
+                $this->ajaxReturn(null, '无效的手机号', 0);
+            } elseif(($sms = model('Sms')) and $sms->sendCaptcha($phone, true)) {
+                $this->ajaxReturn(null, '发送成功', 1);
+            }else{
+                $this->ajaxReturn(null, $sms->getMessage(), 0);
+            }
         }
     }
 }

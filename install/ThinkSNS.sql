@@ -6266,6 +6266,7 @@ INSERT INTO `ts_lang` (`lang_id`, `key`, `appname`, `filetype`, `zh-cn`, `en`, `
 INSERT INTO `ts_lang` (`lang_id`, `key`, `appname`, `filetype`, `zh-cn`, `en`, `zh-tw`) VALUES (1856, 'WEIBA_APPEAL_CONTENT', 'WEIBA', 0, '您的创建微吧申请已经成功提交，我们的管理员正在努力工作中，将在24小时内给予您审核答复', '您的创建微吧申请已经成功提交，我们的管理员正在努力工作中，将在24小时内给予您审核答复', '您的创建微吧申请已经成功提交，我们的管理员正在努力工作中，将在24小时内给予您审核答复');
 INSERT INTO `ts_lang` (`lang_id`, `key`, `appname`, `filetype`, `zh-cn`, `en`, `zh-tw`) VALUES (1857, 'WEIBA_APPEAL_TITLE', 'WEIBA', 0, '您的创建微吧申请已经成功提交，我们的管理员正在努力工作中，将在24小时内给予您审核答复', '您的创建微吧申请已经成功提交，我们的管理员正在努力工作中，将在24小时内给予您审核答复', '您的创建微吧申请已经成功提交，我们的管理员正在努力工作中，将在24小时内给予您审核答复');
 
+
 -- --------------------------------------------------------
 
 --

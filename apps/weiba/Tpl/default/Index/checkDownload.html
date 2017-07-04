@@ -1,0 +1,121 @@
+<style>
+.download-info{margin-top:40px;padding:0px 40px;}
+.download-info .info-list{margin-bottom:20px; position:relative;}
+.download-info .info-list .input-outer{border:1px solid #858585; border-right:none;width:50px;height:48px; display:inline-block;float:left;}
+.download-input{float:left;border:1px solid #858585; border-left:none;height:48px;line-height:48px;width:260px;color:#888;font:16px "microsoft yahei", Helvetica, Tahoma, Arial, "Microsoft jhengHei", sans-serif; background:none;outline:none;}
+.download-ui-phone, .download-ui-regCode{width:25px;height:31px; display:block;background:url(__APP__/images/login_ico.png); position:absolute; background-position:-85px -108px;margin:8px 11px;}
+.download-ui-regCode{background-position:-85px -155px;}
+#download-reg_msg{padding:7px 10px 8px 10px; margin-left:15px;background:#f1f2f3; border:#e5e6e7 1px solid; border-radius:2px;+html-border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; display:inline-block;}
+.next{height:20px;line-height:20px; display:inline-block;font-size:20px;color:#fff;padding:15px 20px; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; background:#0096e6;width: 270px;text-align: center; margin: 0px 0px 40px 40px;}
+</style>
+
+<!--下载验证-->
+<div class="download-info">
+  <div class="info-list clearfix"> <span class="input-outer"> <i class="download-ui-phone"></i></span>
+    <input id="phone" event-node="phone" placeholder="输入手机号码" name="phone" checkurl="{:U('public/Register/isPhoneAvailable')}" autocomplete="off" type="text" value="" class="download-input"/>
+  </div>
+  <div class="info-list clearfix">
+    <span class="input-outer"> <i class="download-ui-regCode"></i></span><input name="regCode" type="text" id="regCode" placeholder="输入手机验证码" tel="" event-node="input_reg_code" checkurl="{:U('public/Register/isRegCodeAvailable')}" class="download-input" style="width:125px;" />
+    <a id="download-reg_msg" href="javascript:;" onclick="javascript:void (0)" style="height:33px;line-height:33px;"><span>获取短信验证码</span></a>
+    <div class="captcha-tips"> </div>
+    <div class="txt-info" id="reg_msg_tip" style="display:none;">验证码已发送到您的手机，30分钟内输入有效，请勿泄露。</div>
+  </div>
+</div>
+<div>
+  <a class="next" href="javascript:;" onclick="javascript:void (0)">下载</a>
+</div>
+
+<script src="__THEME__/js/jquery.form.js" type="text/javascript"></script>
+<script type="text/javascript" src="__THEME__/js/login.js"></script>
+<script type="text/javascript">
+  $('.qk-input-outers input:text').keypress(function(e){
+    if(e.which == 13){
+      quicksubmit();
+    }
+  });
+
+  /* # 提交绑定事件 */
+  $(function () {
+    $('.next').on('click', function (event) {
+      event.preventDefault();
+      quicksubmit();
+    });
+
+    $('#download-reg_msg').on('click',function (event) {
+      event.preventDefault();
+      get_verifiy_code();
+    })
+  });
+  var lock = 0;
+  var timefun = '';
+  var timenum = 0;
+
+  var timeout = function() {
+    timenum -= 1;
+    if (timenum < 0) {
+      clearInterval(timefun);
+      timefun = '';
+      lock = 0;
+      $('#download-reg_msg span').text('获取短信验证码');
+      return;
+    }
+    $('#download-reg_msg span').text('('+timenum+')获取验证码');
+  }
+  function get_verifiy_code() {
+    var mobile = $.trim($("input[name='phone']").val());
+    if ( !mobile ){
+      ui.error('手机号码不能为空！');return false;
+    }
+    if(!(/^1[34578]\d{9}$/.test(mobile))){
+      ui.error("手机号码有误，请重填");return false;
+    }
+    if (lock == 1) {
+      return false;
+    } else {
+      timenum = 60;
+      clearInterval(timefun);
+      lock = 1;
+    }
+    $.post(U('weiba/Index/getVerifiyCode'),{mobile:mobile},function (data){
+      if (data.status == 0) {
+        lock = 0;
+        ui.error(data.data);
+        return false;
+      } else {
+        timefun = setInterval(timeout, 1000);
+        ui.success('短信发送成功，请耐心等待');
+        return false;
+      }
+    },'json');
+  }
+
+  function quicksubmit(){
+    var mobile = $.trim($("input[name='phone']").val());
+    var verifiy = $.trim($("input[name='regCode']").val());
+    if ( !mobile ){
+      ui.error('手机号码不能为空！');return false;
+    }
+    if ( !verifiy ){
+      ui.error('验证码不能为空！');return false;
+    }
+    $.post(U('weiba/Index/checkDownload'),{mobile:mobile,verifiy:verifiy},function (data){
+
+      if ( data.status == 1 ){
+        if(data.data.url){
+          $('.captcha-tips').html('<p>'+data.data.info+'</p>').show();
+          location.href=data.data.url;
+          ui.box.close();
+        }else{
+          $('.captcha-tips').html('<p>'+data.data.info+'</p>').show();
+          location.href=U('public/Index/index');
+          ui.box.close();
+        }
+      } else {
+        ui.error(data.data.info);
+        return false;
+      }
+    }, 'json');
+    return false;
+  }
+
+</script>

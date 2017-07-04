@@ -67,6 +67,7 @@ class Feed extends Model
                             'src'    => $image->path,
                             'width'  => $image->width,
                             'height' => $image->height,
+                            'path'   => $image->save_path . $image->save_name,
                         ));
                         break;
 
@@ -76,6 +77,7 @@ class Feed extends Model
                             'src'    => $image->path,
                             'width'  => $image->width,
                             'height' => $image->height,
+                            'path'   => $image->save_path . $image->save_name,
                         ));
                         break;
 
@@ -85,6 +87,7 @@ class Feed extends Model
                             'src'    => $image->path,
                             'width'  => $image->width,
                             'height' => $image->height,
+                            'path'   => $image->save_path . $image->save_name,
                         ));
                         break;
                 }

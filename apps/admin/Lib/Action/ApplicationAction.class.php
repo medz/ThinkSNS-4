@@ -25,6 +25,7 @@ class ApplicationAction extends AdministratorAction
         'topic'   => '话题',
         'channel' => '频道',
         'user'    => '用户',
+        'information' => '资讯'
     );
 
     public function _initialize()
@@ -119,13 +120,13 @@ class ApplicationAction extends AdministratorAction
         list($id, $title, $image, $type, $data) = array($_GET['id'], $_POST['title'], $_POST['image'], $_POST['type'], $_POST['data']);
         list($id, $title, $image, $type, $data) = array(intval($id), t($title), intval($image), t($type), $data);
 
-        if (!in_array($type, array('false', 'url', 'weiba', 'post', 'weibo', 'topic', 'channel', 'user'))) {
+        if (!in_array($type, array('false', 'url', 'weiba', 'post', 'weibo', 'topic', 'channel', 'user', 'information'))) {
             $this->error('跳转类型不正确');
         } elseif (!$title) {
             $this->error('标题不能为空');
         } elseif (!$image) {
             $this->error('必须上传轮播图片');
-        } elseif (in_array($type, array('url', 'weiba', 'post', 'weibo', 'topic', 'channel', 'user') and !$data)) {
+        } elseif (in_array($type, array('url', 'weiba', 'post', 'weibo', 'topic', 'channel', 'user', 'information') and !$data)) {
             $this->error('您设置的跳转类型必须设置类型参数');
         }
 
@@ -138,6 +139,7 @@ class ApplicationAction extends AdministratorAction
 
         if ($id and D('application_slide')->where('`id` = '.$id)->field('id')->count()) {
             D('application_slide')->where('`id` = '.$id)->save($data);
+            S('api_discover_system', null);
             $this->success('修改成功');
         }
         D('application_slide')->data($data)->add() or $this->error('添加失败');
@@ -155,6 +157,7 @@ class ApplicationAction extends AdministratorAction
     {
         $id = intval($_GET['id']);
         D('application_slide')->where('`id` = '.$id)->delete();
+        S('api_discover_system', null);
         $this->success('删除成功');
     }
 
