@@ -128,7 +128,6 @@ final class Ts
         self::$capsule->connection()->disableQueryLog();
         // 分页
         self::$capsule->connection()->setPaginator(function () {
-
             return new Pagination\Paginator();
         });
     }

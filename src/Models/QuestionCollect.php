@@ -6,7 +6,6 @@ use Ts\Bases\Model;
 
 /**
  * 问题模型.
- *
  **/
 class QuestionCollect extends Model
 {

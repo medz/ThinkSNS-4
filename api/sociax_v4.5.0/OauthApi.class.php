@@ -737,7 +737,6 @@ class OauthApi extends Api
 
             if ($user && $user['uid'] > 0) {
                 if (model('DisableUser')->isDisableUser($user['uid'])) {
-
                     return array('status' => -1, 'msg' => '您的帐号被已管理员禁用');
                 }
                 //记录token

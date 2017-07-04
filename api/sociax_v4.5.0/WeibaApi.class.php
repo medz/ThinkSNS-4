@@ -1107,7 +1107,7 @@ class WeibaApi extends Api
             $digg_list[$k]['intro'] = $user_info['intro'];
             $digg_list[$k]['avatar'] = $user_info['avatar']['avatar_middle'];
             $digg_list[$k]['follow_status'] = $follow_status[$v['uid']];
-            $digg_list [$k] ['space_privacy'] = $user_info ['space_privacy'] ;
+            $digg_list[$k]['space_privacy'] = $user_info['space_privacy'];
             unset($digg_list[$k]['post_id']);
         }
 
@@ -1323,7 +1323,7 @@ class WeibaApi extends Api
         $data['post_uid'] = intval($feed_detail['post_uid']);
         if (!empty($this->data['to_comment_id'])) {
             $data['to_reply_id'] = intval($this->data['to_comment_id']);
-            $data ['to_uid'] = D('weiba_reply')->where('reply_id = '.$data ['to_reply_id'])->getField('uid');
+            $data['to_uid'] = D('weiba_reply')->where('reply_id = '.$data['to_reply_id'])->getField('uid');
             //$data['to_uid'] = model('Comment')->where('comment_id='.intval($this->data['to_comment_id']))->getField('uid');
         }
         $data['uid'] = $this->mid;
@@ -1675,16 +1675,16 @@ class WeibaApi extends Api
     }
 
     /**
-     * 删除帖子评论
+     * 删除帖子评论.
      *
      * @return array
+     *
      * @author zsy
      */
     public function delReply()
     {
         $reply_id = $this->data['reply_id'] ? intval($this->data['reply_id']) : intval($this->data['comment_id']);
         if ($reply_id < 1) {
-
             return array('status' => 0, 'msg' => '请选择需要删除的评论');
         }
 
@@ -1694,14 +1694,12 @@ class WeibaApi extends Api
             $map['is_del'] = 0;
             $count = D('weiba_reply', 'weiba')->where($map)->count();
             if (!CheckPermission('weiba_normal', 'weiba_del_reply') || $count <= 0) {
-
                 return array('status' => 0, 'msg' => '你没有权限删除评论');
             }
         }
         $comment_id = D('weiba_reply', 'weiba')->where('reply_id='.$reply_id)->getField('comment_id');
         $res = model('Comment')->deleteComment($comment_id, '', 'weiba');
         if (!$res) {
-
             return array('status' => 0, 'msg' => '删除失败');
         }
 

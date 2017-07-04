@@ -86,141 +86,139 @@ if (!$v) {
 <p class="center"><input type="submit" style="width:200px;" class="submit" name="next" value="同意协议并安装" /></p>
 </form>
 <?php
-
 } elseif ($v == '2') {
-    if ($agree == 'no') {
-        echo '<script>alert('.$i_message['install_disagree_license'].');history.go(-1)</script>';
-    }
-    $dirarray = array(
+        if ($agree == 'no') {
+            echo '<script>alert('.$i_message['install_disagree_license'].');history.go(-1)</script>';
+        }
+        $dirarray = array(
         'data',
         'storage',
         'install',
         'config',
     );
-    $writeable = array();
-    foreach ($dirarray as $key => $dir) {
-        if (writable($dir)) {
-            $writeable[$key] = $dir.result(1, 0);
-        } else {
-            $writeable[$key] = $dir.result(0, 0);
-            $quit = true;
-        }
-    } ?>
+        $writeable = array();
+        foreach ($dirarray as $key => $dir) {
+            if (writable($dir)) {
+                $writeable[$key] = $dir.result(1, 0);
+            } else {
+                $writeable[$key] = $dir.result(0, 0);
+                $quit = true;
+            }
+        } ?>
 <h2><?php echo $i_message['install_env']; ?></h2>
 <div class="shade">
 <h5><?php echo $i_message['php_os']; ?>&nbsp;&nbsp;<span class="p"><?php echo PHP_OS;
-    result(1, 1); ?></span></h5>
+        result(1, 1); ?></span></h5>
 
 <h5><?php echo $i_message['php_version']; ?>&nbsp;&nbsp;<span class="p"><?php
 echo PHP_VERSION;
-    if (version_compare(PHP_VERSION, '5.3.12', '<')) {
-        result(0, 1);
-        $quit = true;
-    } else {
-        result(1, 1);
-    } ?></span></h5>
+        if (version_compare(PHP_VERSION, '5.3.12', '<')) {
+            result(0, 1);
+            $quit = true;
+        } else {
+            result(1, 1);
+        } ?></span></h5>
 
 <h5><?php echo $i_message['php_memory']; ?>&nbsp;&nbsp;<span class="p"><?php
 echo $i_message['support'],'/',@ini_get('memory_limit');
-    if ((int) @ini_get('memory_limit') < (int) '32M') {
-        result(0, 1);
-        $quit = true;
-    } else {
-        result(1, 1);
-    } ?></span></h5>
+        if ((int) @ini_get('memory_limit') < (int) '32M') {
+            result(0, 1);
+            $quit = true;
+        } else {
+            result(1, 1);
+        } ?></span></h5>
 
 <h5><?php echo $i_message['php_session']; ?>&nbsp;&nbsp;<span class="p"><?php
 $session_path = @ini_get('session.save_path');
-    if (!isset($_SESSION['thinksns_install'])) {
-        echo '<span class="red">'.$i_message['php_session_error'].': '.$session_path.'</span>';
-        result(0, 1);
-        $quit = true;
-    } else {
-        echo $i_message['support'];
-        result(1, 1);
-    } ?></span></h5>
+        if (!isset($_SESSION['thinksns_install'])) {
+            echo '<span class="red">'.$i_message['php_session_error'].': '.$session_path.'</span>';
+            result(0, 1);
+            $quit = true;
+        } else {
+            echo $i_message['support'];
+            result(1, 1);
+        } ?></span></h5>
 
 <h5><?php echo $i_message['file_upload']; ?>&nbsp;&nbsp;<spam class="p"><?php
 if (@ini_get('file_uploads')) {
-        echo $i_message['support'],'/',@ini_get('upload_max_filesize');
-    } else {
-        echo '<span class="red">'.$i_message['unsupport'].'</span>';
-    }
-    result(1, 1); ?></spam></h5>
+            echo $i_message['support'],'/',@ini_get('upload_max_filesize');
+        } else {
+            echo '<span class="red">'.$i_message['unsupport'].'</span>';
+        }
+        result(1, 1); ?></spam></h5>
 
 <h5><?php echo $i_message['mysql']; ?>&nbsp;&nbsp;<span class="p"><?php
 if (function_exists('mysql_connect')) {
-        echo $i_message['support'];
-        result(1, 1);
-    } else {
-        echo '<span class="red">'.$i_message['mysql_unsupport'].'</span>';
-        result(0, 1);
-        $quit = true;
-    } ?></span></h5>
+            echo $i_message['support'];
+            result(1, 1);
+        } else {
+            echo '<span class="red">'.$i_message['mysql_unsupport'].'</span>';
+            result(0, 1);
+            $quit = true;
+        } ?></span></h5>
 
 <h5><?php echo $i_message['php_extention']; ?></h5>
 <p>&nbsp;&nbsp;
 <?php
 if (extension_loaded('mysql')) {
-        echo 'mysql:'.$i_message['support'];
-        result(1, 1);
-    } else {
-        echo '<span class="red">'.$i_message['php_extention_unload_mysql'].'</span>';
-        result(0, 1);
-        $quit = true;
-    } ?></p>
+            echo 'mysql:'.$i_message['support'];
+            result(1, 1);
+        } else {
+            echo '<span class="red">'.$i_message['php_extention_unload_mysql'].'</span>';
+            result(0, 1);
+            $quit = true;
+        } ?></p>
 <p>&nbsp;&nbsp;
 <?php
 if (extension_loaded('gd')) {
-        echo 'gd:'.$i_message['support'];
-        result(1, 1);
-    } else {
-        echo '<span class="red">'.$i_message['php_extention_unload_gd'].'</span>';
-        result(0, 1);
-        $quit = true;
-    } ?></p>
+            echo 'gd:'.$i_message['support'];
+            result(1, 1);
+        } else {
+            echo '<span class="red">'.$i_message['php_extention_unload_gd'].'</span>';
+            result(0, 1);
+            $quit = true;
+        } ?></p>
 <p>&nbsp;&nbsp;
 <?php
 if (extension_loaded('curl')) {
-        echo 'curl:'.$i_message['support'];
-        result(1, 1);
-    } else {
-        echo '<span class="red">'.$i_message['php_extention_unload_curl'].'</span>';
-        result(0, 1);
-        $quit = true;
-    } ?></p>
+            echo 'curl:'.$i_message['support'];
+            result(1, 1);
+        } else {
+            echo '<span class="red">'.$i_message['php_extention_unload_curl'].'</span>';
+            result(0, 1);
+            $quit = true;
+        } ?></p>
 <p>&nbsp;&nbsp;
 <?php
 if (extension_loaded('mbstring')) {
-        echo 'mbstring:'.$i_message['support'];
-        result(1, 1);
-    } else {
-        echo '<span class="red">'.$i_message['php_extention_unload_mbstring'].'</span>';
-        result(0, 1);
-        $quit = true;
-    } ?></p>
+            echo 'mbstring:'.$i_message['support'];
+            result(1, 1);
+        } else {
+            echo '<span class="red">'.$i_message['php_extention_unload_mbstring'].'</span>';
+            result(0, 1);
+            $quit = true;
+        } ?></p>
 
 </div>
 <h2><?php echo $i_message['dirmod']; ?></h2>
 <div class="shade">
 <?php
 foreach ($writeable as $value) {
-        echo '<p>'.$value.'</p>';
-    } ?>
+            echo '<p>'.$value.'</p>';
+        } ?>
 
 </div>
 <p class="center">
 	<form method="get" action='install.php?v=3' style="text-align: center;">
 	<input type="hidden" name="v" value="3">
 	<input style="width:200px;" type="submit" class="submit" value="<?php echo $i_message['install_next']; ?>" <?php if ($quit) {
-        echo 'disabled="disabled"';
-    } ?>>
+            echo 'disabled="disabled"';
+        } ?>>
 	</form>
 </p>
 <?php
-
-} elseif ($v == '3') {
-    ?>
+    } elseif ($v == '3') {
+        ?>
 <!-- <h2><?php echo $i_message['install_setting']; ?></h2> -->
 <form method="post" action="install.php?v=4" id="install" onSubmit="return check(this);">
 	<h2><?php echo $i_message['install_mysql']; ?></h2>
@@ -314,78 +312,76 @@ function check(obj)
 }
 </script>
 <?php
+    } elseif ($v == '4') {
+        if (empty($db_host) || empty($db_username) || empty($db_name) || empty($db_prefix)) {
+            $msg .= '<p>'.$i_message['mysql_invalid_configure'].'<p>';
+            $quit = true;
+        } elseif (!@mysql_connect($db_host, $db_username, $db_password)) {
+            $msg .= '<p>'.mysql_error().'</p>';
+            $quit = true;
+        }
+        if (strstr($db_prefix, '.')) {
+            $msg .= '<p>'.$i_message['mysql_invalid_prefix'].'</p>';
+            $quit = true;
+        }
 
-} elseif ($v == '4') {
-    if (empty($db_host) || empty($db_username) || empty($db_name) || empty($db_prefix)) {
-        $msg .= '<p>'.$i_message['mysql_invalid_configure'].'<p>';
-        $quit = true;
-    } elseif (!@mysql_connect($db_host, $db_username, $db_password)) {
-        $msg .= '<p>'.mysql_error().'</p>';
-        $quit = true;
-    }
-    if (strstr($db_prefix, '.')) {
-        $msg .= '<p>'.$i_message['mysql_invalid_prefix'].'</p>';
-        $quit = true;
-    }
-
-    if (strlen($password) < 6) {
-        $msg .= '<p>'.$i_message['founder_invalid_password'].'</p>';
-        $quit = true;
-    } elseif ($password != $rpassword) {
-        $msg .= '<p>'.$i_message['founder_invalid_rpassword'].'</p>';
-        $quit = true;
-    } elseif (!preg_match('/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/i', $email)) {
-        $msg .= '<p>'.$i_message['founder_invalid_email'].'</p>';
-        $quit = true;
-    } else {
-        $forbiddencharacter = array('\\', '&', ' ', "'", '"', '/', '*', ',', '<', '>', "\r", "\t", "\n", '#', '$', '(', ')', '%', '@', '+', '?', ';', '^');
-        foreach ($forbiddencharacter as $value) {
-            if (strpos($username, $value) !== false) {
-                $msg .= '<p>'.$i_message['	'].'</p>';
-                $quit = true;
-                break;
+        if (strlen($password) < 6) {
+            $msg .= '<p>'.$i_message['founder_invalid_password'].'</p>';
+            $quit = true;
+        } elseif ($password != $rpassword) {
+            $msg .= '<p>'.$i_message['founder_invalid_rpassword'].'</p>';
+            $quit = true;
+        } elseif (!preg_match('/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,3}$/i', $email)) {
+            $msg .= '<p>'.$i_message['founder_invalid_email'].'</p>';
+            $quit = true;
+        } else {
+            $forbiddencharacter = array('\\', '&', ' ', "'", '"', '/', '*', ',', '<', '>', "\r", "\t", "\n", '#', '$', '(', ')', '%', '@', '+', '?', ';', '^');
+            foreach ($forbiddencharacter as $value) {
+                if (strpos($username, $value) !== false) {
+                    $msg .= '<p>'.$i_message['	'].'</p>';
+                    $quit = true;
+                    break;
+                }
             }
         }
-    }
 
-    if ($quit) {
-        $allownext = 'disabled="disabled"'; ?>
+        if ($quit) {
+            $allownext = 'disabled="disabled"'; ?>
 		<?php
         echo $msg;
-    } else {
-        $config_file_content = array();
-        $config_file_content['db_host'] = $db_host;
-        $config_file_content['db_name'] = $db_name;
-        $config_file_content['db_username'] = $db_username;
-        $config_file_content['db_password'] = $db_password;
-        $config_file_content['db_prefix'] = $db_prefix;
-        $config_file_content['db_pconnect'] = 0;
-        $config_file_content['db_charset'] = 'utf8';
-        $config_file_content['dbType'] = 'MySQL';
+        } else {
+            $config_file_content = array();
+            $config_file_content['db_host'] = $db_host;
+            $config_file_content['db_name'] = $db_name;
+            $config_file_content['db_username'] = $db_username;
+            $config_file_content['db_password'] = $db_password;
+            $config_file_content['db_prefix'] = $db_prefix;
+            $config_file_content['db_pconnect'] = 0;
+            $config_file_content['db_charset'] = 'utf8';
+            $config_file_content['dbType'] = 'MySQL';
 
-        $default_manager_account = array();
-        $default_manager_account['email'] = $email;
-        $default_manager_account['password'] = md5(md5($password).'11111');
+            $default_manager_account = array();
+            $default_manager_account['email'] = $email;
+            $default_manager_account['password'] = md5(md5($password).'11111');
 
-        $_SESSION['config_file_content'] = $config_file_content;
-        $_SESSION['default_manager_account'] = $default_manager_account;
-        $_SESSION['first_user_id'] = $first_user_id;
-        $_SESSION['site_url'] = $site_url; ?>
+            $_SESSION['config_file_content'] = $config_file_content;
+            $_SESSION['default_manager_account'] = $default_manager_account;
+            $_SESSION['first_user_id'] = $first_user_id;
+            $_SESSION['site_url'] = $site_url; ?>
 	<div class="botBorder">
 		<p><?php echo $i_message['install_founder_name'], ': ', $email?></p>
 		<p><?php echo $i_message['install_founder_password'], ': ', $password; ?></p>
 	</div>
 <?php
-
-    } ?>
+        } ?>
 	<div class="botBorder">
 
 <?php
 if (!$quit) {
-        //写配置文件
+            //写配置文件
 $randkey = uniqid(rand());
-        $fp = fopen(THINKSNS_ROOT.'/config/'.$thinksns_config_file, 'wb');
-        $configfilecontent = <<<EOT
+            $fp = fopen(THINKSNS_ROOT.'/config/'.$thinksns_config_file, 'wb');
+            $configfilecontent = <<<EOT
 <?php
 if (!defined('SITE_PATH')) exit();
 return array(
@@ -404,24 +400,22 @@ return array(
 	'COOKIE_PREFIX' => 'TS4_',      // # cookie
 );
 EOT;
-        $configfilecontent = str_replace('SECURE_TEST', 'SECURE'.rand(10000, 20000), $configfilecontent);
-        chmod(THINKSNS_ROOT.'/config/'.$thinksns_config_file, 0777);
-        $result_1 = fwrite($fp, trim($configfilecontent));
-        @fclose($fp);
+            $configfilecontent = str_replace('SECURE_TEST', 'SECURE'.rand(10000, 20000), $configfilecontent);
+            chmod(THINKSNS_ROOT.'/config/'.$thinksns_config_file, 0777);
+            $result_1 = fwrite($fp, trim($configfilecontent));
+            @fclose($fp);
 
-        if ($result_1 && file_exists(THINKSNS_ROOT.'/config/'.$thinksns_config_file)) {
-            ?>
+            if ($result_1 && file_exists(THINKSNS_ROOT.'/config/'.$thinksns_config_file)) {
+                ?>
 	<p><?php echo $i_message['config_log_success']; ?></p>
 <?php
-
-        } else {
-            ?>
+            } else {
+                ?>
 	<p><?php echo $i_message['config_read_failed'];
-            $quit = true; ?></p>
+                $quit = true; ?></p>
 <?php
-
-        }
-    } ?>
+            }
+        } ?>
 	</div>
 	<div class="center">
 		<form method="post" action="install.php?v=5">
@@ -430,64 +424,61 @@ EOT;
 		</form>
 	</div>
 <?php
+    } elseif ($v == '5') {
+        $db_config = $_SESSION['config_file_content'];
 
-} elseif ($v == '5') {
-    $db_config = $_SESSION['config_file_content'];
-
-    if (!$db_config['db_host'] && !$db_config['db_name']) {
-        $msg .= '<p>错误:'.$i_message['configure_read_failed'].'</p>';
-        $quit = true;
-    } else {
-        mysql_connect($db_config['db_host'], $db_config['db_username'], $db_config['db_password']);
-        $sqlv = mysql_get_server_info();
-        if (version_compare($sqlv, '5.0.0', '<')) {
-            $msg .= '<p>错误:'.$i_message['mysql_version_402'].'</p>';
+        if (!$db_config['db_host'] && !$db_config['db_name']) {
+            $msg .= '<p>错误:'.$i_message['configure_read_failed'].'</p>';
             $quit = true;
         } else {
-            $db_charset = $db_config['db_charset'];
-            $db_charset = (strpos($db_charset, '-') === false) ? $db_charset : str_replace('-', '', $db_charset);
-
-            mysql_query(" CREATE DATABASE IF NOT EXISTS `{$db_config['db_name']}` DEFAULT CHARACTER SET $db_charset ");
-
-            if (mysql_errno()) {
-                $errormsg = mysql_error();
-                $msg .= '<p>错误:'.($errormsg ? $errormsg : $i_message['database_errno']).'</p>';
+            mysql_connect($db_config['db_host'], $db_config['db_username'], $db_config['db_password']);
+            $sqlv = mysql_get_server_info();
+            if (version_compare($sqlv, '5.0.0', '<')) {
+                $msg .= '<p>错误:'.$i_message['mysql_version_402'].'</p>';
                 $quit = true;
             } else {
-                mysql_select_db($db_config['db_name']);
-            }
+                $db_charset = $db_config['db_charset'];
+                $db_charset = (strpos($db_charset, '-') === false) ? $db_charset : str_replace('-', '', $db_charset);
+
+                mysql_query(" CREATE DATABASE IF NOT EXISTS `{$db_config['db_name']}` DEFAULT CHARACTER SET $db_charset ");
+
+                if (mysql_errno()) {
+                    $errormsg = mysql_error();
+                    $msg .= '<p>错误:'.($errormsg ? $errormsg : $i_message['database_errno']).'</p>';
+                    $quit = true;
+                } else {
+                    mysql_select_db($db_config['db_name']);
+                }
 
             //判断是否有用同样的数据库前缀安装过
             $re = mysql_query("SELECT COUNT(1) FROM {$db_config['db_prefix']}user");
-            $link = @mysql_fetch_row($re);
+                $link = @mysql_fetch_row($re);
 
-            if (intval($link[0]) > 0) {
-                $thinksns_rebuild = true;
-                $msg .= '<p>错误:'.$i_message['thinksns_rebuild'].'</p>';
-                $alert = ' onclick="return confirm(\''.$i_message['thinksns_rebuild'].'\');"';
+                if (intval($link[0]) > 0) {
+                    $thinksns_rebuild = true;
+                    $msg .= '<p>错误:'.$i_message['thinksns_rebuild'].'</p>';
+                    $alert = ' onclick="return confirm(\''.$i_message['thinksns_rebuild'].'\');"';
+                }
             }
         }
-    }
 
-    if ($quit) {
-        $allownext = 'disabled="disabled"'; ?>
+        if ($quit) {
+            $allownext = 'disabled="disabled"'; ?>
 <?php
     echo $msg;
-    } else {
-        ?>
+        } else {
+            ?>
 <div class="botBorder">
 <?php
 if ($thinksns_rebuild) {
-            ?>
+                ?>
 <p style="color:red;font-size:16px;"><?php echo $i_message['thinksns_rebuild']; ?></p>
 <?php
-
-        } ?>
+            } ?>
 <p><?php echo $i_message['mysql_import_data']; ?></p>
 </div>
 <?php
-
-    } ?>
+        } ?>
 <div class="center">
 	<form method="post" action="install.php?v=6">
 	<input type="button" class="submit" name="prev" value="<?php echo $i_message['install_prev']; ?>" onClick="history.go(-1)">&nbsp;
@@ -495,42 +486,41 @@ if ($thinksns_rebuild) {
 	</form>
 </div>
 <?php
+    } elseif ($v == '6') {
+        $db_config = $_SESSION['config_file_content'];
 
-} elseif ($v == '6') {
-    $db_config = $_SESSION['config_file_content'];
+        mysql_connect($db_config['db_host'], $db_config['db_username'], $db_config['db_password']);
+        if (mysql_get_server_info() > '5.0') {
+            mysql_query("SET sql_mode = ''");
+        }
+        $db_config['db_charset'] = (strpos($db_config['db_charset'], '-') === false) ? $db_config['db_charset'] : str_replace('-', '', $db_config['db_charset']);
+        mysql_query("SET character_set_connection={$db_config['db_charset']}, character_set_results={$db_config['db_charset']}, character_set_client=binary");
+        mysql_select_db($db_config['db_name']);
+        $tablenum = 0;
 
-    mysql_connect($db_config['db_host'], $db_config['db_username'], $db_config['db_password']);
-    if (mysql_get_server_info() > '5.0') {
-        mysql_query("SET sql_mode = ''");
-    }
-    $db_config['db_charset'] = (strpos($db_config['db_charset'], '-') === false) ? $db_config['db_charset'] : str_replace('-', '', $db_config['db_charset']);
-    mysql_query("SET character_set_connection={$db_config['db_charset']}, character_set_results={$db_config['db_charset']}, character_set_client=binary");
-    mysql_select_db($db_config['db_name']);
-    $tablenum = 0;
-
-    $fp = fopen($installfile, 'rb');
-    $sql = fread($fp, filesize($installfile));
-    fclose($fp); ?>
+        $fp = fopen($installfile, 'rb');
+        $sql = fread($fp, filesize($installfile));
+        fclose($fp); ?>
 <div class="botBorder">
 <h4><?php echo $i_message['import_processing']; ?></h4>
 <div style="overflow-y:scroll;height:100px;width:715px;padding:5px;border:1px solid #ccc;">
 <?php
     $db_charset = $db_config['db_charset'];
-    $db_prefix = $db_config['db_prefix'];
-    $sql = str_replace("\r", "\n", str_replace('`'.'ts_', '`'.$db_prefix, $sql));
-    foreach (explode(";\n", trim($sql)) as $query) {
-        $query = trim($query);
-        if ($query) {
-            if (substr($query, 0, 12) == 'CREATE TABLE') {
-                $name = preg_replace('/CREATE TABLE ([A-Z ]*)`([a-z0-9_]+)` .*/is', '\\2', $query);
-                echo '<p>'.$i_message['create_table'].' '.$name.' ... <span class="blue">OK</span></p>';
-                @mysql_query(createtable($query, $db_charset));
-                $tablenum++;
-            } else {
-                @mysql_query($query);
+        $db_prefix = $db_config['db_prefix'];
+        $sql = str_replace("\r", "\n", str_replace('`'.'ts_', '`'.$db_prefix, $sql));
+        foreach (explode(";\n", trim($sql)) as $query) {
+            $query = trim($query);
+            if ($query) {
+                if (substr($query, 0, 12) == 'CREATE TABLE') {
+                    $name = preg_replace('/CREATE TABLE ([A-Z ]*)`([a-z0-9_]+)` .*/is', '\\2', $query);
+                    echo '<p>'.$i_message['create_table'].' '.$name.' ... <span class="blue">OK</span></p>';
+                    @mysql_query(createtable($query, $db_charset));
+                    $tablenum++;
+                } else {
+                    @mysql_query($query);
+                }
             }
-        }
-    } ?>
+        } ?>
 </div>
 </div>
 <div class="botBorder">
@@ -553,8 +543,8 @@ if ($thinksns_rebuild) {
     //添加管理员
     $siteFounder = $_SESSION['default_manager_account'];
 
-    $sql1 = 'INSERT INTO `%s` (`uid`, `password`, `login_salt`, `uname`, `email`, `phone`, `sex`, `location`, `is_audit`, `is_active`, `is_init`, `ctime`, `identity`, `api_key`, `domain`, `province`, `city`, `area`, `reg_ip`, `lang`, `timezone`, `is_del`, `first_letter`, `intro`, `last_login_time`, `last_feed_id`, `last_post_time`, `search_key`, `invite_code`, `feed_email_time`, `send_email_time`, `openid`, `input_city`, `is_fixed`) VALUES (%d, "%s", "11111", "管理员", "%s", NULL, 1, "北京 北京市 海淀区", 1, 1, 1, "%s", 1, NULL, "", 1, 2, 10, "127.0.0.1", "zh-cn", "PRC", 0, "G", "", "", 0, 0, "管理员 guanliyuan", NULL, 0, 0, NULL, NULL, 1);';
-    $sql1 = sprintf($sql1, $db_config['db_prefix'].'user', $admin_id, $siteFounder['password'], $siteFounder['email'], time());
+        $sql1 = 'INSERT INTO `%s` (`uid`, `password`, `login_salt`, `uname`, `email`, `phone`, `sex`, `location`, `is_audit`, `is_active`, `is_init`, `ctime`, `identity`, `api_key`, `domain`, `province`, `city`, `area`, `reg_ip`, `lang`, `timezone`, `is_del`, `first_letter`, `intro`, `last_login_time`, `last_feed_id`, `last_post_time`, `search_key`, `invite_code`, `feed_email_time`, `send_email_time`, `openid`, `input_city`, `is_fixed`) VALUES (%d, "%s", "11111", "管理员", "%s", NULL, 1, "北京 北京市 海淀区", 1, 1, 1, "%s", 1, NULL, "", 1, 2, 10, "127.0.0.1", "zh-cn", "PRC", 0, "G", "", "", 0, 0, "管理员 guanliyuan", NULL, 0, 0, NULL, NULL, 1);';
+        $sql1 = sprintf($sql1, $db_config['db_prefix'].'user', $admin_id, $siteFounder['password'], $siteFounder['email'], time());
     // echo $sql1;
     if (mysql_query($sql1)) {
         echo '<p>'.$i_message['create_founderpower_success'].'... <span class="blue">OK</span></p>';
@@ -565,17 +555,17 @@ if ($thinksns_rebuild) {
 
     //将管理员加入“管理员”用户组
     $sql_user_group = "INSERT INTO `{$db_config['db_prefix']}user_group_link` (`id`,`uid`,`user_group_id`) VALUES ('1', ".$admin_id.",'1');";
-    if (mysql_query($sql_user_group)) {
-    } else {
-        $quit = true;
-    }
+        if (mysql_query($sql_user_group)) {
+        } else {
+            $quit = true;
+        }
 
-    if (!$quit) {
-        /* # 写入锁文件 */
+        if (!$quit) {
+            /* # 写入锁文件 */
         file_put_contents(THINKSNS_ROOT.'/data/install.lock', 'ThinkSNS lock file');
-    } else {
-        echo '请重新安装';
-    } ?>
+        } else {
+            echo '请重新安装';
+        } ?>
 </div>
 <div class="botBorder">
 <h4><?php echo $i_message['install_success']; ?></h4>
@@ -583,8 +573,7 @@ if ($thinksns_rebuild) {
 </div>
 <iframe src="<?php echo $_SESSION['site_url']; ?>/cleancache.php?all" height="0" width="0" style="display: none;"></iframe>
 <?php
-
-}
+    }
 ?>
 </div>
 <div class='copyright'>ThinkSNS <?php echo $_TSVERSION; ?> &#169; copyright 2008-<?php echo date('Y') ?> www.ThinkSNS.com All Rights Reserved</div>

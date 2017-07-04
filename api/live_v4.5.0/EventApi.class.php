@@ -712,9 +712,10 @@ class EventApi extends Api
     }
 
     /**
-     * 删除活动评论
+     * 删除活动评论.
      *
      * @return array
+     *
      * @author zsy
      */
     public function delComment()
@@ -723,7 +724,6 @@ class EventApi extends Api
 
         $res = model('Comment')->deleteComment($comment_id, null, 'Event');
         if (!$res) {
-
             return array('status' => 0, 'msg' => '删除失败');
         }
 

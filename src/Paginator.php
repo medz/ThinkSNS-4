@@ -2,7 +2,7 @@
 
 namespace Pagination;
 
-/**
+/*
  * Paginator.php
  *
  * (c) 2014 overtrue <anzhengchao@gmail.com>
@@ -15,13 +15,13 @@ namespace Pagination;
  * @url    http://overtrue.me
  * @date   2014-10-23T20:05:33
  */
-use Closure;
-use Countable;
 use ArrayAccess;
-use Serializable;
 use ArrayIterator;
-use JsonSerializable;
+use Countable;
 use IteratorAggregate;
+use JsonSerializable;
+use Serializable;
+
 class Paginator implements
     ArrayAccess,
     Countable,
@@ -37,8 +37,9 @@ class Paginator implements
     public $nowPage;
     public $html;
     public $data;
+
     /**
-     * Constructor
+     * Constructor.
      *
      * @param \Slim\Http\Request $request
      * @param string             $pager
@@ -52,28 +53,30 @@ class Paginator implements
      * @param $data
      * @param $total
      * @param int $pageSize
+     *
      * @return array
      */
     public function make($data, $total, $pageSize = 10)
     {
-        $this->count = $this->totalRows    = abs($total);
+        $this->count = $this->totalRows = abs($total);
         $this->pageSize = $pageSize;
         $this->data = $data;
         $this->html = $this->links();
 
         return array(
-            'count' => $this->count,
+            'count'      => $this->count,
             'totalPages' => $this->totalPages,
-            'totalRows' => $this->totalRows,
-            'nowPage' => $this->nowPage,
-            'html' => $this->html,
-            'data' => $this->data
+            'totalRows'  => $this->totalRows,
+            'nowPage'    => $this->nowPage,
+            'html'       => $this->html,
+            'data'       => $this->data,
         );
     }
+
     /**
-     * Return current page
+     * Return current page.
      *
-     * @return integer
+     * @return int
      */
     public function getCurrentPage($total = null)
     {
@@ -86,48 +89,52 @@ class Paginator implements
         if ($this->data) {
             $page <= $this->totalPages || $page = $this->totalPages;
         }
+
         return $page;
     }
+
     /**
-     * Return total pages
+     * Return total pages.
      *
-     * @return integer
+     * @return int
      */
     public function getTotalPage()
     {
         $this->pageSize > 0 || $this->pageSize = 10;
         $totalPage = ceil($this->totalRows / $this->pageSize);
         $totalPage >= 1 || $totalPage = 1;
+
         return $totalPage;
     }
+
     public function links()
     {
         $html = '';
-        $this->totalPages   = $this->getTotalPage();
+        $this->totalPages = $this->getTotalPage();
         $currentPage = $this->getCurrentPage();
         if ($this->totalPages < 10) {
             for ($i = 1; $i <= $this->totalPages; $i++) {
-                $active = $i == $currentPage ? 'class="current" ':'';
+                $active = $i == $currentPage ? 'class="current" ' : '';
                 $html .= "<a {$active}href='".$this->getLink($i)."'>$i</a>";
             }
         } else {
             if ($currentPage > 3) {
-                $html .= "<a href=".$this->getLink(1).">&laquo;</a>";
+                $html .= '<a href='.$this->getLink(1).'>&laquo;</a>';
                 $start = $currentPage - 2;
             } else {
                 $start = 1;
             }
             for ($i = $start; $i <= $currentPage; $i++) {
-                $active = $i == $currentPage ? 'class="current" ':'';
+                $active = $i == $currentPage ? 'class="current" ' : '';
                 $html .= "<a {$active}href=".$this->getLink($i).">$i</a>";
             }
             for ($i = $currentPage + 1; $i <= $currentPage + 3; $i++) {
-                $active = $i == $currentPage ? 'class="current" ':'';
+                $active = $i == $currentPage ? 'class="current" ' : '';
                 $html .= "<a {$active}href=".$this->getLink($i).">$i</a>";
             }
             if ($this->totalPages - $currentPage >= 5) {
                 $html .= "<a href='javascript:void(0)'>...</a>";
-                $html .= "<a href=".$this->getLink($this->totalPages).">$this->totalPages</a>";
+                $html .= '<a href='.$this->getLink($this->totalPages).">$this->totalPages</a>";
             }
         }
         /*$html = '<ul class="pagination">';
@@ -160,10 +167,11 @@ class Paginator implements
         }*/
         return $html;
     }
+
     /**
-     * getLink
+     * getLink.
      *
-     * @param integer $page
+     * @param int $page
      *
      * @return string
      */
@@ -191,43 +199,51 @@ class Paginator implements
 
         return $url.'&'.C('VAR_PAGE').'='.$page;
     }
+
     /** {@inhertDoc} */
     public function jsonSerialize()
     {
         return $this->data;
     }
+
     /** {@inhertDoc} */
     public function serialize()
     {
         return serialize($this->data);
     }
+
     /** {@inhertDoc} */
     public function unserialize($data)
     {
         return $this->data = unserialize($data);
     }
+
     /** {@inhertDoc} **/
     public function getIterator()
     {
         return new ArrayIterator($this->data);
     }
+
     /** {@inhertDoc} */
     public function count($mode = COUNT_NORMAL)
     {
         return count($this->data, $mode);
     }
+
     /**
-     * Get a data by key
+     * Get a data by key.
      *
      * @param string $key
      *
      * @return mixed
      */
-    public function __get($key) {
+    public function __get($key)
+    {
         return $this[$key];
     }
+
     /**
-     * Assigns a value to the specified data
+     * Assigns a value to the specified data.
      *
      * @param string $key
      * @param mixed  $value
@@ -238,8 +254,9 @@ class Paginator implements
     {
         $this->data[$key] = $value;
     }
+
     /**
-     * Whether or not an data exists by key
+     * Whether or not an data exists by key.
      *
      * @param string $key
      *
@@ -249,8 +266,9 @@ class Paginator implements
     {
         return isset($this->data[$key]);
     }
+
     /**
-     * Unsets an data by key
+     * Unsets an data by key.
      *
      * @param string $key
      */
@@ -258,8 +276,9 @@ class Paginator implements
     {
         unset($this->data[$key]);
     }
+
     /**
-     * Assigns a value to the specified offset
+     * Assigns a value to the specified offset.
      *
      * @param string $offset
      * @param mixed  $value
@@ -270,12 +289,11 @@ class Paginator implements
     {
         $this->data[$offset] = $value;
     }
+
     /**
-     * Whether or not an offset exists
+     * Whether or not an offset exists.
      *
      * @param string $offset
-     *
-     * @access public
      *
      * @return bool
      */
@@ -283,8 +301,9 @@ class Paginator implements
     {
         return isset($this->data[$offset]);
     }
+
     /**
-     * Unsets an offset
+     * Unsets an offset.
      *
      * @param string $offset
      *
@@ -296,8 +315,9 @@ class Paginator implements
             unset($this->data[$offset]);
         }
     }
+
     /**
-     * Returns the value at specified offset
+     * Returns the value at specified offset.
      *
      * @param string $offset
      *

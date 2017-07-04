@@ -2196,10 +2196,11 @@ class IndexAction extends Action
             echo 0;
         }
     }
+
     //下载源码
     public function checkDownload()
     {
-        if (IS_POST){
+        if (IS_POST) {
             $mobile = t($_POST['mobile']);
             $code = $_POST['verifiy'];
             if (!preg_match("/^[1][34578]\d{9}$/", $mobile)) {
@@ -2207,17 +2208,17 @@ class IndexAction extends Action
             }
             $result = model('Sms')->CheckCaptcha($mobile, $code);
             $data = array();
-            if($result){
+            if ($result) {
                 $insertArr = array();
                 $insertArr['phone'] = $mobile;
                 $insertArr['ctime'] = time();
                 M('check_download')->add($insertArr);
 
-                $data['url'] = "http://korean.zhibocloud.cn/20170303.zip";
+                $data['url'] = 'http://korean.zhibocloud.cn/20170303.zip';
                 $data['info'] = '验证成功';
 
                 $this->ajaxReturn($data, '验证成功', 1);
-            }else{
+            } else {
                 $data['info'] = '验证码不正确';
 
                 $this->ajaxReturn($data, '验证失败', 0);
@@ -2229,14 +2230,14 @@ class IndexAction extends Action
 
     public function getVerifiyCode()
     {
-        if (IS_POST){
+        if (IS_POST) {
             $phone = t($_POST['mobile']);
             /* # 检查是否是手机号码 */
             if (!preg_match("/^[1][34578]\d{9}$/", $phone)) {
                 $this->ajaxReturn(null, '无效的手机号', 0);
-            } elseif(($sms = model('Sms')) and $sms->sendCaptcha($phone, true)) {
+            } elseif (($sms = model('Sms')) and $sms->sendCaptcha($phone, true)) {
                 $this->ajaxReturn(null, '发送成功', 1);
-            }else{
+            } else {
                 $this->ajaxReturn(null, $sms->getMessage(), 0);
             }
         }

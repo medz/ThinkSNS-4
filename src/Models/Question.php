@@ -6,7 +6,6 @@ use Ts\Bases\Model;
 
 /**
  * 问题模型.
- *
  **/
 class Question extends Model
 {
@@ -20,6 +19,7 @@ class Question extends Model
      * 复用的存在用户范围.
      *
      * @param $query
+     *
      * @return mixed
      */
     public function scopeExistent($query)
@@ -75,5 +75,4 @@ class Question extends Model
             ->belongsTo('Ts\\Models\User', 'uid', 'uid')
             ->select('uid', 'uname');
     }
-
 } // END class Tag extends Model

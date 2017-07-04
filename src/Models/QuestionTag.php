@@ -6,7 +6,6 @@ use Ts\Bases\Model;
 
 /**
  * 问题标签模型.
- *
  **/
 class QuestionTag extends Model
 {

@@ -515,18 +515,20 @@ class ContentAction extends AdministratorAction
         $this->savePostUrl = U('admin/Content/do_video_config');
         $this->displayConfig($data);
     }
+
     //下载用户
     public function download_user()
     {
         $this->assign('pageTitle', L('下载用户'));
         $data = M('check_download')->findPage(20);
 
-        foreach ($data['data'] as &$value){
-            $value['ctime'] = date('Y-m-d H:i',$value['ctime']);
+        foreach ($data['data'] as &$value) {
+            $value['ctime'] = date('Y-m-d H:i', $value['ctime']);
         }
         $this->pageKeyList = array('phone', 'ctime');
         $this->displayList($data);
     }
+
     public function do_video_config()
     {
         $list = $_POST['systemdata_list'];

@@ -1,8 +1,8 @@
 <?php
 
-use Apps\Wenda\Model\Question;
-use Apps\Wenda\Model\ProFile     as ProFileModel;
 use Apps\Wenda\Model\Answer;
+use Apps\Wenda\Model\ProFile     as ProFileModel;
+use Apps\Wenda\Model\Question;
 
 /**
  * ProfileAction 个人档案模块.
@@ -1173,11 +1173,10 @@ class ProfileAction extends Action
         }
         $this->assign('list', $list['data']);
         $this->display();
-
     }
 
     /**
-     * 未阅回答
+     * 未阅回答.
      */
     public function answerNoRead()
     {
@@ -1191,7 +1190,7 @@ class ProfileAction extends Action
     }
 
     /**
-     * 我提的问题
+     * 我提的问题.
      */
     public function questionList()
     {
@@ -1208,7 +1207,7 @@ class ProfileAction extends Action
     }
 
     /**
-     * 我关注的问题
+     * 我关注的问题.
      */
     public function questionListByCollect()
     {
@@ -1230,7 +1229,7 @@ class ProfileAction extends Action
     }
 
     /**
-     * 我的回答列表
+     * 我的回答列表.
      */
     public function answerList()
     {
@@ -1247,7 +1246,7 @@ class ProfileAction extends Action
     }
 
     /**
-     * 我收藏的回答列表
+     * 我收藏的回答列表.
      */
     public function answersByCollect()
     {

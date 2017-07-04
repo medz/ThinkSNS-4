@@ -6,7 +6,6 @@ use Ts\Bases\Model;
 
 /**
  * 问题模型.
- *
  **/
 class QuestionAnswer extends Model
 {
@@ -88,5 +87,4 @@ class QuestionAnswer extends Model
             ->ByType(2)
             ->count(array('id'));
     }
-
 } // END class Tag extends Model

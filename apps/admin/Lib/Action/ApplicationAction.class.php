@@ -17,15 +17,15 @@ class ApplicationAction extends AdministratorAction
      * @var string
      **/
     protected $type = array(
-        'false'   => '仅展示',
-        'url'     => 'URL地址',
-        'weiba'   => '微吧',
-        'post'    => '帖子',
-        'weibo'   => '微博',
-        'topic'   => '话题',
-        'channel' => '频道',
-        'user'    => '用户',
-        'information' => '资讯'
+        'false'       => '仅展示',
+        'url'         => 'URL地址',
+        'weiba'       => '微吧',
+        'post'        => '帖子',
+        'weibo'       => '微博',
+        'topic'       => '话题',
+        'channel'     => '频道',
+        'user'        => '用户',
+        'information' => '资讯',
     );
 
     public function _initialize()
