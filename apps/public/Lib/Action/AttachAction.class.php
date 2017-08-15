@@ -88,23 +88,23 @@ class AttachAction extends Action
         if ($size) {
             $modified = filemtime(file_create_path($file));
 
-        //apache only
-        $request = getallheaders();
+            //apache only
+            $request = getallheaders();
 
             if (isset($request['If-Modified-Since'])) {
                 //remove information after the semicolon and form a timestamp
-          $request_modified = explode(';', $request['If-Modified-Since']);
+                $request_modified = explode(';', $request['If-Modified-Since']);
                 $request_modified = strtotime($request_modified[0]);
             }
 
-        // Compare the mtime on the request to the mtime of the image file
-        if ($modified <= $request_modified) {
-            header('HTTP/1.1 304 Not Modified');
-            exit();
-        }
+            // Compare the mtime on the request to the mtime of the image file
+            if ($modified <= $request_modified) {
+                header('HTTP/1.1 304 Not Modified');
+                exit();
+            }
 
-        //enable caching on this url for proxy servers
-        $headers = array('Content-Type: '.$size['mime_type'],
+            //enable caching on this url for proxy servers
+            $headers = array('Content-Type: '.$size['mime_type'],
                          'Last-Modified: '.gmdate('D, d M Y H:i:s', $modified).' GMT',
                          'Cache-Control: public', );
 

@@ -149,11 +149,13 @@ class ChannelModel extends Model
     }
 
     /**
-     * 获取指定分享已经加入的频道分类.
+     * 获取指定分享已经加�
+     * �的频道分类.
      *
      * @param int $feedId 分享ID
      *
-     * @return array 已加入频道的分类数组
+     * @return array 已加�
+     * �频道的分类数组
      */
     public function getSelectedChannels($feedId)
     {
@@ -164,7 +166,8 @@ class ChannelModel extends Model
     }
 
     /**
-     * 添加频道与分享的关联信息.
+     * 添加频道与分享的�
+     * �联信息.
      *
      * @param int   $sourceId   分享ID
      * @param array $channelIds 频道分类ID数组
@@ -231,11 +234,13 @@ class ChannelModel extends Model
     }
 
     /**
-     * 获取指定频道分类下的相关数据 - 分页数据.
+     * 获取指定频道分类下的相�
+     * �数据 - 分页数据.
      *
      * @param int $cid 频道分类ID
      *
-     * @return array 指定频道分类下的相关数据
+     * @return array 指定频道分类下的相�
+     * �数据
      */
     public function getDataWithCid($cid, $loadId, $limit, $order, $loadCount)
     {
@@ -267,8 +272,9 @@ class ChannelModel extends Model
     /**
      * 格式化图片的大小，使瀑布流图片显示正常.
      *
-     * @param array $data  频道数据数组，包含宽高数据
-     * @param int   $width 格式化后的宽度，默认300px
+     * @param array $data  频道数据数组，�
+     * 含宽高数据
+     * @param int $width 格式化后的宽度，默认300px
      *
      * @return array 格式化宽高后的数据
      */
@@ -286,7 +292,8 @@ class ChannelModel extends Model
     }
 
     /**
-     * 删除分享与频道的关联.
+     * 删除分享与频道的�
+     * �联.
      *
      * @param int $feedId 分享ID
      *
@@ -351,7 +358,8 @@ class ChannelModel extends Model
     }
 
     /**
-     * 删除分类关联信息.
+     * 删除分类�
+     * �联信息.
      *
      * @param int $cid 分类ID
      *

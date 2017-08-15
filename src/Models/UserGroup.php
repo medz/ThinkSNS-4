@@ -18,7 +18,8 @@ class UserGroup extends Model
     protected $softDelete = false;
 
     /**
-     * 用户组图标关系字段.
+     * 用户组图标�
+     * �系字段.
      *
      * @return string|null
      *

@@ -31,7 +31,8 @@ class Gift extends Api
      * 列表获取礼物.
      *
      * @request int p 页码，默认值是1页
-     * @request int cate 分类，值只有1和2，1代表虚拟礼物，2代表实体礼物，不传代表全部
+     * @request int cate 分类，值只有1和2，1代表虚拟礼物，2代表实体礼物，不传代表�
+     * �部
      * @request int num 每页返回的数据条数 默认20条
      *
      * @return array
@@ -96,11 +97,13 @@ class Gift extends Api
     }
 
     /**
-     * 兑换礼物.
+     * �
+     * �换礼物.
      *
      * @reuqest int id 礼物ID
      * @reuqest int uid 赠送的人的UID
-     * @reuqest int num 兑换的数量
+     * @reuqest int num �
+     * �换的数量
      * @reuqest string addres 邮寄地址
      * @request string say 祝福语
      * @request int type 类型

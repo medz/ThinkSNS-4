@@ -12,7 +12,8 @@ use Ts;
 class TsAutoLoader
 {
     /**
-     * 自动加载入口.
+     * 自动加载�
+     * �口.
      *
      * @param string $namespace 命名空间
      *

@@ -260,7 +260,8 @@ class WeibaModel extends Model
     }
 
     /**
-     * 关注微吧.
+     * �
+     * �注微吧.
      *
      * @param
      *        	integer uid 用户UID
@@ -295,7 +296,8 @@ class WeibaModel extends Model
     }
 
     /**
-     * 取消关注微吧.
+     * 取消�
+     * �注微吧.
      *
      * @param
      *        	integer uid 用户UID
@@ -331,14 +333,16 @@ class WeibaModel extends Model
     }
 
     /**
-     * 判断是否关注某个微吧.
+     * 判断是否�
+     * �注某个微吧.
      *
      * @param
      *        	integer uid 用户UID
      * @param
      *        	integer weiba_id 微吧ID
      *
-     * @return bool 是否已关注
+     * @return bool 是否已�
+     * �注
      */
     public function getFollowStateByWeibaid($uid, $weiba_id)
     {
@@ -354,7 +358,8 @@ class WeibaModel extends Model
     }
 
     /**
-     * 批量获取微吧关注状态
+     * 批量获取微吧�
+     * �注状态
      *
      * @param
      *        	integer uid 用户UID
@@ -377,16 +382,19 @@ class WeibaModel extends Model
     }
 
     /**
-     * 格式化，用户的关注数据.
+     * 格式化，用户的�
+     * �注数据.
      *
      * @param int   $uid
      *                           用户ID
      * @param array $fids
      *                           用户ID数组
      * @param array $follow_data
-     *                           关注状态数据
+     *                           �
+     * �注状态数据
      *
-     * @return array 格式化后的用户关注状态数据
+     * @return array 格式化后的用户�
+     * �注状态数据
      */
     private function _formatFollowState($uid, $weiba_ids, $follow_data)
     {
@@ -592,7 +600,8 @@ class WeibaModel extends Model
      * 搜索微吧.
      *
      * @param
-     *        	varchar keyword 搜索关键字
+     *        	varchar keyword 搜索�
+     * �键字
      * @param
      *        	integer limit 每页显示条数
      * @param
@@ -642,7 +651,8 @@ class WeibaModel extends Model
      * 搜索帖子.
      *
      * @param
-     *        	varchar keyword 搜索关键字
+     *        	varchar keyword 搜索�
+     * �键字
      * @param
      *        	integer limit 每页显示条数
      * @param

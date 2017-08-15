@@ -8,7 +8,7 @@ if (version_compare(PHP_VERSION, '5.3.12', '<')) {
          'ThinkSNS程序运行版本不得低于：PHP 5.3.12';
     exit;
 
-/* # 检查是否安装过ThinkSNS */
+    /* # 检查是否安装    过ThinkSNS */
 } elseif (is_dir(__DIR__.'/install') and !file_exists(__DIR__.'/data/install.lock')) {
     header('location:install/install.php');
     exit;

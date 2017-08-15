@@ -38,7 +38,8 @@ class Attach extends Model
     }
 
     /**
-     * 图片附件路径关系方法.
+     * 图片附件路径�
+     * �系方法.
      *
      * @param int    $width  裁剪的宽度
      * @param string $height 裁剪的高度

@@ -190,7 +190,7 @@ class OauthApi extends Api
         // );
     }
 
-/********** 登录注销 **********/
+    /********** 登录注销 **********/
 
     /**
      * 认证方法 --using.
@@ -289,7 +289,7 @@ class OauthApi extends Api
         }
     }
 
-/********找回密码*********/
+    /********找回密码*********/
 
     /**
      * 发送短信验证码
@@ -435,7 +435,7 @@ class OauthApi extends Api
         // );
     }
 
-/********** 注册 **********/
+    /********** 注册 **********/
 
     /**
      * 发送注册验证码 --using.
@@ -707,7 +707,7 @@ class OauthApi extends Api
 
             if ($map['is_audit'] == 1) {
                 return $this->authorize();
-// 				$return = array('status'=>1, 'msg'=>'注册成功', 'need_audit'=>0);
+                // 				$return = array('status'=>1, 'msg'=>'注册成功', 'need_audit'=>0);
             } else {
                 $return = array('status' => 1, 'msg' => '注册成功，请等待审核', 'need_audit' => 1);
             }
@@ -876,12 +876,13 @@ class OauthApi extends Api
         }
     }
 
-/********** 其他公用操作API **********/
+    /********** �    �他�    �用操作API **********/
 
     /**
      * 验证是否是合法的email.
      *
-     * @param string $string 待验证的字串
+     * @param string $string �
+     * 验证的字串
      *
      * @return bool 如果是email则返回true，否则返回false
      *
@@ -910,7 +911,7 @@ class OauthApi extends Api
         return Ts\Service\ApiMessage::withArray($return, 1, '');
     }
 
-/*===============E-Mail API satrt==================*/
+    /*===============E-Mail API satrt==================*/
 
     /**
      * 获取邮箱验证码
@@ -1484,7 +1485,8 @@ class OauthApi extends Api
     }
 
     /**
-     * 获取允许的邮箱后缀
+     * 获取�
+     * �许的邮箱后缀
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -1509,5 +1511,5 @@ class OauthApi extends Api
         // );
     }
 
-/*===============E-Mail API end  ==================*/
+    /*===============E-Mail API end  ==================*/
 }

@@ -441,7 +441,8 @@ class AccountAction extends Action
     }
 
     /**
-     * 账号安全设置页面.
+     * 账号安�
+     * �设置页面.
      */
     public function security()
     {
@@ -852,11 +853,11 @@ class AccountAction extends Action
         if (!model('User')->isChangePhone($phone, $this->mid)) {
             $this->ajaxReturn(null, '当前手机号码不能用于绑定', 0);
 
-        /* # 检查验证码是否不正确 */
+            /* # 检查验证码是否不正确 */
         } elseif (($sms = model('Sms')) and !$sms->CheckCaptcha($phone, $code)) {
             $this->ajaxReturn(null, $sms->getMessage(), 0);
 
-        /* # 验证是否修改成功 */
+            /* # 验证是否修改成功 */
         } elseif (model('User')->where('`uid` = '.$this->mid)->setField('phone', $phone)) {
             model('User')->cleanCache($this->mid);
             $this->ajaxReturn(null, '设置成功', 1);
@@ -900,11 +901,11 @@ class AccountAction extends Action
         if (!model('User')->isChangeEmail($email, $this->mid)) {
             $this->ajaxReturn(null, '该邮箱无法用于账户绑定', 0);
 
-        /* # 验证验证码是否不正确 */
+            /* # 验证验证码是否不正确 */
         } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
             $this->ajaxReturn(null, $sms->getMessage(), 0);
 
-        /* # 重新设置email */
+            /* # 重新设置email */
         } elseif (model('User')->where('`uid` = '.$this->mid)->setField('email', $email)) {
             model('User')->cleanCache($this->mid);
             $this->ajaxReturn(null, '设置成功', 1);
@@ -948,7 +949,7 @@ class AccountAction extends Action
         if (!in_array($type, array('mobile', 'email'))) {
             $this->ajaxReturn(null, '参数错误', 0);
 
-        /* # 手机验证码获取 */
+            /* # 手机验证码获取 */
         } elseif ($type == 'mobile') {
             $phone = floatval($_POST['mobile']);
 
@@ -959,7 +960,7 @@ class AccountAction extends Action
             $sms->sendCaptcha($phone, true) and $this->ajaxReturn(null, '验证码已经发送到您手机，请注意查收', 1);
             $this->ajaxReturn(null, $sms->getMessage(), 0);
 
-        /* # 获取邮箱验证码 */
+            /* # 获取邮箱验证码 */
         } elseif ($type == 'email') {
             $email = t($_POST['email']);
 

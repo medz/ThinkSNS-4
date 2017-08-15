@@ -10,7 +10,8 @@ class SystemApi extends Api
      * 提交反馈信息.
      *
      * @reuqest int $uid [null] 可为空，默认从token中读取
-     * @reuqest string $content 反馈内容，不能为空
+     * @reuqest string $content 反馈�
+     * 容，不能为空
      *
      * @return array
      *

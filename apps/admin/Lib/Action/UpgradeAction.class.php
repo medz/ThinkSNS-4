@@ -85,7 +85,8 @@ class UpgradeAction extends AdministratorAction
      * @param string $message 消息
      * @param string $type    [success|error] 消息类型
      * @param string $url     跳转的url
-     * @param int    $s       等待的时间
+     * @param int    $s       等�
+     * 的时间
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -161,7 +162,8 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
     }
 
     /**
-     * 升级程序第一步 下载增量包.
+     * 升级程序第一步 下载增量�
+     * .
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -299,11 +301,11 @@ PS：手动升级覆盖文件后千万不要刷新本页面，直接点击上方
         if (is_file($path)) {
             return unlink($path);
 
-        // # 判断是否是目录，判断是否递归，不递归，直接尝试删除
+            // # 判断是否是目录，判断是否递归，不递归，直接尝试删除
         } elseif (is_dir($path) and !$recursive) {
             return rmdir($path);
 
-        // # 判断是否是目录，如果是目录，则递归删除
+            // # 判断是否是目录，如果是目录，则递归删除
         } elseif (is_dir($path) && file_exists($path)) {
             // # 打开目录资源
             $handle = opendir($path);

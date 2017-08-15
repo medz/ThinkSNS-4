@@ -12,8 +12,9 @@
 //
 
 /**
- * 内容管理.
- +------------------------------------------------------------------------------
+ * �
+ * 容管理.
+ * +------------------------------------------------------------------------------.
  *
  * @author    jason <yangjs17@yeah.net>
  *
@@ -158,7 +159,8 @@ class ContentAction extends AdministratorAction
      *
      * @param bool $isRec 是否是回收站列表
      *
-     * @return array 相关数据
+     * @return array 相�
+     * �数据
      */
     public function comment($isRec = false, $is_audit = 1)
     {
@@ -573,7 +575,8 @@ class ContentAction extends AdministratorAction
     }
 
     /**
-     * 删除举报回收站内容.
+     * 删除举报回收站�
+     * 容.
      *
      * @return int 是否删除成功
      */
@@ -593,7 +596,8 @@ class ContentAction extends AdministratorAction
     }
 
     /**
-     * 撤销举报内容.
+     * 撤销举报�
+     * 容.
      *
      * @return int 是否撤销成功
      */

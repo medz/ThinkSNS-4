@@ -209,7 +209,8 @@ class WeibaApi extends Api
     }
 
     /**
-     * 帖子详情 --using.
+     * 帖子详�
+     * --using.
      *
      * @param
      *        	integer id 帖子ID
@@ -602,7 +603,8 @@ class WeibaApi extends Api
     }
 
     /**
-     * 我加入的圈子.
+     * 我加�
+     * �的圈子.
      */
     public function weiba_join_my()
     {
@@ -672,7 +674,8 @@ class WeibaApi extends Api
     }
 
     /**
-     * 关注圈子.
+     * �
+     * �注圈子.
      *
      * @param
      *        	integer uid 用户UID
@@ -711,7 +714,8 @@ class WeibaApi extends Api
     }
 
     /**
-     * 取消关注圈子.
+     * 取消�
+     * �注圈子.
      *
      * @param
      *        	integer uid 用户UID
@@ -949,7 +953,8 @@ class WeibaApi extends Api
     }
 
     /**
-     * 批量获取圈子关注状态
+     * 批量获取圈子�
+     * �注状态
      *
      * @param
      *        	integer uid 用户UID
@@ -971,16 +976,19 @@ class WeibaApi extends Api
     }
 
     /**
-     * 格式化，用户的关注数据.
+     * 格式化，用户的�
+     * �注数据.
      *
      * @param int   $uid
      *                           用户ID
      * @param array $fids
      *                           用户ID数组
      * @param array $follow_data
-     *                           关注状态数据
+     *                           �
+     * �注状态数据
      *
-     * @return array 格式化后的用户关注状态数据
+     * @return array 格式化后的用户�
+     * �注状态数据
      */
     public function _formatFollowState($uid, $weiba_ids, $follow_data)
     {
@@ -1125,7 +1133,7 @@ class WeibaApi extends Api
         $user_info['remark'] = $user_info_whole['remark'];
         $user_info['avatar']['avatar_middle'] = $user_info_whole['avatar']['avatar_middle'];
         $user_info['user_group'] = $user_info_whole['user_group'];
-            //个人空间隐私权限
+        //个人空间隐私权限
         $privacy = model('UserPrivacy')->getPrivacy($this->mid, $uid);
         $user_info['space_privacy'] = $privacy['space'];
 
@@ -1276,7 +1284,8 @@ class WeibaApi extends Api
      * @param
      *        	integer to_comment_id 评论ID
      * @param
-     *        	string content 评论内容
+     *        	string content 评论�
+     * 容
      * @param
      *        	integer from 来源(2-android 3-iPhone)
      *

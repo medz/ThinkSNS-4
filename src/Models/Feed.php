@@ -18,7 +18,8 @@ class Feed extends Model
     protected $appends = array('images', 'video');
 
     /**
-     * 关联feedData表.
+     * �
+     * �联feedData表.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

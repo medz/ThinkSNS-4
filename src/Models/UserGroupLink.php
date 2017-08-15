@@ -5,7 +5,8 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 用户用户组关系模型.
+ * 用户用户组�
+ * �系模型.
  *
  * @author Seven Du <lovevipdsw@outlook.com>
  **/
@@ -20,7 +21,8 @@ class UserGroupLink extends Model
     protected $fillable = array('uid', 'user_group_id');
 
     /**
-     * 用户组关系字段.
+     * 用户组�
+     * �系字段.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      *

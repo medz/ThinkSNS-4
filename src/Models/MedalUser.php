@@ -5,7 +5,8 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 用户勋章关联模型.
+ * 用户勋章�
+ * �联模型.
  */
 class MedalUser extends Model
 {

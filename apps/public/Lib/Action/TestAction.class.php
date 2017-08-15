@@ -52,19 +52,19 @@ class TestAction extends Action
             M()->execute($sql);
         }
 
-/* 		$sql = "SELECT TABLE_NAME,COLUMN_NAME FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='uat_sociax' AND COLUMN_NAME LIKE '%uid%' AND DATA_TYPE='int'";
-        $list = M()->query($sql);
-        $str = '';
-        foreach ($list as $vo){
-            $str .= str_replace('ts_','', $vo['TABLE_NAME']).':';
-            if($vo['COLUMN_NAME']=='uid'){
-                $str .= ';';
-            }else{
-                $str .= $vo['COLUMN_NAME'].';';
-            }
-
-        }
-        echo($str); */
+        /* 		$sql = "SELECT TABLE_NAME,COLUMN_NAME FROM information_schema.`COLUMNS` WHERE TABLE_SCHEMA='uat_sociax' AND COLUMN_NAME LIKE '%uid%' AND DATA_TYPE='int'";
+                $list = M()->query($sql);
+                $str = '';
+                foreach ($list as $vo){
+                    $str .= str_replace('ts_','', $vo['TABLE_NAME']).':';
+                    if($vo['COLUMN_NAME']=='uid'){
+                        $str .= ';';
+                    }else{
+                        $str .= $vo['COLUMN_NAME'].';';
+                    }
+        
+                }
+                echo($str); */
     }
 
     public function testvideo()
@@ -325,9 +325,9 @@ class TestAction extends Action
     {
 
             //所有节点的子节点
-            $child = array();
-            //hash缓存数组
-            $hash = array();
+        $child = array();
+        //hash缓存数组
+        $hash = array();
         foreach ($data as $dv) {
             $hash[$dv['id']] = $dv;
             $tree[$dv['id']] = $dv;
@@ -408,7 +408,8 @@ class TestAction extends Action
     }
 
     /**
-     * 获取生成的语言文件内容.
+     * 获取生成的语言文件�
+     * 容.
      */
     public function getzLang()
     {
@@ -592,7 +593,8 @@ class TestAction extends Action
     }
 
     /**
-     * 插入Ts2.8用户信息.
+     * 插�
+     * �Ts2.8用户信息.
      */
     public function insertTsUser()
     {
@@ -850,7 +852,8 @@ class TestAction extends Action
     }
 
     /**
-     * 生成后台菜单配置文件.
+     * 生成后台菜单�
+     * �置文件.
      *
      * @return [type] void
      */
@@ -937,7 +940,8 @@ class TestAction extends Action
     }
 
     /**
-     * 获得后台菜单配置文件.
+     * 获得后台菜单�
+     * �置文件.
      *
      * @return [type] void
      */

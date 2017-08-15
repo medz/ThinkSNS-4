@@ -275,7 +275,8 @@ class ApplicationAction extends AdministratorAction
     /*================ Application feedback setting End   ======================*/
 
     /**
-     * 极光推送
+     * 极�
+     * �推送
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/

@@ -34,7 +34,8 @@ class SearchAction extends Action
     }
 
     /**
-     * 根据关键字进行搜索.
+     * 根据�
+     * �键字进行搜索.
      */
     public function index()
     {
@@ -250,7 +251,7 @@ class SearchAction extends Action
                     $userlist['data'][$k]['usercount'] = $usercounts[$v['uid']];
                     $userlist['data'][$k]['userTag'] = model('Tag')->setAppName('User')->setAppTable('user')->getAppTags($v['uid']);
                     // 获取用户用户组信息
-// 					$userGids = model('UserGroupLink')->getUserGroup($v['uid']);
+                    // 					$userGids = model('UserGroupLink')->getUserGroup($v['uid']);
                     $userGroupData = model('UserGroup')->getUserGroupByGids($userGids[$v['uid']]);
                     foreach ($userGroupData as $key => $value) {
                         if ($value['user_group_icon'] == -1) {
@@ -358,8 +359,8 @@ class SearchAction extends Action
                 $this->assign('Stime', t($_GET['Stime']));
                 $this->assign('Etime', t($_GET['Etime']));
             }
-                //关键字匹配 采用搜索引擎兼容函数搜索 后期可能会扩展为搜索引擎
-                $map['uname'] = array(
+            //关键字匹配 采用搜索引擎兼容函数搜索 后期可能会扩展为搜索引擎
+            $map['uname'] = array(
                         'like',
                         '%'.$this->key.'%',
                 );
@@ -381,18 +382,18 @@ class SearchAction extends Action
                 $this->assign('Stime', t($_GET['Stime']));
                 $this->assign('Etime', t($_GET['Etime']));
             }
-                //关键字匹配 采用搜索引擎兼容函数搜索 后期可能会扩展为搜索引擎
-                $feed_type = !empty($_GET['feed_type']) ? t($_GET['feed_type']) : '';
+            //关键字匹配 采用搜索引擎兼容函数搜索 后期可能会扩展为搜索引擎
+            $feed_type = !empty($_GET['feed_type']) ? t($_GET['feed_type']) : '';
             $list = model('Feed')->searchFeeds($this->key, $feed_type, 20, $Stime, $Etime);
 
-                //赞功能
-                $feed_ids = getSubByKey($list['data'], 'feed_id');
+            //赞功能
+            $feed_ids = getSubByKey($list['data'], 'feed_id');
             $diggArr = model('FeedDigg')->checkIsDigg($feed_ids, $GLOBALS['ts']['mid']);
             $this->assign('diggArr', $diggArr);
 
             $this->assign('feed_type', $feed_type);
             $this->assign('searchResult', $list);                 //搜索分享
-                $weiboSet = model('Xdata')->get('admin_Config:feed');
+            $weiboSet = model('Xdata')->get('admin_Config:feed');
             $this->assign('weibo_premission', $weiboSet['weibo_premission']);
         }
         $this->display();
@@ -420,7 +421,7 @@ class SearchAction extends Action
                     $this->setNewcount($v['weiba_id'], 0);
                 }
             }
-                //dump($list);exit;
+            //dump($list);exit;
                 $this->assign('searchResult', $list);                 //搜索分享
         }
         $this->display();
@@ -455,8 +456,8 @@ class SearchAction extends Action
                 }
                 $list['data'][$k]['content'] = t($list['data'][$k]['content']);
             }
-                //dump($list);exit;
-                $this->assign('searchResult', $list);
+            //dump($list);exit;
+            $this->assign('searchResult', $list);
         }
         $this->display();
     }
@@ -482,12 +483,12 @@ class SearchAction extends Action
                 $list['data'][$k]['weiba'] = $nameArr[$v['weiba_id']];
                 $list['data'][$k]['user'] = model('User')->getUserInfo($v['post_uid']);
                 $list['data'][$k]['replyuser'] = model('User')->getUserInfo($v['last_reply_uid']);
-                    // $images = matchImages($v['content']);
-                    // $images[0] && $list['data'][$k]['image'] = array_slice( $images , 0 , 5 );
-                    $image = getEditorImages($v['content']);
+                // $images = matchImages($v['content']);
+                // $images[0] && $list['data'][$k]['image'] = array_slice( $images , 0 , 5 );
+                $image = getEditorImages($v['content']);
                 !empty($image) && $list['data'][$k]['image'] = array($image);
-                    //匹配图片的src
-                    preg_match_all('#<img.*?src="([^"]*)"[^>]*>#i', $v['content'], $match);
+                //匹配图片的src
+                preg_match_all('#<img.*?src="([^"]*)"[^>]*>#i', $v['content'], $match);
                 foreach ($match[1] as $imgurl) {
                     $imgurl = $imgurl;
                     if (!empty($imgurl)) {
@@ -498,14 +499,14 @@ class SearchAction extends Action
                 $list['data'][$k]['digg'] = $is_digg ? 'digg' : 'undigg';
                 $list['data'][$k]['content'] = t($list['data'][$k]['content']);
 
-                    //去掉微吧已经删除的
-                    $is_del = D('weiba')->where('weiba_id='.$v['weiba_id'])->getField('is_del');
+                //去掉微吧已经删除的
+                $is_del = D('weiba')->where('weiba_id='.$v['weiba_id'])->getField('is_del');
                 if ($is_del == 1 || $is_del === null) {
                     unset($list['data'][$k]);
                 }
             }
-                //dump($list);exit;
-                $this->assign('searchResult', $list);
+            //dump($list);exit;
+            $this->assign('searchResult', $list);
         }
         $this->display();
     }

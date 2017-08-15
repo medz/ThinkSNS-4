@@ -1,6 +1,7 @@
 <?php
 /**
- * 可能感兴趣的人Widget.
+ * 可能感�
+ * �趣的人Widget.
  *
  * @author zivss <guolee226@gmail.com>
  *
@@ -9,10 +10,13 @@
 class HotPostWidget extends Widget
 {
     /**
-     * 渲染可能感兴趣的人页面.
+     * 渲染可能感�
+     * �趣的人页面.
      *
      * @param array $data
-     *                    配置相关数据
+     *                    �
+     * �置相�
+     * �数据
      *
      * @return string 渲染页面的HTML
      */
@@ -41,10 +45,13 @@ class HotPostWidget extends Widget
     }
 
     /**
-     * 获取用户的相关数据.
+     * 获取用户的相�
+     * �数据.
      *
      * @param array $data
-     *                    配置相关数据
+     *                    �
+     * �置相�
+     * �数据
      *
      * @return array 显示所需数据
      */
@@ -60,7 +67,7 @@ class HotPostWidget extends Widget
         if (!$list) {
             $list = M('weiba_post')->where($map)->order('rand()')->limit($data['limit'])->select();
             !$list && $list = 1;
-                //model( 'Cache' )->set( 'weiba_post_recommend' , $list , 86400 );
+            //model( 'Cache' )->set( 'weiba_post_recommend' , $list , 86400 );
         }
 
         return $list;

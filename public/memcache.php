@@ -840,8 +840,8 @@ EOB;
                 if ((isset($_GET['dumpslab']) && $_GET['dumpslab'] == $slabId) && (isset($_GET['server']) && $_GET['server'] == array_search($server, $MEMCACHE_SERVERS))) {
                     echo '<br/><b>Items: item</b><br/>';
                     $items = dumpCacheSlab($server, $slabId, $slab['number']);
-                        // maybe someone likes to do a pagination here :)
-                        $i = 1;
+                    // maybe someone likes to do a pagination here :)
+                    $i = 1;
                     foreach ($items['ITEM'] as $itemKey => $itemInfo) {
                         $itemInfo = trim($itemInfo, '[ ]');
 

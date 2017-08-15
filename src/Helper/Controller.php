@@ -54,7 +54,8 @@ class Controller
     protected static $controllers = array();
 
     /**
-     * 需要兼容的控制器命名空间.
+     * 需要�
+     * �容的控制器命名空间.
      *
      * @var array
      **/
@@ -99,7 +100,7 @@ class Controller
         ) {
             return sttaic::$controllers[$className];
 
-        /* 如果不存在，就判断 None类 */
+            /* 如果不存在，就判断 None类 */
         } elseif (
             class_exists($className) === false &&
             $oldControllerName === false
@@ -109,7 +110,7 @@ class Controller
 
             return $this->build($className);
 
-        /* 兼容旧系统的emptyAction */
+            /* 兼容旧系统的emptyAction */
         } elseif (
             class_exists($className) === false &&
             $oldControllerName !== false &&
@@ -119,7 +120,7 @@ class Controller
 
             return $this->build($oldControllerName);
 
-        /* 抛出异常 */
+            /* 抛出异常 */
         } elseif (
             class_exists($className) === false
         ) {
@@ -168,7 +169,8 @@ class Controller
     }
 
     /**
-     * 设置应用运行注入的参数.
+     * 设置应用运行注�
+     * �的参数.
      *
      * @return self
      *

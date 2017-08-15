@@ -10,7 +10,8 @@
 class CheckinApi extends Api
 {
     /**
-     * 获取签到情况 --using.
+     * 获取签到�
+     * 况 --using.
      *
      * @return array 签到信息
      */
@@ -65,7 +66,8 @@ class CheckinApi extends Api
     /**
      * 获取指定分类下的微博 --using.
      *
-     * @return array 签到情况
+     * @return array 签到�
+     * 况
      */
     public function checkin()
     {

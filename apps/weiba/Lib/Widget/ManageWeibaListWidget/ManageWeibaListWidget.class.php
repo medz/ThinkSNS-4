@@ -1,6 +1,7 @@
 <?php
 /**
- * 某人关注的微吧Widget.
+ * 某人�
+ * �注的微吧Widget.
  *
  * @example W('ManageWeibaList', array('manage_uid'=>10000))
  *
@@ -11,12 +12,15 @@
 class ManageWeibaListWidget extends Widget
 {
     /**
-     * 渲染关注按钮模板
+     * 渲染�
+     * �注按钮模板
      *
      * @example
      * $data['manage_uid'] integer 用户ID
      *
-     * @param array $data 渲染的相关配置参数
+     * @param array $data 渲染的相�
+     * ��
+     * �置参数
      *
      * @return string 渲染后的模板数据
      */

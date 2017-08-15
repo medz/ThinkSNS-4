@@ -1,6 +1,7 @@
 <?php
 /**
- * 后台，系统配置控制器.
+ * 后台，系统�
+ * �置控制器.
  *
  * @author liuxiaoqing <liuxiaoqing@zhishisoft.com>
  *
@@ -217,7 +218,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 获取知识的分组情况.
+     * 获取知识的分组�
+     * 况.
      */
     public function _getLogGroup()
     {
@@ -229,7 +231,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 清除知识操作.
+     * �
+     * 除知识操作.
      */
     public function _cleanLogs()
     {
@@ -336,7 +339,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 系统工具 - 计划任务 - 计划任务列表.
+     * 系统工�
+     * � - 计划任务 - 计划任务列表.
      */
     public function schedule()
     {
@@ -355,7 +359,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 系统工具 - 计划任务 - 新建计划任务
+     * 系统工�
+     * � - 计划任务 - 新建计划任务
      */
     public function newschedule()
     {
@@ -406,7 +411,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 数据字典.
+     * 数据字�
+     * �.
      */
     public function systemdata()
     {
@@ -505,7 +511,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 运营工具 - 意见反馈 - 意见反馈列表.
+     * 运营工�
+     * � - 意见反馈 - 意见反馈列表.
      */
     public function feedback()
     {
@@ -552,7 +559,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 运营工具 - 意见反馈 - 意见反馈类型.
+     * 运营工�
+     * � - 意见反馈 - 意见反馈类型.
      */
     public function feedbackType()
     {
@@ -689,7 +697,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 全站发送系统消息 + 邮件.
+     * �
+     * �站发送系统消息 + 邮件.
      */
     public function dosendmsg()
     {
@@ -778,7 +787,8 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 邀请查看详情展示.
+     * 邀请查看详�
+     * 展示.
      */
     public function invateDetail()
     {

@@ -7,14 +7,16 @@ use Medz\Component\Filesystem\Filesystem;
 use Ts;
 
 /**
- * 应用安装器.
+ * 应用安�
+ * 器.
  *
  * @author Seven Du <lovevipdsw@outlook.com>
  **/
 class AppInstall
 {
     /**
-     * 需要安装的应用名称.
+     * 需要安�
+     * 的应用名称.
      *
      * @var string
      **/
@@ -35,7 +37,8 @@ class AppInstall
     protected static $applicationDir;
 
     /**
-     * 应用详情.
+     * 应用详�
+     * .
      *
      * @var array
      **/
@@ -93,7 +96,8 @@ class AppInstall
     }
 
     /**
-     * 复制应用的公开静态资源.
+     * 复制应用的�
+     * �开静态资源.
      *
      * @return self
      *

@@ -5,7 +5,8 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 用户关注数据模型.
+ * 用户�
+ * �注数据模型.
  *
  * @author Seven Du <lovevipdsw@outlook.com>
  **/

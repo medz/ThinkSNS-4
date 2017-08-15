@@ -185,7 +185,8 @@ class MobileAction extends AdministratorAction
     }
 
     /**
-     * 手机版 关于我们.
+     * 手机版 �
+     * �于我们.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -203,7 +204,8 @@ class MobileAction extends AdministratorAction
     }
 
     /**
-     * 3G版本开关设置.
+     * 3G版本开�
+     * �设置.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/

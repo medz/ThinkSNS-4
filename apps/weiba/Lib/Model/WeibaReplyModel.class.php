@@ -73,8 +73,10 @@ class WeibaReplyModel extends Model
      * 添加帖子评论forApi.
      *
      * @param int post_id 帖子ID
-     * @param int content 帖子内容
-     * @param int uid 评论者UID
+     * @param int content 帖子�
+     * 容
+     * @param int uid 评论�
+     * UID
      *
      * @return bool 是否评论成功
      */
@@ -130,8 +132,10 @@ class WeibaReplyModel extends Model
      * 添加评论回复forApi.
      *
      * @param int reply_id 评论ID
-     * @param int content 回复内容
-     * @param int uid 回复者UID
+     * @param int content 回复�
+     * 容
+     * @param int uid 回复�
+     * UID
      *
      * @return bool 是否回复成功
      */

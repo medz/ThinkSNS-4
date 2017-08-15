@@ -5,7 +5,8 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 问题标签关联.
+ * 问题标签�
+ * �联.
  **/
 class QuestionTagLink extends Model
 {

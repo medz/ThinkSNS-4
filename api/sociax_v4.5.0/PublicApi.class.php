@@ -5,7 +5,8 @@ use Apps\Event\Model\Event;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * 公开api接口.
+ * �
+ * �开api接口.
  *
  * @author Medz Seven <lovevipdsw@vip.qq.com>
  **/
@@ -17,7 +18,8 @@ class PublicApi extends Api
     }
 
     /**
-     * 按照层级获取地区列表.
+     * 按�
+     * �层级获取地区列表.
      *
      * @request int     $pid     地区ID
      *
@@ -82,7 +84,8 @@ class PublicApi extends Api
     }
 
     /**
-     * 获取关于我们HTML信息.
+     * 获取�
+     * �于我们HTML信息.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/

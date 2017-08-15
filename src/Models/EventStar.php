@@ -5,7 +5,8 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 活动关注模型.
+ * 活动�
+ * �注模型.
  *
  * @author bs
  **/

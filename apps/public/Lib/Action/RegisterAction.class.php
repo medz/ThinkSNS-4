@@ -16,7 +16,8 @@ class RegisterAction extends Action
     private $_default_method = array('changeActivationEmail', 'activate', 'isEmailAvailable', 'isValidVerify', 'isPhoneAvailable', 'isUnameAvailable', 'sendReigterCode', 'resendActivationEmail');
 
     /**
-     * 模块初始化，获取注册配置信息、用户模型对象、注册模型对象、邀请注册与站点头部信息设置.
+     * 模块初始化，获取注册�
+     * �置信息、用户模型对象、注册模型对象、邀请注册与站点头部信息设置.
      */
     protected function _initialize()
     {
@@ -473,7 +474,8 @@ class RegisterAction extends Action
     }
 
     /**
-     * 等待审核页面.
+     * 等�
+     * 审核页面.
      */
     public function waitForAudit()
     {
@@ -493,7 +495,8 @@ class RegisterAction extends Action
     }
 
     /**
-     * 等待激活页面.
+     * 等�
+     * 激活页面.
      */
     public function waitForActivation()
     {
@@ -612,7 +615,8 @@ class RegisterAction extends Action
 
     /**
      * 注册流程 - 第三步骤
-     * 设置个人兴趣.
+     * 设置个人�
+     * �趣.
      */
     public function step3()
     {
@@ -929,7 +933,8 @@ class RegisterAction extends Action
     }
 
     /**
-     * 添加用户关注信息.
+     * 添加用户�
+     * �注信息.
      */
     public function bulkDoFollow()
     {

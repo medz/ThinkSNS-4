@@ -84,12 +84,14 @@ class FindPeopleApi extends Api
      * 找人首页-搜索用户 --using.
      *
      * @param string $key
-     *                       搜索关键词
+     *                       搜索�
+     * �键词
      * @param string $max_id
      *                       上次返回的最后一个用户ID
      * @param string $count
      *                       数量
-     * @request int $rus 感兴趣的人返回个数，default：5
+     * @request int $rus 感�
+     * �趣的人返回个数，default：5
      *
      * @return array 用户列表
      */
@@ -592,7 +594,7 @@ class FindPeopleApi extends Api
                 'message' => '位置添加成功',
             );
 
-        /* 判断是否更新成功 */
+            /* 判断是否更新成功 */
         } elseif (D('mobile_user')->where('`uid` = '.$this->mid)->save(array(
             'last_latitude'  => $lat,
             'last_longitude' => $lng,

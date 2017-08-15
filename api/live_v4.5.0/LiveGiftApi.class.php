@@ -14,7 +14,8 @@ class LiveGiftApi extends LiveBaseApi
 {
     /**
      * @name 添加/更新一个直播用户
-     * @params 依次传入 (string)usid,(int)sex,(string)uname,(boolean)ticket
+     * @params 依次传�
+     * � (string)usid,(int)sex,(string)uname,(boolean)ticket
      *
      * @return array 结果信息
      */

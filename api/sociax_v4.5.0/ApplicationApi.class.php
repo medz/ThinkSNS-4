@@ -1,6 +1,8 @@
 <?php
 /**
- * app 提现充值模块
+ * app 提现�.
+ *
+ * 值模块
  * bs.
  */
 use Ts\Models as Model;
@@ -87,13 +89,13 @@ class ApplicationApi extends Api
         $data['gold'] = intval($this->data['gold']);
         $data['amount'] = $this->data['amount'];
         $data['ctime'] = time();
-         // if (!$data['account']) {
+        // if (!$data['account']) {
 
-         //     return $this->rd('','请填写提现账户',1);
-         // }
-         if (!$data['gold']) {
-             return $this->rd('', '请填写提现金额', 1);
-         }
+        //     return $this->rd('','请填写提现账户',1);
+        // }
+        if (!$data['gold']) {
+            return $this->rd('', '请填写提现金额', 1);
+        }
         $score = D('credit_user')->where(array('uid' => $this->mid))->getField('score');
         if ($score < $data['gold']) {
             return $this->rd('', '积分不足', 1);

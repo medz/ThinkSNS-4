@@ -123,14 +123,14 @@ class JipuApi extends Api
                 'msg'    => $register->getLastError(),
             );
 
-        /* 判断用户名是否可用 */
+            /* 判断用户名是否可用 */
         } elseif (!$register->isValidName($username)) {
             return array(
                 'status' => 0,
                 'msg'    => $register->getLastError(),
             );
 
-        /* 密码判断 */
+            /* 密码判断 */
         } elseif (!$register->isValidPasswordNoRepeat($password)) {
             return array(
                 'status' => 0,

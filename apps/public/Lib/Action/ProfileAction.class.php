@@ -417,8 +417,8 @@ class ProfileAction extends Action
             if (!$feedInfo) {
                 $this->error('该分享不存在或已被删除');
             }
-                // if (intval ( $_GET ['uid'] ) != $feedInfo ['uid'])
-                // $this->error ( '参数错误' );
+            // if (intval ( $_GET ['uid'] ) != $feedInfo ['uid'])
+            // $this->error ( '参数错误' );
             if ($feedInfo['is_audit'] == '0' && $feedInfo['uid'] != $this->mid) {
                 $this->error('此分享正在审核');
                 exit();
@@ -527,7 +527,8 @@ class ProfileAction extends Action
     }
 
     /**
-     * 获取用户关注列表.
+     * 获取用户�
+     * �注列表.
      */
     public function following()
     {
@@ -688,7 +689,8 @@ class ProfileAction extends Action
     }
 
     /**
-     * 批量获取用户的相关信息加载.
+     * 批量获取用户的相�
+     * �信息加载.
      *
      * @param string|array $uids
      *                           用户ID
@@ -715,7 +717,8 @@ class ProfileAction extends Action
     }
 
     /**
-     * 获取用户的档案信息和资料配置信息.
+     * 获取用户的档案信息和资料�
+     * �置信息.
      *
      * @param
      *        	mix uids 用户uid
@@ -776,7 +779,8 @@ class ProfileAction extends Action
     }
 
     /**
-     * 批量获取用户uid与一群人fids的彼此关注状态
+     * 批量获取用户uid与一群人fids的彼此�
+     * �注状态
      *
      * @param array $fids
      *                    用户uid数组
@@ -812,7 +816,8 @@ class ProfileAction extends Action
      * 调整分组列表.
      *
      * @param array $fids
-     *                    指定用户关注的用户列表
+     *                    指定用户�
+     * �注的用户列表
      */
     private function _assignFollowGroup($fids)
     {
@@ -1176,7 +1181,8 @@ class ProfileAction extends Action
     }
 
     /**
-     * 未阅回答.
+     * 未�
+     * 回答.
      */
     public function answerNoRead()
     {
@@ -1207,7 +1213,8 @@ class ProfileAction extends Action
     }
 
     /**
-     * 我关注的问题.
+     * 我�
+     * �注的问题.
      */
     public function questionListByCollect()
     {

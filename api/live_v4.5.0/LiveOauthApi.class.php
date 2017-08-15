@@ -14,7 +14,8 @@ class LiveOauthApi extends Api
 {
     /**
      * @name 根据ticket获取用户授权
-     * @params 依次传入 (string)tickct
+     * @params 依次传�
+     * � (string)tickct
      *
      * @return array 结果信息
      */
@@ -35,7 +36,8 @@ class LiveOauthApi extends Api
     }
 
     /**
-     * 在第一次登录没有获取到ticket的时候，这里可以重新获取一次，仅用于已登录的用户.
+     * 在第一次登录没有获取到ticket的时候，这里可以重新获取一次，�
+     * 用于已登录的用户.
      *
      * @Author   Wayne[qiaobin@zhiyicx.com]
      * @DateTime 2016-10-15T01:31:52+0800
@@ -344,13 +346,13 @@ class LiveOauthApi extends Api
             $res = model('Follow')->getFollowStateByFids($this->mid, intval($v));
             $user_info[$key]['is_follow'] = $res[$v]['following'];
 
-                /* # 获取用户封面 */
-                $user_info[$key]['cover'] = D('user_data')->where('`key` LIKE "application_user_cover" AND `uid` = '.$v)->field('value')->getField('value');
-                // $user_info['cover'] = (object)getImageUrlByAttachId($user_info['cover']);
-                $user_info[$key]['cover'] = (object) array();
+            /* # 获取用户封面 */
+            $user_info[$key]['cover'] = D('user_data')->where('`key` LIKE "application_user_cover" AND `uid` = '.$v)->field('value')->getField('value');
+            // $user_info['cover'] = (object)getImageUrlByAttachId($user_info['cover']);
+            $user_info[$key]['cover'] = (object) array();
 
             if ($field != '') { //返回指定字段
-                    $_user_info = $user_info[$key];
+                $_user_info = $user_info[$key];
                 unset($user_info[$key]);
                 $field_arr = explode(',', $field);
                 foreach ($field_arr as $fk => $fv) {
@@ -393,7 +395,8 @@ class LiveOauthApi extends Api
     }
 
     /**
-     * 兑换记录.
+     * �
+     * �换记录.
      *
      * @Author   Wayne[qiaobin@zhiyicx.com]
      * @DateTime 2016-10-27T15:38:52+0800
@@ -650,7 +653,8 @@ class LiveOauthApi extends Api
     }
 
     /**
-     *@name 处理兑换
+     *@name 处理�
+     * �换
      */
     protected function do_trade_order($order = array())
     {
@@ -726,7 +730,8 @@ class LiveOauthApi extends Api
     /**
      * @name 生成预处理订单
      *
-     * @param array $token 创建订单的相关信息
+     * @param array $token 创建订单的相�
+     * �信息
      *
      * @return string 订单号
      */

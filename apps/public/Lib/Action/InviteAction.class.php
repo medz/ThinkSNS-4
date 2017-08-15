@@ -181,7 +181,8 @@ class InviteAction extends Action
     }
 
     /**
-     * 邮箱邀请相关数据.
+     * 邮箱邀请相�
+     * �数据.
      */
     private function _getInviteEmail()
     {
@@ -197,7 +198,8 @@ class InviteAction extends Action
     }
 
     /**
-     * 链接邀请相关数据.
+     * 链接邀请相�
+     * �数据.
      */
     private function _getInviteLink()
     {
@@ -245,7 +247,8 @@ class InviteAction extends Action
     /**
      * 验证邮箱地址是否可用.
      *
-     * @return json 验证后的相关数据
+     * @return json 验证后的相�
+     * �数据
      */
     public function checkInviteEmail()
     {
@@ -257,7 +260,8 @@ class InviteAction extends Action
     /**
      * 获取邀请码接口.
      *
-     * @return json 操作后的相关数据
+     * @return json 操作后的相�
+     * �数据
      */
     public function applyInviteCode()
     {

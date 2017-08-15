@@ -164,7 +164,8 @@ class ChannelApi extends Api
      * @param
      *        	integer count 微博条数
      * @param
-     *        	integer type 微博类型 0-全部 1-原创 2-转发 3-图片 4-附件 5-视频
+     *        	integer type 微博类型 0-�
+     * �部 1-原创 2-转发 3-图片 4-附件 5-视频
      *
      * @return json 指定分类下的微博
      */
@@ -227,12 +228,16 @@ class ChannelApi extends Api
     }
 
     /**
-     * 频道关注或取消关注 --using.
+     * 频道�
+     * �注或取消�
+     * �注 --using.
      *
      * @param int $channel_category_id
      *                                 频道分类ID
      * @param int $type
-     *                                 1-关注 0-取消关注
+     *                                 1-�
+     * �注 0-取消�
+     * �注
      *
      * @return 状态+提示
      */

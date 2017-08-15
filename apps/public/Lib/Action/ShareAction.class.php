@@ -47,7 +47,7 @@ class ShareAction extends Action
                 $curInfo = model('Source')->getSourceInfo($shareInfo['curtable'], $shareInfo['curid'], false, $app);
                 $userInfo = $curInfo['source_user_info'];
                 // if($userInfo['uid'] != $this->mid){	//分享其他人的分享，非自己的
-                    $shareInfo['initHTML'] = ' //@'.$userInfo['uname'].'：'.$curInfo['source_content'];
+                $shareInfo['initHTML'] = ' //@'.$userInfo['uname'].'：'.$curInfo['source_content'];
                 // }
                 $shareInfo['initHTML'] = str_replace(array("\n", "\r"), array('', ''), $shareInfo['initHTML']);
             }
@@ -57,16 +57,16 @@ class ShareAction extends Action
         }
         if ($shareInfo['sid'] != $shareInfo['curid']) {
             //获取被评论的分享信息
-                $source = model('Feed')->get($shareInfo['sid']);
-                //判断是否有权限评论当前用户
-                if ($this->mid != $source['uid']) {
-                    $userPrivacy = model('UserPrivacy')->getPrivacy($this->mid, $source['uid']);
-                    if ($userPrivacy['comment_weibo'] == 1) {
-                        $shareInfo['cancomment'] = 0;
-                    } else {
-                        $shareInfo['cancomment'] = 1;
-                    }
+            $source = model('Feed')->get($shareInfo['sid']);
+            //判断是否有权限评论当前用户
+            if ($this->mid != $source['uid']) {
+                $userPrivacy = model('UserPrivacy')->getPrivacy($this->mid, $source['uid']);
+                if ($userPrivacy['comment_weibo'] == 1) {
+                    $shareInfo['cancomment'] = 0;
+                } else {
+                    $shareInfo['cancomment'] = 1;
                 }
+            }
         }
         $shareInfo['shareHtml'] = !empty($oldInfo['shareHtml']) ? $oldInfo['shareHtml'] : '';
         $weiboSet = model('Xdata')->get('admin_Config:feed');

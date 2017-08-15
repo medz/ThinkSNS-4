@@ -19,29 +19,29 @@ class PeopleModel extends model
     public function getPeople($data, $type)
     {
         //		if($data['app'] == 'w3g'){
-//			// 设置查询条件
-//			$list = array();
-//			switch($type) {
-//				case 'tag':
-//					$list = model('UserCategory')->w3g_getUidsByCid($data, $authenticate);
-//					break;
-//				case 'area':
-//					$list = $this->_w3g_getFilterData($data);
-//					break;
-//				case 'verify':
-//					$list = $this->_w3g_getVerifyData($data);
-//					break;
-//				case 'official':
-//					$list = $this->_w3g_getOfficialData($data);
-//					break;
-//			}
-//			// 获取用户ID
-//			$uids = getSubByKey($list['data'], 'uid');
-//			// 用户数据信息组装
-//			$list['data'] = $this->getUserInfos($uids, $list['data']);
-//                        dump($list);exit;
-//			return $list;
-//		}
+        //			// 设置查询条件
+        //			$list = array();
+        //			switch($type) {
+        //				case 'tag':
+        //					$list = model('UserCategory')->w3g_getUidsByCid($data, $authenticate);
+        //					break;
+        //				case 'area':
+        //					$list = $this->_w3g_getFilterData($data);
+        //					break;
+        //				case 'verify':
+        //					$list = $this->_w3g_getVerifyData($data);
+        //					break;
+        //				case 'official':
+        //					$list = $this->_w3g_getOfficialData($data);
+        //					break;
+        //			}
+        //			// 获取用户ID
+        //			$uids = getSubByKey($list['data'], 'uid');
+        //			// 用户数据信息组装        
+        //			$list['data'] = $this->getUserInfos($uids, $list['data']);
+        //                        dump($list);exit;
+        //			return $list;
+        //		}
         // 设置查询条件
         $list = array();
         $data['limit'] = intval($data['limit']) ? intval($data['limit']) : 30;
@@ -70,7 +70,7 @@ class PeopleModel extends model
 
         // 用户数据信息组装
         $list['data'] = $this->getUserInfos($uids, $list['data']);
-                //dump($list['data']);exit;
+        //dump($list['data']);exit;
         return $list;
     }
 
@@ -109,7 +109,7 @@ class PeopleModel extends model
             // 	$userlist['count'] = D('user')->where($map)->field('uid')->order('uid desc')->count();
             // }else{
             $userlist = model('User')->w3g_searchUser($searchKey, $lastUid, 0, $limit, $page);
-                        //$userlist = model('User')->searchUser($searchKey, $lastUid, 0, $limit,'','','0',$page);
+            //$userlist = model('User')->searchUser($searchKey, $lastUid, 0, $limit,'','','0',$page);
             //}
             $uids = getSubByKey($userlist['data'], 'uid');
             $userlist['lastUid'] = end($uids);
@@ -145,7 +145,8 @@ class PeopleModel extends model
     /**
      * 获取筛选用户数据列表.
      *
-     * @param array  $data  筛选相关条件
+     * @param array  $data  筛选相�
+     * �条件
      * @param string $field 字段数据
      * @param string $order 排序数据
      *
@@ -240,7 +241,8 @@ class PeopleModel extends model
     /**
      * 获取筛选认证用数据列表.
      *
-     * @param array  $data  筛选相关条件
+     * @param array  $data  筛选相�
+     * �条件
      * @param string $field 字段数据
      * @param string $order 排序数据
      *
@@ -287,7 +289,8 @@ class PeopleModel extends model
     /**
      * 获取筛选官方用户数据列表.
      *
-     * @param array  $data  筛选相关条件
+     * @param array  $data  筛选相�
+     * �条件
      * @param string $field 字段数据
      * @param string $order 排序数据
      *
@@ -317,7 +320,8 @@ class PeopleModel extends model
     /**
      * 获取筛选用户数据列表.
      *
-     * @param array  $data  筛选相关条件
+     * @param array  $data  筛选相�
+     * �条件
      * @param string $field 字段数据
      * @param string $order 排序数据
      * @param int    $page  分页个数
@@ -409,7 +413,8 @@ class PeopleModel extends model
     /**
      * 获取筛选认证用数据列表.
      *
-     * @param array  $data  筛选相关条件
+     * @param array  $data  筛选相�
+     * �条件
      * @param string $field 字段数据
      * @param string $order 排序数据
      * @param int    $page  分页个数
@@ -444,7 +449,8 @@ class PeopleModel extends model
     /**
      * 获取筛选官方用户数据列表.
      *
-     * @param array  $data  筛选相关条件
+     * @param array  $data  筛选相�
+     * �条件
      * @param string $field 字段数据
      * @param string $order 排序数据
      * @param int    $page  分页个数
@@ -473,11 +479,13 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取用户相关信息.
+     * 获取用户相�
+     * �信息.
      *
      * @param array $uids 用户ID数组
      *
-     * @return array 用户相关数组
+     * @return array 用户相�
+     * �数组
      */
     public function getUserInfos($uids, $data)
     {
@@ -501,13 +509,15 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取指定用户的相关信息.
+     * 获取指定用户的相�
+     * �信息.
      *
      * @param array  $uids  指定用户ID数组
      * @param string $type  指定类型
      * @param int    $limit 显示数据，默认为3
      *
-     * @return array 指定用户的相关信息
+     * @return array 指定用户的相�
+     * �信息
      */
     public function getTopUserInfos($uids, $type, $limit = 3)
     {
@@ -582,7 +592,8 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取用户组装数据（新）.
+     * 获取用户组�
+     * 数据（新）.
      *
      * @param $objList
      *
@@ -600,7 +611,8 @@ class PeopleModel extends model
     }
 
     /**
-     * 获取用户详情（新）.
+     * 获取用户详�
+     * （新）.
      *
      * @param $userObj
      *

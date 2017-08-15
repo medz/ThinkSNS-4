@@ -9,7 +9,8 @@
 class AppAction extends Action
 {
     /**
-     * 初始化控制器，加载相关样式表.
+     * 初始化控制器，加载相�
+     * �样式表.
      */
     protected function _initialize()
     {
@@ -31,7 +32,8 @@ class AppAction extends Action
     }
 
     /**
-     * 我的应用列表页面，登录用户已经安装的应用.
+     * 我的应用列表页面，登录用户已经安�
+     * 的应用.
      */
     public function myApp()
     {
@@ -61,7 +63,8 @@ class AppAction extends Action
     }
 
     /**
-     * 登录用户安装应用操作.
+     * 登录用户安�
+     * 应用操作.
      *
      * @return json 返回操作后的JSON信息数据
      */

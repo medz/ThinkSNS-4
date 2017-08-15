@@ -1,8 +1,8 @@
 <?php
 /**
-     * ChannelProtocolModel
-     * 提供给TS核心调用的协议类.
-     */
+ * ChannelProtocolModel
+ * 提供给TS核心调用的协议类.
+ */
 class ChannelProtocolModel extends Model
 {
     // 假删除用户数据
@@ -32,7 +32,8 @@ class ChannelProtocolModel extends Model
     }
 
     /**
-     * 在个人空间里查看该应用的内容列表.
+     * 在个人空间里查看该应用的�
+     * 容列表.
      *
      * @param int $uid 用户UID
      *

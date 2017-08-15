@@ -79,8 +79,8 @@ class SelectFriendsAction extends Action
     public function getType()
     {
         //$map = "uid = 0 or uid = ".$this->mid;
-            //$friendType = D("FriendGroup")->where($map)->field("id,name")->findAll();
-            $typeId = array(
+        //$friendType = D("FriendGroup")->where($map)->field("id,name")->findAll();
+        $typeId = array(
                 //互粉的人性能有问题，不显示这个列表的用户了
                             //array('id'=>1,'name'=>L('follow_each_other')),
                             array('id' => 2, 'name' => '我关注的'),
@@ -92,8 +92,8 @@ class SelectFriendsAction extends Action
     public function getCount()
     {
         //$gid = $_GET["typeId"]?intval($_GET["typeId"]):false;
-            //echo $this->api->friend_getFriNum($this->mid,$gid);
-            $typeId = intval($_GET['typeId']);
+        //echo $this->api->friend_getFriNum($this->mid,$gid);
+        $typeId = intval($_GET['typeId']);
         empty($typeId) && $typeId = 2;
         $db_prefix = C('DB_PREFIX');
         if ($typeId == 2) {

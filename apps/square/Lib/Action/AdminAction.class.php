@@ -128,7 +128,7 @@ class AdminAction extends AdministratorAction
     {
         $this->assign('pageTitle', '编辑微吧');
         // 初始化微吧列表管理菜单
-// 		$this->_initWeibaListAdminMenu();
+        // 		$this->_initWeibaListAdminMenu();
         $this->pageTab[] = array('title' => '微吧列表', 'tabHash' => 'index', 'url' => U('weiba/Admin/index'));
         //$this->pageTab[] = array('title'=>'添加微吧','tabHash'=>'addWeiba','url'=>U('weiba/Admin/addWeiba'));
         $this->pageTab[] = array('title' => '微吧分类', 'tabHash' => 'weibaCate', 'url' => U('weiba/Admin/weibaCate'));
@@ -707,7 +707,8 @@ class AdminAction extends AdministratorAction
     }
 
     /**
-     * 圈主审核配置.
+     * 圈主审核�
+     * �置.
      */
     public function weibaAdminAuditConfig()
     {
@@ -810,7 +811,8 @@ class AdminAction extends AdministratorAction
     }
 
     /**
-     * 微吧审核配置.
+     * 微吧审核�
+     * �置.
      */
     public function weibaAuditConfig()
     {

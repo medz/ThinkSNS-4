@@ -236,7 +236,8 @@ class ManageAction extends Action
     }
 
     /**
-     * 加入黑名单.
+     * 加�
+     * �黑名单.
      */
     public function moveTo()
     {
@@ -332,7 +333,8 @@ class ManageAction extends Action
     }
 
     /**
-     * 公告发布.
+     * �
+     * �告发布.
      */
     public function notify()
     {
@@ -348,15 +350,16 @@ class ManageAction extends Action
     }
 
     /**
-     * 修改公告.
+     * 修改�
+     * �告.
      */
     public function doNotify()
     {
         $weiba_id = intval($_POST['weiba_id']);
         $notify = t($_POST['notify']);
-/*		if(strlen($notify) == 0){
-            $this->error('公告内容不能为空');
-        }*/
+        /*		if(strlen($notify) == 0){
+                    $this->error('�        �告内        容不能为空');
+                }*/
         preg_match_all('/./us', $notify, $match);
         if (count($match[0]) > 200) {     //汉字和字母都为一个字
             $this->error('公告内容不能超过200个字');

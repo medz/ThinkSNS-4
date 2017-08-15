@@ -103,18 +103,18 @@ class IndexAction extends Action
             //当推荐微吧不足2 或 4 时自动补齐
             $count = count($weiba_recommend);
             // if ($count < 2 || ($count > 2 && $count < 4)) {
-                if ($count < 4) {
-                    if ($count != 0) {
-                        $map['weiba_id'] = array('not in', $weibaId);
-                    } elseif (isset($map['weiba_id'])) {
-                        unset($map['weiba_id']);
-                    }
-                    $order = 'recommend DESC,follower_count DESC';
-                    $weiba->where($map)->order($order);
-                    $limit = 4 - $count;
-                    $array = $weiba->limit($limit)->select();
-                    $weiba_recommend = array_merge($weiba_recommend, $array);
+            if ($count < 4) {
+                if ($count != 0) {
+                    $map['weiba_id'] = array('not in', $weibaId);
+                } elseif (isset($map['weiba_id'])) {
+                    unset($map['weiba_id']);
                 }
+                $order = 'recommend DESC,follower_count DESC';
+                $weiba->where($map)->order($order);
+                $limit = 4 - $count;
+                $array = $weiba->limit($limit)->select();
+                $weiba_recommend = array_merge($weiba_recommend, $array);
+            }
 
             foreach ($weiba_recommend as $k => $v) {
                 $weiba_recommend[$k]['logo'] = getImageUrlByAttachId($v['logo']);

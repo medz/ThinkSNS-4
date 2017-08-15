@@ -32,7 +32,8 @@ class ToolAction extends Action
     /**
      * 验证站点是否在官方服务器上注册.
      *
-     * @return JSON 返回相关数据
+     * @return JSON 返回相�
+     * �数据
      */
     public function checkedHost()
     {

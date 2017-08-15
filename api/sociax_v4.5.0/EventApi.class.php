@@ -75,7 +75,8 @@ class EventApi extends Api
     }
 
     /**
-     * 取消关注活动.
+     * 取消�
+     * �注活动.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -95,7 +96,8 @@ class EventApi extends Api
     }
 
     /**
-     * 关注一个活动.
+     * �
+     * �注一个活动.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -143,7 +145,8 @@ class EventApi extends Api
     }
 
     /**
-     * 我关注的活动.
+     * 我�
+     * �注的活动.
      *
      * @request int $page 分页
      *
@@ -157,9 +160,11 @@ class EventApi extends Api
     }
 
     /**
-     * 更具类型，返回列表数据.
+     * 更�
+     * �类型，返回列表数据.
      *
-     * @param int $type 获取的类型， 0我参与的活动 1我发起的活动， 2我关注的活动
+     * @param int $type 获取的类型， 0我参与的活动 1我发起的活动， 2我�
+     * �注的活动
      *
      * @return array
      *
@@ -255,7 +260,7 @@ class EventApi extends Api
                 'msg'    => '没有上传的文件',
             );
 
-        // # 判断是否上传成功
+            // # 判断是否上传成功
         } elseif ($info['status'] == false) {
             return array(
                 'status' => '0',
@@ -367,7 +372,8 @@ class EventApi extends Api
     }
 
     /**
-     * 获取活动详情.
+     * 获取活动详�
+     * .
      *
      * @request int $eid 活动id
      *
@@ -486,12 +492,15 @@ class EventApi extends Api
     }
 
     /**
-     * 获取活动列表 - 按照最新发布排序.
+     * 获取活动列表 - 按�
+     * �最新发布排序.
      *
      * @request int $cid 分类id
      * @request int $area 地区ID
-     * @request string $time 时间，格式化时间或者时间戳
-     * @request string  $wd 关键词
+     * @request string $time 时间，格式化时间或�
+     * 时间戳
+     * @request string  $wd �
+     * �键词
      * @request int $page 分页，默认是 1
      *
      * @return array
@@ -564,7 +573,8 @@ class EventApi extends Api
     }
 
     /**
-     * 获取全部不重复，活动已经使用的地区.
+     * 获取�
+     * �部不重复，活动已经使用的地区.
      *
      * @return array
      *

@@ -1,6 +1,7 @@
 <?php
 /**
- * 可能感兴趣的人Widget.
+ * 可能感�
+ * �趣的人Widget.
  *
  * @author zivss <guolee226@gmail.com>
  *
@@ -9,10 +10,13 @@
 class LatestPostWidget extends Widget
 {
     /**
-     * 渲染可能感兴趣的人页面.
+     * 渲染可能感�
+     * �趣的人页面.
      *
      * @param array $data
-     *                    配置相关数据
+     *                    �
+     * �置相�
+     * �数据
      *
      * @return string 渲染页面的HTML
      */
@@ -47,10 +51,13 @@ class LatestPostWidget extends Widget
     }
 
     /**
-     * 获取用户的相关数据.
+     * 获取用户的相�
+     * �数据.
      *
      * @param array $data
-     *                    配置相关数据
+     *                    �
+     * �置相�
+     * �数据
      *
      * @return array 显示所需数据
      */

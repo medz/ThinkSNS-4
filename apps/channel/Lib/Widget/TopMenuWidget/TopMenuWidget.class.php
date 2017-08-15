@@ -11,9 +11,12 @@ class TopMenuWidget extends Widget
     /**
      * 模板渲染.
      *
-     * @param array $data 相关数据
+     * @param array $data 相�
+     * �数据
      *
-     * @return string 频道内容渲染入口
+     * @return string 频道�
+     * 容渲染�
+     * �口
      */
     public function render($data)
     {
@@ -38,7 +41,8 @@ class TopMenuWidget extends Widget
     }
 
     /**
-     * 频道关注状态修改接口.
+     * 频道�
+     * �注状态修改接口.
      *
      * @return json 处理后返回的数据
      */

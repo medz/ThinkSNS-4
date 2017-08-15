@@ -5,7 +5,8 @@ namespace Ts\Models;
 use Ts\Bases\Model;
 
 /**
- * 应用标签关联.
+ * 应用标签�
+ * �联.
  *
  * @author Seven Du <lovevipdsw@outlook.com>
  **/

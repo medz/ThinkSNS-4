@@ -106,13 +106,13 @@ function refreshDayCOunt()
 
     $sql = "UPDATE ts_weiba set yesterday_count=today_count,today_count=0,today_date='$today' where today_date='$yesterday'";
     $res = M()->execute($sql);
-// 	dump ( $res );
-// 	dump ( $sql );
+    // 	dump ( $res );
+    // 	dump ( $sql );
 
     $sql = "UPDATE ts_weiba set yesterday_count=0,today_count=0,today_date='$today' where today_date!='$today'";
     $res = M()->execute($sql);
-// 	dump ( $res );
-// 	dump ( $sql );
+    // 	dump ( $res );
+    // 	dump ( $sql );
 
     S('refreshDayCOunt', $today);
 }

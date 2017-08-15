@@ -263,7 +263,7 @@ class MessageApi extends Api
                 'msg'    => '没有上传的文件',
             ));
 
-        // # 判断是否上传成功
+            // # 判断是否上传成功
         } elseif ($info['status'] == false) {
             $this->error(array(
                 'status' => '0',
@@ -307,7 +307,8 @@ class MessageApi extends Api
      * @param int $list_id
      *                     群聊ID
      *
-     * @return array 成员、及群聊创建者的信息
+     * @return array 成员、及群聊创建�
+     * 的信息
      */
     public function get_list_info()
     {

@@ -54,42 +54,42 @@ class OauthApi extends Api
                 'message' => $register->getLastError(),
             );
 
-        /* 判断用户名是否可用 */
+            /* 判断用户名是否可用 */
         } elseif (!$register->isValidName($username)) {
             return array(
                 'status'  => 0,
                 'message' => $register->getLastError(),
             );
 
-        /* 判断验证码是否正确 */
+            /* 判断验证码是否正确 */
         } elseif (!$register->isValidRegCode($code, $phone)) {
             return array(
                 'status'  => 0,
                 'message' => $register->getLastError(),
             );
 
-        /* 判断头像传递信息是否完整 */
+            /* 判断头像传递信息是否完整 */
         } elseif (!$avatarUrl or !$avatarW or !$avatarH) {
             return array(
                 'status'  => 0,
                 'message' => '用户头像上传不完整',
             );
 
-        /* 密码判断 */
+            /* 密码判断 */
         } elseif (!$register->isValidPasswordNoRepeat($password)) {
             return array(
                 'status'  => 0,
                 'message' => $register->getLastError(),
             );
 
-        /* 格式化地区地址判断 */
+            /* 格式化地区地址判断 */
         } elseif (!$location) {
             return array(
                 'status'  => 0,
                 'message' => '格式化地区地址不能为空',
             );
 
-        /* 地区判断 */
+            /* 地区判断 */
         } elseif (!$province or !$city) {
             return array(
                 'status'  => 0,
@@ -181,7 +181,7 @@ class OauthApi extends Api
         );
     }
 
-/********** 登录注销 **********/
+    /********** 登录注销 **********/
 
     /**
      * 认证方法 --using.
@@ -283,7 +283,7 @@ class OauthApi extends Api
         }
     }
 
-/********找回密码*********/
+    /********找回密码*********/
 
     /**
      * 发送短信验证码
@@ -416,7 +416,7 @@ class OauthApi extends Api
         );
     }
 
-/********** 注册 **********/
+    /********** 注册 **********/
 
     /**
      * 发送注册验证码 --using.
@@ -466,7 +466,7 @@ class OauthApi extends Api
                 'msg'    => '该手机已经存在，无法再次注册',
             ));
 
-        /* # 检查是否发送失败 */
+            /* # 检查是否发送失败 */
         } elseif (($sms = model('Sms')) and !$sms->sendCaptcha($phone, true)) {
             $this->error(array(
                 'status' => 0,
@@ -674,7 +674,7 @@ class OauthApi extends Api
 
             if ($map['is_audit'] == 1) {
                 return $this->authorize();
-// 				$return = array('status'=>1, 'msg'=>'注册成功', 'need_audit'=>0);
+                // 				$return = array('status'=>1, 'msg'=>'注册成功', 'need_audit'=>0);
             } else {
                 $return = array('status' => 1, 'msg' => '注册成功，请等待审核', 'need_audit' => 1);
             }
@@ -877,12 +877,13 @@ class OauthApi extends Api
         }
     }
 
-/********** 其他公用操作API **********/
+    /********** �    �他�    �用操作API **********/
 
     /**
      * 验证是否是合法的email.
      *
-     * @param string $string 待验证的字串
+     * @param string $string �
+     * 验证的字串
      *
      * @return bool 如果是email则返回true，否则返回false
      *
@@ -907,7 +908,7 @@ class OauthApi extends Api
         return preg_match("/^[1][3578]\d{9}$/", $phone) !== 0;
     }
 
-/*===============E-Mail API satrt==================*/
+    /*===============E-Mail API satrt==================*/
 
     /**
      * 获取邮箱验证码
@@ -936,18 +937,18 @@ class OauthApi extends Api
                 'message' => '不是合法的E-Mail地址',
             );
 
-        /*
-         * 验证用户是否存在
-         */
+            /*
+             * 验证用户是否存在
+             */
         } elseif (model('User')->hasUser($email) and !$this->data['notreg']) {
             return array(
                 'status'  => -1,
                 'message' => '该邮箱用户已经存在，无法使用',
             );
 
-        /*
-         * 发送验证码，并检查是否发送失败,并加入时间锁
-         */
+            /*
+             * 发送验证码，并检查是否发送失败,并加入时间锁
+             */
         } elseif (($sms = model('Sms')) and !$sms->sendEmaillCaptcha($email, true)) {
             return array(
                 'status'  => -2,
@@ -995,18 +996,18 @@ class OauthApi extends Api
                 'message' => '不合法的E-mail地址',
             );
 
-        /*
-         * 验证验证码是否为空
-         */
+            /*
+             * 验证验证码是否为空
+             */
         } elseif (!$code) {
             return array(
                 'status'  => -1,
                 'message' => '验证码不能为空',
             );
 
-        /*
-         * 验证验证码是否正确
-         */
+            /*
+             * 验证验证码是否正确
+             */
         } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
             return array(
                 'status'  => -3,
@@ -1080,77 +1081,77 @@ class OauthApi extends Api
                 'message' => '不合法的E-mail地址',
             );
 
-        /*
-         * 验证验证码是否为空
-         */
+            /*
+             * 验证验证码是否为空
+             */
         } elseif (!$code) {
             return array(
                 'status'  => -1,
                 'message' => '验证码不能为空',
             );
 
-        /* # 判断性别是否不符合 */
+            /* # 判断性别是否不符合 */
         } elseif (!in_array($sex, array(0, 1, 2))) {
             return array(
                 'status'  => 0,
                 'message' => '性别参数错误',
             );
 
-        /*
-         * 验证邮箱是否已经注册过了
-         */
+            /*
+             * 验证邮箱是否已经注册过了
+             */
         } elseif (model('User')->hasUser($email)) {
             return array(
                 'status'  => -2,
                 'message' => '该邮箱用户已经存在，无法注册',
             );
 
-        /*
-         * 验证username是否已经被注册了
-         */
+            /*
+             * 验证username是否已经被注册了
+             */
         } elseif (model('User')->hasUser($username)) {
             return array(
                 'status'  => -3,
                 'message' => '该用户名已经被注册',
             );
 
-        /*
-         * 验证密码格式是否非法
-         */
+            /*
+             * 验证密码格式是否非法
+             */
         } elseif (!preg_match('/^[a-zA-Z0-9]+$/', $password)) {
             return array(
                 'status'  => -4,
                 'message' => '密码非法，只能是大小写英文和数字组成',
             );
 
-        /*
-         * 验证密码是否过短
-         */
+            /*
+             * 验证密码是否过短
+             */
         } elseif (($plen = strlen($password)) and $plen < 6) {
             return array(
                 'status'  => -5,
                 'message' => '密码太短，最少需要6位',
             );
 
-        /*
-         * 验证密码是否太长
-         */
+            /*
+             * 验证密码是否太长
+             */
         } elseif ($plen > 15) {
             return array(
                 'status'  => -6,
                 'message' => '密码太长，最多15位',
             );
 
-        /* # 判断是否没有上传头像 */
+            /* # 判断是否没有上传头像 */
         } elseif (!$avatar['picurl']) {
             return array(
                 'status'  => 0,
                 'message' => '请上传头像',
             );
 
-        /*
-         * 验证验证码是否正确
-         */
+            /*
+             * 验证验证码是否正确
+             */
         } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
             return array(
                 'status'  => -7,
@@ -1354,54 +1355,54 @@ class OauthApi extends Api
                 'message' => '不是合法的E-Mail地址',
             );
 
-        /*
-         * 验证验证码是否不存在
-         */
+            /*
+             * 验证验证码是否不存在
+             */
         } elseif (!$code) {
             return array(
                 'status'  => -1,
                 'message' => '验证码不能为空',
             );
 
-        /*
-         * 验证邮箱用户是否不存在
-         */
+            /*
+             * 验证邮箱用户是否不存在
+             */
         } elseif (!($uid = model('User')->where('`email` = \''.t($email).'\'')->field('`uid`')->getField('uid'))) {
             return array(
                 'status'  => -2,
                 'message' => '用户不存在',
             );
 
-        /*
-         * 验证密码格式是否非法
-         */
+            /*
+             * 验证密码格式是否非法
+             */
         } elseif (!preg_match('/^[a-zA-Z0-9]+$/', $password)) {
             return array(
                 'status'  => -3,
                 'message' => '密码非法，只能是大小写英文和数字组成',
             );
 
-        /*
-         * 验证密码是否过短
-         */
+            /*
+             * 验证密码是否过短
+             */
         } elseif (($plen = strlen($password)) and $plen < 6) {
             return array(
                 'status'  => -4,
                 'message' => '密码太短，最少需要6位',
             );
 
-        /*
-         * 验证密码是否太长
-         */
+            /*
+             * 验证密码是否太长
+             */
         } elseif ($plen > 15) {
             return array(
                 'status'  => -5,
                 'message' => '密码太长，最多15位',
             );
 
-        /*
-         * 验证验证码是否不正确
-         */
+            /*
+             * 验证验证码是否不正确
+             */
         } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
             return array(
                 'status'  => -6,
@@ -1453,7 +1454,8 @@ class OauthApi extends Api
     }
 
     /**
-     * 获取允许的邮箱后缀
+     * 获取�
+     * �许的邮箱后缀
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -1476,5 +1478,5 @@ class OauthApi extends Api
         );
     }
 
-/*===============E-Mail API end  ==================*/
+    /*===============E-Mail API end  ==================*/
 }

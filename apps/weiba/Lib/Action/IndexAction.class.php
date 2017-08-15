@@ -301,7 +301,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 微吧详情页.
+     * 微吧详�
+     * 页.
      */
     public function detail()
     {
@@ -460,7 +461,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 关注微吧.
+     * �
+     * �注微吧.
      */
     public function doFollowWeiba()
     {
@@ -472,7 +474,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 取消关注微吧.
+     * 取消�
+     * �注微吧.
      */
     public function unFollowWeiba()
     {
@@ -498,7 +501,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 弹窗加入微吧.
+     * 弹窗加�
+     * �微吧.
      */
     public function joinWeiba()
     {
@@ -729,7 +733,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 帖子详情页.
+     * 帖子详�
+     * 页.
      */
     public function postDetail()
     {
@@ -1787,7 +1792,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 获取uid与微吧的关注状态
+     * 获取uid与微吧的�
+     * �注状态
      */
     private function _assignFollowState($weiba_ids)
     {
@@ -1797,7 +1803,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 批量获取用户的相关信息加载.
+     * 批量获取用户的相�
+     * �信息加载.
      *
      * @param string|array $uids 用户ID
      */
@@ -1810,7 +1817,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 批量获取用户uid与一群人fids的彼此关注状态
+     * 批量获取用户uid与一群人fids的彼此�
+     * �注状态
      *
      * @param array $fids 用户uid数组
      */
@@ -2008,7 +2016,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 添加关注操作.
+     * 添加�
+     * �注操作.
      *
      * @return json 返回操作后的JSON信息数据
      */
@@ -2021,7 +2030,8 @@ class IndexAction extends Action
     }
 
     /**
-     * 添加关注操作.
+     * 添加�
+     * �注操作.
      *
      * @return json 返回操作后的JSON信息数据
      */

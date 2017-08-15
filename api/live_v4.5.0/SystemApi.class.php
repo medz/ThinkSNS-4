@@ -10,7 +10,8 @@ class SystemApi extends Api
      * 提交反馈信息.
      *
      * @reuqest int $uid [null] 可为空，默认从token中读取
-     * @reuqest string $content 反馈内容，不能为空
+     * @reuqest string $content 反馈�
+     * 容，不能为空
      *
      * @return array
      *
@@ -29,14 +30,14 @@ class SystemApi extends Api
                 'msg'    => '缺少用户UID',
             ));
 
-        /* # 检查是否有反馈内容 */
+            /* # 检查是否有反馈内容 */
         } elseif (!$content) {
             $this->error(array(
                 'status' => -1,
                 'msg'    => '请输入反馈内容',
             ));
 
-        /* # 检查内容是否超出 */
+            /* # 检查内容是否超出 */
         } elseif (get_str_length($content) > 500) {
             $this->error(array(
                 'status' => -2,

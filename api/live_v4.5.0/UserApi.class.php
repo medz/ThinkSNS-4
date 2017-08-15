@@ -322,13 +322,16 @@ class UserApi extends Api
      * @param varchar $uname
      *                         用户名
      * @param varchar $key
-     *                         搜索关键字
-     * @param int     $max_id
-     *                         上次返回的最后一条关注ID
-     * @param int     $count
-     *                         粉丝个数
+     *                         搜索�
+     * �键字
+     * @param int $max_id
+     *                         上次返回的最后一条�
+     * �注ID
+     * @param int $count
+     *                   粉丝个数
      *
-     * @return array 用户信息+关注状态
+     * @return array 用户信息+�
+     * �注状态
      */
     public function user_follower()
     {
@@ -395,20 +398,25 @@ class UserApi extends Api
     }
 
     /**
-     * 用户关注列表 --using.
+     * 用户�
+     * �注列表 --using.
      *
      * @param int     $user_id
      *                         用户UID
      * @param varchar $uname
      *                         用户名
      * @param varchar $key
-     *                         搜索关键字
-     * @param int     $max_id
-     *                         上次返回的最后一条关注ID
-     * @param int     $count
-     *                         关注个数
+     *                         搜索�
+     * �键字
+     * @param int $max_id
+     *                         上次返回的最后一条�
+     * �注ID
+     * @param int $count
+     *                         �
+     * �注个数
      *
-     * @return array 用户信息+关注状态
+     * @return array 用户信息+�
+     * �注状态
      */
     public function user_following()
     {
@@ -472,20 +480,24 @@ class UserApi extends Api
     }
 
     /**
-     * 用户好友列表(相互关注) --using.
+     * 用户好友列表(相互�
+     * �注) --using.
      *
      * @param int     $user_id
      *                         用户UID
      * @param varchar $uname
      *                         用户名
      * @param varchar $key
-     *                         搜索关键字
-     * @param int     $max_id
-     *                         上次返回的最后一条关注ID
-     * @param int     $count
-     *                         好友个数
+     *                         搜索�
+     * �键字
+     * @param int $max_id
+     *                         上次返回的最后一条�
+     * �注ID
+     * @param int $count
+     *                   好友个数
      *
-     * @return array 用户信息+关注状态
+     * @return array 用户信息+�
+     * �注状态
      */
     public function user_friend()
     {
@@ -547,18 +559,21 @@ class UserApi extends Api
     }
 
     /**
-     * 按字母返回用户好友列表(相互关注) --using.
+     * 按字母返回用户好友列表(相互�
+     * �注) --using.
      *
      * @param int    $user_id
      *                        用户UID
      * @param string $uname
      *                        用户名
      * @param string $key
-     *                        关键字
+     *                        �
+     * �键字
      * @param
      *        	integer max_id 上次返回的最后一条uid
      *
-     * @return array 用户信息+关注状态
+     * @return array 用户信息+�
+     * �注状态
      */
     public function user_friend_by_letter()
     {
@@ -726,7 +741,8 @@ class UserApi extends Api
      * @param int $count
      *                    图片个数
      *
-     * @return array 照片列表
+     * @return array �
+     * �片列表
      */
     public function user_photo($uid_param)
     {
@@ -983,7 +999,8 @@ class UserApi extends Api
 
     /**
      * 上传头像 --using
-     * 传入的头像变量 $_FILES['Filedata'].
+     * 传�
+     * �的头像变量 $_FILES['Filedata'].
      *
      * @return array 状态+提示
      */
@@ -1264,14 +1281,14 @@ class UserApi extends Api
                 'status' => 0,
                 'msg'    => '不是正确的手机号码',
             );
-        /* # 判断是否已经被使用，排除自己 */
+            /* # 判断是否已经被使用，排除自己 */
         } elseif (!model('Register')->isValidPhone($phone, $userPhone)) {
             return array(
                 'status' => 0,
                 'msg'    => model('Register')->getLastError(),
             );
 
-        /* # 判断是否发送验证码失败 */
+            /* # 判断是否发送验证码失败 */
         } elseif (!model('Sms')->sendCaptcha($phone, true)) {
             return array(
                 'status' => 0,
@@ -1396,12 +1413,15 @@ class UserApi extends Api
     }
 
     /**
-     * 关注一个用户 --using.
+     * �
+     * �注一个用户 --using.
      *
      * @param
-     *          integer user_id 要关注的用户ID
+     *          integer user_id 要�
+     * �注的用户ID
      *
-     * @return array 状态+提示+关注状态
+     * @return array 状态+提示+�
+     * �注状态
      */
     public function follow()
     {
@@ -1430,12 +1450,15 @@ class UserApi extends Api
     }
 
     /**
-     * 取消关注一个用户 --using.
+     * 取消�
+     * �注一个用户 --using.
      *
      * @param
-     *          integer user_id 要关注的用户ID
+     *          integer user_id 要�
+     * �注的用户ID
      *
-     * @return array 状态+提示+关注状态
+     * @return array 状态+提示+�
+     * �注状态
      */
     public function unfollow()
     {
@@ -1463,7 +1486,8 @@ class UserApi extends Api
     }
 
     /**
-     * 用户第三方帐号绑定情况 --using.
+     * 用户第三方帐号绑定�
+     * 况 --using.
      *
      * @return 第三方列表及是否绑定
      */

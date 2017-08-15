@@ -11,7 +11,9 @@ use Ts\Models as Model;
 class InformationApi extends Api
 {
     /**
-     * 阅读资讯详情.
+     * �
+     * 读资讯详�
+     * .
      *
      * @author Seven Du <lovevipdsw@outlook.com>
      * @datetime 2016-05-08T11:37:33+0800

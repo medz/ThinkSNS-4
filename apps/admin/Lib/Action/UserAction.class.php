@@ -67,7 +67,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - 待审列表.
+     * 用户管理 - �
+     * 审列表.
      */
     public function pending()
     {
@@ -162,7 +163,7 @@ class UserAction extends AdministratorAction
         // 获取相关数据
         $listData = model('Online')->getUserOperatingList($uid);
         // foreach($listData['data'] as $k => $v) {
-            // $listData['data'][$k]['DOACTION'] = '<a href="javascript:void(0);" onclick="admin.disableIP(\''.$v['ip'].'\')">禁用IP</a>';
+        // $listData['data'][$k]['DOACTION'] = '<a href="javascript:void(0);" onclick="admin.disableIP(\''.$v['ip'].'\')">禁用IP</a>';
         // }
 
         $this->displayList($listData);
@@ -271,9 +272,9 @@ class UserAction extends AdministratorAction
                 break;
         }
 
-/*		if(!empty($_POST['_parent_dept_id'])) {
-            $this->onload[] = "admin.departDefault('".implode(',', $_POST['_parent_dept_id'])."','form_user_department')";
-        }*/
+        /*		if(!empty($_POST['_parent_dept_id'])) {
+                    $this->onload[] = "admin.departDefault('".implode(',', $_POST['_parent_dept_id'])."','form_user_department')";
+                }*/
     }
 
     /**
@@ -313,8 +314,8 @@ class UserAction extends AdministratorAction
             $listData['data'][$k]['uname'] = '<a style="color:#3589F1" href="'.U('admin/User/editUser', array('tabHash' => 'editUser', 'uid' => $v['uid'])).'">'.$v['uname'].'</a>'.$userGroupIcon[$v['uid']].' <br/>'.$v['email'].' '.$userTagString;
             $listData['data'][$k]['ctime'] = date('Y-m-d H:i:s', $v['ctime']);
             // 屏蔽部门信息，若要开启将下面的注释打开
-/*			$department = model('Department')->getUserDepart($v['uid']);
-            $listData['data'][$k]['department'] = str_replace('|', ' - ',trim($department[$v['uid']],'|'));*/
+            /*			$department = model('Department')->getUserDepart($v['uid']);
+                        $listData['data'][$k]['department'] = str_replace('|', ' - ',trim($department[$v['uid']],'|'));*/
             $listData['data'][$k]['identity'] = ($v['identity'] == 1) ? L('PUBLIC_PERSONAL') : L('PUBLIC_ORGANIZATION');
             switch (strtolower($type)) {
                 case 'index':
@@ -599,31 +600,31 @@ class UserAction extends AdministratorAction
         if (!$uid) {
             $this->error('非法操作');
 
-        // # 判断用户名是否存在
+            // # 判断用户名是否存在
         } elseif (!$uname) {
             $this->error('用户名不能为空');
 
-        // # 判断是否用户标识不存在
+            // # 判断是否用户标识不存在
         } elseif (!$phone and !$email) {
             $this->error('用户手机号码或者邮箱至少存在一个');
 
-        // # 判断手机号码是否可以修改
+            // # 判断手机号码是否可以修改
         } elseif ($phone and !$model->isChangePhone($phone, $uid)) {
             $this->error('当前手机号码已存在');
 
-        // # 判断用户邮箱是否可以修改
+            // # 判断用户邮箱是否可以修改
         } elseif ($email and !$model->isChangeEmail($email, $uid)) {
             $this->error('当前邮箱已存在');
 
-        // # 判断用户性别
+            // # 判断用户性别
         } elseif (!in_array($sex, array('1', '2'))) {
             $this->error('请正确先择用户性别');
 
-        // # 判断用户组是否选择
+            // # 判断用户组是否选择
         } elseif (count($group) <= 0) {
             $this->error('请选择用户用户组');
 
-        // # 生成密码
+            // # 生成密码
         } elseif ($password) {
             $data['login_salt'] = rand(11111, 99999);
             $data['password'] = md5(md5($password).$data['login_salt']);
@@ -1175,7 +1176,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取待认证用户列表.
+     * 获取�
+     * 认证用户列表.
      */
     public function verify()
     {
@@ -1210,7 +1212,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取待认证机构列表.
+     * 获取�
+     * 认证机构列表.
      */
     public function verifyGroup()
     {
@@ -1493,7 +1496,7 @@ class UserAction extends AdministratorAction
         $data['phone'] = t($_POST['phone']);
         $data['reason'] = t($_POST['reason']);
         $data['info'] = t($_POST['info']);
-    //	$data['attachment'] = t($_POST['attach']);
+        //	$data['attachment'] = t($_POST['attach']);
         $data['attach_id'] = t($_POST['attach_ids']);
         $data['user_verified_category_id'] = intval($_POST['user_verified_category_id']);
         $Regx1 = '/^[0-9]*$/';
@@ -1805,7 +1808,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 认证用户基本配置.
+     * 认证用户基本�
+     * �置.
      */
     public function verifyConfig()
     {
@@ -1818,7 +1822,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 找人全局
+     * 找人�
+     * �局
      */
     public function findPeopleConfig()
     {
@@ -1836,7 +1841,8 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 官方用户配置.
+     * 官方用户�
+     * �置.
      */
     public function official()
     {

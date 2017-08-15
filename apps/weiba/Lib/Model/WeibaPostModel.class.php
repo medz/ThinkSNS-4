@@ -22,8 +22,10 @@ class WeibaPostModel extends Model
      *
      * @param int post_id 帖子ID
      * @param string title 帖子标题
-     * @param string content 帖子内容
-     * @param int uid 发布者uid
+     * @param string content 帖子�
+     * 容
+     * @param int uid 发布�
+     * uid
      *
      * @return int feed_id 分享ID
      */
@@ -41,8 +43,9 @@ class WeibaPostModel extends Model
      *
      * @param int weiba_id 微吧ID
      * @param varchar title 帖子标题
-     * @param varchar content 帖子内容
-     * @param int user_id 帖子作者
+     * @param varchar content 帖子�
+     * 容
+     * @param int user_id 帖子作�
      */
     public function createPostForApi($weiba_id, $title, $content, $uid)
     {
@@ -102,7 +105,8 @@ class WeibaPostModel extends Model
     }
 
     /**
-     * 为feed提供应用数据来源信息 - 与模板weiba_post.feed.php配合使用.
+     * 为feed提供应用数据来源信息 - 与模板weiba_post.feed.php�
+     * �合使用.
      *
      * @param int row_id 帖子ID
      * @param bool _forApi 提供给API的数据
