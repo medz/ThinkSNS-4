@@ -20,7 +20,9 @@
 # 概述
 A extensable social networing system.
 
-- [TS+](https://github.com/zhiyicx/thinksns-plus)
+> 本项目已停止维护，查看最新版本的 ThinkSNS 请点击 [ThinkSNS+](https://github.com/slimkit/thinksns-plus)
+
+- [TS+](https://github.com/slimkit/thinksns-plus)
 - [website](http://www.thinksns.com)
 - [demo preview](http://demo.thinksns.com/ts4)
 
