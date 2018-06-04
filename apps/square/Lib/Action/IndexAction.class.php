@@ -35,10 +35,10 @@ class IndexAction extends Action
 
             $map['status'] = 1;
             if (!$setting['channelid']) {
-                $list = D('Channel', 'channel')->where($map)->order('rand()')->limit(8)->findAll();
+                $list = D('Channel', 'channel')->where($map['status'])->order('rand()')->limit(8)->findAll();
             } else {
                 $map['feed_channel_link_id'] = array('in', $setting['channelid']);
-                $list = D('Channel', 'channel')->where($map)->order('rand()')->limit(8)->findAll();
+                $list = D('Channel', 'channel')->where($map['status'])->order('rand()')->limit(8)->findAll();
             }
 
             $feedIds = getSubByKey($list, 'feed_id');
