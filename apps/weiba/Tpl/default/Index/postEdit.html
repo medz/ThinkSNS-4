@@ -20,6 +20,12 @@
               </div>
             </dd>
             <dd>
+              <div class="form-tt">上传音/视频</div>
+              <div class="form-row" id="video_upload">
+
+              </div>
+            </dd>
+            <dd>
               <div class="form-tt"><font color="red"> * </font>正文</div>
               <div class="form-row" style="line-height:normal;"> {:W('UM', array('type'=>'weiba','contentName'=>'content','content'=>$post_detail['content'],width=>'700'))} </div>
             </dd>
@@ -39,4 +45,35 @@
     </div>
   </div>
 </div>
+<script>
+    function video() {
+        var extension = "{$post_detail['video']['extension']}";
+        var name = "{$post_detail['video']['name']}";
+        var size = "{$post_detail['video']['size']}";
+        var image_path = "{$post_detail['video']['image_path']}";
+        var video_path = "{$post_detail['video']['video_path']}";
+        var video_id = "{$post_detail['video']['video_id']}";
+        if(video_path){
+            $('#video_upload').html('<div class="img-list clearfix" id="video_button" style="width:280px;"></div><div class="video_txt">音/视频格式:{$video_ext};文件大小:{$video_size}M之内</div>');
+            if(extension == 'mp4'){
+                $('#video_button').html('<div class="video-list"><img src="'+image_path+'" width="100" height="100" onerror="default_img(this)"/><br /><a style="width:100px" class="del" href="javascript:void(0);" onclick="deleteVideo();">删除</a></div><input id="weiba_video" type="hidden" value="'+video_id+'" name="weiba_video" />');
+            }else{
+                $('#video_button').html('<div class="audio-list uploadify-queue"><div class="uploadify-queue-item"><div class="cancel"><a href="javascript:void(0);" onclick="deleteVideo();">X</a></div><span class="fileName">' + name + ' (' + size + ')</span><div class="uploadify-progress"><div class="uploadify-progress-bar" style="width: 100%;"></div></div></div></div><input id="weiba_video" type="hidden" value="'+video_id+'" name="weiba_video" />');
+            }
+        }else{
+            $.get(U('public/Feed/videoWeibaBox'), {}, function (res) {
+                var html = '<div id="video_upload">'+res.html+'<div class="video_txt">音/视频格式:'+res.video_ext+';文件大小:'+res.video_size+'M之内</div></div>';
+                $('#video_upload').append(html);
+            }, 'json');
+        }
+    }
+    video();
+    function deleteVideo(){
+        $.get(U('public/Feed/videoWeibaBox'), {}, function (res) {
+            $('#video_button').remove();
+            $('#video_upload').prepend(res.html);
+            $('#video_id').remove();
+        }, 'json');
+    }
+</script>
 <include file="__THEME__/public_footer" /> 

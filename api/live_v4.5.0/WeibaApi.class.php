@@ -209,8 +209,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * 帖子详�
-     * --using.
+     * 帖子详情 --using.
      *
      * @param
      *        	integer id 帖子ID
@@ -603,8 +602,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * 我加�
-     * �的圈子.
+     * 我加入的圈子.
      */
     public function weiba_join_my()
     {
@@ -674,8 +672,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * �
-     * �注圈子.
+     * 关注圈子.
      *
      * @param
      *        	integer uid 用户UID
@@ -714,8 +711,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * 取消�
-     * �注圈子.
+     * 取消关注圈子.
      *
      * @param
      *        	integer uid 用户UID
@@ -953,8 +949,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * 批量获取圈子�
-     * �注状态
+     * 批量获取圈子关注状态
      *
      * @param
      *        	integer uid 用户UID
@@ -976,19 +971,16 @@ class WeibaApi extends Api
     }
 
     /**
-     * 格式化，用户的�
-     * �注数据.
+     * 格式化，用户的关注数据.
      *
      * @param int   $uid
      *                           用户ID
      * @param array $fids
      *                           用户ID数组
      * @param array $follow_data
-     *                           �
-     * �注状态数据
+     *                           关注状态数据
      *
-     * @return array 格式化后的用户�
-     * �注状态数据
+     * @return array 格式化后的用户关注状态数据
      */
     public function _formatFollowState($uid, $weiba_ids, $follow_data)
     {
@@ -1111,6 +1103,9 @@ class WeibaApi extends Api
             $digg_list[$k]['intro'] = $user_info['intro'];
             $digg_list[$k]['avatar'] = $user_info['avatar']['avatar_middle'];
             $digg_list[$k]['follow_status'] = $follow_status[$v['uid']];
+            $digg_list[$k]['user_group'] = $user_info['user_group'];
+            $digg_list[$k]['space_privacy'] = $user_info['space_privacy'];
+
             unset($digg_list[$k]['post_id']);
         }
 
@@ -1136,6 +1131,7 @@ class WeibaApi extends Api
         //个人空间隐私权限
         $privacy = model('UserPrivacy')->getPrivacy($this->mid, $uid);
         $user_info['space_privacy'] = $privacy['space'];
+        $user_info['comment_weibo'] = $privacy['comment_weibo'];
 
         return $user_info;
     }
@@ -1284,8 +1280,7 @@ class WeibaApi extends Api
      * @param
      *        	integer to_comment_id 评论ID
      * @param
-     *        	string content 评论�
-     * 容
+     *        	string content 评论内容
      * @param
      *        	integer from 来源(2-android 3-iPhone)
      *
@@ -1308,6 +1303,14 @@ class WeibaApi extends Api
 
             return $return;
         }
+        /* 判断是否含有敏感词 */
+        $content = sensitiveWord($this->data['content']);
+        if (!sensitiveWord($content)) {
+            return array(
+                'status' => -3,
+                'msg' => '评论内容包含敏感词', // 评论内容包含敏感词
+            );
+        }
         if (!intval($this->data['post_id'])) {
             $return['msg'] = '参数非法';
 
@@ -1326,11 +1329,12 @@ class WeibaApi extends Api
         $data['post_uid'] = intval($feed_detail['post_uid']);
         if (!empty($this->data['to_comment_id'])) {
             $data['to_reply_id'] = intval($this->data['to_comment_id']);
-            $data['to_uid'] = model('Comment')->where('comment_id='.intval($this->data['to_comment_id']))->getField('uid');
+            $data['to_uid'] = D('weiba_reply')->where('reply_id = '.$data['to_reply_id'])->getField('uid');
+            //$data['to_uid'] = model('Comment')->where('comment_id='.intval($this->data['to_comment_id']))->getField('uid');
         }
         $data['uid'] = $this->mid;
         $data['ctime'] = time();
-        $data['content'] = t(preg_html(h($this->data['content'])));
+        $data['content'] = t(preg_html(h($content)));
         /* # 格式化emoji */
         $data['content'] = formatEmoji(true, $data['content']);
         $data['attach_id'] = intval($this->data['attach_id']);
@@ -1611,6 +1615,21 @@ class WeibaApi extends Api
         if (count($match[0]) > 20) { // 汉字和字母都为一个字
             $this->error('帖子标题不能超过20个字');
         }
+        /* 判断是否含有敏感词 */
+        $title = sensitiveWord($this->data['title']);
+        if (!sensitiveWord($title)) {
+            return array(
+                'status' => -3,
+                'msg' => '帖子标题包含敏感词', // 帖子标题包含敏感词
+            );
+        }
+        $content = sensitiveWord($this->data['content']);
+        if (!sensitiveWord($content)) {
+            return array(
+                'status' => -3,
+                'msg' => '帖子内容包含敏感词!', // 帖子内容包含敏感词
+            );
+        }
         if ($this->data['attach_ids']) {
             $attach = explode('|', $this->data['attach_ids']);
             foreach ($attach as $k => $a) {
@@ -1622,8 +1641,8 @@ class WeibaApi extends Api
             $data['attach'] = serialize($attach);
         }
         $data['weiba_id'] = $weibaid;
-        $data['title'] = t($this->data['title']);
-        $data['content'] = h($this->data['content']);
+        $data['title'] = t($title);
+        $data['content'] = h($content);
 
         // 格式化emoji
         $data['title'] = formatEmoji(true, $data['title']);
@@ -1674,5 +1693,37 @@ class WeibaApi extends Api
         } else {
             $this->error('发布失败');
         }
+    }
+
+    /**
+     * 删除帖子评论.
+     *
+     * @return array
+     *
+     * @author zsy
+     */
+    public function delReply()
+    {
+        $reply_id = $this->data['reply_id'] ? intval($this->data['reply_id']) : intval($this->data['comment_id']);
+        if ($reply_id < 1) {
+            return array('status' => 0, 'msg' => '请选择需要删除的评论');
+        }
+
+        if (!CheckPermission('core_admin', 'comment_del')) {
+            $map['reply_id'] = $reply_id;
+            $map['uid'] = $this->mid;
+            $map['is_del'] = 0;
+            $count = D('weiba_reply', 'weiba')->where($map)->count();
+            if (!CheckPermission('weiba_normal', 'weiba_del_reply') || $count <= 0) {
+                return array('status' => 0, 'msg' => '你没有权限删除评论');
+            }
+        }
+        $comment_id = D('weiba_reply', 'weiba')->where('reply_id='.$reply_id)->getField('comment_id');
+        $res = model('Comment')->deleteComment($comment_id, '', 'weiba');
+        if (!$res) {
+            return array('status' => 0, 'msg' => '删除失败');
+        }
+
+        return array('status' => 1, 'msg' => '操作成功');
     }
 }

@@ -143,7 +143,7 @@ class AdminAction extends AdministratorAction
     {
         $this->assign('pageTitle', '编辑微吧');
         // 初始化微吧列表管理菜单
-        // 		$this->_initWeibaListAdminMenu();
+// 		$this->_initWeibaListAdminMenu();
         $this->pageTab[] = array('title' => '微吧列表', 'tabHash' => 'index', 'url' => U('weiba/Admin/index'));
         //$this->pageTab[] = array('title'=>'添加微吧','tabHash'=>'addWeiba','url'=>U('weiba/Admin/addWeiba'));
         $this->pageTab[] = array('title' => '微吧分类', 'tabHash' => 'weibaCate', 'url' => U('weiba/Admin/weibaCate'));
@@ -432,6 +432,7 @@ class AdminAction extends AdministratorAction
         $this->pageButton[] = array('title' => '搜索帖子', 'onclick' => "admin.fold('search_form')");
         // $this->pageButton[] = array('title'=>'调整回复楼层','onclick'=>"admin.doStorey()");
         $this->pageButton[] = array('title' => '删除帖子', 'onclick' => 'admin.delPost()');
+        $this->pageButton[] = array('title' => '待审帖子列表', 'onclick' => "javascript:location.href='".U('weiba/Admin/postListAudit', array('tabHash' => 'postList'))."';");
         $this->searchKey = array('post_id', 'title', 'post_uid', 'recommend', 'digest', 'top', 'weiba_id');
         $this->opt['recommend'] = array('0' => L('PUBLIC_SYSTEMD_NOACCEPT'), '1' => '是', '2' => '否');
         $this->opt['digest'] = array('0' => L('PUBLIC_SYSTEMD_NOACCEPT'), '1' => '是', '2' => '否');
@@ -629,6 +630,9 @@ class AdminAction extends AdministratorAction
         $result = D('weiba_post')->where('post_id='.$post_id)->setField($field, $value);
         if ($field == 'top' && $value == 2) {
             D('weiba_post')->where('post_id='.$post_id)->setField('top_time', time());
+        }
+        if ($field == 'recommend' && $value == 1) {
+            D('weiba_post')->where('post_id='.$post_id)->setField('recommend_time', time());
         }
         if (!$result) {
             $return['status'] = 0;
@@ -878,8 +882,7 @@ class AdminAction extends AdministratorAction
     }
 
     /**
-     * 圈主审核�
-     * �置.
+     * 圈主审核配置.
      */
     public function weibaAdminAuditConfig()
     {
@@ -982,8 +985,7 @@ class AdminAction extends AdministratorAction
     }
 
     /**
-     * 微吧审核�
-     * �置.
+     * 微吧审核配置.
      */
     public function weibaAuditConfig()
     {
@@ -1079,7 +1081,7 @@ class AdminAction extends AdministratorAction
         if (intval($_POST['value']) < 1) {
             $res = D('weiba')->where($map)->delete();
 
-            /* # 否则通过 */
+        /* # 否则通过 */
         } else {
             $res = D('weiba')->where($map)->save($data);
         }
@@ -1110,5 +1112,104 @@ class AdminAction extends AdministratorAction
         $this->pageTab[] = array('title' => '申请微吧配置', 'tabHash' => 'weibaAuditConfig', 'url' => U('weiba/Admin/weibaAuditConfig'));
         $this->pageTab[] = array('title' => '微吧审核', 'tabHash' => 'weibaAudit', 'url' => U('weiba/Admin/weibaAudit'));
         $this->pageTab[] = array('title' => '首页帖子', 'tabHash' => 'indexPost', 'url' => U('weiba/Admin/indexPost'));
+    }
+    /**
+     * 后台帖子需审核列表.
+     */
+    public function postListAudit()
+    {
+        $_REQUEST['tabHash'] = 'postList';
+        $this->_initWeibaListAdminMenu();
+        // 设置列表主键
+        $this->_listpk = 'post_id';
+        $this->pageButton[] = array('title' => '审核通过', 'onclick' => "admin.auditPost()");
+        $this->pageButton[] = array('title' => '删除帖子', 'onclick' => 'admin.delPost()');
+        $this->pageKeyList = array('post_id', 'title', 'post_uid', 'post_time', 'weiba_id', 'DOACTION');
+        // 数据的格式化与listKey保持一致
+        $list = D('weiba_post')->where(['is_del'=>2])->order('post_time desc')->findPage(20);
+        // 数据组装
+        foreach ($list['data'] as $k => $v) {
+            $list['data'][$k]['title'] = '<a target="_blank" href="'.U('weiba/Index/postDetail', array(
+                    'post_id' => $v['post_id'],
+                )).'">'.$v['title'].'</a>';
+            $author = model('User')->getUserInfoByUids($v['post_uid']);
+            $list['data'][$k]['post_uid'] = $author[$v['post_uid']]['space_link'];
+            $list['data'][$k]['post_time'] = friendlyDate($v['post_time']);
+            $list['data'][$k]['last_reply_time'] = friendlyDate($v['last_reply_time']);
+            $list['data'][$k]['read_count/reply_count'] = $v['read_count'].'/'.$v['reply_count'];
+            $list['data'][$k]['weiba_id'] = D('weiba')->where('weiba_id='.$v['weiba_id'])->getField('weiba_name');
+            $list['data'][$k]['DOACTION'] = '<a href="javascript:void(0)" onclick="admin.auditPost('.$v['post_id'].')">通过</a>&nbsp;-&nbsp;<a href="javascript:void(0)" onclick="admin.delPost('.$v['post_id'].')">删除</a>&nbsp;-&nbsp;<a href="'.U('weiba/Admin/seePost', array('post_id' => $v['post_id'],'tabHash' => 'postList')).'">查看</a>';
+
+        }
+        $this->displayList($list);
+    }
+    /**
+     * 后台审核帖子.
+     */
+    public function auditPost()
+    {
+        if (empty($_POST['post_id'])) {
+            $return['status'] = 0;
+            $return['data'] = '';
+            echo json_encode($return);
+            exit();
+        }
+        !is_array($_POST['post_id']) && $_POST['post_id'] = array($_POST['post_id']);
+        $data['post_id'] = array('in', $_POST['post_id']);
+        $res = D('weiba_post')->where($data)->setField('is_del', 0);
+        if ($res) {
+            $postList = D('weiba_post')->where($data)->findAll();
+            foreach ($postList as $v) {
+                D('Weiba')->setNewcount($v['weiba_id']);
+                D('weiba')->where('weiba_id='.$v['weiba_id'])->setInc('thread_count');
+                $feed_id = model('Feed')->syncToFeed('weiba', $v['post_uid'], $v['post_id']);
+                if($v['feed_id'] == 0){
+                    D('weiba_post')->where('post_id='.$v['post_id'])->setField('feed_id', $feed_id);
+                }else{
+                    //同步到分享
+                    $feedInfo = D('feed_data')->where('feed_id='.$v['feed_id'])->find();
+                    $datas = unserialize($feedInfo['feed_data']);
+                    $datas['content'] = '【'.$v['title'].'】'.getShort(t($v['content']), 100).'&nbsp;';
+                    $datas['body'] = $datas['content'];
+                    $data1['feed_data'] = serialize($datas);
+                    $data1['feed_content'] = $datas['content'];
+                    $feed_id = D('feed_data')->where('feed_id='.$v['feed_id'])->save($data1);
+                    model('Cache')->rm('fd_'.$v['feed_id']);
+                    //清空转发此帖子分享的缓存
+                    $repost_list = model('Feed')->where(array('app_row_table' => 'weiba_post', 'app_row_id' => $v['post_uid'], 'is_repost' => 1))->field('feed_id')->findAll();
+                    if ($repost_list) {
+                        foreach ($repost_list as $value) {
+                            model('Cache')->rm('fd_'.$value['feed_id']);
+                        }
+                    }
+                }
+                //添加积分
+                model('Credit')->setUserCredit($v['post_uid'], 'publish_topic');
+            }
+            $return['status'] = 1;
+            $return['data'] = '帖子审核通过';
+        } else {
+            $return['status'] = 0;
+            $return['data'] = '帖子审核失败';
+        }
+        echo json_encode($return);
+        exit();
+    }
+    /**
+     * 后台查看帖子.
+     */
+    public function seePost()
+    {
+        $_REQUEST['tabHash'] = 'postList';
+        $this->_initWeibaListAdminMenu();
+        // 列表key值 DOACTION表示操作
+        $this->pageKeyList = array('post_id', 'title', 'content');
+        $post_id = intval($_GET['post_id']);
+        $data = D('weiba_post')->where('post_id='.$post_id)->find();
+        // 表单URL设置
+        $this->savePostUrl = U('weiba/Admin/postListAudit');
+        $this->notEmpty = array('title', 'content');
+        $this->submitAlias = '返回';
+        $this->displayConfig($data);
     }
 }

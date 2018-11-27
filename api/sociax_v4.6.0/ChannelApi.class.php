@@ -39,8 +39,7 @@ class ChannelApi extends Api
         unset($map2['status']);
         $channels = D('channel_category')->where($map2)->field('channel_category_id,title')->order('sort ASC')->findAll();
         if (!$channels) {
-            return Ts\Service\ApiMessage::withEmpty();
-            // return array();
+            return array();
         }
 
         //用户关注频道
@@ -62,11 +61,10 @@ class ChannelApi extends Api
             } else {
                 $channels[$k]['image'] = SITE_URL.'/apps/channel/_static/image/api_small_1.png';
             }
-            $channels[$k]['count'] = $countArr[$v['channel_category_id']];
+            $channels[$k]['count'] = $countArr[$v['channel_category_id']] ?: 0;
         }
 
-        return Ts\Service\ApiMessage::withArray($channels, 1, '');
-        // return $channels;
+        return $channels;
 
         // if (! $channels)
         // 	return array ();
@@ -117,8 +115,7 @@ class ChannelApi extends Api
         $map['uid'] = empty($this->uid) ? $this->mid : $this->uid;
         $follow = M('channel_follow')->where($map)->findAll();
         if (empty($follow)) {
-            return Ts\Service\ApiMessage::withEmpty();
-            // return array();
+            return array();
         }
 
         $channel_ids = getSubByKey($follow, 'channel_category_id');
@@ -135,8 +132,7 @@ class ChannelApi extends Api
         unset($map2['status']);
         $channels = D('channel_category')->where($map2)->field('channel_category_id,title')->order('sort ASC')->findAll();
         if (!$channels) {
-            return Ts\Service\ApiMessage::withEmpty();
-            // return array();
+            return array();
         }
         foreach ($channels as $k => $v) {
             $big_image = D('channel')->where('status=1 and channel_category_id='.$v['channel_category_id'].' and width>20 and height>20')->max('feed_id');
@@ -150,8 +146,7 @@ class ChannelApi extends Api
             $channels[$k]['count'] = $countArr[$v['channel_category_id']];
         }
 
-        return Ts\Service\ApiMessage::withArray($channels, 1, '');
-        // return $channels;
+        return $channels;
     }
 
     /**
@@ -164,8 +159,7 @@ class ChannelApi extends Api
      * @param
      *        	integer count 微博条数
      * @param
-     *        	integer type 微博类型 0-�
-     * �部 1-原创 2-转发 3-图片 4-附件 5-视频
+     *        	integer type 微博类型 0-全部 1-原创 2-转发 3-图片 4-附件 5-视频
      *
      * @return json 指定分类下的微博
      */
@@ -173,11 +167,10 @@ class ChannelApi extends Api
     {
         $cid = intval($this->data['channel_category_id']);
         if (!$cid) {
-            return Ts\Service\ApiMessage::withArray('', 0, '请选择频道');
-            // return array(
-            //         'status' => 0,
-            //         'msg' => '请选择频道',
-            // );
+            return array(
+                    'status' => 0,
+                    'msg'    => '请选择频道',
+            );
         }
         $max_id = $this->max_id ? intval($this->max_id) : 0;
         $count = $this->count ? intval($this->count) : 20;
@@ -223,21 +216,16 @@ class ChannelApi extends Api
         $feed_ids = getSubByKey(D()->query($sql), 'feed_id');
         $channel_detail['feed_list'] = api('Weibo')->format_feed($feed_ids);
 
-        return Ts\Service\ApiMessage::withArray($channel_detail, 1, '');
-        // return $channel_detail;
+        return $channel_detail;
     }
 
     /**
-     * 频道�
-     * �注或取消�
-     * �注 --using.
+     * 频道关注或取消关注 --using.
      *
      * @param int $channel_category_id
      *                                 频道分类ID
      * @param int $type
-     *                                 1-�
-     * �注 0-取消�
-     * �注
+     *                                 1-关注 0-取消关注
      *
      * @return 状态+提示
      */
@@ -265,7 +253,6 @@ class ChannelApi extends Api
             $data['msg'] = $info.'失败';
         }
 
-        return Ts\Service\ApiMessage::withArray('', $data['status'], $data['msg']);
-        // return $data;
+        return $data;
     }
 }

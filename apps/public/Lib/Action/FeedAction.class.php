@@ -9,12 +9,9 @@
 class FeedAction extends Action
 {
     /**
-     * 获取表�
-     * 操作.
+     * 获取表情操作.
      *
-     * @return json 表�
-     * 相�
-     * �的JSON数据
+     * @return json 表情相关的JSON数据
      */
     public function getSmile()
     {
@@ -134,8 +131,16 @@ class FeedAction extends Action
             $_POST[$key] = t($_POST[$key]);
         }
         $d['source_url'] = urldecode($_POST['source_url']); // 应用分享到分享，原资源链接
-        // 滤掉话题两端的空白
+                                                                 // 滤掉话题两端的空白
         $d['body'] = preg_replace("/#[\s]*([^#^\s][^#]*[^#^\s])[\s]*#/is", '#'.trim('${1}').'#', $d['body']);
+        /* 判断话题是否被屏蔽 */
+        if (model('FeedTopic')->isLock(html_entity_decode($d['body'], ENT_QUOTES, 'UTF-8'))) {
+            $return = array(
+                'status' => 0,
+                'data'   => '该话题已被屏蔽',
+            );
+            exit(json_encode($return));
+        }
         // $numbers = array(41624,41625,41626,41627,41628,41629);
         // shuffle($numbers);
         // // 附件信息
@@ -233,8 +238,7 @@ class FeedAction extends Action
     }
 
     /**
-     * 分享/转发分享操作，需要传�
-     * �POST的值
+     * 分享/转发分享操作，需要传入POST的值
      *
      * @return json 分享/转发分享后的结果信息JSON数据
      */
@@ -708,11 +712,9 @@ class FeedAction extends Action
     }
 
     /**
-     * 异步获取指定分享�
-     * 容.
+     * 异步获取指定分享内容.
      *
-     * @return json 指定分享的�
-     * 容
+     * @return json 指定分享的内容
      */
     public function ajaxWeiboInfo()
     {
@@ -738,8 +740,7 @@ class FeedAction extends Action
     }
 
     /**
-     * 异步获取指定图片�
-     * 容.
+     * 异步获取指定图片内容.
      *
      * @return json 指定分享图片信息
      */
@@ -841,7 +842,33 @@ class FeedAction extends Action
         }
         exit(json_encode($data));
     }
-
+    /**
+     * 获取视频上传弹窗结构.
+     */
+    public function videoWeibaBox()
+    {
+        $data['weibo_uploadvideo_open'] = 1;
+        // 返回的JSON值
+        $data['unid'] = substr(strtoupper(md5(uniqid(mt_rand(), true))), 0, 8);
+        // 设置渲染变量
+        $var['unid'] = $data['unid'];
+        $video_config = model('Xdata')->get('admin_Content:video_config');
+        $defaultExt = array(
+            'mp4',
+        );
+        $defaultVideoSize = 50;
+        $ext = $video_config['video_ext'] ? explode(',', $video_config['video_ext']) : $defaultExt;
+        foreach ($ext as $value) {
+            $var['fileTypeExts'] .= '*.'.strtolower($value).'; ';
+        }
+        $video_size = $video_config['video_size'] ? intval($video_config['video_size']) : $defaultVideoSize;
+        $var['fileSizeLimit'] = $video_size.'MB';
+        $var['total'] = 1;
+        $data['html'] = fetch('videoWeibaBox', $var);
+        $data['video_ext'] = implode(',', $ext);
+        $data['video_size'] = $video_size;
+        exit(json_encode($data));
+    }
     public function video_exist()
     {
         $flashvar = $_POST['flashvar'];

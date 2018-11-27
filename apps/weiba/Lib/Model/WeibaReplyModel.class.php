@@ -27,6 +27,9 @@ class WeibaReplyModel extends Model
     public function getReplyList($map = null, $order = 'reply_id desc', $limit = 10)
     {
         !isset($map['is_del']) && ($map['is_del'] = 0);
+        $feed_id = D('weiba_post')->where(['post_id'=>$map['post_id']])->getField('feed_id');
+        $comment = D('comment')->where(['row_id'=>$feed_id,'is_audit'=>1])->select();
+        $map['comment_id'] = ['in',getSubByKey($comment, 'comment_id')];
         $data = $this->where($map)->order($order)->findPage($limit);
         // // TODO:后续优化
         foreach ($data['data'] as &$v) {
@@ -73,10 +76,8 @@ class WeibaReplyModel extends Model
      * 添加帖子评论forApi.
      *
      * @param int post_id 帖子ID
-     * @param int content 帖子�
-     * 容
-     * @param int uid 评论�
-     * UID
+     * @param int content 帖子内容
+     * @param int uid 评论者UID
      *
      * @return bool 是否评论成功
      */
@@ -132,10 +133,8 @@ class WeibaReplyModel extends Model
      * 添加评论回复forApi.
      *
      * @param int reply_id 评论ID
-     * @param int content 回复�
-     * 容
-     * @param int uid 回复�
-     * UID
+     * @param int content 回复内容
+     * @param int uid 回复者UID
      *
      * @return bool 是否回复成功
      */

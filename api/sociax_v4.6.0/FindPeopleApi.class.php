@@ -11,22 +11,49 @@ class FindPeopleApi extends Api
         $my['remark'] = $user['remark'];
         $my['avatar'] = $user['avatar_big'];
 
+        // 用户组
+        $user_group = [];
+        foreach ($user['user_group'] as $v) {
+            if ($v) {
+                $user_group[] = $v['user_group_icon_url'];
+            }
+        }
+        $my['user_group'] = $user_group ?: [];
+        unset($user_group);
+
         // 积分排行
-        $scoreuids = M('credit_user')->field('uid,`score`')->order('`score` desc,uid')->limit(10000)->findAll();
+        $uids = \Ts\Models\User::where('is_del', '0')->lists('uid');
+        $scoreuids = M('credit_user')->where(['uid' => ['in', $uids]])->field('uid,`score`')->order('`score` desc,uid')->limit(10000)->findAll();
+
         $iscore = 0;
         foreach ($scoreuids as $key => $gu) {
             $iscore++;
 
             $gu['uid'] == $this->mid && $rank = $iscore;
+            $gu['score'] = (int) $gu['score'];
             if ($key < 14) {
                 $gu['rank'] = (string) $iscore;
                 $user = model('User')->getUserInfo($gu['uid']);
                 $gu['uname'] = $user['uname'];
                 $gu['avatar'] = $user['avatar_big'];
 
+                // 用户组
+                $user_group = [];
+                foreach ($user['user_group'] as $v) {
+                    if ($v) {
+                        $user_group[] = $v['user_group_icon_url'];
+                    }
+                }
+                $gu['user_group'] = $user_group;
+                unset($user_group, $v);
+
+                //个人空间隐私权限
+                $privacy = model('UserPrivacy')->getPrivacy($this->mid, $gu['uid']);
+                $gu['space_privacy'] = $privacy['space'];
+
                 $map['key'] = 'weibo_count';
                 $map['uid'] = $gu['uid'];
-                $gu['weibo_count'] = (string) M('user_data')->where($map)->getField('value');
+                $gu['weibo_count'] = (int) M('user_data')->where($map)->getField('value');
 
                 $lists[] = $gu;
             }
@@ -34,10 +61,9 @@ class FindPeopleApi extends Api
         empty($rank) && $rank = 10000; // 一万名后不再作排名，以提高性能
 
         $my['rank'] = '排名：'.$rank;
-        $my['lists'] = $lists;
+        $my['lists'] = $lists ?: array();
 
-        return Ts\Service\ApiMessage::withArray($my, 1, '');
-        // return $my;
+        return $my;
     }
 
     public function rank_medal()
@@ -46,6 +72,16 @@ class FindPeopleApi extends Api
         $my['uname'] = $user['uname'];
         $my['remark'] = $user['remark'];
         $my['avatar'] = $user['avatar_big'];
+
+        // 用户组
+        $user_group = [];
+        foreach ($user['user_group'] as $v) {
+            if ($v) {
+                $user_group[] = $v['user_group_icon_url'];
+            }
+        }
+        $my['user_group'] = $user_group ?: [];
+        unset($user_group);
 
         // 勋章排行
         $medaluids = M('medal_user')->field('uid,count(medal_id) as mcount')->group('uid')->order('mcount desc,uid')->limit(10000)->findAll();
@@ -61,31 +97,41 @@ class FindPeopleApi extends Api
                 $mu['uname'] = $user['uname'];
                 $mu['avatar'] = $user['avatar_big'];
                 $mu['remark'] = $user['remark'];
+                // 用户组
+                $user_group = [];
+                foreach ($user['user_group'] as $v) {
+                    if ($v) {
+                        $user_group[] = $v['user_group_icon_url'];
+                    }
+                }
+                $mu['user_group'] = $user_group ?: [];
+                unset($user_group);
+
+                //个人空间隐私权限
+                $privacy = model('UserPrivacy')->getPrivacy($this->mid, $mu['uid']);
+                $mu['space_privacy'] = $privacy['space'];
 
                 $lists[] = $mu;
             }
         }
         // empty ( $rank ) && $rank = 10000; // 一万名后不再作排名，以提高性能
 
-        $my['rank'] = '排名：'.$rank;
-        $my['lists'] = $lists;
+        $my['rank'] = $rank > 0 ? ('排名：'.$rank) : '您当前没有排名';
+        $my['lists'] = $lists ?: array();
 
-        // return $my;
-        return Ts\Service\ApiMessage::withArray($my, 1, '');
+        return $my;
     }
 
     /**
      * 找人首页-搜索用户 --using.
      *
      * @param string $key
-     *                       搜索�
-     * �键词
+     *                       搜索关键词
      * @param string $max_id
      *                       上次返回的最后一个用户ID
      * @param string $count
      *                       数量
-     * @request int $rus 感�
-     * �趣的人返回个数，default：5
+     * @request int $rus 感兴趣的人返回个数，default：5
      *
      * @return array 用户列表
      */
@@ -174,10 +220,14 @@ class FindPeopleApi extends Api
                 $user_list[$k]['uid'] = $v['uid'];
                 $user_list[$k]['uname'] = $v['uname'];
                 $user_list[$k]['remark'] = D('UserRemark')->getRemark($this->mid, $v['uid']);
+                $user_list[$k]['remark'] = $user_list[$k]['remark'] ? $user_list[$k]['remark'] : '';
                 $user_list[$k]['intro'] = $user_list[$k]['intro'] ? formatEmoji(false, $user_list[$k]['intro']) : '';
                 $user_list[$k]['follow_status'] = $follow_status[$v['uid']];
                 $user_info = api('User')->get_user_info($v['uid']);
                 $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
+                $user_list[$k]['user_group'] = $user_info['user_group'];
+                $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
+                $user_list[$k]['space_privacy'] = $privacy['space'];
             }
         } else { // 获取感兴趣的5个人
             $user = model('RelatedUser')->getRelatedUser($rus);
@@ -186,14 +236,134 @@ class FindPeopleApi extends Api
                 $user_list[$k]['uid'] = $v['userInfo']['uid'];
                 $user_list[$k]['uname'] = $v['userInfo']['uname'];
                 $user_list[$k]['remark'] = $v['userInfo']['remark'];
+                $user_list[$k]['remark'] = $v['userInfo']['remark'] ? $v['userInfo']['remark'] : '';
+                $user_list[$k]['avatar'] = $v['userInfo']['avatar_big'];
+                $user_list[$k]['intro'] = $v['info']['msg'] ? formatEmoji(false, $v['info']['msg']) : '';
+                $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['userInfo']['uid']);
+                // 用户组
+                $user_group = [];
+                foreach ($v['userInfo']['user_group'] as $value) {
+                    if ($value) {
+                        $user_group[] = $value['user_group_icon_url'];
+                    }
+                }
+                $user_list[$k]['user_group'] = $user_group;
+                unset($user_group, $value);
+                // 用户空间权限
+                $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
+                $user_list[$k]['space_privacy'] = $privacy['space'];
+            }
+        }
+
+        return $user_list;
+    }
+
+    /**
+     * 找人首页-搜索用户 --using.
+     *
+     * @param string $key
+     *                       搜索关键词
+     * @param string $max_id
+     *                       上次返回的最后一个用户ID
+     * @param string $count
+     *                       数量
+     * @request int $rus 感兴趣的人返回个数，default：5
+     *
+     * @return array 用户列表
+     */
+    public function search_user2()
+    {
+        $max_id = $this->max_id ? intval($this->max_id) : 0;
+        $count = $this->count ? intval($this->count) : 20;
+
+        $key = t($this->data['key']);
+        if ($key) {
+            $userObj = \Ts\Models\User::where(function ($query) {
+                $query->where('is_init', '=', 1)
+                    ->where('is_audit', '=', 1)
+                    ->where('is_active', '=', 1)
+                    ->where('is_del', '=', 0);
+            });
+            $usersObj = \Ts\Models\User::where(function ($query) {
+                $query->where('is_init', '=', 1)
+                    ->where('is_audit', '=', 1)
+                    ->where('is_active', '=', 1)
+                    ->where('is_del', '=', 0);
+            });
+            $userObj = $userObj->where('uname', '=', $key)
+                ->select('uid', 'uname', 'intro')
+                ->first();
+            if ($userObj) {
+                $usersObj = $usersObj->where('uid', '!=', $userObj->uid)
+                    ->where(function ($query) use ($key) {
+                        $query->where('search_key', 'like', '%'.$key.'%');
+                        $ruid_arr = D('UserRemark')->searchRemark($this->mid, t($this->data['key']));
+                        if ($ruid_arr) {
+                            $query->orWhere(function ($query) use ($ruid_arr) {
+                                $query->whereIn('uid', $ruid_arr);
+                            });
+                        }
+                    })
+                    ->skip($max_id)
+                    ->take($count - 1)
+                    ->get();
+            } else {
+                $usersObj = $usersObj->where(function ($query) use ($key) {
+                    $query->where('search_key', 'like', '%'.$key.'%');
+                    $ruid_arr = D('UserRemark')->searchRemark($this->mid, t($this->data['key']));
+                    if ($ruid_arr) {
+                        $query->orWhere(function ($query) use ($ruid_arr) {
+                            $query->whereIn('uid', $ruid_arr);
+                        });
+                    }
+                })
+                    ->skip($max_id)
+                    ->take($count)
+                    ->get();
+            }
+            $user_list = array();
+            if ($userObj) {
+                $user_list[0]['uid'] = $userObj->uid;
+                $user_list[0]['uname'] = $userObj->uname;
+                $user_list[0]['remark'] = $userObj->remark($this->mid);
+                $user_list[0]['remark'] = $user_list[0]['remark'] ? $user_list[0]['remark'] : '';
+                $user_list[0]['intro'] = $userObj->intro;
+                $user_list[0]['intro'] = $user_list[0]['intro'] ? $user_list[0]['intro'] : '';
+                $user_list[0]['follow_state']['following'] = (int) $userObj->followIngStatus($this->mid);
+                $user_list[0]['follow_state']['follower'] = (int) $userObj->followStatus($this->mid);
+                $user_list[0]['avatar'] = $userObj->face->avatar_big;
+            }
+            foreach ($usersObj as $k => $v) {
+                $k = $userObj ? ($k + 1) : $k;
+                $user_list[$k]['uid'] = $v->uid;
+                $user_list[$k]['uname'] = $v->uname;
+                $user_list[$k]['remark'] = $v->remark($this->mid);
+                $user_list[$k]['remark'] = $user_list[$k]['remark'] ? $user_list[$k]['remark'] : '';
+                $user_list[$k]['intro'] = $v->intro;
+                $user_list[$k]['intro'] = $user_list[$k]['intro'] ? $user_list[$k]['intro'] : '';
+                $user_list[$k]['follow_state']['following'] = (int) $v->followIngStatus($this->mid);
+                $user_list[$k]['follow_state']['follower'] = (int) $v->followStatus($this->mid);
+                $user_list[$k]['avatar'] = $v->face->avatar_big;
+            }
+        } else { // 获取感兴趣的5个人
+            /* 感兴趣的人人数 */
+            $rus = intval($this->data['rus']);
+            $rus or
+            $rus = 5;
+            $user = model('RelatedUser')->getRelatedUser($rus);
+            $user_list = array();
+            foreach ($user as $k => $v) {
+                $user_list[$k]['uid'] = $v['userInfo']['uid'];
+                $user_list[$k]['uname'] = $v['userInfo']['uname'];
+                $user_list[$k]['remark'] = $v['userInfo']['remark'];
+                $user_list[$k]['remark'] = $v['userInfo']['remark'] ? $v['userInfo']['remark'] : '';
                 $user_list[$k]['avatar'] = $v['userInfo']['avatar_big'];
                 $user_list[$k]['intro'] = $v['info']['msg'] ? formatEmoji(false, $v['info']['msg']) : '';
                 $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['userInfo']['uid']);
             }
         }
 
-        return Ts\Service\ApiMessage::withArray($user_list, 1, '');
-        // return $user_list;
+        return array_values($user_list);
     }
 
     /**
@@ -210,8 +380,7 @@ class FindPeopleApi extends Api
             $categoryTree[$k]['child'] = D('user_category')->where('pid='.$v['user_category_id'])->field('user_category_id as id,title')->findAll();
         }
 
-        return Ts\Service\ApiMessage::withArray($categoryTree, 1, '');
-        // return $categoryTree;
+        return $categoryTree;
     }
 
     /**
@@ -232,11 +401,10 @@ class FindPeopleApi extends Api
         $count = $this->count ? intval($this->count) : 20;
         $cid = intval($this->data['tag_id']);
         if (!$cid) {
-            return Ts\Service\ApiMessage::withArray('', 0, '请选择标签');
-            // return array(
-            //         'status' => 0,
-            //         'msg' => '请选择标签',
-            // );
+            return array(
+                    'status' => 0,
+                    'msg'    => '请选择标签',
+            );
         }
         $pid = M('UserCategory')->where('user_category_id='.$cid)->getField('pid');
         if ($pid == 0) {
@@ -305,10 +473,12 @@ class FindPeopleApi extends Api
             $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
             $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
             $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['row_id']);
+            $user_list[$k]['user_group'] = $user_info['user_group'];
+            $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
+            $user_list[$k]['space_privacy'] = $privacy['space'];
         }
 
-        return Ts\Service\ApiMessage::withArray($user_list, 1, '');
-        // return $user_list;
+        return $user_list;
     }
 
     /**
@@ -330,11 +500,10 @@ class FindPeopleApi extends Api
         $count = $this->count ? intval($this->count) : 20;
 
         if ($this->data['sex'] == '') {
-            return Ts\Service\ApiMessage::withArray('', 0, '请选择性别');
-            // return array(
-            //         'status' => 0,
-            //         'msg' => '请选择性别',
-            // );
+            return array(
+                    'status' => 0,
+                    'msg'    => '请选择性别',
+            );
         }
         $sex = intval($this->data['sex']);
 
@@ -356,10 +525,11 @@ class FindPeopleApi extends Api
             $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
             $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
             $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['uid']);
+            $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
+            $user_list[$k]['space_privacy'] = $privacy['space'];
         }
 
-        return Ts\Service\ApiMessage::withArray($user_list, 1, '');
-        // return $user_list;
+        return $user_list;
     }
 
     /**
@@ -421,8 +591,7 @@ class FindPeopleApi extends Api
             unset($first_letter);
         }
 
-        return Ts\Service\ApiMessage::withArray($letters, 1, '');
-        // return $letters;
+        return $letters;
     }
 
     /**
@@ -443,23 +612,21 @@ class FindPeopleApi extends Api
         $count = $this->count ? intval($this->count) : 20;
         $city_id = intval($this->data['city_id']);
         if (!$city_id) {
-            return Ts\Service\ApiMessage::withArray('', 0, '请选择地区');
-            // return array(
-            //         'status' => 0,
-            //         'msg' => '请选择地区',
-            // );
+            return array(
+                    'status' => 0,
+                    'msg'    => '请选择地区',
+            );
         }
-        !empty($max_id) && $map['uid'] = array(
-                'lt',
-                $max_id,
-        );
-        $map['city'] = $city_id;
-        $map['is_init'] = 1;
-        $map['uid'] = array(
-                'neq',
-                $this->mid,
-        );
-        $uids = model('User')->where($map)->order('uid desc')->field('uid')->limit($count)->findAll();
+        $sql = ' `city` = '.$city_id.' and `is_init` = 1 and  `uid` != '.$this->mid;
+
+        !empty($max_id) && $sql = ' `city` = '.$city_id.' and `is_init` = 1 and  ( `uid` != '.$this->mid.' and `uid` < '.$max_id.' ) ';
+        // $map['city'] = $city_id;
+        // $map['is_init'] = 1;
+        // $map['uid'] = array(
+        //         'neq',
+        //         $this->mid,
+        // );
+        $uids = model('User')->where($sql)->order('uid desc')->field('uid')->limit($count)->findAll();
         $user_list = array();
         foreach ($uids as $k => $v) {
             $user_info = api('User')->get_user_info($v['uid']);
@@ -469,10 +636,12 @@ class FindPeopleApi extends Api
             $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
             $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
             $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['uid']);
+            $user_list[$k]['user_group'] = $user_info['user_group'];
+            $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
+            $user_list[$k]['space_privacy'] = $privacy['space'];
         }
 
-        return Ts\Service\ApiMessage::withArray($user_list, 1, '');
-        // return $user_list;
+        return $user_list;
     }
 
     /**
@@ -495,8 +664,7 @@ class FindPeopleApi extends Api
             }
         }
 
-        return Ts\Service\ApiMessage::withArray($categoryTree, 1, '');
-        // return $categoryTree;
+        return $categoryTree;
     }
 
     /**
@@ -517,11 +685,10 @@ class FindPeopleApi extends Api
         $count = $this->count ? intval($this->count) : 20;
         $verify_id = t($this->data['verify_id']);
         if (!$verify_id) {
-            return Ts\Service\ApiMessage::withArray('', 0, '请选择认证类型');
-            // return array(
-            //         'status' => 0,
-            //         'msg' => '请选择认证类型',
-            // );
+            return array(
+                    'status' => 0,
+                    'msg'    => '请选择认证类型',
+            );
         }
 
         $verify_arr = explode('_', $verify_id);
@@ -545,10 +712,12 @@ class FindPeopleApi extends Api
             $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
             $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
             $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['uid']);
+            $user_list[$k]['user_group'] = $user_info['user_group'];
+            $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
+            $user_list[$k]['space_privacy'] = $privacy['space'];
         }
 
-        return Ts\Service\ApiMessage::withArray($user_list, 1, '');
-        // return $user_list;
+        return $user_list;
     }
 
     /**
@@ -582,29 +751,26 @@ class FindPeopleApi extends Api
                 'uid'        => $this->mid,
             ));
 
-            return Ts\Service\ApiMessage::withArray('', 1, '位置添加成功');
-            // return array(
-            //     'status' => 1,
-            //     'message' => '位置添加成功',
-            // );
+            return array(
+                'status'  => 1,
+                'message' => '位置添加成功',
+            );
 
         /* 判断是否更新成功 */
         } elseif (D('mobile_user')->where('`uid` = '.$this->mid)->save(array(
             'last_latitude'  => $lat,
             'last_longitude' => $lng,
         ))) {
-            return Ts\Service\ApiMessage::withArray('', 1, '位置更新成功');
-            // return array(
-            //     'status' => 1,
-            //     'message' => '位置更新成功',
-            // );
+            return array(
+                'status'  => 1,
+                'message' => '位置更新成功',
+            );
         }
 
-        return Ts\Service\ApiMessage::withArray('', 0, '位置未改变');
-        // return array(
-        //     'status' => 0,
-        //     'message' => '位置未改变',
-        // );
+        return array(
+            'status'  => 0,
+            'message' => '位置未改变',
+        );
     }
 
     /**
@@ -703,6 +869,20 @@ class FindPeopleApi extends Api
              */
             $data['followStatus'] = model('Follow')->getFollowState($this->mid, $userData['uid']);
 
+            // 用户组
+            $user_group = [];
+            foreach ($userData['user_group'] as $v) {
+                if ($v) {
+                    $user_group[] = $v['user_group_icon_url'];
+                }
+            }
+            $data['user_group'] = $user_group;
+            unset($user_group, $v);
+
+            //个人空间隐私权限
+            $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
+            $data['space_privacy'] = $privacy['space'];
+
             /*
              * 用户简介
              */
@@ -718,8 +898,7 @@ class FindPeopleApi extends Api
         /*
          * 返回数据
          */
-        return Ts\Service\ApiMessage::withArray($list, 1, '');
-        // return $list;
+        return $list;
     }
 
     /**
@@ -765,8 +944,7 @@ class FindPeopleApi extends Api
         $stepTwo = 2 * asin(min(1, sqrt($stepOne)));
         $calculatedDistance = $earthRadius * $stepTwo;
 
-        return Ts\Service\ApiMessage::withArray(round($calculatedDistance), 1, '');
-        // return round($calculatedDistance);
+        return round($calculatedDistance);
     }
 
     /**
@@ -825,6 +1003,10 @@ class FindPeopleApi extends Api
                         $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
                         $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
                         $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $user_info['uid']);
+                        $user_list[$k]['user_group'] = $user_info['user_group'];
+                        //个人空间隐私权限
+                        $privacy = model('UserPrivacy')->getPrivacy($this->mid, $uid);
+                        $user_list[$k]['space_privacy'] = $privacy['space'];
                     } else {
                         $user_list1[$k]['uid'] = 0;
                         $user_list1[$k]['tel'] = $v;
@@ -834,8 +1016,7 @@ class FindPeopleApi extends Api
             $data = array_merge($user_list, $user_list1);
         }
 
-        return Ts\Service\ApiMessage::withArray($data, 1, '');
-        // return $data;
+        return $data;
     }
 
     public function top_ad()
@@ -853,7 +1034,6 @@ class FindPeopleApi extends Api
         }
         // dump ( $info );
 
-        return Ts\Service\ApiMessage::withArray($info, 1, '');
-        // return $info;
+        return $info;
     }
 }

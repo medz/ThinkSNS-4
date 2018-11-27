@@ -197,3 +197,11 @@ html,body,input,select,div,tr,td{font-family:"微软雅黑";}
 .content .send_weibo .regular-checkbox + span{vertical-align: middle;}
 
 .ico-minus{background-position:0 -224px;}
+/*音频播放*/
+.audio-content{height: 40px;line-height: 40px;position: relative;width: 192px;-webkit-border-radius: 0 6px 6px 6px;-moz-border-radius: 0 6px 6px 6px;border-radius: 0 6px 6px 6px;color: #FFF;padding: 0 14px;cursor: pointer;}
+.audio-content{background: #0096e6;display: inline-block;vertical-align: middle;}
+.audio-content i.audio-icon{background: url(images/audio.png) no-repeat 0 0;width: 14px;height: 14px;display: block;position: absolute;top: 14px;left: 14px;}
+.audio-content i.audio-icon-active{background: url(images/audio-active.gif) no-repeat 0 0;left: 17px;}
+.audio-content span{margin-left: 30px;font-weight: bold;  }
+.audio-second{margin-left: 10px;}
+.audio-second:after{content: "″";font-size: 18px;}

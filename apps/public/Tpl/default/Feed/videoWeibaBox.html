@@ -1,0 +1,97 @@
+<div class="img-list clearfix" id="video_button" style="width:280px;">
+  <input style="display:none" id="video_{$unid}" type="file" name="video" />
+</div>
+<script type="text/javascript">
+/**
+ * Jquery多图上传Uploadify插件
+ * @return void
+ */
+core.loadFile(THEME_URL+'/js/uploadify/jquery.uploadify.min.js', function () {
+	var unid = "{$unid}",
+		fileSizeLimit = "{$fileSizeLimit}",
+		total = "{$total}",
+		fileTypeExts = "{$fileTypeExts}";
+	$('#video_'+unid).uploadify({
+		formData: {
+			PHPSESSID: "<?php echo session_id(); ?>"
+		},
+		fileSizeLimit: fileSizeLimit,
+    	fileTypeExts: fileTypeExts,
+		swf: THEME_URL + '/js/uploadify/uploadify.swf',
+		uploader: U('widget/Upload/uploadVideo'),
+		buttonText      : '请上传音/视频',
+		queueSizeLimit: total,
+		overrideEvents: ['onSelectError', 'onDialogClose'],
+		onUploadSuccess : function(file, data, response) {
+			var i = data.indexOf('{');	
+			data = data.substr(i);
+			// 解析JSON数据
+			var jsondata = $.parseJSON(data);
+			//console.log(jsondata);
+			if (jsondata.status === 1) {
+				// 添加附件ID表单项目
+				var $sendAction = $('div[model-node="send_action"]');
+				if ($sendAction.find('.video_id').length === 0) {
+					$sendAction.append('<input id="video_id" class="video_id" type="hidden" name="video_id" feedtype="video" value="" />');
+				}
+				$('#video_id').val(jsondata.video_id);
+				$('.uploadify-queue-item').remove();
+				var default_img = THEME_URL + '/image/video_bk.png';
+				if(jsondata.extension == 'mp4'){
+                    $('#video_button').html('<div class="video-list"><img src="'+jsondata.image_path+'" width="100" height="100" onerror="default_img(this)"/><br /><a style="width:100px" class="del" href="javascript:void(0);" onclick="deleteVideo();">删除</a></div><input id="weiba_video" type="hidden" value="'+jsondata.video_id+'" name="weiba_video" />');
+                }else{
+                    var size = jsondata.size;
+                    if(size>=1024){
+                        size /= 1024;
+                        if(size>=1024){
+                            size /= 1024;
+                            size = size.toFixed(2)+' MB';
+                        }else{
+                            size = size.toFixed(2)+' KB';
+                        }
+                    }
+                    $('#video_button').html('<div class="audio-list uploadify-queue"><div class="uploadify-queue-item"><div class="cancel"><a href="javascript:void(0);" onclick="deleteVideo();">X</a></div><span class="fileName">' + jsondata.name + ' (' + size + ')</span><div class="uploadify-progress"><div class="uploadify-progress-bar" style="width: 100%;"></div></div></div></div><input id="weiba_video" type="hidden" value="'+jsondata.video_id+'" name="weiba_video" />');
+                }
+			}
+		},
+		onSelectError: function (file, errorCode, errorMsg) {
+			switch (errorCode) {
+				case -100:
+					ui.error('选择的上传数目超过，您还能上传'+errorMsg+'个视频');
+					break;
+				case -110:
+					ui.error("文件 [" + file.name + "] 大小超出系统限制的" + fileSizeLimit + "大小", 4);
+					break;
+				case -120:
+					ui.error("文件 [" + file.name + "] 大小异常");
+					break;
+				case -130:
+					ui.error("文件 [" + file.name + "] 类型不正确");
+					break;
+			}
+		},
+		onFallback: function () {
+			ui.error('您未安装FLASH控件，无法上传！请安装FLASH控件后再试');
+		},
+		onUploadStart: function (file) {
+			// $('#video_'+unid).css('height','0');  //暂时隐藏
+			// core.video.addLoading(unid);
+			// 验证是否能继续上传
+			// var len = $('#ul_'+unid).find('li').length - 1;
+			// if (len > total) {
+			// 	core.video.removeLoading(unid);
+			// 	ui.error('最多只能上传' + total + '个图片');
+			// 	// 停止上传
+			// 	$('#uploadify_'+unid).uploadify('stop');
+			// 	// 移除队列
+			// 	$('#uploadify_'+unid).uploadify('cancel', file.id);
+			// }
+		}
+	});
+});
+function default_img(o){
+	var default_img = THEME_URL + '/image/video_bk.png';
+	$(o).attr("src",default_img);
+}
+</script>
+

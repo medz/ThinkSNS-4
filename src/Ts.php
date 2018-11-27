@@ -9,8 +9,7 @@ use Ts\AutoLoader\TsAutoLoader;
 require_once 'Paginator.php';
 
 /**
- * 新�
- * �口核心.
+ * 新入口核心.
  *
  * @author Seven Du <lovevipdsw@vip.qq.com>
  **/
@@ -52,8 +51,7 @@ final class Ts
     protected static $_classLoader;
 
     /**
-     * �
-     * �口文件.
+     * 入口文件.
      *
      * @param \Composer\Autoload\ClassLoader $classLoader
      *
@@ -139,8 +137,7 @@ final class Ts
      *
      * @param string $name 文件名
      * @param string $ext  文件拓展名
-     * @param param [param ...] 按�
-     * �完整路径的层级，最后一个默认为拓展名
+     * @param param [param ...] 按照完整路径的层级，最后一个默认为拓展名
      *
      * @return bool
      *

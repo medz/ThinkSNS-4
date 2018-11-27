@@ -1,5 +1,11 @@
 @charset "utf-8";
 /* CSS Document */
+.ico-top, .ico-btm {background: url(image/ico_top_btm.gif) no-repeat scroll 0 0 transparent;height:14px;width:12px;}
+.ico-top, .ico-btm {display: inline-block;vertical-align: middle;}
+.ico-top {background-position: -12px 0;}
+.ico-btm {background-position: -24px 0;}
+.ico-top:hover {background-position: 0 0;}
+.ico-btm:hover {background-position: -35px 0;}
 
 body { font:12px Arial, Verdana, Helvetica, sans-serif; text-align:center; color:#333; font-family: "微软雅黑"}
 body, div, dl, dt, dd, ul, ol, li, pre, form, fieldset, blockquote, h1, h2, h3, h4, h5, h6 { padding:0; margin:0 }
@@ -130,7 +136,15 @@ a:active { color:#3589F1; }
 .tit_tab2 a.on { font-weight:bold; color:#333 }
 .ui-sortable { }
 .ui-sortable li { float:left; padding:5px; }
-
+@media screen and (max-width:1270px) {
+	.tit_tab li {padding:5px 5px 0 0;}
+	.page_tit span{padding-right:10px;}
+}
+@media screen and (max-width:1060px) {
+	.tit_tab li {padding:5px 0 0 0;}
+	.tit_tab li a {padding:0 8px;}
+	.page_tit span{padding-right:10px;}
+}
 /*表单样式*/
 .form { padding-top:10px;}
 .form h3 { line-height:30px; font-size:12px; color:#333; border-bottom:1px solid #9cb8cc; }

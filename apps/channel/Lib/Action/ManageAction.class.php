@@ -29,11 +29,9 @@ class ManageAction extends Action
     }
 
     /**
-     * 添加分享进�
-     * �频道.
+     * 添加分享进入频道.
      *
-     * @return json 操作后的相�
-     * �信息数据
+     * @return json 操作后的相关信息数据
      */
     public function doAddChannel()
     {

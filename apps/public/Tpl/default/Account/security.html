@@ -26,7 +26,7 @@
               <form id="do_binding_email" action="{:U('public/Account/doBindingEmail')}" method="post">
                 <dl class="form-set form-contact">
                   <dd>
-                    <div class="form-tt">请输入新的邮箱：</div>
+                    <div class="form-tt">邮箱地址：</div>
                     <div class="form-row">
                       <input name="email" id="write_email" type="text" class="text" autocomplete='off'/>
                     </div>
@@ -35,7 +35,7 @@
                     <div class="form-tt">验证码：</div>
                     <div class="form-row">
                       <input id="write_email_code" name="email_code" type="text" class="text" autocomplete='off' />
-                      <a href="javascript:;" id="get_email_code" onclick="send_email_msg();" email="" class="btn-cancel">
+                      <a href="javascript:;" id="get_email_code" onclick="send_email_msg();" email="" class="btn-cancel recode-code-btn">
                         <span>获取验证码</span>
                       </a>
                       <div class="txt-info" id="email_msg_tip" style="display:none;">验证码已发送到您的邮箱，30分钟内输入有效，请勿泄露。</div>
@@ -83,7 +83,7 @@
                     <div class="form-tt">验证码：</div>
                     <div class="form-row">
                       <input id="write_mobile_code" name="mobile_code" type="text" class="text" autocomplete='off' />
-                      <a href="javascript:;" id="get_mobile_code" mobile="" onclick="send_moblie_msg();" class="btn-cancel">
+                      <a href="javascript:;" id="get_mobile_code" mobile="" onclick="send_moblie_msg();" class="btn-cancel  recode-code-btn">
                         <span>获取验证码</span>
                       </a>
                       <div class="txt-info" id="mobile_msg_tip" style="display:none;">验证码已发送到您的手机，30分钟内输入有效，请勿泄露。</div>
@@ -185,7 +185,7 @@ var send_moblie_msg = function() {
     ui.error('手机号不能为空');
     return false;
   }
-  if( !(/^[1][358]\d{9}$/.test(mobile)) ){
+  if( !(/^[1][34578]\d{9}$/.test(mobile)) ){
     ui.error('请填写正确的11位手机号');
     return false;
   }
@@ -253,7 +253,7 @@ var do_binding_mobile = function() {
     ui.error('手机号不能为空');
     return false;
   }
-  if( !(/^[1][358]\d{9}$/.test(mobile)) ){
+  if( !(/^[1][34578]\d{9}$/.test(mobile)) ){
     ui.error('请填写正确的11位手机号');
     return false;
   }

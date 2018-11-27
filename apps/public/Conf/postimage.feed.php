@@ -5,7 +5,7 @@
 <php>$attachCount=count($attachInfo);</php>
 <volist name='attachInfo' id='vo'>
 	<li rel="{$vo.attach_id}" {$attachCount==1?'style="width:205px;height:auto"':''}>
-		<a href="javascript:void(0);" onclick="core.weibo.showBigImage({$feedid}, {$i})" >
+		<a href="javascript:void(0);" onclick="core.weibo.preventBubbles(event,{$feedid},{$i})" >
 		   <img <php>if($attachCount==1):</php>onload="/*仅标签上有效，待改进*/;var li=$(this).parents('li');if(li.height()>300){li.css('height','300px');li.find('.pic-btm').show();}" <php>endif;</php>class="imgicon" src='{$attachCount==1?$vo['attach_medium']:$vo['attach_small']}' title='点击放大' >
 		   <!--共有{$attachCount}张图片-->
            {$attachCount==1?'<span class="pic-btm hidden">点击查看完整图片</span>':''}

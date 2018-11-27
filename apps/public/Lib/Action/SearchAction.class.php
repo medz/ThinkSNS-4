@@ -34,8 +34,7 @@ class SearchAction extends Action
     }
 
     /**
-     * 根据�
-     * �键字进行搜索.
+     * 根据关键字进行搜索.
      */
     public function index()
     {
@@ -145,36 +144,34 @@ class SearchAction extends Action
             $this->display('weiba');
         } elseif ($this->curType == 4) {     //搜索用户
             if ($this->key != '') {
-                if (t($_GET['Stime']) && t($_GET['Etime'])) {
-                    $Stime = strtotime(t($_GET['Stime']));
-                    $Etime = strtotime(t($_GET['Etime']));
-                    $this->assign('Stime', t($_GET['Stime']));
-                    $this->assign('Etime', t($_GET['Etime']));
-                }
-                $map['title'] = array(
-                        'like',
-                        '%'.$this->key.'%',
+                $map['subject'] = array(
+                    'like',
+                    '%'.$this->key.'%',
                 );
-                $list = M('blog')->where($map)->findPage(20);
-                foreach ($list['data'] as $k => $v) {
-                    preg_match_all('#<img.*?src="([^"]*)"[^>]*>#i', $v['content'], $match);
-                    foreach ($match[1] as $imgurl) {
-                        $imgurl = $imgurl;
-                        if (!empty($imgurl)) {
-                            $list['data'][$k]['img'][] = $imgurl;
+                $list = M('information_list')->where($map)->findPage(20);
+                foreach ($list['data'] as $k=>$subject) {
+                    if ($subject['logo'] > 0) {
+                        $list['data'][$k]['image'] = getImageUrlByAttachId($subject['logo'], '205', '160', true);
+                    } else {
+                        preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $subject['content'], $image);
+                        $image = $image[2];
+                        if ($image && is_array($image) && count($image) >= 1) {
+                            $image = $image[array_rand($image)];
+                            if (!preg_match('/https?\:\/\//is', $image)) {
+                                $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
+                            }
                         }
+                        $list['data'][$k]['image'] = $image;
                     }
-                    $is_digg = M('blog_digg')->where('post_id='.$v['id'].' and uid='.$this->mid)->find();
-                    $list['data'][$k]['digg'] = $is_digg ? 'digg' : 'undigg';
-                    if (count($list[$k]['img']) == '0') {
-                        $list['data'][$k]['img'][] = ''; // 默认图
+                    if(mb_strlen($subject['abstract'],'utf8')> 145){
+                        $list['data'][$k]['abstract'] = getShort($subject['abstract'],145).'......';
                     }
-                    $list['data'][$k]['content'] = t($list['data'][$k]['content']);
+                    $list['data'][$k]['commentNum'] = $this->_getComentNum($subject['id']);
                 }
                 //dump($list);exit;
                 $this->assign('searchResult', $list);
             }
-            $this->display('blog');
+            $this->display('information');
         } elseif ($this->curType == 5) {     //搜索帖子
             if ($this->key != '') {
                 if (t($_GET['Stime']) && t($_GET['Etime'])) {
@@ -251,7 +248,7 @@ class SearchAction extends Action
                     $userlist['data'][$k]['usercount'] = $usercounts[$v['uid']];
                     $userlist['data'][$k]['userTag'] = model('Tag')->setAppName('User')->setAppTable('user')->getAppTags($v['uid']);
                     // 获取用户用户组信息
-                    // 					$userGids = model('UserGroupLink')->getUserGroup($v['uid']);
+// 					$userGids = model('UserGroupLink')->getUserGroup($v['uid']);
                     $userGroupData = model('UserGroup')->getUserGroupByGids($userGids[$v['uid']]);
                     foreach ($userGroupData as $key => $value) {
                         if ($value['user_group_icon'] == -1) {
@@ -273,7 +270,20 @@ class SearchAction extends Action
             $this->display('post');
         }
     }
+    /**
+     * 获取评论数
+     *
+     * @param  int $sid 主题ID
+     * @return int 评论数
+     * @author Seven Du <lovevipdsw@vip.qq.com>
+     **/
+    private function _getComentNum($sid)
+    {
+        $where = '`is_del` = 0 AND `app` = \'Information\' AND `table` = \'%s\' AND `row_id` = %d';
+        $where = sprintf($where, 'information_list', intval($sid));
 
+        return model('Comment')->where($where)->field('comment_id')->count();
+    }
     private function _assignUserTag($uids)
     {
         $user_tag = model('Tag')->setAppName('User')->setAppTable('user')->getAppTags($uids);
@@ -359,8 +369,8 @@ class SearchAction extends Action
                 $this->assign('Stime', t($_GET['Stime']));
                 $this->assign('Etime', t($_GET['Etime']));
             }
-            //关键字匹配 采用搜索引擎兼容函数搜索 后期可能会扩展为搜索引擎
-            $map['uname'] = array(
+                //关键字匹配 采用搜索引擎兼容函数搜索 后期可能会扩展为搜索引擎
+                $map['uname'] = array(
                         'like',
                         '%'.$this->key.'%',
                 );
@@ -382,23 +392,54 @@ class SearchAction extends Action
                 $this->assign('Stime', t($_GET['Stime']));
                 $this->assign('Etime', t($_GET['Etime']));
             }
-            //关键字匹配 采用搜索引擎兼容函数搜索 后期可能会扩展为搜索引擎
-            $feed_type = !empty($_GET['feed_type']) ? t($_GET['feed_type']) : '';
+                //关键字匹配 采用搜索引擎兼容函数搜索 后期可能会扩展为搜索引擎
+                $feed_type = !empty($_GET['feed_type']) ? t($_GET['feed_type']) : '';
             $list = model('Feed')->searchFeeds($this->key, $feed_type, 20, $Stime, $Etime);
 
-            //赞功能
-            $feed_ids = getSubByKey($list['data'], 'feed_id');
+                //赞功能
+                $feed_ids = getSubByKey($list['data'], 'feed_id');
             $diggArr = model('FeedDigg')->checkIsDigg($feed_ids, $GLOBALS['ts']['mid']);
             $this->assign('diggArr', $diggArr);
 
             $this->assign('feed_type', $feed_type);
             $this->assign('searchResult', $list);                 //搜索分享
-            $weiboSet = model('Xdata')->get('admin_Config:feed');
+                $weiboSet = model('Xdata')->get('admin_Config:feed');
             $this->assign('weibo_premission', $weiboSet['weibo_premission']);
         }
         $this->display();
     }
-
+    public function information()
+    {
+        if ($this->key != '') {
+            $map['subject'] = array(
+                'like',
+                '%'.$this->key.'%',
+            );
+            $list = M('information_list')->where($map)->findPage(20);
+            foreach ($list['data'] as $k=>$subject) {
+                if ($subject['logo'] > 0) {
+                    $list['data'][$k]['image'] = getImageUrlByAttachId($subject['logo'], '205', '160', true);
+                } else {
+                    preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $subject['content'], $image);
+                    $image = $image[2];
+                    if ($image && is_array($image) && count($image) >= 1) {
+                        $image = $image[array_rand($image)];
+                        if (!preg_match('/https?\:\/\//is', $image)) {
+                            $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
+                        }
+                    }
+                    $list['data'][$k]['image'] = $image;
+                }
+                if(mb_strlen($subject['abstract'],'utf8')> 118){
+                    $list['data'][$k]['abstract'] = getShort($subject['abstract'],118).'......';
+                }
+                $list['data'][$k]['commentNum'] = $this->_getComentNum($subject['id']);
+            }
+            //dump($list);exit;
+            $this->assign('searchResult', $list);
+        }
+        $this->display();
+    }
     public function weiba()
     {
         if ($this->key != '') {
@@ -421,7 +462,7 @@ class SearchAction extends Action
                     $this->setNewcount($v['weiba_id'], 0);
                 }
             }
-            //dump($list);exit;
+                //dump($list);exit;
                 $this->assign('searchResult', $list);                 //搜索分享
         }
         $this->display();
@@ -456,8 +497,8 @@ class SearchAction extends Action
                 }
                 $list['data'][$k]['content'] = t($list['data'][$k]['content']);
             }
-            //dump($list);exit;
-            $this->assign('searchResult', $list);
+                //dump($list);exit;
+                $this->assign('searchResult', $list);
         }
         $this->display();
     }
@@ -483,12 +524,12 @@ class SearchAction extends Action
                 $list['data'][$k]['weiba'] = $nameArr[$v['weiba_id']];
                 $list['data'][$k]['user'] = model('User')->getUserInfo($v['post_uid']);
                 $list['data'][$k]['replyuser'] = model('User')->getUserInfo($v['last_reply_uid']);
-                // $images = matchImages($v['content']);
-                // $images[0] && $list['data'][$k]['image'] = array_slice( $images , 0 , 5 );
-                $image = getEditorImages($v['content']);
+                    // $images = matchImages($v['content']);
+                    // $images[0] && $list['data'][$k]['image'] = array_slice( $images , 0 , 5 );
+                    $image = getEditorImages($v['content']);
                 !empty($image) && $list['data'][$k]['image'] = array($image);
-                //匹配图片的src
-                preg_match_all('#<img.*?src="([^"]*)"[^>]*>#i', $v['content'], $match);
+                    //匹配图片的src
+                    preg_match_all('#<img.*?src="([^"]*)"[^>]*>#i', $v['content'], $match);
                 foreach ($match[1] as $imgurl) {
                     $imgurl = $imgurl;
                     if (!empty($imgurl)) {
@@ -499,14 +540,14 @@ class SearchAction extends Action
                 $list['data'][$k]['digg'] = $is_digg ? 'digg' : 'undigg';
                 $list['data'][$k]['content'] = t($list['data'][$k]['content']);
 
-                //去掉微吧已经删除的
-                $is_del = D('weiba')->where('weiba_id='.$v['weiba_id'])->getField('is_del');
+                    //去掉微吧已经删除的
+                    $is_del = D('weiba')->where('weiba_id='.$v['weiba_id'])->getField('is_del');
                 if ($is_del == 1 || $is_del === null) {
                     unset($list['data'][$k]);
                 }
             }
-            //dump($list);exit;
-            $this->assign('searchResult', $list);
+                //dump($list);exit;
+                $this->assign('searchResult', $list);
         }
         $this->display();
     }

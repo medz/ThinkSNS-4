@@ -5,8 +5,7 @@ use Apps\Event\Model\Event;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * �
- * �开api接口.
+ * 公开api接口.
  *
  * @author Medz Seven <lovevipdsw@vip.qq.com>
  **/
@@ -18,8 +17,7 @@ class PublicApi extends Api
     }
 
     /**
-     * 按�
-     * �层级获取地区列表.
+     * 按照层级获取地区列表.
      *
      * @request int     $pid     地区ID
      *
@@ -84,8 +82,7 @@ class PublicApi extends Api
     }
 
     /**
-     * 获取�
-     * �于我们HTML信息.
+     * 获取关于我们HTML信息.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -164,6 +161,8 @@ class PublicApi extends Api
                         $weiba_recommend[$k]['new_count'] = 0;
                         $this->setNewcount($v['weiba_id'], 0);
                     }
+                    $weiba_recommend[$k]['notify'] = $v['notify'] ?: '';
+                    $weiba_recommend[$k]['info'] = $v['info'] ?: '';
                     $weiba_recommend[$k]['title'] = formatEmoji(false, $weiba_recommend[$k]['title']);
                     $weiba_recommend[$k]['content'] = formatEmoji(false, $weiba_recommend[$k]['content']);
                 }
@@ -218,12 +217,16 @@ class PublicApi extends Api
                 $information_recommend = D('InformationList')->where($imap)->order('hits desc')->limit(8)->field('id,subject,content')->findAll();
 
                 foreach ($information_recommend as $key => $value) {
-                    preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $value['content'], $image);
-                    $image = $image[2];
-                    if ($image && is_array($image) && count($image) >= 1) {
-                        $image = $image[array_rand($image)];
-                        if (!preg_match('/https?\:\/\//is', $image)) {
-                            $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
+                    if ($value['logo'] > 0) {
+                        $image = getImageUrlByAttachId($value['logo'], '205', '160', true);
+                    } else {
+                        preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $value['content'], $image);
+                        $image = $image[2];
+                        if ($image && is_array($image) && count($image) >= 1) {
+                            $image = $image[array_rand($image)];
+                            if (!preg_match('/https?\:\/\//is', $image)) {
+                                $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
+                            }
                         }
                     }
                     $information_recommend[$key]['pic'] = !empty($image) ? $image : '';
@@ -241,8 +244,18 @@ class PublicApi extends Api
                 foreach ($user as $k => $v) {
                     $user_list[$k]['uid'] = $v['userInfo']['uid'];
                     $user_list[$k]['uname'] = $v['userInfo']['uname'];
-                    $user_list[$k]['remark'] = $v['userInfo']['remark'];
+                    $user_list[$k]['remark'] = $v['userInfo']['remark'] ?: '';
                     $user_list[$k]['avatar'] = $v['userInfo']['avatar_big'];
+                    // 用户组
+                    $user_group = [];
+                    foreach ($v['userInfo']['user_group'] as $value) {
+                        if ($value) {
+                            $user_group[] = $value['user_group_icon_url'];
+                        }
+                    }
+                    $user_list[$k]['user_group'] = $user_group;
+                    unset($user_group, $value);
+
                     $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['userInfo']['uid']);
                     $user_list[$k]['space_privacy'] = $privacy['space'];
                 }
@@ -254,25 +267,34 @@ class PublicApi extends Api
                 $users = api('FindPeople')->around();
 
                 foreach ($users['data'] as $key => $value) {
-                    $findp['uid'] = $value['uid'];
-                    $findp['uname'] = $value['username'];
-                    $findp['remark'] = $value['remark'];
-                    $findp['avatar'] = $value['avatar'];
-                    $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
-                    $findp['space_privacy'] = $privacy['space'];
-                    $fpeople[] = $findp;
+                    if (!empty($value)) {
+                        $findp['uid'] = $value['uid'];
+                        $findp['uname'] = $value['username'];
+                        $findp['remark'] = $value['remark'] ?: '';
+                        $findp['avatar'] = $value['avatar'];
+                        $findp['followStatus'] = $value['followStatus'];
+                        $findp['user_group'] = $value['user_group'];
+                        $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
+                        $findp['space_privacy'] = $privacy['space'];
+                        $fpeople[] = $findp;
+                    }
                 }
                 $list['near_users'] = $fpeople ? $fpeople : array();
             }
 
             //积分商城
             if (in_array('8', $open_arr)) {
-                $giftlogs = D('GiftLog')->field('`gid`')->group('`gid`')->order('COUNT(`gid`) DESC')->limit(8)->findAll();
+                $db_prefix = C('DB_PREFIX');
+                $gifts = M('')->field('gift.id, gift.image, gift.name')
+                    ->table("{$db_prefix}gift AS gift LEFT JOIN {$db_prefix}gift_log AS log ON gift.id=log.gid")
+                    ->where('gift.isDel = 0')
+                    ->group('gid')
+                    ->order('COUNT(`gid`) DESC')
+                    ->limit(8)
+                    ->findAll();
 
-                foreach ($giftlogs as $key => $value) {
-                    $gift = D('Gift')->where(array('id' => $value['gid']))->field('id,name,image')->find();
-                    $gift['image'] = getImageUrlByAttachId($gift['image']);
-                    $gifts[] = $gift;
+                foreach ($gifts as $key => &$value) {
+                    $value['image'] = getImageUrlByAttachId($value['image']) ?: '';
                 }
                 $list['gifts'] = $gifts ? $gifts : array();
             }

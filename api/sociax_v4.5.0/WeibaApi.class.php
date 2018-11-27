@@ -209,8 +209,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * 帖子详�
-     * --using.
+     * 帖子详情 --using.
      *
      * @param
      *        	integer id 帖子ID
@@ -606,8 +605,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * 我加�
-     * �的圈子.
+     * 我加入的圈子.
      */
     public function weiba_join_my()
     {
@@ -677,8 +675,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * �
-     * �注圈子.
+     * 关注圈子.
      *
      * @param
      *        	integer uid 用户UID
@@ -717,8 +714,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * 取消�
-     * �注圈子.
+     * 取消关注圈子.
      *
      * @param
      *        	integer uid 用户UID
@@ -956,8 +952,7 @@ class WeibaApi extends Api
     }
 
     /**
-     * 批量获取圈子�
-     * �注状态
+     * 批量获取圈子关注状态
      *
      * @param
      *        	integer uid 用户UID
@@ -979,19 +974,16 @@ class WeibaApi extends Api
     }
 
     /**
-     * 格式化，用户的�
-     * �注数据.
+     * 格式化，用户的关注数据.
      *
      * @param int   $uid
      *                           用户ID
      * @param array $fids
      *                           用户ID数组
      * @param array $follow_data
-     *                           �
-     * �注状态数据
+     *                           关注状态数据
      *
-     * @return array 格式化后的用户�
-     * �注状态数据
+     * @return array 格式化后的用户关注状态数据
      */
     public function _formatFollowState($uid, $weiba_ids, $follow_data)
     {
@@ -1115,6 +1107,7 @@ class WeibaApi extends Api
             $digg_list[$k]['intro'] = $user_info['intro'];
             $digg_list[$k]['avatar'] = $user_info['avatar']['avatar_middle'];
             $digg_list[$k]['follow_status'] = $follow_status[$v['uid']];
+            $digg_list[$k]['user_group'] = $user_info['user_group'];
             $digg_list[$k]['space_privacy'] = $user_info['space_privacy'];
             unset($digg_list[$k]['post_id']);
         }
@@ -1290,8 +1283,7 @@ class WeibaApi extends Api
      * @param
      *        	integer to_comment_id 评论ID
      * @param
-     *        	string content 评论�
-     * 容
+     *        	string content 评论内容
      * @param
      *        	integer from 来源(2-android 3-iPhone)
      *
@@ -1313,6 +1305,14 @@ class WeibaApi extends Api
             $return['msg'] = '评论内容不能为空';
 
             return $return;
+        }
+        /* 判断是否含有敏感词 */
+        $content = sensitiveWord($this->data['content']);
+        if (!sensitiveWord($content)) {
+            return array(
+                'status' => -3,
+                'msg' => '评论内容包含敏感词', // 评论内容包含敏感词
+            );
         }
         if (!intval($this->data['post_id'])) {
             $return['msg'] = '参数非法';
@@ -1337,7 +1337,7 @@ class WeibaApi extends Api
         }
         $data['uid'] = $this->mid;
         $data['ctime'] = time();
-        $data['content'] = t(preg_html(h($this->data['content'])));
+        $data['content'] = t(preg_html(h($content)));
         /* # 格式化emoji */
         $data['content'] = formatEmoji(true, $data['content']);
         $data['attach_id'] = intval($this->data['attach_id']);
@@ -1543,6 +1543,14 @@ class WeibaApi extends Api
 
     public function upload_photo()
     {
+        //检测用户是否被禁言
+        if ($isDisabled = model('DisableUser')->isDisableUser($this->mid, 'post')) {
+            return array(
+                'status' => 0,
+                'msg'    => '您已经被禁言了',
+            );
+        }        
+
         $d['attach_type'] = 'weiba_post';
         $d['upload_type'] = 'image';
         $GLOBALS['fromMobile'] = true;
@@ -1553,6 +1561,14 @@ class WeibaApi extends Api
 
     public function add_post($imgs)
     {
+        //检测用户是否被禁言
+        if ($isDisabled = model('DisableUser')->isDisableUser($this->mid, 'post')) {
+            return array(
+                'status' => 0,
+                'msg'    => '您已经被禁言了',
+            );
+        }        
+
         if (!CheckPermission('weiba_normal', 'weiba_post')) {
             $this->error('对不起，您没有权限进行该操作！');
         }
@@ -1618,6 +1634,21 @@ class WeibaApi extends Api
         if (count($match[0]) > 20) { // 汉字和字母都为一个字
             $this->error('帖子标题不能超过20个字');
         }
+        /* 判断是否含有敏感词 */
+        $title = sensitiveWord($this->data['title']);
+        if (!sensitiveWord($title)) {
+            return array(
+                'status' => -3,
+                'msg' => '帖子标题包含敏感词', // 帖子标题包含敏感词
+            );
+        }
+        $content = sensitiveWord($this->data['content']);
+        if (!sensitiveWord($content)) {
+            return array(
+                'status' => -3,
+                'msg' => '帖子内容包含敏感词!', // 帖子内容包含敏感词
+            );
+        }
         if ($this->data['attach_ids']) {
             $attach = explode('|', $this->data['attach_ids']);
             foreach ($attach as $k => $a) {
@@ -1629,8 +1660,8 @@ class WeibaApi extends Api
             $data['attach'] = serialize($attach);
         }
         $data['weiba_id'] = $weibaid;
-        $data['title'] = t($this->data['title']);
-        $data['content'] = h($this->data['content']);
+        $data['title'] = t($title);
+        $data['content'] = h($content);
 
         // 格式化emoji
         $data['title'] = formatEmoji(true, $data['title']);

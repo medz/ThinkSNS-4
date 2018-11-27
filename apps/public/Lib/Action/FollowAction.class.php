@@ -1,7 +1,6 @@
 <?php
 /**
- * �
- * �注控制器.
+ * 关注控制器.
  *
  * @author chenweichuan <chenweichuan@zhishisoft.com>
  *
@@ -12,8 +11,7 @@ class FollowAction extends Action
     private $_follow_model = null;         // 关注模型对象字段
 
     /**
-     * 初始化控制器，实例化�
-     * �注模型对象
+     * 初始化控制器，实例化关注模型对象
      */
     protected function _initialize()
     {
@@ -21,8 +19,7 @@ class FollowAction extends Action
     }
 
     /**
-     * 添加�
-     * �注操作.
+     * 添加关注操作.
      *
      * @return json 返回操作后的JSON信息数据
      */
@@ -36,8 +33,7 @@ class FollowAction extends Action
     }
 
     /**
-     * 取消�
-     * �注操作.
+     * 取消关注操作.
      *
      * @return json 返回操作后的JSON信息数据
      */
@@ -50,8 +46,7 @@ class FollowAction extends Action
     }
 
     /**
-     * 批量添加�
-     * �注操作.
+     * 批量添加关注操作.
      *
      * @return json 返回操作后的JSON信息数据
      */

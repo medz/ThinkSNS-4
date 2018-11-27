@@ -186,11 +186,11 @@ class MedalAction extends AdministratorAction
         foreach ($list['data'] as &$v) {
             $v['medalsrc'] = '<img src="'.getImageUrl($v['medalsrc']).'" width="100px" height="100px" />';
             $v['DOACTION'] = '<a href="'.U('admin/Medal/editUserMedal', array('id' => $v['id'])).'" >编辑</a>';
-            // 			$v['DOACTION'] .= " <a href='javascript:void(0)' onclick='admin.deleteusermedal(".$v['id'].")'>删除</a>";
+// 			$v['DOACTION'] .= " <a href='javascript:void(0)' onclick='admin.deleteusermedal(".$v['id'].")'>删除</a>";
         }
         $this->pageButton[] = array('title' => '搜索', 'onclick' => "admin.fold('search_form')");
         $this->pageButton[] = array('title' => '颁发勋章', 'onclick' => "javascript:location.href='".U('admin/Medal/addUserMedal')."';");
-        // 		$this->pageButton[] = array( 'title' => '删除' , 'onclick' => "admin.deleteusermedal()" );
+// 		$this->pageButton[] = array( 'title' => '删除' , 'onclick' => "admin.deleteusermedal()" );
         $this->searchKey = array('user', 'medal');
         $medals = model('Medal')->getAllMedal();
         $medals[0] = '不限';

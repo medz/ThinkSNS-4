@@ -1,7 +1,6 @@
 <?php
 /**
- * 频道�
- * �注模型 - 数据对象模型.
+ * 频道关注模型 - 数据对象模型.
  *
  * @author zivss <guolee226@gmail.com>
  *
@@ -12,13 +11,11 @@ class ChannelFollowModel extends Model
     protected $tableName = 'channel_follow';
 
     /**
-     * 获取指定分类的�
-     * �注数目.
+     * 获取指定分类的关注数目.
      *
      * @param int $cid 频道分类ID
      *
-     * @return int 指定分类的�
-     * �注数目
+     * @return int 指定分类的关注数目
      */
     public function getFollowingCount($cid)
     {
@@ -29,16 +26,13 @@ class ChannelFollowModel extends Model
     }
 
     /**
-     * 更新频道的�
-     * �注状态
+     * 更新频道的关注状态
      *
-     * @param int    $uid  �
-     * �注用户ID
+     * @param int    $uid  关注用户ID
      * @param int    $cid  频道分类ID
      * @param string $type 更新频道操作，add or del
      *
-     * @return bool 更新频道�
-     * �注状态是否成功
+     * @return bool 更新频道关注状态是否成功
      */
     public function upFollow($uid, $cid, $type)
     {
@@ -73,14 +67,12 @@ class ChannelFollowModel extends Model
     }
 
     /**
-     * 获取指定用户与指定频道分类的�
-     * �注状态
+     * 获取指定用户与指定频道分类的关注状态
      *
      * @param int $uid 用户ID
      * @param int $cid 频道分类ID
      *
-     * @return bool 返回是否�
-     * �注
+     * @return bool 返回是否关注
      */
     public function getFollowStatus($uid, $cid)
     {
@@ -93,13 +85,11 @@ class ChannelFollowModel extends Model
     }
 
     /**
-     * 获取指定用户的�
-     * �注列表.
+     * 获取指定用户的关注列表.
      *
      * @param int $uid 指定用户ID
      *
-     * @return array 指定用户的�
-     * �注列表
+     * @return array 指定用户的关注列表
      */
     public function getFollowList($uid)
     {
@@ -116,17 +106,14 @@ class ChannelFollowModel extends Model
     }
 
     /**
-     * 获取指定用户所�
-     * �注频道的所有分享，默认为当前登录用户.
+     * 获取指定用户所关注频道的所有分享，默认为当前登录用户.
      *
      * @param string $where 查询条件
      * @param int    $limit 结果集数目，默认为10
      * @param int    $uid   指定用户ID，默认为空
-     * @param int    $fgid  �
-     * �注频道ID，默认为空
+     * @param int    $fgid  关注频道ID，默认为空
      *
-     * @return array 指定用户所�
-     * �注频道的所有分享，默认为当前登录用户
+     * @return array 指定用户所关注频道的所有分享，默认为当前登录用户
      */
     public function getFollowingFeed($where = '', $limit = 10, $uid = '', $fgid = '')
     {

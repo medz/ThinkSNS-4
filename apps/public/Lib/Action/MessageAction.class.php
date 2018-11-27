@@ -79,8 +79,7 @@ class MessageAction extends Action
     }
 
     /**
-     * 私信详�
-     * .
+     * 私信详情.
      */
     public function detail()
     {
@@ -109,8 +108,7 @@ class MessageAction extends Action
     }
 
     /**
-     * 获取指定私信列表中的私信�
-     * 容.
+     * 获取指定私信列表中的私信内容.
      */
     public function loadMessage()
     {

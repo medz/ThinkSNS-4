@@ -66,18 +66,32 @@ var checkAll = function(o){
 M.addModelFns({
 	weiba_post:{  //发布帖子
 		callback:function(txt){
-			ui.success('发布成功');
-			setTimeout(function() {
-				location.href = U('weiba/Index/postDetail')+'&post_id='+txt.data.id;
-			}, 1500);
+			if(txt.data.is_audit){
+                ui.success('发布内容中包含审核关键词，需审核后展示！');
+                setTimeout(function() {
+                    location.href = U('weiba/Index/index');
+                }, 1500);
+			}else{
+                ui.success('发布成功');
+                setTimeout(function() {
+                    location.href = U('weiba/Index/postDetail')+'&post_id='+txt.data.id;
+                }, 1500);
+			}
 		}
 	},
 	weiba_post_edit:{  //编辑帖子
 		callback:function(txt){
-			ui.success('编辑成功');
-			setTimeout(function() {
-				location.href = U('weiba/Index/postDetail')+'&post_id='+txt.data;
-			}, 1500);
+            if(txt.data.is_audit){
+                ui.success('编辑内容中包含审核关键词，需审核后展示！');
+                setTimeout(function() {
+                    location.href = U('weiba/Index/index');
+                }, 1500);
+            }else{
+                ui.success('编辑成功');
+                setTimeout(function() {
+                    location.href = U('weiba/Index/postDetail')+'&post_id='+txt.data.post_id;
+                }, 1500);
+            }
 		}
 	},
 	drop_weiba_search:{
@@ -272,29 +286,37 @@ M.addEventFns({
 				if(msg.status == "0"){
 					ui.error(msg.data);
 				}else{
-					if("undefined" != typeof(commentListObj.childModels['comment_list']) ){
-						ui.success('评论成功');
-						if(attrs.addtoend == 1){
-                            $('#commentlist_'+attrs.post_id).append(msg.data);
+                    if(msg.status == 1000){
+                        ui.success(msg.data);
+                        //重置
+                        _textarea.value = '';
+                        this.to_reply_id = 0;
+                        this.to_uid = 0;
+                    }else{
+                        if("undefined" != typeof(commentListObj.childModels['comment_list']) ){
+                            ui.success('评论成功');
+                            if(attrs.addtoend == 1){
+                                $('#commentlist_'+attrs.post_id).append(msg.data);
 //							$(commentListObj).find('.comment_lists').eq(0).append(msg.data);
-						}else{
-                            $('#commentlist_'+attrs.post_id).prepend(msg.data);
+                            }else{
+                                $('#commentlist_'+attrs.post_id).prepend(msg.data);
 //							$(msg.data).insertBefore($(commentListObj.childModels['comment_list'][0]));
-						}
-					}else{
-						ui.success('评论成功');
-                        $('#commentlist_'+attrs.post_id).html(msg.data);
+                            }
+                        }else{
+                            ui.success('评论成功');
+                            $('#commentlist_'+attrs.post_id).html(msg.data);
 //						$(commentListObj).find('.comment_lists').eq(0).html(msg.data);
-					}
-					$('#reply_count').html(parseInt($('#reply_count').html()) + 1);
-					M(commentListObj);
-					//重置
-					_textarea.value = '';
-					this.to_reply_id = 0;
-					this.to_uid = 0;
-					// if("function" == typeof(afterComment)){
-					// 	afterComment();
-					// }
+                        }
+                        $('#reply_count').html(parseInt($('#reply_count').html()) + 1);
+                        M(commentListObj);
+                        //重置
+                        _textarea.value = '';
+                        this.to_reply_id = 0;
+                        this.to_uid = 0;
+                        // if("function" == typeof(afterComment)){
+                        // 	afterComment();
+                        // }
+                    }
 				}
 				$(_this).html('<span>回复</span>');
 				addComment = false;

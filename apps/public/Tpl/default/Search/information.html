@@ -1,0 +1,33 @@
+<include file="__THEME__/public_header" />
+<link href="__APP__/information.css" rel="stylesheet" type="text/css" />
+<div id="page-wrap">
+  <div id="main-wrap">
+    <div id="col"> <include file="search_top" /> </div>
+    <div id="col8" class="post-circle clearfix">
+      <div class="post-list zx-linst">
+        <php>if($searchResult['data']){</php>
+          <volist name="searchResult['data']" id="vo">
+            <dl>
+              <dt>
+                <a href="{:U('Information/Index/read', array('id' => $vo['id']))}">
+                <?php if ($vo['image']) { ?>
+                <img src="{$vo['image']}" alt="{$vo['subject']}">
+                <?php } ?>
+                </a>
+              </dt>
+              <dd>
+                <h2><a href="{:U('Information/Index/read', array('id' => $vo['id'],'type'=>$vo['type']))}">{$vo['subject']}</a></h2>
+                <p><a href="{:U('Information/Index/read', array('id' => $vo['id'],'type'=>$vo['type']))}">{$vo['abstract']}</a></p>
+                <div class="linst-info">{:date('Y年m月d日 H时i分s秒', $vo['ctime'])}<span><i class="i-post-scan"></i>({$vo['hits']})<i class="i-post-comment"></i>({$vo['commentNum']})</span></div>
+              </dd>
+            </dl>
+          </volist>
+          <php>}else{</php>
+          <div class="note">没有搜到相应信息！</div>
+          <php>}</php>
+        </div>
+        <div id="page" class="page"> {$searchResult.html} </div>
+    </div>
+  </div>
+</div>
+<include file="__THEME__/public_footer" />

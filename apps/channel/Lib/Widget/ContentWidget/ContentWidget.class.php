@@ -1,7 +1,6 @@
 <?php
 /**
- * 频道�
- * 容渲染Widget.
+ * 频道内容渲染Widget.
  *
  * @author zivss <guolee226@gmail.com>
  *
@@ -12,12 +11,9 @@ class ContentWidget extends Widget
     /**
      * 模板渲染.
      *
-     * @param array $data 相�
-     * �数据
+     * @param array $data 相关数据
      *
-     * @return string 频道�
-     * 容渲染�
-     * �口
+     * @return string 频道内容渲染入口
      */
     public function render($data)
     {
@@ -54,12 +50,9 @@ class ContentWidget extends Widget
     }
 
     /**
-     * 载�
-     * �频道�
-     * 容.
+     * 载入频道内容.
      *
-     * @return json 频道渲染�
-     * 容
+     * @return json 频道渲染内容
      */
     public function loadMore()
     {
@@ -109,8 +102,7 @@ class ContentWidget extends Widget
     /**
      * 处理分享附件数据.
      *
-     * @param array $data 频道�
-     * �联数组信息
+     * @param array $data 频道关联数组信息
      *
      * @return array 处理后的分享数据
      */

@@ -311,7 +311,7 @@ class CreditApi extends Api
         }
     }
 
-    //这个类里的参数返回跟其他接口不一致、、、mesage..
+  //这个类里的参数返回跟其他接口不一致、、、mesage..
 
     public function saveCharge()
     {
@@ -347,11 +347,11 @@ class CreditApi extends Api
         $data['charge_value'] = floatval($_REQUEST['charge_value']);
         $data['charge_score'] = floatval($_REQUEST['charge_score']);
 
-        // 		dump(WxPayConf_pub::APPID);
-        // 		dump(WxPayConf_pub::MCHID);
-        // 		dump(WxPayConf_pub::KEY);
-        // 		dump(WxPayConf_pub::APPSECRET);
-        // 		dump(WxPayConf_pub::NOTIFY_URL);
+// 		dump(WxPayConf_pub::APPID);
+// 		dump(WxPayConf_pub::MCHID);
+// 		dump(WxPayConf_pub::KEY);
+// 		dump(WxPayConf_pub::APPSECRET);
+// 		dump(WxPayConf_pub::NOTIFY_URL);
 
         $out_trade_no = $_REQUEST['out_trade_no'];
         empty($out_trade_no) && $out_trade_no = 'e2e5096d574976e8f115a8f1e0ffb52b';

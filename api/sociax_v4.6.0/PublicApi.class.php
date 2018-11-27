@@ -1,10 +1,11 @@
 <?php
 
+use Apps\Event\Model\Cate;
+use Apps\Event\Model\Event;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * �
- * �开api接口.
+ * 公开api接口.
  *
  * @author Medz Seven <lovevipdsw@vip.qq.com>
  **/
@@ -12,14 +13,11 @@ class PublicApi extends Api
 {
     public function getAreaAll()
     {
-        $return = Capsule::table('area')->get();
-
-        return Ts\Service\ApiMessage::withArray($return, 1, '');
+        return Capsule::table('area')->get();
     }
 
     /**
-     * 按�
-     * �层级获取地区列表.
+     * 按照层级获取地区列表.
      *
      * @request int     $pid     地区ID
      *
@@ -42,8 +40,7 @@ class PublicApi extends Api
         $list = model('Area')->getAreaList($pid);
 
         if ($notsort) {
-            return Ts\Service\ApiMessage::withArray($list, 1, '');
-            // return $list;
+            return $list;
         }
 
         $areas = array();
@@ -62,8 +59,7 @@ class PublicApi extends Api
         }
         ksort($areas);
 
-        return Ts\Service\ApiMessage::withArray($areas, 1, '');
-        // return $areas;
+        return $areas;
     }
 
     /**
@@ -75,20 +71,18 @@ class PublicApi extends Api
      **/
     public function getSlideShow()
     {
-        $list = D('application_slide')->field('`title`, `image`, `type`, `data`')->select();
+        $list = D('application_slide')->field('`title`, `image`, `type`, `data`')->order('rank asc')->select();
 
         foreach ($list as $key => $value) {
             $value['image'] = getImageUrlByAttachId($value['image']);
             $list[$key] = $value;
         }
 
-        return Ts\Service\ApiMessage::withArray($list, 1, '');
-        // return $list;
+        return $list;
     }
 
     /**
-     * 获取�
-     * �于我们HTML信息.
+     * 获取关于我们HTML信息.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -109,6 +103,27 @@ class PublicApi extends Api
     }
 
     /**
+     * 获取用户协议HTML信息.
+     *
+     * @author bs
+     **/
+    public function showAgreement()
+    {
+        ob_end_clean();
+        ob_start();
+        header('Content-Type:text/html;charset=utf-8');
+        echo '<!DOCTYPE html>',
+             '<html lang="zh">',
+                '<head><title>用户协议</title></head>',
+                '<body>',
+                json_decode(json_encode(model('Xdata')->get('admin_Application:agreement')), false)->agreement,
+                '</body>',
+             '</html>';
+        ob_end_flush();
+        exit;
+    }
+
+    /**
      * 发现.
      *
      * @return array
@@ -117,9 +132,9 @@ class PublicApi extends Api
      **/
     public function discover()
     {
-        $open_arr = !empty($this->data['needs']) ? explode(',', t($this->data['needs'])) : array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10');
+        $open_arr = !empty($this->data['needs']) ? explode(',', t($this->data['needs'])) : array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11');
         $type = !empty($this->data['type']) ? t($this->data['type']) : 'system';
-        $list = S('api_discover_'.$type);
+        //$list = S('api_discover_'.$type);
 
         if (!$list) {
             $list = array();
@@ -140,14 +155,16 @@ class PublicApi extends Api
                 $weiba_id = getSubByKey($weiba_recommend, 'weiba_id');
                 $followStatus = api('Weiba')->getFollowStateByWeibaids($this->mid, $weiba_id);
                 foreach ($weiba_recommend as $k => $v) {
-                    $weiba_recommend[$k]['logo'] = getImageUrlByAttachId($v['logo'], 200, 200);
+                    $weiba_recommend[$k]['logo'] = getImageUrlByAttachId($v['logo'], 200, 200) ?: '';
                     $weiba_recommend[$k]['following'] = $followStatus[$v['weiba_id']]['following'];
                     if ($v['new_day'] != date('Y-m-d', time())) {
                         $weiba_recommend[$k]['new_count'] = 0;
-                        $this->setNewcount($v['weiba_id'], 0);
+                        api('Weiba')->setNewcount($v['weiba_id'], 0);
                     }
-                    $weiba_recommend[$k]['title'] = formatEmoji(false, $weiba_recommend[$k]['title']);
-                    $weiba_recommend[$k]['content'] = formatEmoji(false, $weiba_recommend[$k]['content']);
+                    $weiba_recommend[$k]['notify'] = $v['notify'] ?: '';
+                    $weiba_recommend[$k]['info'] = $v['info'] ?: '';
+                    $weiba_recommend[$k]['title'] = formatEmoji(false, $weiba_recommend[$k]['title']) ?: '';
+                    $weiba_recommend[$k]['content'] = formatEmoji(false, $weiba_recommend[$k]['content']) ?: '';
                 }
                 $list['weibas'] = $weiba_recommend ? $weiba_recommend : array();
             }
@@ -197,15 +214,19 @@ class PublicApi extends Api
 
                 $imap['isPre'] = 0;
                 $imap['isDel'] = 0;
-                $information_recommend = D('InformationList')->where($imap)->order('hits desc')->limit(8)->field('id,subject,content')->findAll();
+                $information_recommend = D('InformationList')->where($imap)->order('hits desc')->limit(8)->field('id,subject,content,logo')->findAll();
 
                 foreach ($information_recommend as $key => $value) {
-                    preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $value['content'], $image);
-                    $image = $image[2];
-                    if ($image && is_array($image) && count($image) >= 1) {
-                        $image = $image[array_rand($image)];
-                        if (!preg_match('/https?\:\/\//is', $image)) {
-                            $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
+                    if ($value['logo'] > 0) {
+                        $image = getImageUrlByAttachId($value['logo'], '205', '160', true);
+                    } else {
+                        preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $value['content'], $image);
+                        $image = $image[2];
+                        if ($image && is_array($image) && count($image) >= 1) {
+                            $image = $image[array_rand($image)];
+                            if (!preg_match('/https?\:\/\//is', $image)) {
+                                $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
+                            }
                         }
                     }
                     $information_recommend[$key]['pic'] = !empty($image) ? $image : '';
@@ -223,8 +244,18 @@ class PublicApi extends Api
                 foreach ($user as $k => $v) {
                     $user_list[$k]['uid'] = $v['userInfo']['uid'];
                     $user_list[$k]['uname'] = $v['userInfo']['uname'];
-                    $user_list[$k]['remark'] = $v['userInfo']['remark'];
+                    $user_list[$k]['remark'] = $v['userInfo']['remark'] ?: '';
                     $user_list[$k]['avatar'] = $v['userInfo']['avatar_big'];
+                    // 用户组
+                    $user_group = [];
+                    foreach ($v['userInfo']['user_group'] as $value) {
+                        if ($value) {
+                            $user_group[] = $value['user_group_icon_url'];
+                        }
+                    }
+                    $user_list[$k]['user_group'] = $user_group;
+                    unset($user_group, $value);
+
                     $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['userInfo']['uid']);
                     $user_list[$k]['space_privacy'] = $privacy['space'];
                 }
@@ -236,13 +267,17 @@ class PublicApi extends Api
                 $users = api('FindPeople')->around();
 
                 foreach ($users['data'] as $key => $value) {
-                    $findp['uid'] = $value['uid'];
-                    $findp['uname'] = $value['username'];
-                    $findp['remark'] = $value['remark'];
-                    $findp['avatar'] = $value['avatar'];
-                    $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
-                    $findp['space_privacy'] = $privacy['space'];
-                    $fpeople[] = $findp;
+                    if (!empty($value)) {
+                        $findp['uid'] = $value['uid'];
+                        $findp['uname'] = $value['username'];
+                        $findp['remark'] = $value['remark'] ?: '';
+                        $findp['avatar'] = $value['avatar'];
+                        $findp['followStatus'] = $value['followStatus'];
+                        $findp['user_group'] = $value['user_group'];
+                        $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
+                        $findp['space_privacy'] = $privacy['space'];
+                        $fpeople[] = $findp;
+                    }
                 }
                 $list['near_users'] = $fpeople ? $fpeople : array();
             }
@@ -264,7 +299,26 @@ class PublicApi extends Api
                 $list['gifts'] = $gifts ? $gifts : array();
             }
 
-            S('api_discover_'.$type, $list, 3600);
+            //活动
+            if (in_array('11', $open_arr)) {
+                $num = 5; //随机五条
+                $data = Event::getInstance()->getRightEvent($num);
+                foreach ($data as $key => &$value) {
+                    $_event = $value;
+                    $_event['area'] = model('Area')->getAreaById($_event['area']);
+                    $_event['area'] = $_event['area']['title'];
+                    $_event['city'] = model('Area')->getAreaById($_event['city']);
+                    $_event['city'] = $_event['city']['title'];
+                    $_event['image'] = getImageUrlByAttachId($_event['image']) ?: '';
+                    $_event['cate'] = Cate::getInstance()->getById($_event['cid']);
+                    $_event['cate'] = $_event['cate']['name'];
+                    $event[] = $_event;
+                }
+
+                $list['event'] = $event ? $event : array();
+            }
+
+            S('api_discover_'.$type, $list, 1800);
         }
 
         //直播
@@ -320,7 +374,77 @@ class PublicApi extends Api
             $list['jipu_goods'] = $goods_rs;
         }
 
-        return Ts\Service\ApiMessage::withArray($list, 1, '');
-        // return $list;
+        return $list;
+    }
+
+    /**
+     * 获取App版本信息
+     *
+     * @return array
+     */
+    public function getAppVersions()
+    {
+        $androidVersion = model('Xdata')->get('admin_Application:versionByAndroid');
+        $androidVersion['apk'] = !empty($androidVersion) ? SITE_URL.'/public/'.$androidVersion['apk'] : '';
+        $androidVersion['version'] = $androidVersion['version'] ?: '';
+        $androidVersion['is_update'] = (boolean)$androidVersion['is_update'];
+        $androidVersion['title'] = $androidVersion['title'] ?: '';
+        $androidVersion['explain'] = $androidVersion['explain'] ?: '';
+        $IosVersion = model('Xdata')->get('admin_Application:versionByIos');
+        $IosVersion['version'] = $IosVersion['version'] ?: '';
+        $IosVersion['appstore_link'] = $IosVersion['appstore_link'] ?: '';
+        $IosVersion['is_update'] = (boolean)$IosVersion['is_update'];
+        $IosVersion['title'] = $IosVersion['title'] ?: '';
+        $IosVersion['explain'] = $IosVersion['explain'] ?: '';
+
+        return array('status' => 1, 'msg' => '获取成功', 'data' => array('android' => $androidVersion, 'ios' => $IosVersion));
+    }
+    //获取App版本信息 chat=>聊天版，image=>图片版，circle=>圈子社交版，video=>视频版，media=>媒体版，contacts=>人脉版，live=>直播版，默认为系统版
+    public function getChildAppVersion()
+    {
+        $version = $this->data['version']?ucfirst($this->data['version']):'';
+        $androidVersion = model('Xdata')->get('admin_Application:versionByAndroid'.$version);
+        $androidVersion['apk'] = !empty($androidVersion) ? SITE_URL.'/public/'.$version.'/'.$androidVersion['apk'] : '';
+        $androidVersion['version'] = $androidVersion['version'] ?: '';
+        $androidVersion['is_update'] = (boolean)$androidVersion['is_update'];
+        $androidVersion['title'] = $androidVersion['title'] ?: '';
+        $androidVersion['explain'] = $androidVersion['explain'] ?: '';
+        $IosVersion = model('Xdata')->get('admin_Application:versionByIos'.$version);
+        $IosVersion['version'] = $IosVersion['version'] ?: '';
+        $IosVersion['appstore_link'] = $IosVersion['appstore_link'] ?: '';
+        $IosVersion['is_update'] = (boolean)$IosVersion['is_update'];
+        $IosVersion['title'] = $IosVersion['title'] ?: '';
+        $IosVersion['explain'] = $IosVersion['explain'] ?: '';
+
+        return array('status' => 1, 'msg' => '获取成功', 'data' => array('android' => $androidVersion, 'ios' => $IosVersion));
+    }
+
+    public function test()
+    {
+        $result = array();
+        $data = [
+            array('id'=>1, 'name'=>'张三', '性别'=>'男'),
+            array('id'=> 2, 'name'=>'李四', '性别'=>'女'),
+            array('id'=> 3, 'name'=>'王二', '性别'=>'女'),
+            array('id'=> 4, 'name'=>'麻子', '性别'=>'男'),
+        ];
+        $result = array_map(function ($item) {
+            return array(
+                'id'   => $item['id'],
+                'name' => $item['name'],
+                'sex'  => $item['性别'] == '男' ? 1 : 2,
+                );
+        }, $data);
+
+        dump($result);
+        die;
+    }
+
+    public function testMessage()
+    {
+        $uid = $this->data['uid'];
+        model('Notify')->sendNotify($uid, 'admin_user_doverify_ok');
+
+        return 'OKKOKO';
     }
 } // END class PublicApi extends Api

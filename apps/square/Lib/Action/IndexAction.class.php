@@ -103,18 +103,18 @@ class IndexAction extends Action
             //当推荐微吧不足2 或 4 时自动补齐
             $count = count($weiba_recommend);
             // if ($count < 2 || ($count > 2 && $count < 4)) {
-            if ($count < 4) {
-                if ($count != 0) {
-                    $map['weiba_id'] = array('not in', $weibaId);
-                } elseif (isset($map['weiba_id'])) {
-                    unset($map['weiba_id']);
+                if ($count < 4) {
+                    if ($count != 0) {
+                        $map['weiba_id'] = array('not in', $weibaId);
+                    } elseif (isset($map['weiba_id'])) {
+                        unset($map['weiba_id']);
+                    }
+                    $order = 'recommend DESC,follower_count DESC';
+                    $weiba->where($map)->order($order);
+                    $limit = 4 - $count;
+                    $array = $weiba->limit($limit)->select();
+                    $weiba_recommend = array_merge($weiba_recommend, $array);
                 }
-                $order = 'recommend DESC,follower_count DESC';
-                $weiba->where($map)->order($order);
-                $limit = 4 - $count;
-                $array = $weiba->limit($limit)->select();
-                $weiba_recommend = array_merge($weiba_recommend, $array);
-            }
 
             foreach ($weiba_recommend as $k => $v) {
                 $weiba_recommend[$k]['logo'] = getImageUrlByAttachId($v['logo']);
@@ -144,10 +144,10 @@ class IndexAction extends Action
             //首页推荐帖子
             $order = 'is_index_time desc';
             $maps['is_index'] = 1;
-            $list = D('weiba_post')->field('weiba_id,post_id,title,content,index_img')->where($maps)->order($order)->select();
-            //如果首页推荐帖子不够6个，获取全局置顶，吧内置顶，最新回复帖子
-            if (count($list) < 6) {
-                $limit = 6 - count($list);
+            $list = D('weiba_post')->field('weiba_id,post_id,title,content,index_img')->where($maps)->limit(5)->order($order)->select();
+            //如果首页推荐帖子不够5个，获取全局置顶，吧内置顶，最新回复帖子
+            if (count($list) < 5) {
+                $limit = 5 - count($list);
                 $post_ids = getSubByKey($list, 'post_id');
                 $maps['post_id'] = array(
                         'not in',
@@ -157,7 +157,7 @@ class IndexAction extends Action
                 $order = 'top desc,last_reply_time desc';
                 $_list = D('weiba_post')->field('post_id,title,content')->where($maps)->order($order)->limit($limit)->select();
             }
-            $weiba_hot = array_merge($list, $_list);
+            $weiba_hot = $_list ? array_merge($list, $_list) : $list;
             if ($weiba_hot[0]['index_img'] != null) {
                 //首页帖子图片换成缩略图
                 $index_img = model('Attach')->getAttachById($weiba_hot[0]['index_img']);

@@ -30,7 +30,7 @@ class EventApi extends Api
         /* 获取初始化时间戳 */
         list($cid, $area, $time, $wd) = Common::getInput(array('cid', 'area', 'time', 'wd'));
 
-        return Event::getInstance()->getMonthEventDay($cid, $area, $wd, $time);
+        return Event::getInstance()->getMonthEventDay($cid, $area, $wd, $time) ?: [];
     }
 
     /**
@@ -49,11 +49,20 @@ class EventApi extends Api
             'status'  => 0,
             'message' => '活动已经删除',
         ));
+        $content = t($content);
+        /* 判断是否含有敏感词 */
+        $content = sensitiveWord($content);
+        if (!sensitiveWord($content)) {
+            return array(
+                'status' => -3,
+                'msg' => '评论内容包含敏感词', // 评论内容包含敏感词
+            );
+        }
         $data = array(
             'app'                => 'Event',
             'table'              => 'event_list',
             'app_uid'            => $info['uid'],
-            'content'            => t($content),
+            'content'            => $content,
             'row_id'             => intval($eid),
             'to_uid'             => intval($ruid),
             'to_comment_id'      => intval($tocid),
@@ -75,8 +84,7 @@ class EventApi extends Api
     }
 
     /**
-     * 取消�
-     * �注活动.
+     * 取消关注活动.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -96,8 +104,7 @@ class EventApi extends Api
     }
 
     /**
-     * �
-     * �注一个活动.
+     * 关注一个活动.
      *
      * @author Seven Du <lovevipdsw@vip.qq.com>
      **/
@@ -145,8 +152,7 @@ class EventApi extends Api
     }
 
     /**
-     * 我�
-     * �注的活动.
+     * 我关注的活动.
      *
      * @request int $page 分页
      *
@@ -160,11 +166,9 @@ class EventApi extends Api
     }
 
     /**
-     * 更�
-     * �类型，返回列表数据.
+     * 更具类型，返回列表数据.
      *
-     * @param int $type 获取的类型， 0我参与的活动 1我发起的活动， 2我�
-     * �注的活动
+     * @param int $type 获取的类型， 0我参与的活动 1我发起的活动， 2我关注的活动
      *
      * @return array
      *
@@ -239,6 +243,14 @@ class EventApi extends Api
      **/
     protected function uploadFile($uploadType, $attachType)
     {
+        //检测用户是否被禁言
+        if (model('DisableUser')->isDisableUser($this->mid, 'post')) {
+            return array(
+                'status' => 0,
+                'msg'    => '您已经被禁言了..',
+            );
+        }
+
         $ext = func_get_args();
         array_shift($ext);
         array_shift($ext);
@@ -260,7 +272,7 @@ class EventApi extends Api
                 'msg'    => '没有上传的文件',
             );
 
-            // # 判断是否上传成功
+        // # 判断是否上传成功
         } elseif ($info['status'] == false) {
             return array(
                 'status' => '0',
@@ -283,6 +295,13 @@ class EventApi extends Api
      **/
     public function create()
     {
+        if (model('DisableUser')->isDisableUser($this->mid, 'post')) {
+            return array(
+                'status' => 0,
+                'message'    => '您已经被禁言了..',
+            );
+        }
+
         list($title, $stime, $etime, $area, $city, $address, $place, $image, $mainNumber, $price, $tips, $cate, $audit, $content, $longitude, $latitude, $attach, $video) = Common::getInput(array('title', 'stime', 'etime', 'area', 'city', 'address', 'place', 'image', 'mainNumber', 'price', 'tips', 'cate', 'audit', 'content', 'longitude', 'latitude', 'attach', 'video'));
         $audit != 1 and
         $audit = 0;
@@ -301,6 +320,7 @@ class EventApi extends Api
                                 ->setPlace($place)  // 场所
                                 ->setImage($image) // 封面图片
                                 ->setManNumber($mainNumber)  // 活动人数
+                                ->setRemainder($mainNumber)  // 活动剩余人数
                                 ->setPrice($price)  // 价格
                                 ->setCid($cate) // 分类
                                 ->setAudit($audit)  // 是否需要权限审核
@@ -372,8 +392,7 @@ class EventApi extends Api
     }
 
     /**
-     * 获取活动详�
-     * .
+     * 获取活动详情.
      *
      * @request int $eid 活动id
      *
@@ -404,15 +423,38 @@ class EventApi extends Api
 
         /* 用户 */
         $data['user'] = model('User')->getUserInfo($data['uid']);
+        // 用户组
+        $user_group = [];
+        foreach ($data['user']['user_group'] as $v) {
+            if ($v) {
+                $user_group[] = $v['user_group_icon_url'];
+            }
+        }
+        $data['user']['user_group'] = $user_group;
 
         /* 当前用户报名情况 */
         $data['enrollment'] = Enrollment::getInstance()->hasUser($id, $this->mid);
+        $data['enrollment_status'] = Enrollment::getInstance()->getEnrollmentStatus($id, $this->mid);
 
         /* 是否已经关注了活动 */
         $data['star'] = Star::getInstance()->has($id, $this->mid);
 
         /* 报名用户 */
         $data['enrollmentUsers'] = Enrollment::getInstance()->getEventUsers($id);
+        foreach ($data['enrollmentUsers'] as $key => $value) {
+            // 用户组
+            $user_group = [];
+            foreach ($value['user_group'] as $v) {
+                if ($v) {
+                    $user_group[] = $v['user_group_icon_url'];
+                }
+            }
+            $value['user_group'] = $user_group;
+
+            $data['enrollmentUsers'][$key] = $value;
+            unset($user_group, $value);
+        }
+        $data['enrollmentUsers'] = array_values($data['enrollmentUsers']);
 
         /* 封面 */
         $data['image'] = getImageUrlByAttachId($data['image']);
@@ -420,13 +462,18 @@ class EventApi extends Api
         //图片附件
         if (!empty($data['attach'])) {
             $attachids = explode(',', $data['attach']);
-            foreach ($attachids as $key => $value) {
-                $_attach = getAttachUrlByAttachId($value);
-                if ($_attach) {
-                    $attach[] = $_attach;
-                }
+            $attachs = model('Attach')->getAttachByIds($attachids);
+            $attach = [];
+            foreach ($attachs as $v) {
+                $attach[] = [
+                    'attach_id' => $v['attach_id'],
+                    'width' => $v['width'],
+                    'height' => $v['height'],
+                    'url' => getAttachUrl($v['save_path'].$v['save_name'])
+                ];
             }
             $data['attach'] = $attach;
+            unset($attachids, $attachs, $attach);
         }
 
         //视频附件
@@ -457,17 +504,36 @@ class EventApi extends Api
                 'message' => '参数错误',
                 );
         }
+
+        if (!$eid or !($data = Event::getInstance()->get($eid)) or $data['del']) {
+            return array(
+                'status'  => 0,
+                'message' => '您访问的活动不存在，或者已经被删除！',
+            );
+        }
         $page = intval($this->data['page']) ?: 1;
         $count = intval($this->data['count']) ?: 20;
         $limit = ($page - 1) * $count;
-        $users = D('event_enrollment')->where(array(
-            'eid'   => array('eq', $eid),
-            'aduit' => array('eq', 1),
-        ))->field('uid')->limit($limit.','.$count)->select();
+
+        if ($data['audit'] == 1) {
+            $map['aduit'] = '1';
+        }
+        $map['eid'] = $eid;
+
+        $users = D('event_enrollment')->where($map)->field('uid')->limit($limit.','.$count)->select();
 
         if (!empty($users)) {
             foreach ($users as $key => $value) {
                 $value = model('User')->getUserInfo($value['uid']);
+                // 用户组
+                $user_group = [];
+                foreach ($value['user_group'] as $v) {
+                    if ($v) {
+                        $user_group[] = $v['user_group_icon_url'];
+                    }
+                }
+                $value['user_group'] = $user_group;
+
                 $users[$key] = $value;
                 //个人空间隐私权限
                 $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
@@ -477,6 +543,7 @@ class EventApi extends Api
                 } else {
                     $users[$key]['is_follow'] = 0;
                 }
+                unset($user_group, $value);
             }
         } else {
             return array(
@@ -492,15 +559,12 @@ class EventApi extends Api
     }
 
     /**
-     * 获取活动列表 - 按�
-     * �最新发布排序.
+     * 获取活动列表 - 按照最新发布排序.
      *
      * @request int $cid 分类id
      * @request int $area 地区ID
-     * @request string $time 时间，格式化时间或�
-     * 时间戳
-     * @request string  $wd �
-     * �键词
+     * @request string $time 时间，格式化时间或者时间戳
+     * @request string  $wd 关键词
      * @request int $page 分页，默认是 1
      *
      * @return array
@@ -573,8 +637,7 @@ class EventApi extends Api
     }
 
     /**
-     * 获取�
-     * �部不重复，活动已经使用的地区.
+     * 获取全部不重复，活动已经使用的地区.
      *
      * @return array
      *
@@ -654,6 +717,15 @@ class EventApi extends Api
                     //个人空间隐私权限
                     $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['to_uid']);
                     $_return['to_space_privacy'] = $privacy['space'];
+                    // 用户组
+                    $user_group = [];
+                    foreach ($toUserInfo['user_group'] as $v) {
+                        if ($v) {
+                            $user_group[] = $v['user_group_icon_url'];
+                        }
+                    }
+                    $_return['to_user_group'] = $user_group;
+                    unset($user_group, $v);
                 } else {
                     $_return['to_uname'] = '';
                     $_return['to_remark'] = '';
@@ -663,13 +735,32 @@ class EventApi extends Api
                 $_return['app_uname'] = $appUserInfo['uname'];
                 $_return['app_remark'] = $appUserInfo['remark'];
                 $_return['app_avatar'] = getUserFace($value['app_uid']);
+                // 用户组
+                $user_group = [];
+                foreach ($appUserInfo['user_group'] as $v) {
+                    if ($v) {
+                        $user_group[] = $v['user_group_icon_url'];
+                    }
+                }
+                $_return['app_user_group'] = $user_group;
+                unset($user_group, $v);
                 //个人空间隐私权限
-                $privacy = model('UserPrivacy')->getPrivacy($this->mid, $mu['app_uid']);
+                $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['app_uid']);
                 $_return['app_space_privacy'] = $privacy['space'];
+
                 $UserInfo = getUserInfo($value['uid']);
                 $_return['uname'] = $UserInfo['uname'];
                 $_return['remark'] = $UserInfo['remark'];
                 $_return['avatar'] = getUserFace($value['uid']);
+                // 用户组
+                $user_group = [];
+                foreach ($UserInfo['user_group'] as $v) {
+                    if ($v) {
+                        $user_group[] = $v['user_group_icon_url'];
+                    }
+                }
+                $_return['user_group'] = $user_group;
+                unset($user_group, $v);
                 //个人空间隐私权限
                 $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
                 $_return['space_privacy'] = $privacy['space'];

@@ -11,8 +11,7 @@ class WeibaUserInformationWidget extends Widget
     /**
      * 模板渲染.
      *
-     * @param array $data 相�
-     * �数据
+     * @param array $data 相关数据
      *
      * @return string 用户身份选择模板
      */

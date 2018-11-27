@@ -27,7 +27,7 @@ class MobileAction extends AdministratorAction
     public function w3gSlideShow()
     {
         // # 设置页面字段
-        $this->pageKeyList = array('image', 'url', 'doaction');
+        $this->pageKeyList = array('image', 'url','rank', 'doaction');
 
         // # 添加tab
         array_push($this->pageTab, array(
@@ -42,7 +42,7 @@ class MobileAction extends AdministratorAction
         ));
 
         // # 分页获取数据，20条
-        $list = D('w3g_slide_show')->findPage(20);
+        $list = D('w3g_slide_show')->order('rank asc')->findPage(20);
 
         // # 加入操作按钮
         foreach ($list['data'] as $key => $value) {
@@ -54,6 +54,9 @@ class MobileAction extends AdministratorAction
             $value = '<a href="%s" target="_blank"><img src="%s" width="300px" height="140px"></a>';
             $value = sprintf($value, getImageUrlByAttachId($aid), getImageUrlByAttachId($aid, 300, 140));
             $list['data'][$key]['image'] = $value;
+            $mvAdSpace1 = "admin.mvAdSpace(".$id.",'up')";
+            $mvAdSpace2 = "admin.mvAdSpace(".$id.",'down')";
+            $list['data'][$key]['rank'] = '<label><a href="javascript:;" class="ico-top" onclick="'.$mvAdSpace1.'"></a></label><label><a href="javascript:;" class="ico-btm" onclick="'.$mvAdSpace2.'"></a></label>';
 
             // # 添加操作按钮
             $value = '[<a href="%s">编辑</a>]&nbsp;-&nbsp;[<a href="%s">删除</a>]';
@@ -68,7 +71,42 @@ class MobileAction extends AdministratorAction
         $this->displayList($list);
         unset($list);
     }
+    /**
+     * 移动3G办广场轮播操作.
+     *
+     * @param int $id    广场轮播ID - A
+     * @param int $baseId 广场轮播ID - B
+     *
+     * @return bool 是否移动成功
+     */
+    public function doMvAdSpace()
+    {
+        $id = intval($_POST['id']);
+        $baseId = intval($_POST['baseId']);
+        $map['id'] = array('IN', array($id, $baseId));
+        $order = D('w3g_slide_show')->where($map)->select();
+        if (count($order) < 2) {
+            $result['status'] = 0;
+            $result['info'] = '操作失败';
+        }
+        foreach ($order as $v){
+            if($v['id'] == $baseId){
+                $res = D('w3g_slide_show')->where('`id`='.$id)->setField('rank', $v['rank']);
+            }
+            if($v['id'] == $id){
+                $res = D('w3g_slide_show')->where('`id`='.$baseId)->setField('rank',$v['rank']);
+            }
+        }
+        if ($res) {
+            $result['status'] = 1;
+            $result['info'] = '操作成功';
+        } else {
+            $result['status'] = 0;
+            $result['info'] = '操作失败';
+        }
 
+        exit(json_encode($result));
+    }
     /**
      * [添加|编辑]3G版广场轮播.
      *
@@ -137,7 +175,7 @@ class MobileAction extends AdministratorAction
             D('w3g_slide_show')->where('`id` = '.$id)->save($data);
             $this->success('编辑成功！');
         }
-
+        $data['rank'] = D('w3g_slide_show')->count();
         // # 添加，失败则输出错误
         D('w3g_slide_show')->add($data) or $this->error('添加失败');
 
@@ -185,8 +223,7 @@ class MobileAction extends AdministratorAction
     }
 
     /**
-     * 手机版 �
-     * �于我们.
+     * 手机版 关于我们.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -204,8 +241,7 @@ class MobileAction extends AdministratorAction
     }
 
     /**
-     * 3G版本开�
-     * �设置.
+     * 3G版本开关设置.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/

@@ -1,8 +1,6 @@
 <?php
 /**
- * 后台�
- * ��
- * �方法.
+ * 后台公共方法.
  *
  * @author zivss <guolee226@gmail.com>
  *
@@ -102,8 +100,7 @@ class PublicAction extends AdministratorAction
     /**
      * 移动分类顺序API.
      *
-     * @return json 返回相�
-     * �的JSON信息
+     * @return json 返回相关的JSON信息
      */
     public function moveTreeCategory()
     {
@@ -143,8 +140,7 @@ class PublicAction extends AdministratorAction
     /**
      * 添加分类操作API.
      *
-     * @return json 返回相�
-     * �的JSON信息
+     * @return json 返回相关的JSON信息
      */
     public function doAddTreeCategory()
     {
@@ -193,8 +189,7 @@ class PublicAction extends AdministratorAction
     /**
      * 编辑分类操作API.
      *
-     * @return json 返回相�
-     * �的JSON信息
+     * @return json 返回相关的JSON信息
      */
     public function doUpTreeCategory()
     {
@@ -221,8 +216,7 @@ class PublicAction extends AdministratorAction
     /**
      * 删除分类API.
      *
-     * @return json 返回相�
-     * �的JSON信息
+     * @return json 返回相关的JSON信息
      */
     public function rmTreeCategory()
     {
@@ -247,8 +241,7 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 设置分类�
-     * �置页面.
+     * 设置分类配置页面.
      */
     public function setCategoryConf()
     {
@@ -294,8 +287,7 @@ class PublicAction extends AdministratorAction
     }
 
     /**
-     * 存储分类�
-     * �置操作.
+     * 存储分类配置操作.
      */
     public function doSetCategoryConf()
     {

@@ -7,8 +7,7 @@
 class MedalApi extends Api
 {
     /**
-     * 获取�
-     * �部勋章.
+     * 获取全部勋章.
      *
      * @return array
      *

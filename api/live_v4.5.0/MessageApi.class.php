@@ -263,7 +263,7 @@ class MessageApi extends Api
                 'msg'    => '没有上传的文件',
             ));
 
-            // # 判断是否上传成功
+        // # 判断是否上传成功
         } elseif ($info['status'] == false) {
             $this->error(array(
                 'status' => '0',
@@ -298,6 +298,7 @@ class MessageApi extends Api
             'weiba'                 => (string) intval($count['new_folower_count']),
             'weiba_comment'         => intval($count['unread_comment_weiba']),
             'unread_digg_weibapost' => intval($count['unread_digg_weibapost']),
+            'unread_system_message' => intval($count['unread_system_message']),
         );
     }
 
@@ -307,8 +308,7 @@ class MessageApi extends Api
      * @param int $list_id
      *                     群聊ID
      *
-     * @return array 成员、及群聊创建�
-     * 的信息
+     * @return array 成员、及群聊创建者的信息
      */
     public function get_list_info()
     {
@@ -322,12 +322,23 @@ class MessageApi extends Api
         if (!$members) {
             return $this->error('没有任何用户');
         }
+        $list_info['title'] = \Medz\Component\EmojiFormat::de($list_info['title']);
         foreach ($members as $k => $v) {
             $user_info_whole = model('User')->getUserInfo($v['member_uid']);
             $user_info['uid'] = $user_info_whole['uid'];
             $user_info['uname'] = $user_info_whole['uname'];
             $user_info['avatar'] = $user_info_whole['avatar_middle'];
             $user_info['remark'] = $user_info_whole['remark'];
+
+            // 用户组
+            $user_group = [];
+            foreach ($user_info_whole['user_group'] as $v) {
+                if ($v) {
+                    $user_group[] = $v['user_group_icon_url'];
+                }
+            }
+            $user_info['user_group'] = $user_group;
+            unset($user_group, $v);
             //个人空间隐私权限
             $privacy = model('UserPrivacy')->getPrivacy($this->mid, $user_info_whole['uid']);
             $user_info['space_privacy'] = $privacy['space'];

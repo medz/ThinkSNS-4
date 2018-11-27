@@ -28,3 +28,6 @@ api/ts-api.phar
 api/phar.php
 .DS_Store
 /resources/theme
+/resources/thinksns-theme-stv1
+/api
+/src/Models/Question*

@@ -5,8 +5,7 @@ use Apps\Event\Model\Event;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * �
- * �开api接口.
+ * 公开api接口.
  *
  * @author Medz Seven <lovevipdsw@vip.qq.com>
  **/
@@ -18,8 +17,7 @@ class PublicApi extends Api
     }
 
     /**
-     * 按�
-     * �层级获取地区列表.
+     * 按照层级获取地区列表.
      *
      * @request int     $pid     地区ID
      *
@@ -84,8 +82,7 @@ class PublicApi extends Api
     }
 
     /**
-     * 获取�
-     * �于我们HTML信息.
+     * 获取关于我们HTML信息.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -137,7 +134,7 @@ class PublicApi extends Api
     {
         $open_arr = !empty($this->data['needs']) ? explode(',', t($this->data['needs'])) : array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11');
         $type = !empty($this->data['type']) ? t($this->data['type']) : 'system';
-        $list = S('api_discover_'.$type);
+        //$list = S('api_discover_'.$type);
 
         if (!$list) {
             $list = array();
@@ -217,15 +214,19 @@ class PublicApi extends Api
 
                 $imap['isPre'] = 0;
                 $imap['isDel'] = 0;
-                $information_recommend = D('InformationList')->where($imap)->order('hits desc')->limit(8)->field('id,subject,content')->findAll();
+                $information_recommend = D('InformationList')->where($imap)->order('hits desc')->limit(8)->field('id,subject,content,logo')->findAll();
 
                 foreach ($information_recommend as $key => $value) {
-                    preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $value['content'], $image);
-                    $image = $image[2];
-                    if ($image && is_array($image) && count($image) >= 1) {
-                        $image = $image[array_rand($image)];
-                        if (!preg_match('/https?\:\/\//is', $image)) {
-                            $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
+                    if ($value['logo'] > 0) {
+                        $image = getImageUrlByAttachId($value['logo'], '205', '160', true);
+                    } else {
+                        preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $value['content'], $image);
+                        $image = $image[2];
+                        if ($image && is_array($image) && count($image) >= 1) {
+                            $image = $image[array_rand($image)];
+                            if (!preg_match('/https?\:\/\//is', $image)) {
+                                $image = parse_url(SITE_URL, PHP_URL_SCHEME).'://'.parse_url(SITE_URL, PHP_URL_HOST).'/'.$image;
+                            }
                         }
                     }
                     $information_recommend[$key]['pic'] = !empty($image) ? $image : '';
@@ -245,6 +246,16 @@ class PublicApi extends Api
                     $user_list[$k]['uname'] = $v['userInfo']['uname'];
                     $user_list[$k]['remark'] = $v['userInfo']['remark'] ?: '';
                     $user_list[$k]['avatar'] = $v['userInfo']['avatar_big'];
+                    // 用户组
+                    $user_group = [];
+                    foreach ($v['userInfo']['user_group'] as $value) {
+                        if ($value) {
+                            $user_group[] = $value['user_group_icon_url'];
+                        }
+                    }
+                    $user_list[$k]['user_group'] = $user_group;
+                    unset($user_group, $value);
+
                     $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['userInfo']['uid']);
                     $user_list[$k]['space_privacy'] = $privacy['space'];
                 }
@@ -261,6 +272,8 @@ class PublicApi extends Api
                         $findp['uname'] = $value['username'];
                         $findp['remark'] = $value['remark'] ?: '';
                         $findp['avatar'] = $value['avatar'];
+                        $findp['followStatus'] = $value['followStatus'];
+                        $findp['user_group'] = $value['user_group'];
                         $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
                         $findp['space_privacy'] = $privacy['space'];
                         $fpeople[] = $findp;
@@ -383,5 +396,13 @@ class PublicApi extends Api
 
         dump($result);
         die;
+    }
+
+    public function testMessage()
+    {
+        $uid = $this->data['uid'];
+        model('Notify')->sendNotify($uid, 'admin_user_doverify_ok');
+
+        return 'OKKOKO';
     }
 } // END class PublicApi extends Api

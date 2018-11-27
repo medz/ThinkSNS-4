@@ -10,8 +10,7 @@
 class CheckinApi extends Api
 {
     /**
-     * 获取签到�
-     * 况 --using.
+     * 获取签到情况 --using.
      *
      * @return array 签到信息
      */
@@ -44,8 +43,7 @@ class CheckinApi extends Api
             model('Cache')->set('check_info_'.$uid.'_'.date('Ymd'), $data);
         }
 
-        return Ts\Service\ApiMessage::withArray($data, 1, '');
-        // return $data;
+        return $data;
     }
 
     // 排行榜
@@ -53,21 +51,21 @@ class CheckinApi extends Api
     {
         $list = D('check_info')->where('ctime>'.strtotime(date('Ymd')))->order('ctime asc')->limit(5)->findAll();
         foreach ($list as &$v) {
-            $avatar = model('Avatar')->init($v['uid'])->getUserAvatar();
-            $v['avatar'] = $avatar['avatar_big'];
-            $v['uname'] = getUserName($v['uid']);
-            $v['remark'] = D('UserRemark')->getRemark($this->mid, $v['uid']);
+            $user_info = api('User')->get_user_info($v['uid']);
+            $v['avatar'] = $user_info['avatar']['avatar_big'];
+            $v['uname'] = $user_info['uname'];
+            $v['remark'] = $user_info['remark'];
+            $v['user_group'] = $user_info['user_group'];
+            $v['space_privacy'] = $user_info['space_privacy'];
         }
 
-        return Ts\Service\ApiMessage::withArray($list, 1, '');
-        // return $list;
+        return $list;
     }
 
     /**
      * 获取指定分类下的微博 --using.
      *
-     * @return array 签到�
-     * 况
+     * @return array 签到情况
      */
     public function checkin()
     {
@@ -132,7 +130,6 @@ class CheckinApi extends Api
             }
         }
 
-        // return Ts\Service\ApiMessage::withArray($this->get_check_info(), 1, '');
         return $this->get_check_info();
     }
 
@@ -166,9 +163,8 @@ class CheckinApi extends Api
             // dump($res);
         }
 
-        return Ts\Service\ApiMessage::withArray('', intval($res), '');
-        // return array(
-        //         'status' => intval($res),
-        // );
+        return array(
+                'status' => intval($res),
+        );
     }
 }

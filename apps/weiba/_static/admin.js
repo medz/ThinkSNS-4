@@ -279,3 +279,17 @@ admin.checkNewImg = function(form){
     }
     return true;    
 };
+/**
+ * 审核帖子
+ * @param integer post_id 帖子ID
+ * @return void
+ */
+admin.auditPost = function(post_id){
+    if("undefined" == typeof(post_id) || post_id=='') post_id = admin.getChecked();
+    if(post_id==''){
+        ui.error('请选择要通过审核的帖子');return false;
+    }
+    $.post(U('weiba/Admin/auditPost'),{post_id:post_id},function(msg){
+        admin.ajaxReload(msg);
+    },'json');
+};

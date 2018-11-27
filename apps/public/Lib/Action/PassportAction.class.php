@@ -195,11 +195,11 @@ class PassportAction extends Action
         if (!preg_match("/^[1][3578]\d{9}$/", $phone)) {
             $this->ajaxReturn(null, '无效的手机号', 0);
 
-            /* # 检查用户是否没有注册 */
+        /* # 检查用户是否没有注册 */
         } elseif (model('User')->isChangePhone($phone)) {
             $this->ajaxReturn(null, '此手机号没有注册用户', 0);
 
-            /* # 发送验证码是否成功 */
+        /* # 发送验证码是否成功 */
         } elseif (($sms = model('Sms')) and $sms->sendCaptcha($phone, true)) {
             $this->ajaxReturn(null, '发送成功', 1);
         }
@@ -235,8 +235,7 @@ class PassportAction extends Action
     }
 
     /**
-     * 通过安�
-     * �问题找回密码
+     * 通过安全问题找回密码
      */
     public function doFindPasswordByQuestions()
     {

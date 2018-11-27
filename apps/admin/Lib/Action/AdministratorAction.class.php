@@ -15,8 +15,7 @@ class AdministratorAction extends Action
     protected $pageKeyList = array();
 
     /**
-     * 针对搜索 或�
-     * 页面字段的额外属性.
+     * 针对搜索 或者 页面字段的额外属性.
      *
      * @var array
      */
@@ -30,24 +29,21 @@ class AdministratorAction extends Action
     protected $searchKey = array();
 
     /**
-     * 页面字段�
-     * �置存在system_data表中的页面唯一key值
+     * 页面字段配置存在system_data表中的页面唯一key值
      *
      * @var string
      */
     protected $pageKey = '';
 
     /**
-     * 页面搜索�
-     * �置存在system_data表中的页面唯一key值
+     * 页面搜索配置存在system_data表中的页面唯一key值
      *
      * @var string
      */
     protected $searchPageKey = '';
 
     /**
-     * 默认的�
-     * �置页面保存地址
+     * 默认的配置页面保存地址
      *
      * @var string
      */
@@ -61,16 +57,14 @@ class AdministratorAction extends Action
     protected $searchPostUrl = '';
 
     /**
-     * �
-     * �置页面的值在system_data表中的对应list值
+     * 配置页面的值在system_data表中的对应list值
      *
      * @var string
      */
     protected $systemdata_list = '';
 
     /**
-     * �
-     * �置页面的值在system_data表中对应的key值
+     * 配置页面的值在system_data表中对应的key值
      *
      * @var string
      */
@@ -92,8 +86,7 @@ class AdministratorAction extends Action
      */
     protected $pageButton = array();
     /**
-     * 列表页是否有�
-     * �选项.
+     * 列表页是否有全选项.
      *
      * @var bool
      */
@@ -106,8 +99,7 @@ class AdministratorAction extends Action
      */
     protected $_listpk = 'id';
     /**
-     * 页面载�
-     * �时需要执行的JS列表 （直接函数名）
+     * 页面载入时需要执行的JS列表 （直接函数名）
      * 如：$onload[] = "admin.test()";.
      */
     protected $onload = array();
@@ -187,8 +179,7 @@ class AdministratorAction extends Action
     }
 
     /**
-     * 显示�
-     * �置详细页面.
+     * 显示配置详细页面.
      */
     public function displayConfig($detailData = false)
     {
@@ -246,13 +237,11 @@ class AdministratorAction extends Action
     /**
      * 现实分类页面.
      *
-     * @param array  $tree   树形结构数据
-     * @param string $stable 资源表明
-     * @param int    $level  子分类添加层级数目，默认为0（无限极）
-     * @param array  $delParam 删除�
-     * �联数据模型参数，app、module、method
-     * @param array  $extra    附加�
-     * �置信息字段，字段间使用|分割，字段的属性用-分割。例：attach|type-是-否|is_audit
+     * @param array  $tree     树形结构数据
+     * @param string $stable   资源表明
+     * @param int    $level    子分类添加层级数目，默认为0（无限极）
+     * @param array  $delParam 删除关联数据模型参数，app、module、method
+     * @param array  $extra    附加配置信息字段，字段间使用|分割，字段的属性用-分割。例：attach|type-是-否|is_audit
      *
      * @return string HTML页面数据
      */
@@ -315,8 +304,7 @@ class AdministratorAction extends Action
     }
 
     /**
-     * 修正数据格式 -- �
-     * 开发阶段使用
+     * 修正数据格式 -- 仅开发阶段使用
      * Enter description here ...
      */
     public function createData()
@@ -356,7 +344,7 @@ class AdministratorAction extends Action
         $key = $_POST['searchPageKey'];
         $title = $_POST['pageTitle'];
         unset($_POST['searchPageKey'], $_POST['pageTitle']);
-        // 保存成KEY=>VALUE形式
+       // 保存成KEY=>VALUE形式
         $keyArr = $_POST['key'];
         foreach ($_POST as &$v) {
             $v = $this->setKVArr($v, $keyArr);
@@ -372,8 +360,7 @@ class AdministratorAction extends Action
     }
 
     /**
-     * 保存�
-     * �置页面详细数据.
+     * 保存配置页面详细数据.
      */
     public function saveConfigData()
     {

@@ -427,7 +427,7 @@ class GlobalAction extends AdministratorAction
     public function setCreditLevel()
     {
         if (!empty($_POST)) { //添加&编辑积分类型
-            $res = model('Credit')->saveCreditLevel($_POST);
+           $res = model('Credit')->saveCreditLevel($_POST);
             $this->assign('jumpUrl', U('admin/Global/creditLevel'));
             $this->success();
             exit();
@@ -448,7 +448,7 @@ class GlobalAction extends AdministratorAction
         $this->displayConfig($detailData);
     }
 
-    //保存积分规则
+        //保存积分规则
     public function savecredit()
     {
         $res = model('Credit')->saveCreditSet($_POST['creditSet']);

@@ -11,8 +11,7 @@ class UserListWidget extends Widget
     /**
      * 模板渲染.
      *
-     * @param array $data 相�
-     * �数据
+     * @param array $data 相关数据
      *
      * @return string 用户展示列表
      */
@@ -33,7 +32,7 @@ class UserListWidget extends Widget
         $var['type'] = t($data['type']);
         $var['uids'] = t($data['uids']);
         $var['pid'] = intval($data['pid']);
-        //        $var['userList'] = D('People', 'people')->getPeople($var, $var['type']);
+//        $var['userList'] = D('People', 'people')->getPeople($var, $var['type']);
         $var['userList'] = D('People', 'people')->getPeopleNew($var, $var['type'], $this->mid);
         // 渲染模版
         $content = $this->renderFile(dirname(__FILE__).'/'.$template.'.html', $var);

@@ -24,8 +24,7 @@ class TaskApi extends OldTaskApi
      * 每日任务
      * 和主线任务复用.
      *
-     * @param int $type 只有两个类型，类已经定义，self::DAILY为每日，self::MAINLINE为主线，这个方法是TS以前任务遗留定义，后续会修改，现在�
-     * �这么写！
+     * @param int $type 只有两个类型，类已经定义，self::DAILY为每日，self::MAINLINE为主线，这个方法是TS以前任务遗留定义，后续会修改，现在先这么写！
      *
      * @return array
      *
@@ -97,8 +96,7 @@ class TaskApi extends OldTaskApi
             array_push($tasks, $task);
         }
 
-        return Ts\Service\ApiMessage::withArray($tasks, 1, '');
-        // return $tasks;
+        return $tasks;
     }
 
     /**
@@ -110,9 +108,7 @@ class TaskApi extends OldTaskApi
      **/
     public function mainLine()
     {
-        $return = $this->daily(self::MAINLINE);
-
-        return Ts\Service\ApiMessage::withArray($return, 1, '');
+        return $this->daily(self::MAINLINE);
     }
 
     /**
@@ -228,8 +224,7 @@ class TaskApi extends OldTaskApi
             }
         }
 
-        return Ts\Service\ApiMessage::withArray($tasks, 1, '');
-        // return $tasks;
+        return $tasks;
     }
 } // END class TaskApi extends OldTaskApi
 
@@ -387,8 +382,7 @@ class OldTaskApi extends Api
             }
         }
 
-        return Ts\Service\ApiMessage::withArray($res, 1, '');
-        // return $res;
+        return $res;
     }
 
     // public function task_list1() {
@@ -505,11 +499,10 @@ class OldTaskApi extends Api
             $status = D('task_user')->where('uid='.$this->mid.' and ( status=0 or receive=1 ) and id='.$id)->find();
             $taskexist = D('task_user')->where('uid='.$this->mid.' and id='.$id)->find();
             if ($status || !$taskexist) {
-                return Ts\Service\ApiMessage::withArray('', 0, '参数错误');
-                // return array(
-                //         'status' => 0,
-                //         'msg' => '参数错误',
-                // );
+                return array(
+                        'status' => 0,
+                        'msg'    => '参数错误',
+                );
             }
             $res = D('task_user')->setField('receive', 1, 'id='.$id);
             if ($res) {
@@ -530,24 +523,21 @@ class OldTaskApi extends Api
                 model('Task')->getReward($reward->exp, $reward->score, $reward->medal->id, $GLOBALS['ts']['mid']);
                 // $res = array('allcomplete'=> $allcomplete , 'tasktype'=>$this->data['task_type'] ,'info'=>$info);
                 // echo json_encode($res);
-                return Ts\Service\ApiMessage::withArray('', 1, '领取成功');
-                // return array(
-                //         'status' => 1,
-                //         'msg' => '领取成功',
-                // );
+                return array(
+                        'status' => 1,
+                        'msg'    => '领取成功',
+                );
             } else {
-                return Ts\Service\ApiMessage::withArray('', 0, '领取失败');
-                // return array(
-                //         'status' => 0,
-                //         'msg' => '领取失败',
-                // );
+                return array(
+                        'status' => 0,
+                        'msg'    => '领取失败',
+                );
             }
         } else {
-            return Ts\Service\ApiMessage::withArray('', 0, '参数错误');
-            // return array(
-            //         'status' => 0,
-            //         'msg' => '参数错误',
-            // );
+            return array(
+                    'status' => 0,
+                    'msg'    => '参数错误',
+            );
         }
     }
 }

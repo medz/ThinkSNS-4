@@ -4,9 +4,9 @@
   </if>
   <div class="right-wrap"> 
     <!--该作者其他帖子-->
-    {:W('OtherPost',array('uid'=>$mid,'title'=>'该作者其它帖子','post_id'=>intval($_GET['post_id']),'max'=>4))} 
-    <!--最新帖子--> 
-    {:W('LatestPost',array('uid'=>$mid,'title'=>'最新帖子','weiba_id'=>$weiba_id,'max'=>4))} 
+    {:W('OtherPost',array('uid'=>$mid,'title'=>'该作者其它帖子','post_id'=>intval($_GET['post_id']),'max'=>4))}
+    <!--最新帖子-->
+    {:W('LatestPost',array('uid'=>$mid,'title'=>'最新帖子','post_id'=>intval($_GET['post_id']),'max'=>4))}
     <!--微吧推荐-->
     <div class="mb20"> {:W('RelatedGroup',array('uid'=>$mid,'title'=>'微吧推荐','max'=>3))} </div>
     <!--微吧右下广告-->

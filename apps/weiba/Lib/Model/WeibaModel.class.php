@@ -146,7 +146,7 @@ class WeibaModel extends Model
             $admin_uid = model('User')->getUserInfoByUids($v['admin_uid']);
             $list['data'][$k]['admin_uid'] = $admin_uid[$v['admin_uid']]['space_link'];
             $list['data'][$k]['follower_count/thread_count'] = $v['follower_count'].'/'.$v['thread_count'];
-            $isrecommend = $v['recommend'] ? '取消推荐' : '首页热帖推荐';
+            $isrecommend = $v['recommend'] ? '取消推荐' : '推荐';
             $list['data'][$k]['weiba_cate'] = $cids[$v['cid']];
             $list['data'][$k]['DOACTION'] = '<a href="javascript:void(0)" onclick="admin.recommend('.$v['weiba_id'].','.$v['recommend'].');">'.$isrecommend.'</a>&nbsp;-&nbsp;<a href="'.U('weiba/Admin/editWeiba', array(
                     'weiba_id' => $v['weiba_id'],
@@ -220,8 +220,6 @@ class WeibaModel extends Model
             $author = model('User')->getUserInfoByUids($v['post_uid']);
             $list['data'][$k]['post_uid'] = $author[$v['post_uid']]['space_link'];
             $list['data'][$k]['post_time'] = friendlyDate($v['post_time']);
-            $list['data'][$k]['last_reply_time'] = friendlyDate($v['last_reply_time']);
-            $list['data'][$k]['read_count/reply_count'] = $v['read_count'].'/'.$v['reply_count'];
             $list['data'][$k]['weiba_id'] = $this->where('weiba_id='.$v['weiba_id'])->getField('weiba_name');
             if ($v['is_del'] == 0) {
                 $isRecommend = $v['recommend'] ? '取消推荐' : '推荐到首页';
@@ -260,8 +258,7 @@ class WeibaModel extends Model
     }
 
     /**
-     * �
-     * �注微吧.
+     * 关注微吧.
      *
      * @param
      *        	integer uid 用户UID
@@ -296,8 +293,7 @@ class WeibaModel extends Model
     }
 
     /**
-     * 取消�
-     * �注微吧.
+     * 取消关注微吧.
      *
      * @param
      *        	integer uid 用户UID
@@ -333,16 +329,14 @@ class WeibaModel extends Model
     }
 
     /**
-     * 判断是否�
-     * �注某个微吧.
+     * 判断是否关注某个微吧.
      *
      * @param
      *        	integer uid 用户UID
      * @param
      *        	integer weiba_id 微吧ID
      *
-     * @return bool 是否已�
-     * �注
+     * @return bool 是否已关注
      */
     public function getFollowStateByWeibaid($uid, $weiba_id)
     {
@@ -358,8 +352,7 @@ class WeibaModel extends Model
     }
 
     /**
-     * 批量获取微吧�
-     * �注状态
+     * 批量获取微吧关注状态
      *
      * @param
      *        	integer uid 用户UID
@@ -382,19 +375,16 @@ class WeibaModel extends Model
     }
 
     /**
-     * 格式化，用户的�
-     * �注数据.
+     * 格式化，用户的关注数据.
      *
      * @param int   $uid
      *                           用户ID
      * @param array $fids
      *                           用户ID数组
      * @param array $follow_data
-     *                           �
-     * �注状态数据
+     *                           关注状态数据
      *
-     * @return array 格式化后的用户�
-     * �注状态数据
+     * @return array 格式化后的用户关注状态数据
      */
     private function _formatFollowState($uid, $weiba_ids, $follow_data)
     {
@@ -600,8 +590,7 @@ class WeibaModel extends Model
      * 搜索微吧.
      *
      * @param
-     *        	varchar keyword 搜索�
-     * �键字
+     *        	varchar keyword 搜索关键字
      * @param
      *        	integer limit 每页显示条数
      * @param
@@ -651,8 +640,7 @@ class WeibaModel extends Model
      * 搜索帖子.
      *
      * @param
-     *        	varchar keyword 搜索�
-     * �键字
+     *        	varchar keyword 搜索关键字
      * @param
      *        	integer limit 每页显示条数
      * @param

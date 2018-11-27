@@ -12,9 +12,8 @@
 //
 
 /**
- * �
- * 容管理.
- * +------------------------------------------------------------------------------.
+ * 内容管理.
+ +------------------------------------------------------------------------------
  *
  * @author    jason <yangjs17@yeah.net>
  *
@@ -159,8 +158,7 @@ class ContentAction extends AdministratorAction
      *
      * @param bool $isRec 是否是回收站列表
      *
-     * @return array 相�
-     * �数据
+     * @return array 相关数据
      */
     public function comment($isRec = false, $is_audit = 1)
     {
@@ -177,7 +175,7 @@ class ContentAction extends AdministratorAction
         $this->pageButton[] = array('title' => L('PUBLIC_SEARCH_COMMENT'), 'onclick' => "admin.fold('search_form')");
         if ($isRec == 0 && $is_audit == 1) {
             $this->pageButton[] = array('title' => L('PUBLIC_DELETE_COMMENT'), 'onclick' => "admin.ContentEdit('','delComment','".L('PUBLIC_STREAM_DELETE')."','".L('PUBLIC_STREAM_COMMENT')."')");
-        } elseif ($is_Rec == 0 && $is_audit == 0) {
+        } elseif ($isRec == 0 && $is_audit == 0) {
             $this->pageButton[] = array('title' => '通过', 'onclick' => "admin.ContentEdit('','auditComment','".'通过'."','".L('PUBLIC_DYNAMIC')."')");
             $this->pageButton[] = array('title' => '删除', 'onclick' => "admin.ContentEdit('','delComment','".L('PUBLIC_STREAM_DELETE')."','".L('PUBLIC_DYNAMIC')."')");
         } else {
@@ -192,14 +190,32 @@ class ContentAction extends AdministratorAction
             $map['is_audit'] = $is_audit == 1 ? 1 : 0;
         }
         !empty($_POST['comment_id']) && $map['comment_id'] = array('in', explode(',', $_POST['comment_id']));
-        !empty($_POST['uid']) && $map['uid'] = array('in', explode(',', $_POST['uid']));
-        !empty($_POST['app_uid']) && $map['app_uid'] = array('in', explode(',', $_POST['app_uid']));
+        //!empty($_POST['uid']) && $map['uid'] = array('in', explode(',', $_POST['uid']));
+        //!empty($_POST['app_uid']) && $map['app_uid'] = array('in', explode(',', $_POST['app_uid']));
+        if(!empty($_POST['uid'])){
+            $user = D('user')->where(['uname'=>['LIKE','%'.t($_POST['uid']).'%',]])->select();
+            $uids = getSubByKey($user, 'uid');
+            $map['uid'] = array('in', $uids);
+        }
+        if(!empty($_POST['app_uid'])){
+            $user = D('user')->where(['uname'=>['LIKE','%'.t($_POST['app_uid']).'%',]])->select();
+            $uids = getSubByKey($user, 'uid');
+            $map['app_uid'] = array('in', $uids);
+        }
         $listData = model('Comment')->getCommentList($map, 'comment_id desc', 20);
 
         foreach ($listData['data'] as &$v) {
             $v['uid'] = $v['user_info']['space_link'];
             $v['app_uid'] = $v['sourceInfo']['source_user_info']['space_link'];
-            $v['source_type'] = "<a href='{$v['sourceInfo']['source_url']}' target='_blank'>".$v['sourceInfo']['source_type'].'</a>';
+            if($v['app'] == 'weiba'){
+                $v['source_type'] = '微吧';
+            }elseif ($v['app'] == 'Information'){
+                $v['source_type'] = '资讯';
+            }elseif ($v['app'] == 'Event'){
+                $v['source_type'] = '活动';
+            }else{
+                $v['source_type'] = "<a href='{$v['sourceInfo']['source_url']}' target='_blank'>".$v['sourceInfo']['source_type'].'</a>';
+            }
             $v['content'] = '<div style="width:400px">'.$v['content'].'</div>';
             $v['client_type'] = $this->from[$v['client_type']];
             $v['ctime'] = date('Y-m-d H:i:s', $v['ctime']);
@@ -442,9 +458,9 @@ class ContentAction extends AdministratorAction
         $this->pageKeyList = array('video_id', 'name', 'size', 'uid', 'ctime', 'from', 'DOACTION');
         $this->searchKey = array('video_id', 'name', 'from');
         $this->opt['from'] = array_merge(array('-1' => L('PUBLIC_ALL_STREAM')), $this->from);
-        $this->pageTab[] = array('title' => '视频列表', 'tabHash' => 'list', 'url' => U('admin/Content/video'));
+        $this->pageTab[] = array('title' => '音/视频列表', 'tabHash' => 'list', 'url' => U('admin/Content/video'));
         $this->pageTab[] = array('title' => L('PUBLIC_RECYCLE_BIN'), 'tabHash' => 'rec', 'url' => U('admin/Content/videoRec'));
-        $this->pageTab[] = array('title' => '视频配置', 'tabHash' => 'video_config', 'url' => U('admin/Content/video_config'));
+        $this->pageTab[] = array('title' => '音/视频配置', 'tabHash' => 'video_config', 'url' => U('admin/Content/video_config'));
 
         $this->pageButton[] = array('title' => L('PUBLIC_FILE_STREAM_SEARCH'), 'onclick' => "admin.fold('search_form')");
         if ($is_del == 0) {
@@ -454,7 +470,7 @@ class ContentAction extends AdministratorAction
         }
 
         $is_del == 1 && $_REQUEST['tabHash'] = 'rec';
-        $this->assign('pageTitle', $is_del ? L('PUBLIC_RECYCLE_BIN') : L('视频管理'));
+        $this->assign('pageTitle', $is_del ? L('PUBLIC_RECYCLE_BIN') : L('音/视频管理'));
         $map['is_del'] = $is_del == 1 ? 1 : 0;    //未删除的
         !empty($_POST['video_id']) && $map['video_id'] = array('in', explode(',', $_POST['video_id']));
         $_POST['from'] > 0 && $map['from'] = intval($_POST['from'] - 1);
@@ -575,8 +591,7 @@ class ContentAction extends AdministratorAction
     }
 
     /**
-     * 删除举报回收站�
-     * 容.
+     * 删除举报回收站内容.
      *
      * @return int 是否删除成功
      */
@@ -592,12 +607,11 @@ class ContentAction extends AdministratorAction
         $map['id'] = array('in', t($_POST['ids']));
         $data[] = model('Denounce')->where($map)->findAll();
         // todo 记录知识
-        echo model('Denounce')->deleteDenounce(t($_POST['ids']), intval($_POST['state'])) ? '1' : '0';
+        echo model('Denounce')->deleteDenounce(t($_POST['ids']), intval($_POST['state'])) ? '1' : '0';exit;
     }
 
     /**
-     * 撤销举报�
-     * 容.
+     * 撤销举报内容.
      *
      * @return int 是否撤销成功
      */
@@ -613,7 +627,7 @@ class ContentAction extends AdministratorAction
         $map['id'] = array('in', t($_POST['ids']));
         $data[] = model('Denounce')->where($map)->findall();
         //todo 记录知识
-        echo model('Denounce')->reviewDenounce(t($_POST['ids'])) ? '1' : '0';
+        echo model('Denounce')->reviewDenounce(t($_POST['ids'])) ? '1' : '0';exit;
     }
 
     /**

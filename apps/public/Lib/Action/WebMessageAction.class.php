@@ -47,7 +47,7 @@ class WebMessageAction extends Action
             $map['_string'] = " (to_uid = '{$this->uid}' OR app_uid = '{$this->mid}') AND uid !=".$this->mid;
         }
 
-        //		$d['tab'] = model('Comment')->getTab($map);
+//		$d['tab'] = model('Comment')->getTab($map);
         $d['tab'] = model('Comment')->getTabForApp($map);
         foreach ($d['tab'] as $key => $vo) {
             if ($key == 'feed') {
@@ -72,7 +72,7 @@ class WebMessageAction extends Action
 
         // 安全过滤
         $t = t($_GET['t']);
-        //		!empty($t) && $map['table'] = $t;
+//		!empty($t) && $map['table'] = $t;
         !empty($t) && $map['app'] = $t;
         if ($t == 'feed') {
             $map['app'] = 'public';
@@ -401,11 +401,15 @@ class WebMessageAction extends Action
         ));
 
         if ($result) {
-            if (isset($_POST['msgid'])) {
-                $this->pullMessage($_POST['room_id'], $_POST['msgid']);
-            } else {
-                $html = $this->buildMsgList(array($result));
-                $this->ajaxReturn($html, (int) $result['message_id'], 1);
+            if(!empty($result['send_message'])){
+                $this->ajaxReturn('', '所属用户组禁止发私信！', 0);
+            }else{
+                if (isset($_POST['msgid'])) {
+                    $this->pullMessage($_POST['room_id'], $_POST['msgid']);
+                } else {
+                    $html = $this->buildMsgList(array($result));
+                    $this->ajaxReturn($html, (int) $result['message_id'], 1);
+                }
             }
         } else {
             $this->ajaxReturn('', '发送失败', 0);

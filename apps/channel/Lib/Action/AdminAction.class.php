@@ -1,7 +1,6 @@
 <?php
 /**
- * 频道后台�
- * �置
+ * 频道后台配置
  * 1.频道分类管理 - 目前支持1级分类.
  *
  * @author zivss <guolee226@gmail.com>
@@ -14,9 +13,7 @@ class AdminAction extends AdministratorAction
     private $_model_category;
 
     /**
-     * 初始化，�
-     * �置�
-     * 容标题.
+     * 初始化，配置内容标题.
      */
     public function _initialize()
     {
@@ -37,8 +34,7 @@ class AdminAction extends AdministratorAction
     }
 
     /**
-     * 频道基本�
-     * �置页面.
+     * 频道基本配置页面.
      */
     public function index()
     {
@@ -52,8 +48,7 @@ class AdminAction extends AdministratorAction
     }
 
     /**
-     * 频道分类�
-     * �置页面.
+     * 频道分类配置页面.
      */
     public function channelCategory()
     {
@@ -102,8 +97,7 @@ class AdminAction extends AdministratorAction
     /**
      * 取消推荐操作.
      *
-     * @return josn 相�
-     * �操作信息数据
+     * @return josn 相关操作信息数据
      */
     public function cancelRecommended()
     {
@@ -125,8 +119,7 @@ class AdminAction extends AdministratorAction
     /**
      * 审核操作.
      *
-     * @return josn 相�
-     * �操作信息数据
+     * @return josn 相关操作信息数据
      */
     public function auditChannelList()
     {
@@ -172,8 +165,7 @@ class AdminAction extends AdministratorAction
     }
 
     /**
-     * 获取�
-     * 容信息.
+     * 获取内容信息.
      *
      * @param array  $map  查询条件
      * @param string $type 类型

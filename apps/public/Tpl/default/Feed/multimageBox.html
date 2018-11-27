@@ -44,7 +44,7 @@ core.loadFile(THEME_URL+'/js/uploadify/jquery.uploadify.min.js', function () {
 					$sendAction.append('<input id="attach_ids" class="attach_ids" type="hidden" name="attach_ids" feedtype="image" value="" />');
 				}
 				core.multimage.removeLoading(unid);
-				$('#btn_'+unid).before($('<li id="li_'+unid+'_'+file.index+'"><img src="'+jsondata.data.src+'" width="80" height="80" /><a href="javascript:;" onclick="core.multimage.removeImage(\''+unid+'\', '+file.index+', '+jsondata.data.attach_id+')"><span class="del">删除</span></a></li>').fadeIn('slow'));
+				$('#btn_'+unid).before($('<li id="li_'+unid+'_'+file.index+'"><img src="'+jsondata.data.src+'" width="80" height="80" /><a href="javascript:;" onclick="core.multimage.removeImage(\''+unid+'\', '+file.index+', '+jsondata.data.attach_id+',event)"><span class="del">删除</span></a></li>').fadeIn('slow'));
 				// 动态设置数目
 				core.multimage.upNumVal(unid, 'inc');
 				// 设置附件的值

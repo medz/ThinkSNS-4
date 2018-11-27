@@ -24,8 +24,7 @@ class TaskApi extends OldTaskApi
      * 每日任务
      * 和主线任务复用.
      *
-     * @param int $type 只有两个类型，类已经定义，self::DAILY为每日，self::MAINLINE为主线，这个方法是TS以前任务遗留定义，后续会修改，现在�
-     * �这么写！
+     * @param int $type 只有两个类型，类已经定义，self::DAILY为每日，self::MAINLINE为主线，这个方法是TS以前任务遗留定义，后续会修改，现在先这么写！
      *
      * @return array
      *

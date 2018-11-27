@@ -8,8 +8,7 @@ class WeiboApi extends Api
      */
 
     /**
-     * 获取�
-     * �站最新发布微博 --using.
+     * 获取全站最新发布微博 --using.
      *
      * @param
      *        	integer max_id 上次返回的最后一条微博ID
@@ -22,16 +21,15 @@ class WeiboApi extends Api
      */
     public function public_timeline()
     {
-        // return $this->mid;
         $max_id = $this->max_id ? intval($this->max_id) : 0;
         $count = $this->count ? intval($this->count) : 10;
         $where = 'is_del=0 and is_audit=1';
         // 动态类型
         $type = $this->data['type'];
         if (in_array($type, array(
-                'postimage',
-                // 'postfile',
-                'postvideo',
+            'postimage',
+            // 'postfile',
+            'postvideo',
         ))) {
             $where .= " AND type='{$type}' ";
         } elseif ($type == 'post') {
@@ -39,18 +37,68 @@ class WeiboApi extends Api
         } elseif ($type == 'repost') {
             $where .= ' AND is_repost=1';
         }
+        // 先查询置顶微博列表
+        if (empty($max_id)) {
+            $topIds = $this->weiboTop($count);
+            if (count($topIds) >= $count) {
+
+                $data = $this->format_feed($topIds);
+                foreach ($data as &$v) {
+                    $v['top'] = 1;
+                }
+
+                return $data;
+            } else {
+                $count -= count($topIds);
+            }
+        } else {
+            $tId = M('feed_top')->where('feed_id = '.$max_id)->getField('id');
+            if ($tId) {
+                $topIds = $this->weiboTop($count, $tId);
+                if ($topIds) {
+                    if (count($topIds) >= $count) {
+
+                        $data = $this->format_feed($topIds);
+                        foreach ($data as &$v) {
+                            $v['top'] = 1;
+                        }
+
+                        return $data;
+                    } else {
+                        $count -= count($topIds);
+                    }
+
+                    $max_id = 0;
+                }
+            }
+        }
+        $topIds && $where .= ' AND feed_id not in ('.implode(',', $this->weiboTop()).')';
+
         !empty($max_id) && $where .= " AND feed_id < {$max_id}";
         // $where .= " AND (app='public')";
         $where .= " AND (app='public' OR app='weiba')";
         $where .= " AND type != 'postfile'";
         $feed_ids = model('Feed')->where($where)->field('feed_id')->limit($count)->order('feed_id DESC')->getAsFieldArray('feed_id');
 
-        return $this->format_feed($feed_ids);
+        // 如果有置顶，则合并置顶数据
+        $topIds && $feed_ids = array_merge($topIds, $feed_ids);
+
+        $data = $this->format_feed($feed_ids);
+        if ($data) {
+            foreach ($data as &$v) {
+                if (in_array($v['feed_id'], $topIds)) {
+                    $v['top'] = 1;
+                } else {
+                    $v['top'] = 0;
+                }
+            }
+        }
+
+        return $data ?: [];
     }
 
     /**
-     * 获取当前用户所�
-     * �注的用户发布的微博 --using.
+     * 获取当前用户所关注的用户发布的微博 --using.
      *
      * @param
      *        	integer max_id 上次返回的最后一条微博ID
@@ -91,12 +139,10 @@ class WeiboApi extends Api
     }
 
     /**
-     * 获取当前用户所�
-     * �注频道分类下的微博 --using.
+     * 获取当前用户所关注频道分类下的微博 --using.
      *
      * @param
-     *        	integer cid 频道ID(可选,0或null为�
-     * �部)
+     *        	integer cid 频道ID(可选,0或null为全部)
      * @param
      *        	integer max_id 上次返回的最后一条微博ID
      * @param
@@ -159,7 +205,7 @@ class WeiboApi extends Api
      * @param
      *        	integer type 微博类型 'post','repost','postimage','postfile','postvideo'
      *
-     * @return array 话题详�
+     * @return array 话题详情
      */
     public function topic_timeline()
     {
@@ -292,8 +338,7 @@ class WeiboApi extends Api
     }
 
     /**
-     * 某条微博详细�
-     * 容 --using.
+     * 某条微博详细内容 --using.
      *
      * @param
      *        	integer feed_id 微博ID
@@ -382,6 +427,7 @@ class WeiboApi extends Api
             $comment_info['digg_count'] = $v['digg_count'];
             $diggarr = model('CommentDigg')->checkIsDigg($v['comment_id'], $GLOBALS['ts']['mid']);
             $comment_info['is_digg'] = t($diggarr[$v['comment_id']] ? 1 : 0);
+            $comment_info['to_uid'] = $v['to_uid'];
 
             /* # 将评论里面的emoji解析 */
             $comment_info['content'] = formatEmoji(false, $comment_info['content']);
@@ -422,6 +468,7 @@ class WeiboApi extends Api
             $digg_list[$k]['uname'] = $user_info['uname'];
             $digg_list[$k]['intro'] = $user_info['intro'];
             $digg_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
+            $digg_list[$k]['user_group'] = $user_info['user_group'];
             $digg_list[$k]['follow_status'] = $follow_status[$v['uid']];
             $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
             $digg_list[$k]['space_privacy'] = $privacy['space'];
@@ -439,15 +486,13 @@ class WeiboApi extends Api
      * 发布一条微博 --using.
      *
      * @param
-     *        	string content 微博�
-     * 容
+     *        	string content 微博内容
      * @param float  $latitude
      *                          纬度
      * @param float  $longitude
      *                          经度
      * @param string $address
-     *                          �
-     * �体地址
+     *                          具体地址
      * @param
      *        	integer from 来源(2-android 3-iphone)
      * @param
@@ -487,6 +532,33 @@ class WeiboApi extends Api
                     'msg'    => '内容不能为空',
             );
         }
+        /* 判断是否含有敏感词 */
+        $data['body'] = sensitiveWord($data['body']);
+        if (!sensitiveWord($data['body'])) {
+            return array(
+                'status' => -3,
+                'msg' => '内容包含敏感词', // 内容包含敏感词
+            );
+        }
+        //判断是否先审后发
+        $filterStatus = filter_words($data['body']);
+        $weiboSet = model('Xdata')->get('admin_Config:feed');
+        $weibo_premission = $weiboSet['weibo_premission'];
+        $is_audit = false;
+        if (in_array('audit', $weibo_premission) || CheckPermission('core_normal', 'feed_audit') || $filterStatus['type'] == 2) {
+            $data['is_audit'] = 0;
+            $is_audit = true;
+        } else {
+            $data['is_audit'] = 1;
+        }
+        if (model('FeedTopic')->isLock(html_entity_decode($data ['body'], ENT_QUOTES, 'UTF-8'))) {
+
+            return array(
+                'status' => 0,
+                'msg' => '该话题已被屏蔽',
+            );
+        }
+
         $data['type'] = isset($this->data['type']) ? $this->data['type'] : 'post';
         $data['app'] = 'public';
         $data['app_row_id'] = '0';
@@ -547,8 +619,8 @@ class WeiboApi extends Api
             $isOpenChannel = model('App')->isAppNameOpen('channel');
             if (!$isOpenChannel) {
                 return array(
-                        'status'  => 1,
-                        'msg'     => '发布成功',
+                        'status'  => $is_audit ? 0 : 1,
+                        'msg'     => $is_audit ? '内容含敏感词，待审核' :'发布成功',
                         'feed_id' => $feed_id,
                 );
             }
@@ -585,8 +657,8 @@ class WeiboApi extends Api
             }
 
             return array(
-                    'status'           => 1,
-                    'msg'              => '发布成功',
+                    'status'           => $is_audit ? 0 : 1,
+                    'msg'              => $is_audit ? '内容含敏感词，待审核' :'发布成功',
                     'feed_id'          => $feed_id,
                     'is_audit_channel' => intval($channelConf['is_audit']),
             );
@@ -604,15 +676,13 @@ class WeiboApi extends Api
      * @param file $_FILE
      *                    图片
      * @param
-     *        	string content 微博�
-     * 容
+     *        	string content 微博内容
      * @param float  $latitude
      *                          纬度
      * @param float  $longitude
      *                          经度
      * @param string $address
-     *                          �
-     * �体地址
+     *                          具体地址
      * @param
      *        	integer from 来源(2-android 3-iphone)
      * @param
@@ -652,15 +722,13 @@ class WeiboApi extends Api
      * @param file $_FILE
      *                    视频
      * @param
-     *        	string content 微博�
-     * 容
+     *        	string content 微博内容
      * @param float  $latitude
      *                          纬度
      * @param float  $longitude
      *                          经度
      * @param string $address
-     *                          �
-     * �体地址
+     *                          具体地址
      * @param
      *        	integer from 来源(2-android 3-iphone)
      * @param
@@ -745,15 +813,13 @@ class WeiboApi extends Api
      * @param
      *        	integer feed_id 微博ID
      * @param
-     *        	string content 转发�
-     * 容
+     *        	string content 转发内容
      * @param float  $latitude
      *                          纬度
      * @param float  $longitude
      *                          经度
      * @param string $address
-     *                          �
-     * �体地址
+     *                          具体地址
      * @param
      *        	integer from 来源(2-android 3-iPhone)
      *
@@ -815,8 +881,7 @@ class WeiboApi extends Api
      * @param
      *        	integer to_comment_id 评论ID
      * @param
-     *        	string content 评论�
-     * 容
+     *        	string content 评论内容
      * @param
      *        	integer from 来源(2-android 3-iPhone)
      *
@@ -836,6 +901,14 @@ class WeiboApi extends Api
                     'msg'    => '评论内容不能为空',
             );
         }
+        /* 判断是否含有敏感词 */
+        $content = sensitiveWord($this->data['content']);
+        if (!sensitiveWord($content)) {
+            return array(
+                'status' => 0,
+                'msg' => '评论内容包含敏感词', // 评论内容包含敏感词
+            );
+        }
         //检测用户是否被禁言
         if ($isDisabled = model('DisableUser')->isDisableUser($this->mid, 'post')) {
             return array(
@@ -849,7 +922,7 @@ class WeiboApi extends Api
         $data['table'] = 'feed';
         $data['row_id'] = intval($this->data['feed_id']);
         $data['app_uid'] = $feed_detail['uid'];
-        $data['content'] = $this->data['content'];
+        $data['content'] = $content;
         // $data ['from'] = 'feed';
         /* # 将emoji编码 */
         $data['content'] = t(formatEmoji(true, $data['content']));
@@ -933,9 +1006,9 @@ class WeiboApi extends Api
                 'message' => '传入的参数不合法',
             );
 
-            /*
-             * 判断是否删除成功
-             */
+        /*
+         * 判断是否删除成功
+         */
         } elseif (model('Comment')->deleteComment(array($cid), $this->mid)) {
             return array(
                 'status'  => 1,
@@ -1166,8 +1239,7 @@ class WeiboApi extends Api
     }
 
     /**
-     * ******** 用户相�
-     * �微博信息列表API *********.
+     * ******** 用户相关微博信息列表API *********.
      */
 
     /**
@@ -1304,21 +1376,18 @@ class WeiboApi extends Api
     }
 
     /**
-     * ******** 搜索相�
-     * �的接口API *********.
+     * ******** 搜索相关的接口API *********.
      */
 
     /**
-     * 按�
-     * �键字搜索微博 --using.
+     * 按关键字搜索微博 --using.
      *
      * @param
      *        	integer max_id 上次返回的最后一条收藏ID
      * @param
      *        	integer count 微博条数
      * @param
-     *        	varchar key �
-     * �键字
+     *        	varchar key 关键字
      * @param
      *        	integer type 微博类型 'post','repost','postimage','postfile','postvideo'
      *
@@ -1374,8 +1443,7 @@ class WeiboApi extends Api
      * @param
      *        	integer count 微博条数
      * @param
-     *        	varchar key �
-     * �键字
+     *        	varchar key 关键字
      * @param
      *        	integer type 微博类型 'post','repost','postimage','postfile','postvideo'
      *
@@ -1428,8 +1496,7 @@ class WeiboApi extends Api
      * 搜索@最近联系人 --using.
      *
      * @param
-     *        	varchar key �
-     * �键字
+     *        	varchar key 关键字
      * @param
      *        	integer max_id 上次返回的最后一条用户UID
      * @param
@@ -1522,8 +1589,7 @@ class WeiboApi extends Api
      * 搜索话题 --using.
      *
      * @param
-     *        	varchar key �
-     * �键字
+     *        	varchar key 关键字
      * @param
      *        	integer max_id 上次返回的最后一条话题ID
      * @param
@@ -1559,8 +1625,7 @@ class WeiboApi extends Api
     }
 
     /**
-     * ******** 用户的相�
-     * �微博--将合并 @我的、评论我的等等微博列表 *********.
+     * ******** 用户的相关微博--将合并 @我的、评论我的等等微博列表 *********.
      */
 
     /**
@@ -1629,16 +1694,14 @@ class WeiboApi extends Api
     }
 
     /**
-     * 与我相�
-     * �.
+     * 与我相关.
      *
      * @param
      *        	integer max_id 上次返回的最后一条atme_id
      * @param`
      *        	integer count @条数
      *
-     * @return array 与我相�
-     * �列表
+     * @return array 与我相关列表
      */
     public function user_related()
     {
@@ -1695,27 +1758,62 @@ class WeiboApi extends Api
             $where .= ' AND app!="weiba"';
             model('UserData')->setKeyValue($this->mid, 'unread_comment', 0);
         }
+        $where .= ' AND app!="Event"';
         !empty($max_id) && $where .= " AND comment_id < {$max_id}";
 
         $list = model('Comment')->where($where)->order('comment_id DESC')->limit($count)->findAll();
         $comment_arr = array();
         foreach ($list as $k => $v) {
-            $feed_info = $this->format_feed(array(
+            if ($v['app'] == 'Information' && $v['table'] == 'information_list') {
+                $information_info = \Apps\Information\Model\Subject::getInstance()->setId($v['row_id'])->getSubject();
+                $comment['comment_id'] = $v['comment_id'];
+                $comment['app'] = $v['app'];
+                $comment['to_uid'] = $v['to_uid'];
+                $comment['information_id'] = $v['row_id'];
+                $comment['type'] = 'post';
+                $comment['content'] = formatEmoji(false, $v['content']);
+                $comment['ctime'] = $v['ctime'];
+                $comment['from'] = '来自网站';
+                $comment['user_info'] = $this->get_user_info($v['uid']);
+                $comment['attach_info'] = array();
+                $comment['information_info']['abstract'] = $information_info['abstract'];
+
+                if ($information_info['logo'] > 0) {
+                    $comment['information_info']['logo'] = getImageUrlByAttachId($information_info['logo']);
+                } else {
+                    $information_info['url'] = sprintf('%s/api.php?mod=Information&act=reader&id=%d', SITE_URL, intval($information_info['id']));
+                    preg_match_all('/\<img(.*?)src\=\"(.*?)\"(.*?)\/?\>/is', $information_info['content'], $image);
+                    $image = $image[2];
+                    if ($image && is_array($image) && count($image) >= 1) {
+                        $image = $image[0];
+                        if (!preg_match('/https?\:\/\//is', $image)) {
+                            $image = parse_url(SITE_URL, PHP_URL_SCHEME) . '://' . parse_url(SITE_URL, PHP_URL_HOST) . '/' . $image;
+                        }
+                    }
+                    $comment['information_info']['logo'] = $image[0] ?: '';
+                }
+                $comment['information_info']['isDel'] = $information_info['isDel'];
+
+            } else {
+                $feed_info = $this->format_feed(array(
                     $v['row_id'],
-            ), 0);
-            if (!$feed_info[0] || $feed_info[0]['is_del'] == 1) {
-                unset($comment);
-                continue;
+                ), 0);
+                if (!$feed_info[0] || $feed_info[0]['is_del'] == 1) {
+                    unset($comment);
+                    continue;
+                }
+                $comment['comment_id'] = $v['comment_id'];
+                $comment['app'] = $v['app'];
+                $comment['to_uid'] = $v['to_uid'];
+                $comment['feed_id'] = $v['row_id'];
+                $comment['type'] = 'post';
+                $comment['content'] = formatEmoji(false, $v['content']);
+                $comment['ctime'] = $v['ctime'];
+                $comment['from'] = '来自网站';
+                $comment['user_info'] = $this->get_user_info($v['uid']);
+                $comment['attach_info'] = array();
+                $comment['feed_info'] = $feed_info[0];
             }
-            $comment['comment_id'] = $v['comment_id'];
-            $comment['feed_id'] = $v['row_id'];
-            $comment['type'] = 'post';
-            $comment['content'] = formatEmoji(false, $v['content']);
-            $comment['ctime'] = $v['ctime'];
-            $comment['from'] = '来自网站';
-            $comment['user_info'] = $this->get_user_info($v['uid']);
-            $comment['attach_info'] = array();
-            $comment['feed_info'] = $feed_info[0];
 
             $comment_arr[] = $comment;
             unset($comment);
@@ -1819,9 +1917,7 @@ class WeiboApi extends Api
     }
 
     /**
-     * ******** �
-     * �他�
-     * �用操作API *********.
+     * ******** 其他公用操作API *********.
      */
 
     /**
@@ -1900,8 +1996,7 @@ class WeiboApi extends Api
     }
 
     /**
-     * 获取微博详�
-     * --using.
+     * 获取微博详情 --using.
      *
      * @param
      *        	integer feed_id 微博ID
@@ -1949,28 +2044,29 @@ class WeiboApi extends Api
                 $feed_info['channel_category_name'] = $channel_category_name;
                 $from = '来自'.$channel_category_name;
             } else {
+                $fromConfig = model('Xdata')->get('admin_Application:configureFrom');
                 switch ($data['from']) {
                     case 1:
-                        $from = '来自手机';
+                        $from = $fromConfig['phone'];   // 来自手机
                         break;
                     case 2:
-                        $from = '来自Android';
+                        $from = $fromConfig['mobile'];   //来自移动端
                         break;
                     case 3:
-                        $from = '来自iPhone';
+                        $from = $fromConfig['iPhone'];   //来自iPhone
                         break;
                     case 4:
-                        $from = '来自iPad';
+                        $from = $fromConfig['iPad'];   //'来自iPad';
                         break;
                     case 5:
-                        $from = '来自Windows';
+                        $from = $fromConfig['windows'];   //'来自Windows';
                         break;
                     case 6:
-                        $from = '来自H5客户端';
+                        $from = $fromConfig['h5'];   //'来自H5客户端';
                         break;
                     case 0:
                     default:
-                        $from = '来自网站';
+                        $from = $fromConfig['web'];   //'来自网站';
                         break;
                 }
             }
@@ -2278,5 +2374,31 @@ class WeiboApi extends Api
         return array(
             'num' => json_decode(json_encode(model('Xdata')->get('admin_Config:feed')), false)->weibo_nums,
         );
+    }
+
+    /**
+     * 微博置顶列表
+     *
+     * @param int $count
+     * @param int $maxId
+     * @return array
+     * @author zsy
+     */
+    public function weiboTop($count = 0, $maxId = 0)
+    {
+        $where = 'status = 0';
+        $FeedTop = M('feed_top')->order('id DESC');
+        $maxId == 0 || $where .= ' AND id < '.$maxId;
+        $FeedTop->where($where);
+        $count > 0 && $FeedTop->limit($count);
+        $FeedTop->field('feed_id');
+        $feedIds = $FeedTop->select();
+        $feedIds = array_unique(array_filter(getSubByKey($feedIds, 'feed_id')));
+        if (!$feedIds) {
+
+            return [];
+        }
+
+        return $feedIds;
     }
 }

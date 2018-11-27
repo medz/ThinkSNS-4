@@ -14,7 +14,7 @@ class WeibaPostModel extends Model
                             0  => 'post_id', 1 => 'weiba_id', 2 => 'post_uid', 3 => 'title', 4 => 'content', 5 => 'post_time',
                             6  => 'reply_count', 7 => 'read_count', 8 => 'last_reply_uid', 9 => 'last_reply_time', 10 => 'digest', 11 => 'top', 12 => 'lock',
                             13 => 'api_key', 14 => 'domain', 15 => 'is_index', 16 => 'index_img', 17 => 'reg_ip',
-                            18 => 'is_del', 19 => 'feed_id', 20 => 'reply_all_count', 21 => 'attach', 22 => 'form', 23 => 'top_time', 24 => 'is_index_time', '_autoinc' => true, '_pk' => 'post_id',
+                            18 => 'is_del', 19 => 'feed_id', 20 => 'reply_all_count', 21 => 'attach', 22 => 'form', 23 => 'top_time', 24 => 'is_index_time',25 =>'video_id', '_autoinc' => true, '_pk' => 'post_id',
                         );
 
     /**
@@ -22,10 +22,8 @@ class WeibaPostModel extends Model
      *
      * @param int post_id 帖子ID
      * @param string title 帖子标题
-     * @param string content 帖子�
-     * 容
-     * @param int uid 发布�
-     * uid
+     * @param string content 帖子内容
+     * @param int uid 发布者uid
      *
      * @return int feed_id 分享ID
      */
@@ -43,9 +41,8 @@ class WeibaPostModel extends Model
      *
      * @param int weiba_id 微吧ID
      * @param varchar title 帖子标题
-     * @param varchar content 帖子�
-     * 容
-     * @param int user_id 帖子作�
+     * @param varchar content 帖子内容
+     * @param int user_id 帖子作者
      */
     public function createPostForApi($weiba_id, $title, $content, $uid)
     {
@@ -105,8 +102,7 @@ class WeibaPostModel extends Model
     }
 
     /**
-     * 为feed提供应用数据来源信息 - 与模板weiba_post.feed.php�
-     * �合使用.
+     * 为feed提供应用数据来源信息 - 与模板weiba_post.feed.php配合使用.
      *
      * @param int row_id 帖子ID
      * @param bool _forApi 提供给API的数据

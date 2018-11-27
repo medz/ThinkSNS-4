@@ -147,8 +147,8 @@ class IndexAction extends Action
                 $this->setKeywords(L('PUBLIC_INDEX_INDEX'));
         }
 
-        /* 		$category = D ( 'BlogCategory' )->getCategory ();
-                $this->assign ( 'blog_category', $category ); */
+/* 		$category = D ( 'BlogCategory' )->getCategory ();
+        $this->assign ( 'blog_category', $category ); */
         $category = model('CategoryTree')->setTable('channel_category')->getCategoryList();
         $this->assign('channel_category', $category);
         $wtype = array('at', 'topic', 'contribute');
@@ -206,8 +206,7 @@ class IndexAction extends Action
     }
 
     /**
-     * 我的�
-     * �注页面.
+     * 我的关注页面.
      */
     public function following()
     {
@@ -464,8 +463,7 @@ class IndexAction extends Action
     }
 
     /**
-     * �
-     * �告详细页面.
+     * 公告详细页面.
      */
     public function announcement()
     {
@@ -481,8 +479,7 @@ class IndexAction extends Action
     }
 
     /**
-     * �
-     * �告列表页面.
+     * 公告列表页面.
      */
     public function announcementList()
     {
@@ -557,8 +554,7 @@ class IndexAction extends Action
     }
 
     /**
-     * 消息弹出层�
-     * 容获取.
+     * 消息弹出层内容获取.
      */
     public function messageContent($type)
     {

@@ -441,8 +441,7 @@ class AccountAction extends Action
     }
 
     /**
-     * 账号安�
-     * �设置页面.
+     * 账号安全设置页面.
      */
     public function security()
     {
@@ -450,7 +449,7 @@ class AccountAction extends Action
         $mobile = $user['phone'];
         $email = $user['email'];
 
-        $matchMobile = preg_match('/^[1][358]\d{9}$/', $mobile);
+        $matchMobile = preg_match('/^[1][34578]\d{9}$/', $mobile);
         $bindingMobile = ($matchMobile === 1) ? true : false;
         $this->assign('bindingMobile', $bindingMobile);
         $this->assign('mobile', $mobile);
@@ -853,11 +852,11 @@ class AccountAction extends Action
         if (!model('User')->isChangePhone($phone, $this->mid)) {
             $this->ajaxReturn(null, '当前手机号码不能用于绑定', 0);
 
-            /* # 检查验证码是否不正确 */
+        /* # 检查验证码是否不正确 */
         } elseif (($sms = model('Sms')) and !$sms->CheckCaptcha($phone, $code)) {
             $this->ajaxReturn(null, $sms->getMessage(), 0);
 
-            /* # 验证是否修改成功 */
+        /* # 验证是否修改成功 */
         } elseif (model('User')->where('`uid` = '.$this->mid)->setField('phone', $phone)) {
             model('User')->cleanCache($this->mid);
             $this->ajaxReturn(null, '设置成功', 1);
@@ -901,11 +900,11 @@ class AccountAction extends Action
         if (!model('User')->isChangeEmail($email, $this->mid)) {
             $this->ajaxReturn(null, '该邮箱无法用于账户绑定', 0);
 
-            /* # 验证验证码是否不正确 */
+        /* # 验证验证码是否不正确 */
         } elseif (($sms = model('Sms')) and !$sms->checkEmailCaptcha($email, $code)) {
             $this->ajaxReturn(null, $sms->getMessage(), 0);
 
-            /* # 重新设置email */
+        /* # 重新设置email */
         } elseif (model('User')->where('`uid` = '.$this->mid)->setField('email', $email)) {
             model('User')->cleanCache($this->mid);
             $this->ajaxReturn(null, '设置成功', 1);
@@ -949,7 +948,7 @@ class AccountAction extends Action
         if (!in_array($type, array('mobile', 'email'))) {
             $this->ajaxReturn(null, '参数错误', 0);
 
-            /* # 手机验证码获取 */
+        /* # 手机验证码获取 */
         } elseif ($type == 'mobile') {
             $phone = floatval($_POST['mobile']);
 
@@ -960,7 +959,7 @@ class AccountAction extends Action
             $sms->sendCaptcha($phone, true) and $this->ajaxReturn(null, '验证码已经发送到您手机，请注意查收', 1);
             $this->ajaxReturn(null, $sms->getMessage(), 0);
 
-            /* # 获取邮箱验证码 */
+        /* # 获取邮箱验证码 */
         } elseif ($type == 'email') {
             $email = t($_POST['email']);
 
@@ -1038,6 +1037,9 @@ class AccountAction extends Action
 
         // 积分变化记录
         $credit_record = D('credit_record')->where('uid='.$this->mid)->order('ctime DESC')->findPage(100);
+        foreach ($credit_record['data'] as &$v){
+            $v['action'] = getUserName($v['reason'])?'转给 '.getUserName($v['reason']):rtrim($v['action'],strrchr($v['action'],'-'));
+        }
         $this->assign('credit_record', $credit_record);
         $this->display();
     }
@@ -1084,8 +1086,14 @@ class AccountAction extends Action
             $this->error('积分转账失败');
         }
         $map['uid'] = $this->mid;
-        $map['action'] = '积分转出';
+        $map['type'] = 3;
+        $map['action'] = ['like','%转给%'];
         $credit_record = D('credit_record')->where($map)->order('ctime DESC')->findPage(100);
+        foreach ($credit_record['data'] as &$v){
+            $v['toUname'] = getUserName($v['reason'])?:rtrim(ltrim($v['action'],'转给'),strrchr($v['action'],'-'));
+            $detail = json_decode($v['detail']);
+            $v['score'] = abs($detail->score);
+        }
         $this->assign('credit_record', $credit_record);
         $this->display();
     }

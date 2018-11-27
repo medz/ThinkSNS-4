@@ -343,20 +343,20 @@ class TaskAction extends AdministratorAction
         if (strtotime($_POST['reg_time1'][0]) > strtotime($_POST['reg_time1'][1])) {
             $this->error('注册的开始时间不能大于结束时间');
         }
-        // 		$medal =  intval( $_POST['attach_id'] );
-        // 		if ( $medal ){
-        // 			$data['name'] = t ( $_POST['medal_name'] );
-        // 			$exist = model( 'Medal' )->where($data)->find();
-        // 			if ( $exist ){
-        // 				$this->error('已存在相同的勋章名称');
-        // 			} else {
-        // 				$data['desc'] = t ( $_POST['medal_desc'] );
-        // 				$attach = model('Attach')->getAttachById( $medal );
-        // 				$src = $attach['save_path'].$attach['save_name'];
-        // 				$data['src'] = $medal.'|'.$src;
-        // 				$medal_id = model('Medal')->add($data);
-        // 			}
-        // 		}
+// 		$medal =  intval( $_POST['attach_id'] );
+// 		if ( $medal ){
+// 			$data['name'] = t ( $_POST['medal_name'] );
+// 			$exist = model( 'Medal' )->where($data)->find();
+// 			if ( $exist ){
+// 				$this->error('已存在相同的勋章名称');
+// 			} else {
+// 				$data['desc'] = t ( $_POST['medal_desc'] );
+// 				$attach = model('Attach')->getAttachById( $medal );
+// 				$src = $attach['save_path'].$attach['save_name'];
+// 				$data['src'] = $medal.'|'.$src;
+// 				$medal_id = model('Medal')->add($data);
+// 			}
+// 		}
 
         $task['task_name'] = $taskname;
         $task['task_desc'] = $taskdesc;

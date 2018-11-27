@@ -19,6 +19,12 @@
             </div>
           </li>
           <li>
+            <div class="c1">上传音/视频</div>
+            <div class="c2" id="video_upload">
+
+            </div>
+          </li>
+          <li>
             <div class="c1"><font color="red"> * </font>正文</div>
             <div class="c2" style="line-height:normal;"> {:W('UM', array('type'=>'weiba','contentName'=>'content','content'=>'','width'=>'700','tpl'=>'weiba'))} </div>
           </li>
@@ -38,4 +44,18 @@
     </div>
   </div>
 </div>
+<script>
+    $.get(U('public/Feed/videoWeibaBox'), {}, function (res) {
+        var html = '<div id="video_upload">'+res.html+'<div class="video_txt">音/视频格式:'+res.video_ext+';文件大小:'+res.video_size+'M之内</div></div>';
+        $('#video_upload').append(html);
+    }, 'json');
+    function deleteVideo(){
+        $.get(U('public/Feed/videoWeibaBox'), {}, function (res) {
+            $('#video_button').remove();
+            $('#video_upload').prepend(res.html);
+            $('#video_id').remove();
+            // $('#videos').css({top:(pos.top+5)+"px",left:(pos.left-5)+"px","z-index":1001});
+        }, 'json');
+    }
+</script>
 <include file="__THEME__/public_footer" /> 

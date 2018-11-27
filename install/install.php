@@ -1,7 +1,6 @@
 <?php
 /**
- * ThinkSNS安�
- * 文件，修改自pbdigg。
+ * ThinkSNS安装文件，修改自pbdigg。
  */
 error_reporting(0);
 set_time_limit(600);
@@ -41,7 +40,7 @@ if (file_exists(THINKSNS_ROOT.'/data/install.lock')) {
     echo $i_message['install_lock'];
     exit;
 
-    /* # 判断安装    sql文件是否可读 */
+/* # 判断安装sql文件是否可读 */
 } elseif (!is_readable($installfile)) {
     echo $i_message['install_dbFile_error'];
     exit;
@@ -380,7 +379,7 @@ function check(obj)
 <?php
 if (!$quit) {
             //写配置文件
-            $randkey = uniqid(rand());
+$randkey = uniqid(rand());
             $fp = fopen(THINKSNS_ROOT.'/config/'.$thinksns_config_file, 'wb');
             $configfilecontent = <<<EOT
 <?php
@@ -451,8 +450,8 @@ EOT;
                     mysql_select_db($db_config['db_name']);
                 }
 
-                //判断是否有用同样的数据库前缀安装过
-                $re = mysql_query("SELECT COUNT(1) FROM {$db_config['db_prefix']}user");
+            //判断是否有用同样的数据库前缀安装过
+            $re = mysql_query("SELECT COUNT(1) FROM {$db_config['db_prefix']}user");
                 $link = @mysql_fetch_row($re);
 
                 if (intval($link[0]) > 0) {
@@ -541,21 +540,21 @@ if ($thinksns_rebuild) {
     } else {
         $admin_id = 1;
     }
-        //添加管理员
-        $siteFounder = $_SESSION['default_manager_account'];
+    //添加管理员
+    $siteFounder = $_SESSION['default_manager_account'];
 
         $sql1 = 'INSERT INTO `%s` (`uid`, `password`, `login_salt`, `uname`, `email`, `phone`, `sex`, `location`, `is_audit`, `is_active`, `is_init`, `ctime`, `identity`, `api_key`, `domain`, `province`, `city`, `area`, `reg_ip`, `lang`, `timezone`, `is_del`, `first_letter`, `intro`, `last_login_time`, `last_feed_id`, `last_post_time`, `search_key`, `invite_code`, `feed_email_time`, `send_email_time`, `openid`, `input_city`, `is_fixed`) VALUES (%d, "%s", "11111", "管理员", "%s", NULL, 1, "北京 北京市 海淀区", 1, 1, 1, "%s", 1, NULL, "", 1, 2, 10, "127.0.0.1", "zh-cn", "PRC", 0, "G", "", "", 0, 0, "管理员 guanliyuan", NULL, 0, 0, NULL, NULL, 1);';
         $sql1 = sprintf($sql1, $db_config['db_prefix'].'user', $admin_id, $siteFounder['password'], $siteFounder['email'], time());
-        // echo $sql1;
-        if (mysql_query($sql1)) {
-            echo '<p>'.$i_message['create_founderpower_success'].'... <span class="blue">OK</span></p>';
-        } else {
-            echo '<p>'.$i_message['create_founderpower_error'].'... <span class="red">ERROR</span></p>';
-            $quit = true;
-        }
+    // echo $sql1;
+    if (mysql_query($sql1)) {
+        echo '<p>'.$i_message['create_founderpower_success'].'... <span class="blue">OK</span></p>';
+    } else {
+        echo '<p>'.$i_message['create_founderpower_error'].'... <span class="red">ERROR</span></p>';
+        $quit = true;
+    }
 
-        //将管理员加入“管理员”用户组
-        $sql_user_group = "INSERT INTO `{$db_config['db_prefix']}user_group_link` (`id`,`uid`,`user_group_id`) VALUES ('1', ".$admin_id.",'1');";
+    //将管理员加入“管理员”用户组
+    $sql_user_group = "INSERT INTO `{$db_config['db_prefix']}user_group_link` (`id`,`uid`,`user_group_id`) VALUES ('1', ".$admin_id.",'1');";
         if (mysql_query($sql_user_group)) {
         } else {
             $quit = true;
@@ -563,7 +562,7 @@ if ($thinksns_rebuild) {
 
         if (!$quit) {
             /* # 写入锁文件 */
-            file_put_contents(THINKSNS_ROOT.'/data/install.lock', 'ThinkSNS lock file');
+        file_put_contents(THINKSNS_ROOT.'/data/install.lock', 'ThinkSNS lock file');
         } else {
             echo '请重新安装';
         } ?>

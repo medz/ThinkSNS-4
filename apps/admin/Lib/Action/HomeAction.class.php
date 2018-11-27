@@ -1,7 +1,6 @@
 <?php
 /**
- * 后台，系统�
- * �置控制器.
+ * 后台，系统配置控制器.
  *
  * @author liuxiaoqing <liuxiaoqing@zhishisoft.com>
  *
@@ -218,8 +217,7 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 获取知识的分组�
-     * 况.
+     * 获取知识的分组情况.
      */
     public function _getLogGroup()
     {
@@ -231,8 +229,7 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * �
-     * 除知识操作.
+     * 清除知识操作.
      */
     public function _cleanLogs()
     {
@@ -339,8 +336,7 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 系统工�
-     * � - 计划任务 - 计划任务列表.
+     * 系统工具 - 计划任务 - 计划任务列表.
      */
     public function schedule()
     {
@@ -359,8 +355,7 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 系统工�
-     * � - 计划任务 - 新建计划任务
+     * 系统工具 - 计划任务 - 新建计划任务
      */
     public function newschedule()
     {
@@ -411,8 +406,7 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 数据字�
-     * �.
+     * 数据字典.
      */
     public function systemdata()
     {
@@ -511,8 +505,7 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 运营工�
-     * � - 意见反馈 - 意见反馈列表.
+     * 运营工具 - 意见反馈 - 意见反馈列表.
      */
     public function feedback()
     {
@@ -559,8 +552,7 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 运营工�
-     * � - 意见反馈 - 意见反馈类型.
+     * 运营工具 - 意见反馈 - 意见反馈类型.
      */
     public function feedbackType()
     {
@@ -686,19 +678,20 @@ class HomeAction extends AdministratorAction
     public function message()
     {
         //$this->pageKeyList = array('user_group_id','type','content');
-        $this->pageKeyList = array('user_group_id', 'content');    //现在后台只支持发送系统消息
-        $this->opt['type'] = array('0' => L('PUBLIC_MAIL_INLOCALHOST'), '1' => 'Email');
+        $this->pageKeyList = array('user_type', 'user_group_id', 'uid', 'content');    //现在后台只支持发送系统消息
+        //$this->opt['type'] = array('0' => L('PUBLIC_MAIL_INLOCALHOST'), '1' => 'Email');
+        $this->opt['user_type'] = array('1' => '用户组', '2' => '指定用户');
         $groupHash = model('UserGroup')->getHashUsergroup();
         $this->opt['user_group_id'] = array_merge(array(0 => L('PUBLIC_ALL_USERS')), $groupHash);
         $this->savePostUrl = U('admin/Home/dosendmsg');
-        $this->notEmpty = array('content');
+        $this->notEmpty = array('user_type', 'user_group_id', 'uid', 'content');
+        $this->onload[] = 'admin.doSendMessageDisplay()';
         // $this->onsubmit = 'admin.checkMessage(this)';
         $this->displayConfig();
     }
 
     /**
-     * �
-     * �站发送系统消息 + 邮件.
+     * 全站发送系统消息 + 邮件.
      */
     public function dosendmsg()
     {
@@ -710,13 +703,35 @@ class HomeAction extends AdministratorAction
         $checkContents = preg_replace('/<img(.*?)src=/i', 'img', $checkContent);
         $checkContents = preg_replace('/<embed(.*?)src=/i', 'img', $checkContents);
         if (strlen(t($checkContents)) == 0) {
+
             $this->error('系统信息内容不能为空');
         }
-        $this->assign('jumpUrl', U('admin/Home/message'));
-        if (model('Notify')->sendSystemMessage($_POST['user_group_id'], h($_POST['content']))) {
-            $this->success();
+        $type = intval($_POST['user_type']);
+        if ($type == 1) {
+            if (intval($_POST['user_group_id']) == 0) {
+                $uids = \Ts\Models\User::where('is_del', '0')
+                    ->lists('uid');
+            } else {
+                $uids = model('UserGroupLink')->where(array('user_group_id' => intval($_POST['user_group_id'])))->field('uid')->findAll();
+                $uids = getSubByKey($uids, 'uid');
+            }
+        } elseif ($type == 2) {
+            if (!$_POST['uid']) {
+                $this->error('请选择发送用户');
+            }
+            $uids = explode(',', $_POST['uid']);
         }
-        $this->error();
+        $messageData['node'] = 'sys_notify';
+        $messageData['appname'] = 'public';
+        $messageData['title'] = '系统消息';
+        $messageData['body'] = $_POST['content'];
+        model('Notify')->sendSystemMessageJpush($uids, $messageData);
+
+        $this->assign('jumpUrl', U('admin/Home/message'));
+        //if (model('Notify')->sendSystemMessage($_POST['user_group_id'], h($_POST['content']))) {
+        //    $this->error();
+        //}
+        $this->success();
     }
 
     /**
@@ -787,8 +802,7 @@ class HomeAction extends AdministratorAction
     }
 
     /**
-     * 邀请查看详�
-     * 展示.
+     * 邀请查看详情展示.
      */
     public function invateDetail()
     {

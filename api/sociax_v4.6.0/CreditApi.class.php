@@ -103,7 +103,7 @@ class CreditApi extends Api
     */
     public function createCharge()
     {
-        $orderinfo = $this->setOrder();
+        $orderinfo = $this->setOrder('android');
         if ($orderinfo['status'] == 0) {
             return array('status' => 0, 'mesage' => $orderinfo['mesage']);
         }
@@ -189,7 +189,7 @@ class CreditApi extends Api
      */
     public function createChargeIOS()
     {
-        $orderinfo = $this->setOrder();
+        $orderinfo = $this->setOrder('ios');
         if ($orderinfo['status'] == 0) {
             return array('status' => 0, 'mesage' => $orderinfo['mesage']);
         }
@@ -311,7 +311,7 @@ class CreditApi extends Api
         }
     }
 
-    //这个类里的参数返回跟其他接口不一致、、、mesage..
+  //这个类里的参数返回跟其他接口不一致、、、mesage..
 
     public function saveCharge()
     {
@@ -347,11 +347,11 @@ class CreditApi extends Api
         $data['charge_value'] = floatval($_REQUEST['charge_value']);
         $data['charge_score'] = floatval($_REQUEST['charge_score']);
 
-        // 		dump(WxPayConf_pub::APPID);
-        // 		dump(WxPayConf_pub::MCHID);
-        // 		dump(WxPayConf_pub::KEY);
-        // 		dump(WxPayConf_pub::APPSECRET);
-        // 		dump(WxPayConf_pub::NOTIFY_URL);
+// 		dump(WxPayConf_pub::APPID);
+// 		dump(WxPayConf_pub::MCHID);
+// 		dump(WxPayConf_pub::KEY);
+// 		dump(WxPayConf_pub::APPSECRET);
+// 		dump(WxPayConf_pub::NOTIFY_URL);
 
         $out_trade_no = $_REQUEST['out_trade_no'];
         empty($out_trade_no) && $out_trade_no = 'e2e5096d574976e8f115a8f1e0ffb52b';
@@ -434,7 +434,7 @@ class CreditApi extends Api
     }
 
     //充值接口统一下单
-    public function setOrder()
+    public function setOrder($charge = 'android')
     {
         $price = intval($this->data['money']);
         if ($price < 1) {
@@ -453,7 +453,8 @@ class CreditApi extends Api
         } else {
             return array('status' => 0, 'mesage' => '参数错误');
         }
-        if (!in_array($types[$type], $chargeConfigs['charge_platform'])) {
+
+        if (!in_array($types[$type], $chargeConfigs[$charge])) {
             return array('status' => 0, 'mesage' => '充值方式不支持');
         }
 
@@ -463,10 +464,6 @@ class CreditApi extends Api
         $data['uid'] = $this->mid;
         $data['ctime'] = time();
         $data['status'] = 0;
-        $data['partner'] = $chargeConfigs['alipay_pid'];
-        $data['seller_id'] = $chargeConfigs['alipay_pid'];
-        $data['seller_email'] = $chargeConfigs['alipay_email'];
-        $data['private_key_path'] = $chargeConfigs['private_key_path'];
         $data['charge_sroce'] = intval($price * abs(intval($chargeConfigs['charge_ratio'])));
         $data['charge_order'] = '';
         $result = D('credit_charge')->add($data);

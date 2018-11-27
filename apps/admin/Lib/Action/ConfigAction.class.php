@@ -1,7 +1,6 @@
 <?php
 /**
- * 后台，系统�
- * �置控制器.
+ * 后台，系统配置控制器.
  *
  * @author jason <yangjs17@yeah.net>
  *
@@ -52,9 +51,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 站点�
-     * �置.
+     * 系统配置 - 站点配置.
      */
     public function site()
     {
@@ -122,9 +119,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 注册�
-     * �置.
+     * 系统配置 - 注册配置.
      */
     public function register()
     {
@@ -156,18 +151,18 @@ class ConfigAction extends AdministratorAction
         $this->opt['register_audit'] = $this->opt['captcha'] = array(1 => L('PUBLIC_OPEN'), 0 => L('PUBLIC_CLOSE'));
         // 是，否
         $this->opt['need_active'] = array(1 => L('PUBLIC_OPEN'), 0 => L('PUBLIC_CLOSE'));
-        /*		$this->opt ['photo_open'] = array (
-                        1 => L ( 'PUBLIC_OPEN' ),
-                        0 => L ( 'PUBLIC_CLOSE' )
-                );
-                $this->opt ['need_photo'] = array (
-                        1 => '是，强制上传 ',
-                        0 => '否，可跳过 '
-                );
-                $this->opt ['tag_open'] = array (
-                        1 => L ( 'PUBLIC_OPEN' ),
-                        0 => L ( 'PUBLIC_CLOSE' )
-                );*/
+/*		$this->opt ['photo_open'] = array (
+                1 => L ( 'PUBLIC_OPEN' ),
+                0 => L ( 'PUBLIC_CLOSE' )
+        );
+        $this->opt ['need_photo'] = array (
+                1 => '是，强制上传 ',
+                0 => '否，可跳过 '
+        );
+        $this->opt ['tag_open'] = array (
+                1 => L ( 'PUBLIC_OPEN' ),
+                0 => L ( 'PUBLIC_CLOSE' )
+        );*/
         $this->opt['personal_open'] = array(1 => L('PUBLIC_OPEN'), 0 => L('PUBLIC_CLOSE'));
         $this->opt['personal_required'] = array('face' => '头像', 'location' => '地区', 'tag' => '标签', 'intro' => '简介');
         // $this->opt['interester_open'] = array(1=>L('PUBLIC_OPEN'), 0=>L('PUBLIC_CLOSE'));
@@ -186,8 +181,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * * 邀请�
-     * �置 **.
+     * * 邀请配置 **.
      */
 
     /**
@@ -219,8 +213,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 游客�
-     * �置.
+     * 游客配置.
      */
     public function guest()
     {
@@ -259,9 +252,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 邀请�
-     * �置.
+     * 系统配置 - 邀请配置.
      */
     public function invite()
     {
@@ -295,8 +286,7 @@ class ConfigAction extends AdministratorAction
     /**
      * 管理员邮件邀请操作.
      *
-     * @return json 操作后的相�
-     * �数据
+     * @return json 操作后的相关数据
      */
     public function doInvite()
     {
@@ -330,8 +320,7 @@ class ConfigAction extends AdministratorAction
     /**
      * 获取邀请码接口.
      *
-     * @return json 操作后的相�
-     * �数据
+     * @return json 操作后的相关数据
      */
     public function getInviteCode()
     {
@@ -406,9 +395,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * �
-     * �告�
-     * �置.
+     * 公告配置.
      */
     public function announcement($type = 1)
     {
@@ -534,9 +521,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 邮件�
-     * �置.
+     * 系统配置 - 邮件配置.
      */
     public function email()
     {
@@ -566,9 +551,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 附件�
-     * �置.
+     * 系统配置 - 附件配置.
      */
     public function attach()
     {
@@ -636,9 +619,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 附件�
-     * �置 - 又拍云图片.
+     * 系统配置 - 附件配置 - 又拍云图片.
      */
     public function cloudimage()
     {
@@ -684,9 +665,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 附件�
-     * �置 - 又拍云附件.
+     * 系统配置 - 附件配置 - 又拍云附件.
      */
     public function cloudattach()
     {
@@ -731,9 +710,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 过滤�
-     * �置.
+     * 系统配置 - 过滤配置.
      */
     public function audit()
     {
@@ -774,13 +751,30 @@ class ConfigAction extends AdministratorAction
         $this->_sensitiveTab();
 
         $this->pageKeyList = array('word', 'type_name', 'replace', 'sensitive_category', 'uname', 'format_ctime', 'DOACTION');
-
+        $this->pageButton[] = array('title' => '搜索', 'onclick' => "admin.fold('search_form')");
         $this->pageButton[] = array('title' => '新增敏感词', 'onclick' => 'admin.setSensitiveBox()');
         // $this->pageButton[] = array('title'=>'删除', 'onclick'=>"admin.rmSensitive('search_form')");
-
-        $listData = model('SensitiveWord')->getSensitiveWordList();
+        $this->searchKey = array('word', 'type_name', 'replace', 'sensitive_category', 'uid');
+        $categoryList = D('sensitive_category')->getHashList($k = 'sensitive_category_id', $v = 'title');
+        $categoryList[0] = L('PUBLIC_SYSTEMD_NOACCEPT');
+        $this->opt['sensitive_category'] = $categoryList;
+        $this->opt['type_name'] = [0=>'不限',1=>'禁止关键词',2=>'审核关键词',3=>'替换关键词'];
+        if (isset($_POST)) {
+            // 搜索时用到
+            $_POST['word'] && $map['word'] = array(
+                'like',
+                '%'.$_POST['word'].'%',
+            );
+            $_POST['type_name'] && $map['type'] = intval($_POST['type_name']);
+            $_POST['replace'] && $map['replace'] = array(
+                'like',
+                '%'.$_POST['replace'].'%',
+            );
+            $_POST['sensitive_category'] && $map['sensitive_category_id'] = intval($_POST['sensitive_category']);
+            $_POST['uid'] && $map['uid'] = intval($_POST['uid']);
+        }
+        $listData = model('SensitiveWord')->getSensitiveWordList($map);
         foreach ($listData['data'] as &$value) {
-            $value['sensitive_category'] = $value['sensitive_category'];
             if (in_array($value['type'], array(1, 2))) {
                 $value['replace'] = '<span style="color:blue;cursor:auto;">无</span>';
             }
@@ -857,11 +851,81 @@ class ConfigAction extends AdministratorAction
 
         $this->displayTree($treeData, 'sensitive_category', 1);
     }
+    //导入敏感词
+    public function importSensitive(){
+        $this->_sensitiveTab();
+        $this->pageKeyList = array('file');
+        // 表单URL设置
+        $this->savePostUrl = U('admin/Config/doImportSensitive');
+        $this->displayConfig();
+    }
+    public function doImportSensitive()
+    {
+        $attach_id = trim($_POST['file_ids'], '|') ?: 0;
+        if ($attach_id) {
+            $attach = model('Attach')->getAttachById($attach_id);
+            if (!in_array($attach['extension'], ['xls', 'xlsx'])) {
+                $this->error('请重新上传导入附件');
+            } else {
+                //检测文件是否存在
+                $file_path = implode(DIRECTORY_SEPARATOR, array(SITE_PATH, 'data', 'upload', $attach['save_path'] . $attach['save_name']));
+                //导入PHPExcel
+                tsload(implode(DIRECTORY_SEPARATOR, array(SITE_PATH, 'PHPExcel', 'PHPExcel.php')));
+                $excel = PHPExcel_IOFactory::load($file_path);
+                $sheet = $excel->getActiveSheet(0);
+                $data  = $sheet->toArray();
+                $field = array('word', 'type', 'replace', 'sensitive_category_id');
+                //循环获取excel中的值
+                $add_count   = 0;
+                $total_count = 0;
+                if (!empty($data)) {
+                    foreach ($data as $key => $value) {
+                        if($key > 0 && $value[0]){
+                            if(empty(t($value[0])) || empty(intval($value[1])) || empty(intval($value[3]))){
+                                $this->error('导入失败,第'.($key+1).'行数据不完整');
+                            }
+                            if(!in_array(intval($value[1]),[1,2,3])){
+                                $this->error('导入失败,第'.($key+1).'行过滤动作不存在');
+                            }
+                            if(intval($value[1])==3 && t($value[2])==""){
+                                $this->error('导入失败,第'.($key+1).'行需填写规则');
+                            }
+                            if(!is_numeric($value[3])){
+                                $this->error('导入失败,第'.($key+1).'行敏感词分类Id必须为数字');
+                            }
+                        }
+                    }
+                    foreach ($data as $key => $value) {
+                        if ($key > 0 && $value[0]) {
+                            $total_count++;
+                            $word = t($value[0]);
+                            $type   = intval($value[1]);
+                            $replace = intval($value[1])==3 ?t($value[2]): '';
+                            $cid = intval($value[3]);
+                            $res = model('SensitiveWord')->setSensitiveWord($word, $replace, $type, $cid, $this->mid);
+                            if ($res) {
+                                $add_count++;
+                            }
+                        }
+                    }
+                }
+                if ($add_count > 0) {
+                    $this->jumpUrl = U('admin/Config/sensitive');
+                    $this->success('共计' . $total_count . '个敏感词,本次成功导入' . $add_count . '个敏感词');
+                } else {
+                    $this->error('导入失败,请检查数据格式或敏感词是否重复导入');
+                }
+            }
+
+        }
+        $this->error('请重新上传导入附件');
+    }
 
     private function _sensitiveTab()
     {
         $this->pageTab[] = array('title' => L('PUBLIC_FILTER_SETTING'), 'tabHash' => 'sensitive', 'url' => U('admin/Config/sensitive'));
         $this->pageTab[] = array('title' => '敏感词分类', 'tabHash' => 'sensitiveCategory', 'url' => U('admin/Config/sensitiveCategory'));
+        $this->pageTab[] = array('title' => '导入', 'tabHash' => 'importSensitive', 'url' => U('admin/Config/importSensitive'));
         // $this->pageTab[] = array('title'=>'敏感审核', 'tabHash'=>'sensitiveAudit', 'url'=>U('admin/Config/sensitiveAudit'));
     }
 
@@ -873,9 +937,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 顶部导航�
-     * �置 - 导航列表.
+     * 系统配置 - 顶部导航配置 - 导航列表.
      */
     public function nav()
     {
@@ -989,9 +1051,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 底部导航�
-     * �置 - 导航列表.
+     * 系统配置 - 底部导航配置 - 导航列表.
      */
     public function footNav()
     {
@@ -1225,8 +1285,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 导航�
-     * �置的添加和修改.
+     * 导航配置的添加和修改.
      */
     public function doNav()
     {
@@ -1290,9 +1349,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 导航�
-     * �置 - 增加导航.
+     * 系统配置 - 导航配置 - 增加导航.
      */
     public function navAdd()
     {
@@ -1429,10 +1486,8 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 页脚文章�
-     * �置
-     * 与�
-     * �告数据存在同一张表中.
+     * 页脚文章配置
+     * 与公告数据存在同一张表中.
      */
     public function footer()
     {
@@ -1440,9 +1495,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 分享�
-     * �置.
+     * 系统配置 - 分享配置.
      */
     public function feed()
     {
@@ -1485,8 +1538,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * �
-     * �置获取第三方视频信息接口信息.
+     * 配置获取第三方视频信息接口信息.
      *
      * @author Medz Seven <lovevipdsw@vip.qq.com>
      **/
@@ -1506,9 +1558,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 地区�
-     * �置.
+     * 系统配置 - 地区配置.
      */
     public function area()
     {
@@ -1592,9 +1642,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 语言�
-     * �置.
+     * 系统配置 - 语言配置.
      */
     public function lang()
     {
@@ -1640,9 +1688,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 添加，编辑语言�
-     * �置�
-     * 容.
+     * 添加，编辑语言配置内容.
      */
     public function updateLangContent()
     {
@@ -1674,9 +1720,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 编辑语言�
-     * �置�
-     * 容.
+     * 编辑语言配置内容.
      */
     public function doUpdateLangContent()
     {
@@ -1711,9 +1755,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 删除语言�
-     * �置�
-     * 容.
+     * 删除语言配置内容.
      */
     public function deleteLangContent()
     {
@@ -1807,9 +1849,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 系统�
-     * �置 - 消息�
-     * �置.
+     * 系统配置 - 消息配置.
      */
     public function notify()
     {
@@ -1843,8 +1883,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * 保存消息�
-     * �置节点.
+     * 保存消息配置节点.
      */
     public function saveNotifyNode()
     {
@@ -2042,8 +2081,7 @@ class ConfigAction extends AdministratorAction
     }
 
     /**
-     * SEO�
-     * �置.
+     * SEO配置.
      */
     public function setSeo()
     {
@@ -2172,8 +2210,8 @@ class ConfigAction extends AdministratorAction
         $this->pageTab[] = array('title' => '直播版充值配置', 'tabHash' => 'ZBcharge', 'url' => U('admin/Config/ZBcharge'));
         $this->pageTab[] = array('title' => '提现配置', 'tabHash' => 'ZB_config', 'url' => U('admin/Application/ZB_config'));
 
-        $this->pageKeyList = array('charge_ratio', 'description', 'charge_platform', 'alipay_pid', 'alipay_key', 'alipay_email', 'alipay_app_pid', 'private_key_path', 'alipay_public_key', 'weixin_pid', 'weixin_mid', 'weixin_key');
-        $this->opt['charge_platform'] = array(
+        $this->pageKeyList = array('charge_ratio', 'description', 'android', 'ios', 'charge_platform', 'alipay_pid', 'alipay_key', 'alipay_email', 'alipay_app_pid', 'private_key_path', 'alipay_public_key', 'weixin_pid', 'weixin_mid', 'weixin_key');
+        $this->opt['android'] = $this->opt['ios'] = $this->opt['charge_platform'] = array(
             'alipay' => '支付宝',
             'weixin' => '微信支付',
         );

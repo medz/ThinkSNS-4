@@ -16,6 +16,7 @@ return array(
         'Application/getVersion'             => true,
         'Application/test'                   => true,
         'Application/getZBConfig'            => true,
+        'Application/getAppConfig'            => true,
         'Credit/alipayNotify'                => true,
         'Credit/weixinNotify'                => true,
         //极铺登录TS账户

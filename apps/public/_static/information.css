@@ -1,0 +1,12 @@
+/*资讯列表*/
+.zx-linst{ width:920px; padding:  0 20px; background:#ffffff; height:auto; overflow:hidden;}
+.zx-linst dl{ padding:10px 0 20px 0;border-bottom:solid 1px #e1e1e1; overflow:hidden;}
+.zx-linst dt img{ width:205px ;height:150px; margin-right:20px; padding-top:10px;}
+.zx-linst dt { float:left;}
+.zx-linst dd h2 a{ font-size: 18px; color:#333333; height:42px; line-height:42px;}
+.zx-linst dd p a{ font-size:14px; line-height:24px; color:#686868}
+.zx-linst .linst-info{ text-align:left; position:relative; height:16px; line-height:16px; color:#afafaf; padding:18px 0 0 0; font-size:12px; }
+.zx-linst .linst-info span{ position:absolute; right:0;}
+.i-post-scan,.i-post-comment{width:16px;height:16px; display:inline-block;background:url(./image/index-ico.png);margin:0 5px 0 10px; vertical-align:middle;}
+.i-post-scan{ background-position:-60px -41px;}
+.i-post-comment{background-position:-60px -63px;}

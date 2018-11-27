@@ -67,8 +67,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 用户管理 - �
-     * 审列表.
+     * 用户管理 - 待审列表.
      */
     public function pending()
     {
@@ -115,7 +114,89 @@ class UserAction extends AdministratorAction
 
         $this->displayList($listData);
     }
+    //锁定用户
+    public function lockList(){
+        $this->allSelected = false;
 
+        $_REQUEST['tabHash'] = 'lockList';
+        // 初始化锁定列表管理菜单
+        $this->_initUserListAdminMenu('lockList');
+        $this->pageKeyList = array('uid', 'uname', 'phone', 'user_group', 'location', 'is_audit', 'is_active', 'is_init','reg_ip','ctime','locktime', 'DOACTION');
+        $map['u.is_del'] = 0;
+        $map['lr.locktime'] = array('gt', time());
+        $listData = D()->table(C('DB_PREFIX').'login_record AS lr LEFT JOIN '.C('DB_PREFIX').'user AS u ON lr.uid = u.uid')
+            ->field('u.*, lr.login_record_id, lr.locktime,lr.ctime')
+            ->where($map)
+            ->findPage(20);
+        // 数据格式化
+        foreach ($listData['data'] as $k => $v) {
+            // 获取用户身份信息
+            $userTag = model('Tag')->setAppName('User')->setAppTable('user')->getAppTags($v['uid']);
+            $userTagString = '';
+            $userTagArray = array();
+            if (!empty($userTag)) {
+                $userTagString .= '<p>';
+                foreach ($userTag as $value) {
+                    $userTagArray[] = '<span style="color:#2AB284;cursor:auto;">'.$value.'</span>';
+                }
+                $userTagString .= implode('&nbsp;', $userTagArray).'</p>';
+            }
+            //获取用户组信息
+            $userGroupInfo = model('UserGroupLink')->getUserGroupData($v['uid']);
+            foreach ($userGroupInfo[$v['uid']] as $val) {
+                $userGroupIcon[$v['uid']] .= '<img style="width:auto;height:auto;display:inline;cursor:pointer;vertical-align:-2px;" src="'.$val['user_group_icon_url'].'" title="'.$val['user_group_name'].'" />&nbsp';
+            }
+            $listData['data'][$k]['uname'] = '<a href="'.U('admin/User/editUser', array('tabHash' => 'editUser', 'uid' => $v['uid'])).'">'.$v['uname'].'</a>'.$userGroupIcon[$v['uid']].' <br/>'.$v['email'].' '.$userTagString;
+            $listData['data'][$k]['ctime'] = date('Y-m-d H:i:s', $v['ctime']);
+            $listData['data'][$k]['identity'] = ($v['identity'] == 1) ? L('PUBLIC_PERSONAL') : L('PUBLIC_ORGANIZATION');
+            $listData['data'][$k]['is_active'] = ($v['is_active'] == 1) ? '<span style="color:#2AB284;cursor:auto;">'.L('SSC_ALREADY_ACTIVATED').'</span>' : '<a href="javascript:void(0)" onclick="admin.activeUser(\''.$v['uid'].'\',1)" style="color:red">'.L('PUBLIC_NOT_ACTIVATED').'</a>';
+            $listData['data'][$k]['is_audit'] = ($v['is_audit'] == 1) ? '<span style="color:#2AB284;cursor:auto;">'.L('PUBLIC_AUDIT_USER_SUCCESS').'</span>' : '<a href="javascript:void(0)" onclick="admin.auditUser(\''.$v['uid'].'\',1)" style="color:red">'.L('PUBLIC_AUDIT_USER_ERROR').'</a>';
+            $listData['data'][$k]['is_init'] = ($v['is_init'] == 1) ? '<span style="cursor:auto;">'.L('PUBLIC_SYSTEMD_TRUE').'</span>' : '<span style="cursor:auto;">'.L('PUBLIC_SYSTEMD_FALSE').'</span>';
+            // 用户组数据
+            $userGroupLink = model('UserGroupLink')->where("uid='".$v['uid']."'")->getAsFieldArray('user_group_id');
+            if (!empty($userGroupLink)) {
+                $group = array();
+                $userGroup = model('UserGroup')->getHashUsergroup();
+                foreach ($userGroupLink as $gid) {
+                    $group[] = $userGroup[$gid];
+                }
+                $listData['data'][$k]['user_group'] = implode('<br/>', $group);
+            } else {
+                $listData['data'][$k]['user_group'] = '';
+            }
+            // $this->opt['user_group'][$v['user_group_id']];
+            $listData['data'][$k]['locktime'] = date('Y-m-d H:i:s', $v['locktime']);
+            // 操作数据
+            $listData['data'][$k]['DOACTION'] = '<a href="javascript:;" onclick="admin.UnlockUser(\''.$v['login_record_id'].'\',\''.$v['uid'].'\')">解锁</a>';
+        }
+        $this->displayList($listData);
+    }
+    //解锁用户
+    public function UnlockUser()
+    {
+        $id = intval($_POST['id']);
+        $uid = intval($_POST['uid']);
+        if (empty($id)) {
+            exit(json_encode(array('status' => '0', 'info' => '操作失败')));
+        }
+        $result = D('LoginRecord')->where(['login_record_id'=>$id])->setField('locktime',0);
+        if ($result) {
+            model('UserData')->setKeyValue($uid, 'login_error_time', 0);
+            $res = array('status' => '1', 'info' => '操作成功');
+        } else {
+            $res = array('status' => '0', 'info' => '操作失败');
+        }
+        exit(json_encode($res));
+    }
+    //锁定配置
+    public function setLock(){
+        $this->allSelected = false;
+        $_REQUEST['tabHash'] = 'setLock';
+        // 初始化锁定列表管理菜单
+        $this->_initUserListAdminMenu('setLock');
+        $this->pageKeyList = array('lockTime','inputNum');
+        $this->displayConfig();
+    }
     /**
      * 用户管理 - 在线用户列表.
      */
@@ -163,7 +244,7 @@ class UserAction extends AdministratorAction
         // 获取相关数据
         $listData = model('Online')->getUserOperatingList($uid);
         // foreach($listData['data'] as $k => $v) {
-        // $listData['data'][$k]['DOACTION'] = '<a href="javascript:void(0);" onclick="admin.disableIP(\''.$v['ip'].'\')">禁用IP</a>';
+            // $listData['data'][$k]['DOACTION'] = '<a href="javascript:void(0);" onclick="admin.disableIP(\''.$v['ip'].'\')">禁用IP</a>';
         // }
 
         $this->displayList($listData);
@@ -240,8 +321,10 @@ class UserAction extends AdministratorAction
         $this->pageTab[] = array('title' => L('PUBLIC_PENDING_LIST'), 'tabHash' => 'pending', 'url' => U('admin/User/pending'));
         $this->pageTab[] = array('title' => L('PUBLIC_DISABLE_LIST'), 'tabHash' => 'dellist', 'url' => U('admin/User/dellist'));
         $this->pageTab[] = array('title' => '禁言用户', 'tabHash' => 'disableSendList', 'url' => U('admin/User/disableSendList'));
+        $this->pageTab[] = array('title' => '锁定用户', 'tabHash' => 'lockList', 'url' => U('admin/User/lockList'));
         // $this->pageTab[] = array('title'=>'在线用户列表','tabHash'=>'online','url'=>U('admin/User/online'));
         $this->pageTab[] = array('title' => L('PUBLIC_ADD_USER_INFO'), 'tabHash' => 'addUser', 'url' => U('admin/User/addUser'));
+        $this->pageTab[] = array('title' => '锁定配置', 'tabHash' => 'setLock', 'url' => U('admin/User/setLock'));
         // 搜索选项的key值
         // $this->searchKey = array('uid','uname','email','sex','department','user_group',array('ctime','ctime1'));
         $this->searchKey = array('uid', 'uname', 'email', 'mobile', 'sex', 'user_group', 'user_category', array('ctime', 'ctime1'));
@@ -272,9 +355,9 @@ class UserAction extends AdministratorAction
                 break;
         }
 
-        /*		if(!empty($_POST['_parent_dept_id'])) {
-                    $this->onload[] = "admin.departDefault('".implode(',', $_POST['_parent_dept_id'])."','form_user_department')";
-                }*/
+/*		if(!empty($_POST['_parent_dept_id'])) {
+            $this->onload[] = "admin.departDefault('".implode(',', $_POST['_parent_dept_id'])."','form_user_department')";
+        }*/
     }
 
     /**
@@ -314,8 +397,8 @@ class UserAction extends AdministratorAction
             $listData['data'][$k]['uname'] = '<a style="color:#3589F1" href="'.U('admin/User/editUser', array('tabHash' => 'editUser', 'uid' => $v['uid'])).'">'.$v['uname'].'</a>'.$userGroupIcon[$v['uid']].' <br/>'.$v['email'].' '.$userTagString;
             $listData['data'][$k]['ctime'] = date('Y-m-d H:i:s', $v['ctime']);
             // 屏蔽部门信息，若要开启将下面的注释打开
-            /*			$department = model('Department')->getUserDepart($v['uid']);
-                        $listData['data'][$k]['department'] = str_replace('|', ' - ',trim($department[$v['uid']],'|'));*/
+/*			$department = model('Department')->getUserDepart($v['uid']);
+            $listData['data'][$k]['department'] = str_replace('|', ' - ',trim($department[$v['uid']],'|'));*/
             $listData['data'][$k]['identity'] = ($v['identity'] == 1) ? L('PUBLIC_PERSONAL') : L('PUBLIC_ORGANIZATION');
             switch (strtolower($type)) {
                 case 'index':
@@ -445,8 +528,16 @@ class UserAction extends AdministratorAction
         }
 
         $result = model('DisableUser')->setDisableUser($uid, $disableItem, $startTime, $endTime);
-        $res = array();
         if ($result) {
+            if ($disableItem == 'login') {
+                \Ts\Models\Login::where('type', 'location')
+                    ->where('uid', $uid)
+                    ->delete();
+                model('User')->cleanCache([$uid]);
+                // 清文件缓存
+                A('Tool')->_rmdirr(TS_ROOT.TS_STORAGE.'/temp/datacache');
+            }
+
             $res = array('status' => '1', 'info' => '操作成功');
         } else {
             $res = array('status' => '0', 'info' => '操作失败');
@@ -552,7 +643,7 @@ class UserAction extends AdministratorAction
 
         unset($userInfo['password']);
 
-        $hasMobile = preg_match("/^[1][358]\d{9}$/", $userInfo['phone'], $matches) !== 0;
+        $hasMobile = preg_match("/^[1][34578]\d{9}$/", $userInfo['phone'], $matches) !== 0;
         if ($hasMobile) {
             $userInfo['mobile'] = $userInfo['phone'];
         } else {
@@ -600,40 +691,54 @@ class UserAction extends AdministratorAction
         if (!$uid) {
             $this->error('非法操作');
 
-            // # 判断用户名是否存在
+        // # 判断用户名是否存在
         } elseif (!$uname) {
             $this->error('用户名不能为空');
+        // # 判断用户名是否被注册
+        }elseif ($uname and !$model->isChangeUserName($uname,$uid)) {
+            $this->error('用户昵称已存在，请使用其他昵称');
 
-            // # 判断是否用户标识不存在
+        // # 判断是否用户标识不存在
         } elseif (!$phone and !$email) {
             $this->error('用户手机号码或者邮箱至少存在一个');
 
-            // # 判断手机号码是否可以修改
+        // # 判断手机号码是否可以修改
         } elseif ($phone and !$model->isChangePhone($phone, $uid)) {
             $this->error('当前手机号码已存在');
 
-            // # 判断用户邮箱是否可以修改
+        // # 判断用户邮箱是否可以修改
         } elseif ($email and !$model->isChangeEmail($email, $uid)) {
             $this->error('当前邮箱已存在');
 
-            // # 判断用户性别
+        // # 判断用户性别
         } elseif (!in_array($sex, array('1', '2'))) {
             $this->error('请正确先择用户性别');
 
-            // # 判断用户组是否选择
+        // # 判断用户组是否选择
         } elseif (count($group) <= 0) {
             $this->error('请选择用户用户组');
 
-            // # 生成密码
+        // # 生成密码
         } elseif ($password) {
             $data['login_salt'] = rand(11111, 99999);
             $data['password'] = md5(md5($password).$data['login_salt']);
         }
-
+        //其他格式
+        $res = preg_match("/^[\x{4e00}-\x{9fa5}A-Za-z0-9_\.]+$/u", $uname) !== 0;
+        if ($res) {
+            $length = get_str_length($uname);
+            $res = ($length >= 2 && $length <= 10);
+            if (!$res) {
+                $error = L('PUBLIC_NICKNAME_LIMIT', array('nums' => '2-10'));// 昵称长度必须在2-10个汉字之间
+                $this->error($error);
+            }
+        } else {
+            $this->error('昵称仅支持中英文，数字，下划线');
+        }
         $sex and $data['sex'] = $sex;
         $uname and $data['uname'] = $uname;
-        $data['phone'] = $phone;
-        $data['email'] = $email;
+        $phone and $data['phone'] = $phone;
+        $email and $data['email'] = $email;
 
         $uname and preg_match('/[\x7f-\xff]+/', $data['search_key'] = $uname) and $data['search_key'] .= ' '.model('PinYin')->Pinyin($uname);
 
@@ -750,10 +855,39 @@ class UserAction extends AdministratorAction
             // 关联删除用户其他信息，执行删除用户插件.
             $return['status'] = 1;
             $return['data'] = L('PUBLIC_REMOVE_COMPLETELY_SUCCESS');            // 操作成功
+            // 清文件缓存
+            $dirs = array(TS_ROOT.TS_STORAGE.'/temp/',);
+            // 清理缓存
+            foreach ($dirs as $value) {
+                $this->_rmdirr($value);
+            }
+            \Medz\Component\Filesystem\Filesystem::mkdir(TS_ROOT.TS_STORAGE.'/temp', 0777);
+            //其它缓存清理
+            model('Cache')->clear();
         }
         exit(json_encode($return));
     }
+    public function _rmdirr($dirname)
+    {
+        if (!file_exists($dirname)) {
+            return false;
+        }
+        if (is_file($dirname) || is_link($dirname)) {
+            return unlink($dirname);
+        }
+        $dir = dir($dirname);
+        if ($dir) {
+            while (false !== $entry = $dir->read()) {
+                if ($entry == '.' || $entry == '..') {
+                    continue;
+                }
+                $this->_rmdirr($dirname.DIRECTORY_SEPARATOR.$entry);
+            }
+        }
+        $dir->close();
 
+        return rmdir($dirname);
+    }
     /**
      * 用户账号恢复操作.
      *
@@ -1176,8 +1310,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取�
-     * 认证用户列表.
+     * 获取待认证用户列表.
      */
     public function verify()
     {
@@ -1212,8 +1345,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 获取�
-     * 认证机构列表.
+     * 获取待认证机构列表.
      */
     public function verifyGroup()
     {
@@ -1496,7 +1628,7 @@ class UserAction extends AdministratorAction
         $data['phone'] = t($_POST['phone']);
         $data['reason'] = t($_POST['reason']);
         $data['info'] = t($_POST['info']);
-        //	$data['attachment'] = t($_POST['attach']);
+    //	$data['attachment'] = t($_POST['attach']);
         $data['attach_id'] = t($_POST['attach_ids']);
         $data['user_verified_category_id'] = intval($_POST['user_verified_category_id']);
         $Regx1 = '/^[0-9]*$/';
@@ -1808,8 +1940,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 认证用户基本�
-     * �置.
+     * 认证用户基本配置.
      */
     public function verifyConfig()
     {
@@ -1822,8 +1953,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 找人�
-     * �局
+     * 找人全局
      */
     public function findPeopleConfig()
     {
@@ -1841,8 +1971,7 @@ class UserAction extends AdministratorAction
     }
 
     /**
-     * 官方用户�
-     * �置.
+     * 官方用户配置.
      */
     public function official()
     {

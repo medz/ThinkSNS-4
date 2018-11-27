@@ -1,0 +1,92 @@
+<include file="__THEME__/admin_header" />
+<div id="container" class="so_main">
+  <!-- START TAB框 -->
+  <div class="tit_tab">
+    <php>if(!empty($pageTab)):</php>
+    <ul>
+      <php> !$_REQUEST['tabHash'] && $_REQUEST['tabHash'] =  $pageTab[0]['tabHash'];</php>
+      <volist name='pageTab' id='t'>
+        <li><a href="{$t.url}&tabHash={$t.tabHash}" <php> if($t['tabHash'] == $_REQUEST['tabHash']){ echo 'class="on"';}</php>>{$t.title}</a></li>
+      </volist>
+    </ul>
+    <php>endif;</php>
+
+  </div>
+  <!-- END TAB框 -->
+  <php>if(!empty($pageButton)):</php>
+  <!-- START TOOLBAR -->
+  <div class="Toolbar_inbox">
+    <volist name='pageButton' id='b'>
+      <?php
+        $dataArgs = '';
+        if (is_array($b['data'])) {
+          foreach ($b['data'] as $dk => $dv) {
+      $dataArgs .= 'data-' . $dk . '="' . $dv . '"';
+      }
+      }
+      ?>
+      <a onclick="{$b.onclick}" class="btn_a {$b.class}" id="{$b.id}" {$dataArgs}><span>{$b.title}</span></a>
+      <?php unset($dataArgs); ?>
+    </volist>
+  </div>
+  <!-- END TOOLBAR -->
+  <php>endif;</php>
+  <!-- START CONFIG_FORM -->
+  <php> if($pageKeyData=='null'){</php>
+  {:L('PUBLIC_PLEASE')}<span onclick="admin.fold('page_config')">{:L('PUBLIC_PAGE_CONFIGURATION')}</span>
+  <php>}else{</php>
+
+  <form action="{:U('admin/Application/saveAndroidVersion')}" method='POST' enctype="multipart/form-data" id="detail_form">
+    <input type="hidden" name='systemdata_list' value="{$systemdata_list}"  class="s-txt"/>
+    <input type="hidden" name='systemdata_key' value="{$systemdata_key}"  class="s-txt"/>
+    <input type="hidden" name='pageTitle' value="{$pageTitle}" class="s-txt" />
+    <div class="form2">
+      <dl class="lineD" id='dl_version'>
+        <dt><font color="red"> * </font>app 安卓版本：</dt>
+        <dd>
+          <input name="version" id="form_version" type="text" value="{$version}" class="s-txt" style="width:350px"/>
+        </dd>
+      </dl>
+      <dl class="lineD" id='dl_apk'>
+        <dt><font color="red"> * </font>安卓apk文件：</dt>
+        <dd>
+          <input name="apk" type="file" class="s-txt" style="width:350px"/>
+          <input name="appVersion" type="hidden" value="{$_REQUEST['version']}">
+          <php>if ($apkUrl) :</php><br/>文件下载地址：{$apkUrl}<php>endif;</php>
+        </dd>
+      </dl>
+      <dl class="lineD" id='dl_is_update'>
+        <dt><font color="red"> * </font>是否强制更新：</dt>
+        <dd>
+          <input type="radio" name="is_update" value="0" <php>if($is_update == '0'):</php> checked="checked"<php>endif;</php>>不强制更新
+          <input type="radio" name="is_update" value="1" <php>if($is_update == '1'):</php> checked="checked"<php>endif;</php>>强制更新
+        </dd>
+      </dl>
+      <dl class="lineD" id='dl_title'>
+        <dt><font color="red"> * </font>更新标题：</dt>
+        <dd>
+          <input name="title" id="form_title" type="text" value="{$title}" class="s-txt" style="width:350px"/>
+        </dd>
+      </dl>
+      <dl class="lineD" id='dl_explain'>
+        <dt><font color="red"> * </font>更新说明：</dt>
+        <dd>
+          <textarea name="explain" id="form_explain" rows="10" cols="80">{$explain}</textarea>
+        </dd>
+      </dl>
+      <div class="page_btm" >
+        <input type='text' style="display:none">
+        <input type="button" class="btn_b" value="提交" id='form_submit' onclick = "submitform()"/>
+
+      </div>
+    </div>
+  </form>
+  <php> } </php>
+</div>
+<script>
+  function submitform()
+  {
+    $('#detail_form').submit();
+  }
+</script>
+<include file="__THEME__/admin_footer" />

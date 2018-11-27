@@ -70,7 +70,7 @@
                 <li>
                   <div class="weiba-c1"><img src="{$vo.user.avatar_middle}" width="50" height="50"/></div>
                   <div class="c2 left">
-                    <h3 class="post-tit"> <a href="{:U('weiba/Index/postDetail',array('post_id'=>$vo['post_id']))}"><span>{$vo.title|getShort=20}</span></a> </h3>
+                    <h3 class="post-tit"> <a href="{:U('weiba/Index/postDetail',array('post_id'=>$vo['post_id']))}"><span>{$vo.title|getShort=20}</span></a> <if condition="$vo['top'] neq 0"><i class="ico-toTop"></i></if></h3>
                     <div class="post-info f10">
                       <div class="left"><span>{$vo.user.space_link}/{$vo.post_time|friendlyDate}发布</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最后回复{$vo.last_reply_time|friendlyDate}</div>
                     </div>

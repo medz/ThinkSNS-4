@@ -51,7 +51,7 @@ class UserGroupAction extends AdministratorAction
     {
         if (!empty($_POST)) { //添加&编辑积分类型
 
-            //   dump($_POST);exit;
+         //   dump($_POST);exit;
             $res = model('UserGroup')->addUsergroup($_POST);
             if ($res) {
                 //TODO 记录知识
@@ -69,7 +69,7 @@ class UserGroupAction extends AdministratorAction
 
         $dirs = new Dir(THEME_PUBLIC_PATH.'/image/usergroup');
         $dirs = $dirs->toArray();
-        //      $icons = array('-1'=>'无');
+//      $icons = array('-1'=>'无');
         $icons = array('-1' => L('PUBLIC_NO_MORE_INFO'));
         foreach ($dirs as $k => $v) {
             $icons[$v['filename']] = "<img src='".THEME_PUBLIC_URL.'/image/usergroup/'.$v['filename']."'>";

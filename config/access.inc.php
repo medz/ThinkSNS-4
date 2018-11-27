@@ -17,5 +17,7 @@ return array(
         'h5/*/*'                      => true, // h5版
         'public/Account/alipayNotify' => true, //支付成功的通知，去掉之后无法成功充值
         'public/Account/alipayReturn' => true,
+        'Information/Index/info'      => true,
+        'Information/Index/getMoreComment'=> true,
     ),
 );

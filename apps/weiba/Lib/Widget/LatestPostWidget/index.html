@@ -1,6 +1,6 @@
 <div class="clearfix mb30" >
   <fieldset class="inter-line mb5">
-    <a href="javascript:;" event-node="change_related_new_post" rel="0" event-args="uid={$uid}&max={$max}&weiba_id={$weiba_id}" id="change_related_new_post" class="right"><i class="ico-refresh"></i></a>
+    <a href="javascript:;" event-node="change_related_new_post" rel="0" event-args="uid={$uid}&max={$max}&post_id={$post_id}" id="change_related_new_post" class="right"><i class="ico-refresh"></i></a>
     <legend class="inter-txt">{$title}</legend>
   </fieldset>
   <ul model-node="related_new_post" class="weiba-post-list">
@@ -12,6 +12,8 @@
   </ul>
 </div>
 <script type="text/javascript">
+    var page =1;
+    var totalPages = '{$totalPages}';
 // 事件绑定
 M.addEventFns({
     // 换一换操作
@@ -19,7 +21,12 @@ M.addEventFns({
         click: function() {
             var args = M.getEventArgs(this);
             var _model = M.getModels('related_new_post');
-            $.post("{:U('widget/LatestPost/changeRelate','app_widget=weiba')}", {uid:args.uid, max:args.max,weiba_id:args.weiba_id}, function(data) {
+            if(page>=totalPages){
+                page=1;
+            }else{
+                page++;
+            }
+            $.post("{:U('widget/LatestPost/changeRelate','app_widget=weiba&p="+page+"')}", {uid:args.uid, max:args.max,post_id:args.post_id}, function(data) {
                 $(_model[0]).html(data);
                 M($(_model)[0]);
             }, 'json');

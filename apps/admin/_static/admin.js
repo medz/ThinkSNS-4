@@ -756,7 +756,25 @@ admin.enableUser = function(id) {
     }
     return false;
 }
-
+//解锁用户
+admin.UnlockUser = function(id,uid) {
+    if (typeof id === 'undefined' || id == '') {
+        return false;
+    }
+    if (confirm('确定解锁该用户')) {
+        $.post(U('admin/User/UnlockUser'), {id:id,uid:uid}, function(res) {
+            if (res.status == 1) {
+                ui.success(res.info);
+                setTimeout(function() {
+                    location.reload();
+                }, 1500);
+            } else {
+                ui.error(res.info);
+            }
+        }, 'json');
+    }
+    return false;
+}
 //激活/取消激活 用户
 admin.activeUser = function(id,type){
     if("undefined" == typeof(id) || id=='')
@@ -1849,4 +1867,76 @@ admin.edit_tab = function(action,id){
 admin.setReason = function(number){
     var number = number ? number : getChecked();
     ui.box.load(U('admin/Application/setReason')+'&number='+number,'驳回理由');
+};
+
+/* **** 后台发送系统消息 **** */
+admin.doSendMessageDisplay = function() {
+    $('#dl_user_group_id').hide();
+    $('#dl_uid').hide();
+};
+
+admin.doSendMessageType = function(type) {
+    if (Number(type) == 1) {
+        $('#dl_uid').hide();
+        $('#dl_user_group_id').show();
+    } else {
+        $('#dl_uid').show();
+        $('#dl_user_group_id').hide();
+    }
+};
+admin.setWord = function (value) {
+    // 纯数字验证
+    var re = /^[0-9]*$/;
+    if(!re.test(value)) {
+        ui.error('格式不正确,请输入正整数！');		// 格式不正确
+        return false;
+    }
+};
+/**
+ * 移动3G办广场轮播操作
+ * @param integer id 广场轮播ID
+ * @param string type 移动类型，up or down
+ * @return void
+ */
+admin.mvAdSpace = function(id,type)
+{
+    // 判断是否能移动
+    var baseId = (type == 'up') ? $('#tr'+id).prev().attr('rel') : $('#tr'+id).next().attr('rel');
+    if(baseId) {
+        // 提交移动操作
+        $.post(U('admin/Mobile/doMvAdSpace'), {id:id, baseId:baseId}, function(res) {
+            if(res.status == 1) {
+                ui.success(res.info);
+                type == 'up' ? $('#tr'+id).insertBefore('#tr'+baseId) : $('#tr'+id).insertAfter('#tr'+baseId);
+            } else {
+                ui.error(res.info);
+            }
+            return false;
+        }, 'json');
+        return false;
+    }
+};
+/**
+ * 移动发现轮播操作
+ * @param integer id 发现轮播ID
+ * @param string type 移动类型，up or down
+ * @return void
+ */
+admin.mvSlide = function(id,type)
+{
+    // 判断是否能移动
+    var baseId = (type == 'up') ? $('#tr'+id).prev().attr('rel') : $('#tr'+id).next().attr('rel');
+    if(baseId) {
+        // 提交移动操作
+        $.post(U('admin/Application/doMvSlide'), {id:id, baseId:baseId}, function(res) {
+            if(res.status == 1) {
+                ui.success(res.info);
+                type == 'up' ? $('#tr'+id).insertBefore('#tr'+baseId) : $('#tr'+id).insertAfter('#tr'+baseId);
+            } else {
+                ui.error(res.info);
+            }
+            return false;
+        }, 'json');
+        return false;
+    }
 };

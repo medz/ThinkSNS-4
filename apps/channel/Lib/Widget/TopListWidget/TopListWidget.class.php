@@ -11,12 +11,9 @@ class TopListWidget extends Widget
     /**
      * 模板渲染.
      *
-     * @param array $data 相�
-     * �数据
+     * @param array $data 相关数据
      *
-     * @return string 频道�
-     * 容渲染�
-     * �口
+     * @return string 频道内容渲染入口
      */
     public function render($data)
     {

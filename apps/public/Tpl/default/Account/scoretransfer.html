@@ -50,8 +50,8 @@
                              </tr>
                               <volist name="credit_record.data" id="vo">
                              <tr>
-                                <td width="150">{$vo.uid|getUserName}</td>
-                                <td width="150"><php>echo (-1 * $vo['change'])</php></td>
+                                <td width="150">{$vo.toUname}</td>
+                                <td width="150">{$vo.score}</td>
                                 <td width="150">{$vo.ctime|friendlyDate}</td>
                                 <td width="150">{$vo.des}</td>
                              </tr>

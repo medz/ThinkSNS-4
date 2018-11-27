@@ -105,8 +105,7 @@ function _makeMd5FileToArray($dir, $res = array())
  *
  * @param array|string $dir  目录路径
  * @param string       $type 类型：core 核心 app 应用 plug 插件 theme 模板
- * @param string       $name �
- * 名
+ * @param string       $name 包名
  */
 function makeMd5File($dir, $type, $name)
 {

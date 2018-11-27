@@ -58,6 +58,12 @@ function changeweiba(obj){
               </div>
             </dd>
             <dd>
+              <div class="form-tt">上传音/视频</div>
+              <div class="form-row" id="video_upload">
+
+              </div>
+            </dd>
+            <dd>
               <div class="form-tt"><font color="red"> * </font>正文</div>
               <div class="form-row" style="line-height:normal;">{:W('UM', array('type'=>'weiba','contentName'=>'content','content'=>'','width'=>'700','tpl'=>'weiba'))}</div>
             </dd>
@@ -69,7 +75,7 @@ function changeweiba(obj){
             </dd>
             <dd>
               <div class="form-tt"></div>
-              <div class="form-row"> <a href="javascript:;" class="btn_b mr5 btn-green-big" event-node="submit_btn" event-args="editor=true"><span>确定</span></a> <a href="{:U('weiba/Index/index')}" class="btn_w"><span>取消</span></a> </div>
+              <div class="form-row"> <a href="javascript:;" class="btn_b" event-node="submit_btn" event-args="editor=true"><span>确定</span></a> <a href="{:U('weiba/Index/index')}" class="btn_w"><span>取消</span></a> </div>
             </dd>
           </dl>
         </form>
@@ -82,6 +88,18 @@ function changeweiba(obj){
 	$("#weiba_name").click(function(){
 			$(".kind-list").toggle();
 		})
+$.get(U('public/Feed/videoWeibaBox'), {}, function (res) {
+    var html = '<div id="video_upload">'+res.html+'<div class="video_txt">音/视频格式:'+res.video_ext+';文件大小:'+res.video_size+'M之内</div></div>';
+    $('#video_upload').append(html);
+}, 'json');
+function deleteVideo(){
+    $.get(U('public/Feed/videoWeibaBox'), {}, function (res) {
+        $('#video_button').remove();
+        $('#video_upload').prepend(res.html);
+        $('#video_id').remove();
+        // $('#videos').css({top:(pos.top+5)+"px",left:(pos.left-5)+"px","z-index":1001});
+    }, 'json');
+}
 //如果没有可选择微吧，添加提示
 function nocircleTip(obj,tips){
 	var tipContent = ''+'<p class="f8 p20">您没有可选择的微吧，<a href="{:U('weiba/Index/weibaList',array('type'=>$_GET['type']))}"class="f-red">赶紧去加入吧！</a></p>'

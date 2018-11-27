@@ -11,8 +11,20 @@ class FindPeopleApi extends Api
         $my['remark'] = $user['remark'];
         $my['avatar'] = $user['avatar_big'];
 
+        // 用户组
+        $user_group = [];
+        foreach ($user['user_group'] as $v) {
+            if ($v) {
+                $user_group[] = $v['user_group_icon_url'];
+            }
+        }
+        $my['user_group'] = $user_group ?: [];
+        unset($user_group);
+
         // 积分排行
-        $scoreuids = M('credit_user')->field('uid,`score`')->order('`score` desc,uid')->limit(10000)->findAll();
+        $uids = \Ts\Models\User::where('is_del', '0')->lists('uid');
+        $scoreuids = M('credit_user')->where(['uid' => ['in', $uids]])->field('uid,`score`')->order('`score` desc,uid')->limit(10000)->findAll();
+
         $iscore = 0;
         foreach ($scoreuids as $key => $gu) {
             $iscore++;
@@ -24,6 +36,16 @@ class FindPeopleApi extends Api
                 $user = model('User')->getUserInfo($gu['uid']);
                 $gu['uname'] = $user['uname'];
                 $gu['avatar'] = $user['avatar_big'];
+
+                // 用户组
+                $user_group = [];
+                foreach ($user['user_group'] as $v) {
+                    if ($v) {
+                        $user_group[] = $v['user_group_icon_url'];
+                    }
+                }
+                $gu['user_group'] = $user_group;
+                unset($user_group, $v);
 
                 //个人空间隐私权限
                 $privacy = model('UserPrivacy')->getPrivacy($this->mid, $gu['uid']);
@@ -51,6 +73,16 @@ class FindPeopleApi extends Api
         $my['remark'] = $user['remark'];
         $my['avatar'] = $user['avatar_big'];
 
+        // 用户组
+        $user_group = [];
+        foreach ($user['user_group'] as $v) {
+            if ($v) {
+                $user_group[] = $v['user_group_icon_url'];
+            }
+        }
+        $my['user_group'] = $user_group ?: [];
+        unset($user_group);
+
         // 勋章排行
         $medaluids = M('medal_user')->field('uid,count(medal_id) as mcount')->group('uid')->order('mcount desc,uid')->limit(10000)->findAll();
         $imedal = 0;
@@ -65,6 +97,17 @@ class FindPeopleApi extends Api
                 $mu['uname'] = $user['uname'];
                 $mu['avatar'] = $user['avatar_big'];
                 $mu['remark'] = $user['remark'];
+
+                // 用户组
+                $user_group = [];
+                foreach ($user['user_group'] as $v) {
+                    if ($v) {
+                        $user_group[] = $v['user_group_icon_url'];
+                    }
+                }
+                $mu['user_group'] = $user_group ?: [];
+                unset($user_group);
+
                 //个人空间隐私权限
                 $privacy = model('UserPrivacy')->getPrivacy($this->mid, $mu['uid']);
                 $mu['space_privacy'] = $privacy['space'];
@@ -74,7 +117,7 @@ class FindPeopleApi extends Api
         }
         // empty ( $rank ) && $rank = 10000; // 一万名后不再作排名，以提高性能
 
-        $my['rank'] = '排名：'.$rank;
+        $my['rank'] = $rank > 0 ? ('排名：'.$rank) : '您当前没有排名';
         $my['lists'] = $lists ?: array();
 
         return $my;
@@ -84,14 +127,12 @@ class FindPeopleApi extends Api
      * 找人首页-搜索用户 --using.
      *
      * @param string $key
-     *                       搜索�
-     * �键词
+     *                       搜索关键词
      * @param string $max_id
      *                       上次返回的最后一个用户ID
      * @param string $count
      *                       数量
-     * @request int $rus 感�
-     * �趣的人返回个数，default：5
+     * @request int $rus 感兴趣的人返回个数，default：5
      *
      * @return array 用户列表
      */
@@ -185,6 +226,7 @@ class FindPeopleApi extends Api
                 $user_list[$k]['follow_status'] = $follow_status[$v['uid']];
                 $user_info = api('User')->get_user_info($v['uid']);
                 $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
+                $user_list[$k]['user_group'] = $user_info['user_group'];
                 $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
                 $user_list[$k]['space_privacy'] = $privacy['space'];
             }
@@ -199,6 +241,15 @@ class FindPeopleApi extends Api
                 $user_list[$k]['avatar'] = $v['userInfo']['avatar_big'];
                 $user_list[$k]['intro'] = $v['info']['msg'] ? formatEmoji(false, $v['info']['msg']) : '';
                 $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['userInfo']['uid']);
+                // 用户组
+                $user_group = [];
+                foreach ($v['userInfo']['user_group'] as $value) {
+                    if ($value) {
+                        $user_group[] = $value['user_group_icon_url'];
+                    }
+                }
+                $user_list[$k]['user_group'] = $user_group;
+                unset($user_group, $value);
                 $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
                 $user_list[$k]['space_privacy'] = $privacy['space'];
             }
@@ -314,6 +365,7 @@ class FindPeopleApi extends Api
             $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
             $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
             $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['row_id']);
+            $user_list[$k]['user_group'] = $user_info['user_group'];
             $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
             $user_list[$k]['space_privacy'] = $privacy['space'];
         }
@@ -476,6 +528,7 @@ class FindPeopleApi extends Api
             $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
             $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
             $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['uid']);
+            $user_list[$k]['user_group'] = $user_info['user_group'];
             $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
             $user_list[$k]['space_privacy'] = $privacy['space'];
         }
@@ -551,6 +604,7 @@ class FindPeopleApi extends Api
             $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
             $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
             $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $v['uid']);
+            $user_list[$k]['user_group'] = $user_info['user_group'];
             $privacy = model('UserPrivacy')->getPrivacy($this->mid, $v['uid']);
             $user_list[$k]['space_privacy'] = $privacy['space'];
         }
@@ -594,7 +648,7 @@ class FindPeopleApi extends Api
                 'message' => '位置添加成功',
             );
 
-            /* 判断是否更新成功 */
+        /* 判断是否更新成功 */
         } elseif (D('mobile_user')->where('`uid` = '.$this->mid)->save(array(
             'last_latitude'  => $lat,
             'last_longitude' => $lng,
@@ -706,6 +760,16 @@ class FindPeopleApi extends Api
              * 当前用户对该用户的关注状态
              */
             $data['followStatus'] = model('Follow')->getFollowState($this->mid, $userData['uid']);
+
+            // 用户组
+            $user_group = [];
+            foreach ($userData['user_group'] as $v) {
+                if ($v) {
+                    $user_group[] = $v['user_group_icon_url'];
+                }
+            }
+            $data['user_group'] = $user_group;
+            unset($user_group, $v);
 
             //个人空间隐私权限
             $privacy = model('UserPrivacy')->getPrivacy($this->mid, $value['uid']);
@@ -831,6 +895,7 @@ class FindPeopleApi extends Api
                         $user_list[$k]['avatar'] = $user_info['avatar']['avatar_big'];
                         $user_list[$k]['intro'] = $user_info['intro'] ? formatEmoji(false, $user_info['intro']) : '';
                         $user_list[$k]['follow_status'] = model('Follow')->getFollowState($this->mid, $user_info['uid']);
+                        $user_list[$k]['user_group'] = $user_info['user_group'];
                         //个人空间隐私权限
                         $privacy = model('UserPrivacy')->getPrivacy($this->mid, $uid);
                         $user_list[$k]['space_privacy'] = $privacy['space'];

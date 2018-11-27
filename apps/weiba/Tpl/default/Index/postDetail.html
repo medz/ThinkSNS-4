@@ -130,7 +130,10 @@
         </div>
         <!--帖子信息-->
         <div class="weiba-article postDetail" <if condition=" $page neq '' AND $page neq '1' ">style="display:none"</if>>
-          <p class="text">{$post_detail.content}</p>
+          <div class="text gallerys">
+            <div class="audio-container" <if condition="$video_path eq null">style="display:none"</if>><audio id="audioTag" src="{$video_path}" ></audio><div class="audio-content" id="playPause"><i class="audio-icon left"></i></div><span class="audio-second" id="audioTime"></span></div>
+            {$post_detail.content}
+          </div>
           <php>if($post_detail['attachInfo']){</php>
           <ul class="feed_file_list mt20">
             <volist name="post_detail.attachInfo" id="vo">
@@ -197,6 +200,47 @@
   $("#comment_inputor").blur(function(){
     $('body').unbind("keypress");
   });
+  /* 播放音频 */
+  var audio = $('#audioTag').get(0);
+  //播放暂停控制
+  $('#playPause').click(function(){
+      //监听播放完成事件
+      audio.addEventListener('ended',audioEnded,false);
+      //改变暂停/播放icon
+      if(audio.paused){
+          audio.play();
+          $('.audio-icon').addClass('audio-icon-active')
+      } else{
+          audio.pause();
+          $('.audio-icon').removeClass('audio-icon-active');
+      }
+  })
+  $('#audioTag').on("loadedmetadata",function () {
+      $('#audioTime').text(transTime(this.duration));
+  });
+  //转换音频时长显示
+  function transTime(time) {
+      var duration = parseInt(time);
+      var minute = parseInt(duration/60);
+      var sec = duration%60+'';
+      var isM0 = '.';
+      if(minute == 0){
+          minute = '0';
+      }else if(minute < 10 ){
+          minute = '0'+minute;
+      }
+      if(sec.length == 1){
+          sec = '0'+sec;
+      }
+      return minute+isM0+sec;
+  }
+  //播放完成
+  function audioEnded() {
+      var audio =document.getElementsByTagName('audio')[0];
+      audio.currentTime=0;
+      audio.pause();
+      $('.audio-icon').removeClass('audio-icon-active');
+  }
 </script> 
 <script src="__THEME__/js/module.weibo.js"></script> 
 <include file="__THEME__/public_footer" /> 

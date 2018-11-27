@@ -1,7 +1,6 @@
 <?php
 /**
- * �
- * �注分组控制器.
+ * 关注分组控制器.
  *
  * @author jason <yangjs17@yeah.net>
  *
@@ -59,8 +58,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 设置指定好友的�
-     * �注分组状态
+     * 设置指定好友的关注分组状态
      *
      * @return json 返回操作后的JSON信息数据
      */
@@ -73,8 +71,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 设置指定好友的�
-     * �注分组状态 - 多个分组.
+     * 设置指定好友的关注分组状态 - 多个分组.
      *
      * @return json 返回操作后的JSON信息数据
      */
@@ -131,8 +128,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 添加�
-     * �注分组操作.
+     * 添加关注分组操作.
      *
      * @return json 返回操作后的JSON信息数据
      */
@@ -163,8 +159,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 设置�
-     * �注分组Tab页面.
+     * 设置关注分组Tab页面.
      */
     public function setGroupTab()
     {
@@ -200,9 +195,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 设置用户�
-     * �注分组、修改�
-     * �注分组操作.
+     * 设置用户关注分组、修改关注分组操作.
      */
     public function setGroup()
     {
@@ -233,8 +226,7 @@ class FollowGroupAction extends Action
     }
 
     /**
-     * 删除指定用户的指定�
-     * �注分组.
+     * 删除指定用户的指定关注分组.
      *
      * @return json 是否删除成功
      */
