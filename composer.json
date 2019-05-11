@@ -68,7 +68,7 @@
         "ext-zlib": "*",
         "ext-zip": "*",
         "medz/vendor-pack-pinyin": "@dev",
-        "medz/filesystem": "1.0.2",
+        "medz/filesystem": "2.0.2",
         "medz/emoji-format": "1.0.2",
         "symfony/polyfill-mbstring": "1.11.0",
         "illuminate/database": "4.1.*",
