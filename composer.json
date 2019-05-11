@@ -70,7 +70,7 @@
         "medz/vendor-pack-pinyin": "@dev",
         "medz/filesystem": "~1.0",
         "medz/emoji-format": "^1.0",
-        "symfony/polyfill-mbstring": "~1.0",
+        "symfony/polyfill-mbstring": "1.11.0",
         "illuminate/database": "4.1.*",
         "jpush/jpush": "^3.4",
         "zhiyicx/thinksns-old-code": "^1.0",
