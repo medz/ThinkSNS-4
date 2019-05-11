@@ -68,13 +68,13 @@
         "ext-zlib": "*",
         "ext-zip": "*",
         "medz/vendor-pack-pinyin": "@dev",
-        "medz/filesystem": "~1.0",
-        "medz/emoji-format": "^1.0",
+        "medz/filesystem": "1.0.2",
+        "medz/emoji-format": "1.0.2",
         "symfony/polyfill-mbstring": "1.11.0",
         "illuminate/database": "4.1.*",
-        "jpush/jpush": "^3.4",
-        "zhiyicx/thinksns-old-code": "^1.0",
-        "zhiyicx/thinksns-theme-stv1": "^1.0"
+        "jpush/jpush": "3.6.3",
+        "zhiyicx/thinksns-old-code": "1.0.59",
+        "zhiyicx/thinksns-theme-stv1": "1.0.17"
     },
     "config": {
         "vendor-dir": "src/vendor/",
