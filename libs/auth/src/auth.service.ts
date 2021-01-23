@@ -44,6 +44,7 @@ export class AuthService {
           name: AUTH_TOKEN_VVALIDITY_PERIOD_KEY,
         },
       },
+      rejectOnNotFound: false,
     });
     const { value = {} } = setting || {};
     const { expiredIn = {}, refreshExpiredIn = {} } = value as any;
@@ -109,9 +110,12 @@ export class AuthService {
     where: Prisma.UserWhereUniqueInput,
     password: string,
   ) {
-    const user = await this.prisma.user.findUnique({ where });
-    if (!user || !user.password) {
-      throw new Error(!user ? USER_NOT_FOUND : USER_NOT_SET_PASSWORD);
+    const user = await this.prisma.user.findUnique({
+      where,
+      rejectOnNotFound: () => Error(USER_NOT_FOUND),
+    });
+    if (!user.password) {
+      throw new Error(USER_NOT_SET_PASSWORD);
     }
 
     const hasMatch = await bcrypt.compare(password, user.password);

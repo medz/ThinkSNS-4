@@ -6,7 +6,7 @@ const logger = new Logger('Development Server');
 
 async function bootstrap() {
   // create application
-  const app = await createClientServerApp(resolve(__dirname, '../../.env'));
+  const app = await createClientServerApp(resolve(__dirname, '../../../.env'));
   await app.listen(process.env.APP_PORT);
 
   const listeningURL = await app.getUrl();

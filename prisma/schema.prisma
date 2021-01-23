@@ -22,7 +22,20 @@ model User {
   profile             UserProfile? /// the user profile
   authorizationTokens AuthorizationToken[] /// The user authorization tokens
   sentSecurityCodes   SecurityCode[] /// Sent security codes
+  state               UserAccountChangeState? // User account changed state
+
   @@index([createdAt])
+}
+
+/// User Changed state model
+model UserAccountChangeState {
+  id                String    @id /// State ID
+  loginChangeAt   DateTime? /// User login changed last time.
+  emailChangedAt    DateTime? /// User email changed last time
+  phoneChangedAt    DateTime? /// User phone changed last time
+  passwordChangedAt String? /// User password changed last time.
+  userId            String    @unique /// User ID
+  user              User      @relation(fields: [id], references: [id])
 }
 
 /// User profile

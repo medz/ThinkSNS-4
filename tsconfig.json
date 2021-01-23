@@ -65,6 +65,12 @@
       ],
       "@socfony/tencent-cloud-sts/*": [
         "libs/tencent-cloud-sts/src/*"
+      ],
+      "@socfony/user": [
+        "libs/user/src"
+      ],
+      "@socfony/user/*": [
+        "libs/user/src/*"
       ]
     }
   }
