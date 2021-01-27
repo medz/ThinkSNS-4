@@ -1,0 +1,10 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "webpack": false
+  },
+  "generateOptions": {
+    "spec": false
+  }
+}
