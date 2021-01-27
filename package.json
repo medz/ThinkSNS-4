@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "socfony",
   "version": "0.0.5",
   "description": "Socfony is an open source social application, quickly build your own social application.",
