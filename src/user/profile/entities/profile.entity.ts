@@ -1,15 +1,7 @@
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
 
 @ObjectType()
-export class UserProfileEntity implements Prisma.UserProfileGetPayload<{
-    
-}> {
-  @Field((type) => ID, {
-    description: 'User profile ID',
-  })
-  id: string;
-
+export class UserProfileEntity implements UserProfileEntity {
   @Field((type) => ID, {
     description: 'Profile owner ID',
   })

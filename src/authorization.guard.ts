@@ -3,7 +3,10 @@ import { Reflector } from '@nestjs/core';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Request } from 'express';
 import { AuthorizationTokenService } from './authorization-token/authorization-token.service';
-import { AUTH_METADATA_HAS_AUTHORIZATION, AUTH_METADATA_HAS_AUTHORIZATION_TYPE } from './authorization-token/constants';
+import {
+  AUTH_METADATA_HAS_AUTHORIZATION,
+  AUTH_METADATA_HAS_AUTHORIZATION_TYPE,
+} from './authorization-token/constants';
 import { HasTokenExpiredType } from './authorization-token/enums';
 import { UNAUTHORIZED } from './constants';
 import { Context } from './context';
@@ -17,7 +20,7 @@ export class AuthorizationGuard implements CanActivate {
   ) {}
 
   resolveContext(context: ExecutionContext): Context {
-    if (context.getType<GqlContextType>() === "graphql") {
+    if (context.getType<GqlContextType>() === 'graphql') {
       return GqlExecutionContext.create(context).getContext();
     }
 
@@ -49,16 +52,17 @@ export class AuthorizationGuard implements CanActivate {
     type: HasTokenExpiredType,
   ): boolean {
     const { authorizationToken, user } = this.resolveContext(context);
-    const has = !this.authorizationTokenService.hasTokenExpired(authorizationToken, type);
+    const has = !this.authorizationTokenService.hasTokenExpired(
+      authorizationToken,
+      type,
+    );
 
     return user && has;
   }
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     await this.initializeContext(context);
-    
+
     // If Don't validate or verified
     if (!this.getHasAuthorization(context)) return true;
 

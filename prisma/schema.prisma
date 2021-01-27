@@ -27,8 +27,7 @@ model User {
 
 /// User profile
 model UserProfile {
-  id        String   @id /// Profile ID
-  userId    String   @unique /// The profile owner ID
+  userId    String   @id /// The profile owner ID
   user      User     @relation(fields: [userId], references: [id]) /// The profile owner
   name      String? /// user display name
   avatar    String? /// user avatar

@@ -1,12 +1,14 @@
-import { applyDecorators, SetMetadata, UseGuards } from "@nestjs/common";
-import { AUTH_METADATA_HAS_AUTHORIZATION, AUTH_METADATA_HAS_AUTHORIZATION_TYPE } from "./authorization-token/constants";
-import { HasTokenExpiredType } from "./authorization-token/enums";
-import { AuthorizationGuard } from "./authorization.guard";
-
+import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
+import {
+  AUTH_METADATA_HAS_AUTHORIZATION,
+  AUTH_METADATA_HAS_AUTHORIZATION_TYPE,
+} from './authorization-token/constants';
+import { HasTokenExpiredType } from './authorization-token/enums';
+import { AuthorizationGuard } from './authorization.guard';
 
 export interface AuthDecoratorOptions {
-    hasAuthorization?: boolean;
-    type?: HasTokenExpiredType;
+  hasAuthorization?: boolean;
+  type?: HasTokenExpiredType;
 }
 
 /**
@@ -16,12 +18,12 @@ export interface AuthDecoratorOptions {
  * @param param.type validate token type.
  */
 export function Authorization(options: AuthDecoratorOptions) {
-    return applyDecorators(
-      SetMetadata(AUTH_METADATA_HAS_AUTHORIZATION, options?.hasAuthorization),
-      SetMetadata(
-        AUTH_METADATA_HAS_AUTHORIZATION_TYPE,
-        options?.type || HasTokenExpiredType.AUTH,
-      ),
-      UseGuards(AuthorizationGuard),
-    );
+  return applyDecorators(
+    SetMetadata(AUTH_METADATA_HAS_AUTHORIZATION, options?.hasAuthorization),
+    SetMetadata(
+      AUTH_METADATA_HAS_AUTHORIZATION_TYPE,
+      options?.type || HasTokenExpiredType.AUTH,
+    ),
+    UseGuards(AuthorizationGuard),
+  );
 }

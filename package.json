@@ -58,7 +58,7 @@
     "prebuild": "rimraf dist",
     "prestart": "rimraf dist && nest build",
     "preserve": "rimraf dist",
-    "format": "prettier --write src/**/*.ts",
+    "format": "prettier --write src",
     "start": "node dist/main",
     "serve": "nest start --watch"
   }

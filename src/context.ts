@@ -48,11 +48,13 @@ export class Context {
    * Get `AuthorizationToken`
    * @param token Token string.
    */
-  private getAuthorizationToken(token: string): Promise<Prisma.AuthorizationTokenGetPayload<{ include: { user: true; } }>> {
+  private getAuthorizationToken(
+    token: string,
+  ): Promise<Prisma.AuthorizationTokenGetPayload<{ include: { user: true } }>> {
     if (token)
       return this.prisma.authorizationToken.findUnique({
         where: { token: token },
-        include: { user: true, },
+        include: { user: true },
         rejectOnNotFound: false,
       });
   }

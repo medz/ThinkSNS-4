@@ -21,11 +21,14 @@ import { getConfig } from './app.config';
           path: options.endpoint,
           context({ req }) {
             return context.create(req);
-          }
-        }
-      }
+          },
+        };
+      },
     }),
-    PrismaModule, AuthorizationTokenModule, UserModule, SecurityModule,
+    PrismaModule,
+    AuthorizationTokenModule,
+    UserModule,
+    SecurityModule,
   ],
   providers: [Context],
   exports: [Context],
