@@ -1,5 +1,11 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { PrismaClient } from '@prisma/client';
+import {
+  Args,
+  Mutation,
+  Parent,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import { PrismaClient, User } from '@prisma/client';
 import { HasTokenExpiredType } from 'src/authorization-token/enums';
 import { Authorization } from 'src/authorization.decorator';
 import {
@@ -28,6 +34,26 @@ export class ViewerResolver {
     private readonly userService: UserService,
     private readonly prismaClient: PrismaClient,
   ) {}
+
+  @ResolveField(() => String)
+  phone(@Parent() user: User) {
+    const { phone } = user;
+    if (phone) {
+      return phone.replace(/(.*)\d{4}(\d{4})/, '$1****$2');
+    }
+
+    return phone;
+  }
+
+  @ResolveField(() => String)
+  email(@Parent() user: User) {
+    const { email } = user;
+    if (email) {
+      return email.replace(/^(\w{1}).*?(\w{1}?)\@(.*)$/, '$1***$2@$3');
+    }
+
+    return email;
+  }
 
   @Mutation(() => ViewerEntity)
   @Authorization({ hasAuthorization: true, type: HasTokenExpiredType.AUTH })
