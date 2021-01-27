@@ -1,7 +1,15 @@
-import { Args, Mutation, registerEnumType, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  registerEnumType,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { AuthorizationWith } from 'src/authorization.decorator';
 import { IDHelper } from 'src/helper';
-import { TencentCloudFederationToken } from './entities/cos.entity';
+import { TencentCloudStsFederationToken } from '../sts';
+import { TencentCloudCosCredentials } from './entities/cos.entity';
 import { TencentCloudCosService } from './soc.service';
 
 export enum AllowUploadFileType {
@@ -21,31 +29,54 @@ registerEnumType(AllowUploadFileType, {
   name: 'AllowUploadFileType',
 });
 
-@Resolver(() => TencentCloudFederationToken)
+@Resolver(() => TencentCloudCosCredentials)
 export class TencentCloudCosResolver {
   constructor(private readonly cosService: TencentCloudCosService) {}
 
-  @Mutation(() => TencentCloudFederationToken, {
-    description: 'Create Tencent Cloud COS read credential',
-  })
-  createTemporaryReadCredential() {
-    return this.cosService.createTemporaryReadCredential();
+  @ResolveField(() => TencentCloudStsFederationToken)
+  authorization(
+    @Parent()
+    {
+      authorization,
+    }: {
+      authorization: () => Promise<TencentCloudStsFederationToken>;
+    },
+  ) {
+    return authorization();
   }
 
-  @Mutation(() => TencentCloudFederationToken, {
+  @Mutation(() => TencentCloudCosCredentials, {
+    description: 'Create Tencent Cloud COS read credential',
+  })
+  async createCosTemporaryReadCredential(): Promise<
+    Omit<TencentCloudCosCredentials, 'authorization'> & {
+      authorization: () => Promise<TencentCloudStsFederationToken>;
+    }
+  > {
+    return Object.assign({}, this.cosService.options, {
+      authorization: () => this.cosService.createTemporaryReadCredential(),
+    });
+  }
+
+  @Mutation(() => TencentCloudCosCredentials, {
     description: 'Create Tencent Cloud COS write credential',
   })
   @AuthorizationWith()
-  createTemporaryWriteCredential(
+  async createCosTemporaryWriteCredential(
     @Args({
       name: 'type',
       type: () => AllowUploadFileType,
       description: 'create resource type.',
     })
     type: AllowUploadFileType,
-  ) {
-    return this.cosService.createTemporaryWriteCredential(
-      IDHelper.id(64) + type,
-    );
+  ): Promise<
+    Omit<TencentCloudCosCredentials, 'authorization'> & {
+      authorization: () => Promise<TencentCloudStsFederationToken>;
+    }
+  > {
+    return Object.assign({}, this.cosService.options, {
+      authorization: () =>
+        this.cosService.createTemporaryWriteCredential(IDHelper.id(64) + type),
+    });
   }
 }

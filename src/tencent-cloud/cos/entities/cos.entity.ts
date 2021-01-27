@@ -1,41 +1,20 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Credentials, GetFederationTokenResponse } from 'src/tencent-cloud/sts';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { TencentCloudStsFederationToken } from '../../sts';
 
 @ObjectType()
-export class TencentCloudCredentials implements Credentials {
-  @Field(() => String, {
-    description: 'Tencent Cloud credentials token',
+export class TencentCloudCosCredentials {
+  @Field(() => TencentCloudStsFederationToken, {
+    description: 'Tencent Cloud STS authorization token',
   })
-  Token: string;
+  authorization: TencentCloudStsFederationToken;
 
   @Field(() => String, {
-    description: 'Tencent Cloud credentials secrect id',
+    description: 'Tencent Cloud COS bucket',
   })
-  TmpSecretId: string;
+  bucket: string;
 
   @Field(() => String, {
-    description: 'Tencent Cloud credentials secrect key',
+    description: 'Tencent Cloud COS bucket region',
   })
-  TmpSecretKey: string;
-}
-
-@ObjectType()
-export class TencentCloudFederationToken implements GetFederationTokenResponse {
-  @Field(() => TencentCloudCredentials, {
-    description: 'Tencent Cloud credentials',
-    nullable: true,
-  })
-  Credentials?: TencentCloudCredentials;
-
-  @Field(() => Int, {
-    description: 'Tencent Cloud credentials expired Unix time.',
-    nullable: true,
-  })
-  ExpiredTime?: number;
-
-  @Field(() => String, {
-    description: 'Tencent Cloud credentials expired ISO8601 date.',
-    nullable: true,
-  })
-  Expiration?: string;
+  region: string;
 }
