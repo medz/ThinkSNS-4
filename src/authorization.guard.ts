@@ -57,7 +57,8 @@ export class AuthorizationGuard implements CanActivate {
 
   async initializeContext(context: ExecutionContext) {
     if (context.getType() === 'http') {
-      await new IContext(this.prismaClient).create(
+      return await IContext.create(
+        this.prismaClient,
         context.switchToHttp().getRequest<Request>(),
       );
     }

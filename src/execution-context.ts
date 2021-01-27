@@ -2,47 +2,44 @@ import { Request } from 'express';
 import { AuthorizationToken, Prisma, PrismaClient, User } from '@prisma/client';
 
 export class ExecutionContext {
-  constructor(private readonly prisma: PrismaClient) {}
-
-  /**
-   * Authenticated user token
-   */
-  authorizationToken: AuthorizationToken;
-
-  /**
-   * Authenticated user
-   */
-  user: User;
-
-  /**
-   * Express request
-   */
-  request?: Request;
+  private constructor(
+    public request: Request,
+    public authorizationToken?: AuthorizationToken,
+    public user?: User,
+  ) {}
 
   /**
    * Create kernel context.
    * @param request Express request.
    */
-  async create(request: Request) {
-    this.request = request;
-
+  static async create(prismaClient: PrismaClient, request: Request) {
     const token = this.getHttpAuthorization(request);
-    if (this.authorizationToken?.token === token) {
+    if (
+      request.context &&
+      request.context.authorizationToken?.token === token
+    ) {
       return this;
     }
 
-    const authorizationToken = await this.getAuthorizationToken(token);
-    this.authorizationToken = authorizationToken;
-    this.user = authorizationToken?.user;
+    const authorizationToken = await this.getAuthorizationToken(
+      prismaClient,
+      token,
+    );
+    const context = new ExecutionContext(
+      request,
+      authorizationToken,
+      authorizationToken?.user,
+    );
+    context.request.context = request.context = context;
 
-    return this;
+    return context;
   }
 
   /**
    * Get HTTP endpoint `Authorization` header value.
    * @param request Express request.
    */
-  private getHttpAuthorization(request: Request): string {
+  private static getHttpAuthorization(request: Request): string {
     const key = 'Authorization';
     if (request.header instanceof Function) {
       return request.header(key);
@@ -61,11 +58,12 @@ export class ExecutionContext {
    * Get `AuthorizationToken`
    * @param token Token string.
    */
-  private getAuthorizationToken(
+  private static getAuthorizationToken(
+    prismaClient: PrismaClient,
     token: string,
   ): Promise<Prisma.AuthorizationTokenGetPayload<{ include: { user: true } }>> {
     if (token)
-      return this.prisma.authorizationToken.findUnique({
+      return prismaClient.authorizationToken.findUnique({
         where: { token: token },
         include: { user: true },
         rejectOnNotFound: false,

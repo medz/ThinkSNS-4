@@ -24,7 +24,7 @@ import { PrismaClient } from '@prisma/client';
           playground: !options.isProduction,
           path: options.endpoint,
           context({ req }) {
-            return new ExecutionContext(prisma).create(req);
+            return ExecutionContext.create(prisma, req);
           },
         };
       },
