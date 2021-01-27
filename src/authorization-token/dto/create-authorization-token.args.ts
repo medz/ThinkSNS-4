@@ -1,15 +1,6 @@
-import { ArgsType, Field, registerEnumType } from '@nestjs/graphql';
-import { UserWhereUniqueInput } from 'src/user';
-
-export enum CreateAuthorizationTokenSecurityType {
-  PASSWORD,
-  SMS_CODE,
-}
-
-registerEnumType(CreateAuthorizationTokenSecurityType, {
-  name: 'CreateAuthorizationTokenSecurityType',
-  description: 'Create AuthorizationToken security type',
-});
+import { ArgsType, Field } from '@nestjs/graphql';
+import { UserWhereUniqueInput } from 'src/user/dto';
+import { UserSecurityCompareType } from 'src/user/enums';
 
 @ArgsType()
 export class CreateAuthorizationTokenArgs {
@@ -18,10 +9,10 @@ export class CreateAuthorizationTokenArgs {
   })
   user: UserWhereUniqueInput;
 
-  @Field(() => CreateAuthorizationTokenSecurityType, {
+  @Field(() => UserSecurityCompareType, {
     description: 'Create AuthorizationToken security type',
   })
-  type: CreateAuthorizationTokenSecurityType;
+  type: UserSecurityCompareType;
 
   @Field(() => String, {
     description: 'Create AuthorizationToken security value',

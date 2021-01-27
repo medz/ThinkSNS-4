@@ -11,16 +11,13 @@ import { Authorization } from 'src/authorization.decorator';
 import {
   AUTHORIZATION_TOKEN_CREATE_USER_WHERE_ALLOW_ONE,
   USER_NOT_FOUND,
-  USER_NOT_SET_PHONE,
 } from 'src/constants';
 import { Context } from 'src/context';
 import { IDHelper } from 'src/helper';
 import { ViewerEntity } from 'src/user/entities/viewer.entity';
+import { UserSecurityCompareType } from 'src/user/enums';
 import { AuthorizationTokenService } from './authorization-token.service';
-import {
-  CreateAuthorizationTokenArgs,
-  CreateAuthorizationTokenSecurityType,
-} from './dto/create-authorization-token.args';
+import { CreateAuthorizationTokenArgs } from './dto/create-authorization-token.args';
 import { AuthorizationTokenEntity } from './entities/authorization-token.entity';
 import { HasTokenExpiredType } from './enums';
 
@@ -74,29 +71,20 @@ export class AuthorizationTokenEntityResolver {
       where,
       rejectOnNotFound: false,
     });
-
-    if (type === CreateAuthorizationTokenSecurityType.PASSWORD) {
-      if (!user) {
-        throw new Error(USER_NOT_FOUND);
-      }
-
-      return this.authorizationTokenService.createTokenWithPassword(
-        user,
-        security,
-      );
-    } else if (!where.phone && !user?.phone) {
-      throw new Error(USER_NOT_SET_PHONE);
-    } else if (where.phone && !user) {
+    if (type === UserSecurityCompareType.SMS_CODE && !user && where.phone) {
       user = await this.prisma.user.create({
         data: {
           id: IDHelper.id(32),
           phone: where.phone,
         },
       });
+    } else if (!user) {
+      throw new Error(USER_NOT_FOUND);
     }
 
     return this.authorizationTokenService.createTokenWithSecurity(
       user,
+      type,
       security,
     );
   }

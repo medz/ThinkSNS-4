@@ -69,6 +69,10 @@ export class SecuritySmsService {
     phone: string,
     code: string,
   ): Promise<false | SecuritySmsCode> {
+    if (!phone || !code) {
+      return false;
+    }
+
     const security = await this.prisma.securitySmsCode.findFirst({
       where: { phone, code },
       orderBy: { createdAt: 'desc' },

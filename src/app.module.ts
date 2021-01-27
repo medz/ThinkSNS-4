@@ -1,11 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 import { Context } from './context';
 import { PrismaModule } from './prisma';
-import { AuthorizationTokenModule } from './authorization-token';
-import { UserModule } from './user';
 import { GraphQLModule } from '@nestjs/graphql';
 import { SecurityModule } from './security/security.module';
 import { getConfig } from './app.config';
+import { AuthorizationTokenModule } from './authorization-token/authorization-token.module';
+import { UserModule } from './user/user.module';
 
 @Global()
 @Module({

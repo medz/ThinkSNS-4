@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { PrismaModule } from 'src/prisma';
-import { SecurityModule } from 'src/security/security.module';
-import { UserModule } from 'src/user';
+import { UserModule } from 'src/user/user.module';
 import { AuthorizationTokenEntityResolver } from './authorization-token.resolver';
 import { AuthorizationTokenService } from './authorization-token.service';
 
+@Global()
 @Module({
-  imports: [PrismaModule, UserModule, SecurityModule],
+  imports: [PrismaModule, UserModule],
   providers: [AuthorizationTokenService, AuthorizationTokenEntityResolver],
   exports: [AuthorizationTokenService],
 })

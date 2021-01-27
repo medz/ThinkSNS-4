@@ -3,13 +3,11 @@ import { AuthorizationToken, PrismaClient, User } from '@prisma/client';
 import * as dayjs from 'dayjs';
 import {
   AUTHORIZATION_TOKEN_NOT_FOUND,
-  SECURITY_VALIDATE_ERROR,
-  USER_NOT_SET_PASSWORD,
-  USER_PASSWORD_COMPARE_FAILED,
+  SECURITY_COMPARE_FAILED,
 } from 'src/constants';
 import { IDHelper } from 'src/helper';
-import { SecuritySmsService } from 'src/security/security-sms.service';
-import { UserService } from 'src/user';
+import { UserService } from 'src/user/user.service';
+import { UserSecurityCompareType } from 'src/user/enums';
 import {
   AUTH_TOKEN_DEFAULT_EXPORED_IN,
   AUTH_TOKEN_DEFAULT_EXPORED_UNIT,
@@ -25,7 +23,6 @@ export class AuthorizationTokenService {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly userService: UserService,
-    private readonly securitySmsService: SecuritySmsService,
   ) {}
 
   /**
@@ -96,33 +93,24 @@ export class AuthorizationTokenService {
     });
   }
 
-  /**
-   * Using user password login and create authorization token object.
-   * @param where User query where input.
-   * @param password User password string.
-   */
-  async createTokenWithPassword(user: User, password: string) {
-    if (!user.password) {
-      throw new Error(USER_NOT_SET_PASSWORD);
-    }
-
-    const hasMatch = await this.userService.comparePassword(user, password);
-    if (hasMatch) {
-      return await this.createUserAuthorizationToken(user);
-    }
-
-    throw new Error(USER_PASSWORD_COMPARE_FAILED);
-  }
-
-  async createTokenWithSecurity(user: User, code: string) {
-    const compare = await this.securitySmsService.compareCode(user.phone, code);
-    if (compare) {
-      this.securitySmsService.updateCodeToUsed(compare);
-
+  async createTokenWithSecurity(
+    user: User,
+    type: UserSecurityCompareType,
+    security: string,
+  ) {
+    const compared = await this.userService.compareSecurity(
+      user,
+      type,
+      security,
+    );
+    if (compared) {
+      if (compared instanceof Function) {
+        compared();
+      }
       return this.createUserAuthorizationToken(user);
     }
 
-    throw new Error(SECURITY_VALIDATE_ERROR);
+    throw new Error(SECURITY_COMPARE_FAILED);
   }
 
   /**

@@ -26,4 +26,7 @@ export namespace IDHelper {
    */
   export const readability = (size: number): string =>
     customAlphabet('23456789qwertyupasdfghjklzxcvbnm', size)();
+
+  export const custom = (alphabet: string, size: number) =>
+    customAlphabet(alphabet, size)();
 }
