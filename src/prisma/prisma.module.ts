@@ -1,5 +1,6 @@
 import {
   ClassProvider,
+  Global,
   Logger,
   Module,
   OnModuleDestroy,
@@ -50,6 +51,7 @@ const client: ClassProvider<PrismaClient> = {
   },
 };
 
+@Global()
 @Module({
   providers: [client],
   exports: [client],

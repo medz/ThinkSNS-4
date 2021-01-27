@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthorizationGuard } from './authorization.guard';
 import { PrismaClient } from '@prisma/client';
+import { TencentCloudModule } from './tencent-cloud';
 
 @Global()
 @Module({
@@ -33,6 +34,7 @@ import { PrismaClient } from '@prisma/client';
     AuthorizationTokenModule,
     UserModule,
     SecurityModule,
+    TencentCloudModule,
   ],
   providers: [
     {
