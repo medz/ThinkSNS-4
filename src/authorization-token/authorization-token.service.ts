@@ -79,18 +79,29 @@ export class AuthorizationTokenService {
     user: User | string,
   ): Promise<AuthorizationToken> {
     const setting = await this.getTokenExpiredIn();
-    return await this.prisma.authorizationToken.create({
-      data: {
-        userId: typeof user === 'string' ? user : user.id,
-        token: IDHelper.id(128),
-        expiredAt: dayjs()
-          .add(setting.expiredIn.value, setting.expiredIn.unit)
-          .toDate(),
-        refreshExpiredAt: dayjs()
-          .add(setting.refreshExpiredIn.value, setting.refreshExpiredIn.unit)
-          .toDate(),
-      },
-    });
+    const [token] = await this.prisma.$transaction([
+      this.prisma.authorizationToken.create({
+        data: {
+          userId: typeof user === 'string' ? user : user.id,
+          token: IDHelper.id(128),
+          expiredAt: dayjs()
+            .add(setting.expiredIn.value, setting.expiredIn.unit)
+            .toDate(),
+          refreshExpiredAt: dayjs()
+            .add(setting.refreshExpiredIn.value, setting.refreshExpiredIn.unit)
+            .toDate(),
+        },
+      }),
+      this.prisma.authorizationToken.deleteMany({
+        where: {
+          refreshExpiredAt: {
+            lte: dayjs().add(10, 'minutes').toDate(),
+          },
+        },
+      }),
+    ]);
+
+    return token;
   }
 
   async createTokenWithSecurity(
