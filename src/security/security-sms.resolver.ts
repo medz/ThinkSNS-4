@@ -2,15 +2,13 @@ import { Args, GraphQLISODateTime, Mutation, Resolver } from '@nestjs/graphql';
 import { HasTokenExpiredType } from 'src/authorization-token/enums';
 import { Authorization } from 'src/authorization.decorator';
 import { USER_NOT_SET_PHONE } from 'src/constants';
-import { Context } from 'src/context';
+import { Context } from 'src/context.decorator';
+import { ExecutionContext } from 'src/execution-context';
 import { SecuritySmsService } from './security-sms.service';
 
 @Resolver()
 export class SecuritySmsResolver {
-  constructor(
-    private readonly securitySmsService: SecuritySmsService,
-    private readonly context: Context,
-  ) {}
+  constructor(private readonly securitySmsService: SecuritySmsService) {}
 
   @Mutation(() => GraphQLISODateTime)
   async createSecurity(
@@ -27,8 +25,8 @@ export class SecuritySmsResolver {
 
   @Mutation(() => GraphQLISODateTime)
   @Authorization({ hasAuthorization: true, type: HasTokenExpiredType.AUTH })
-  async createViewerSecurity() {
-    const { phone } = this.context.user || {};
+  async createViewerSecurity(@Context() context: ExecutionContext) {
+    const { phone } = context.user || {};
     if (!phone) {
       throw new Error(USER_NOT_SET_PHONE);
     }

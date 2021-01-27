@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
+import { PrismaClient } from '@prisma/client';
 import { Request } from 'express';
 import { AuthorizationTokenService } from './authorization-token/authorization-token.service';
 import {
@@ -9,28 +10,22 @@ import {
 } from './authorization-token/constants';
 import { HasTokenExpiredType } from './authorization-token/enums';
 import { UNAUTHORIZED } from './constants';
-import { Context } from './context';
+import { ExecutionContext as IContext } from './execution-context';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
   constructor(
-    private readonly context: Context,
     private readonly reflector: Reflector,
     private readonly authorizationTokenService: AuthorizationTokenService,
+    private readonly prismaClient: PrismaClient,
   ) {}
 
-  resolveContext(context: ExecutionContext): Context {
+  resolveContext(context: ExecutionContext): IContext {
     if (context.getType<GqlContextType>() === 'graphql') {
       return GqlExecutionContext.create(context).getContext();
     }
 
-    return this.context;
-  }
-
-  initializeContext(context: ExecutionContext) {
-    if (context.getType() === 'http') {
-      return this.context.create(context.switchToHttp().getRequest<Request>());
-    }
+    return context.switchToHttp().getRequest<Request>().context;
   }
 
   getHasAuthorization(context: ExecutionContext) {
@@ -58,6 +53,14 @@ export class AuthorizationGuard implements CanActivate {
     );
 
     return user && has;
+  }
+
+  async initializeContext(context: ExecutionContext) {
+    if (context.getType() === 'http') {
+      await new IContext(this.prismaClient).create(
+        context.switchToHttp().getRequest<Request>(),
+      );
+    }
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

@@ -12,7 +12,8 @@ import {
   AUTHORIZATION_TOKEN_CREATE_USER_WHERE_ALLOW_ONE,
   USER_NOT_FOUND,
 } from 'src/constants';
-import { Context } from 'src/context';
+import { Context } from 'src/context.decorator';
+import { ExecutionContext } from 'src/execution-context';
 import { IDHelper } from 'src/helper';
 import { ViewerEntity } from 'src/user/entities/viewer.entity';
 import { UserSecurityCompareType } from 'src/user/enums';
@@ -26,7 +27,6 @@ export class AuthorizationTokenEntityResolver {
   constructor(
     private readonly authorizationTokenService: AuthorizationTokenService,
     private readonly prisma: PrismaClient,
-    private readonly context: Context,
   ) {}
 
   @Field(() => ViewerEntity)
@@ -51,8 +51,8 @@ export class AuthorizationTokenEntityResolver {
     hasAuthorization: true,
     type: HasTokenExpiredType.AUTH,
   })
-  authorizationToken() {
-    return this.context.authorizationToken;
+  authorizationToken(@Context() context: ExecutionContext) {
+    return context.authorizationToken;
   }
 
   @Mutation(() => AuthorizationTokenEntity)
@@ -100,9 +100,9 @@ export class AuthorizationTokenEntityResolver {
     hasAuthorization: true,
     type: HasTokenExpiredType.REFRESH,
   })
-  refreshAuthorizationToken() {
+  refreshAuthorizationToken(@Context() context: ExecutionContext) {
     return this.authorizationTokenService.refreshAuthorizationToken(
-      this.context.authorizationToken,
+      context.authorizationToken,
     );
   }
 }

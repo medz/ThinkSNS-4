@@ -1,10 +1,12 @@
 import {
   ClassProvider,
+  Logger,
   Module,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { PrismaLoggerMiddleware } from './middleware';
 
 /**
  * Prisma class provider
@@ -14,6 +16,8 @@ const client: ClassProvider<PrismaClient> = {
   useClass: class
     extends PrismaClient
     implements OnModuleInit, OnModuleDestroy {
+    private readonly logger = new Logger('Prisma');
+
     /**
      * Prisma client constructor
      */
@@ -31,6 +35,9 @@ const client: ClassProvider<PrismaClient> = {
     async onModuleInit() {
       // Prisma connect database.
       await this.$connect();
+
+      // Set Prisma client global logger middleware.
+      this.$use(PrismaLoggerMiddleware(this.logger));
     }
 
     /**

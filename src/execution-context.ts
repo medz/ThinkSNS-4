@@ -1,9 +1,7 @@
 import { Request } from 'express';
-import { Injectable } from '@nestjs/common';
 import { AuthorizationToken, Prisma, PrismaClient, User } from '@prisma/client';
 
-@Injectable()
-export class Context {
+export class ExecutionContext {
   constructor(private readonly prisma: PrismaClient) {}
 
   /**
@@ -27,13 +25,17 @@ export class Context {
    */
   async create(request: Request) {
     this.request = request;
-    const token = await this.getAuthorizationToken(
-      this.getHttpAuthorization(request),
-    );
-    this.authorizationToken = token;
-    this.user = token?.user;
 
-    return (this.request.context = this);
+    const token = this.getHttpAuthorization(request);
+    if (this.authorizationToken?.token === token) {
+      return this;
+    }
+
+    const authorizationToken = await this.getAuthorizationToken(token);
+    this.authorizationToken = authorizationToken;
+    this.user = authorizationToken?.user;
+
+    return this;
   }
 
   /**
@@ -41,7 +43,18 @@ export class Context {
    * @param request Express request.
    */
   private getHttpAuthorization(request: Request): string {
-    if (request) return request.header('Authorization');
+    const key = 'Authorization';
+    if (request.header instanceof Function) {
+      return request.header(key);
+    }
+
+    const headers = request.headers;
+    let token = headers[key.toLowerCase()];
+    if (!token || !token.length) {
+      token = headers[key];
+    }
+
+    return Array.isArray(token) ? token.pop() : token;
   }
 
   /**

@@ -1,18 +1,22 @@
 import { Global, Module } from '@nestjs/common';
-import { Context } from './context';
+import { ExecutionContext } from './execution-context';
 import { PrismaModule } from './prisma';
 import { GraphQLModule } from '@nestjs/graphql';
 import { SecurityModule } from './security/security.module';
 import { getConfig } from './app.config';
 import { AuthorizationTokenModule } from './authorization-token/authorization-token.module';
 import { UserModule } from './user/user.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthorizationGuard } from './authorization.guard';
+import { PrismaClient } from '@prisma/client';
 
 @Global()
 @Module({
   imports: [
     GraphQLModule.forRootAsync({
-      inject: [Context],
-      useFactory(context: Context) {
+      imports: [PrismaModule],
+      inject: [PrismaClient],
+      useFactory(prisma: PrismaClient) {
         const options = getConfig();
         return {
           autoSchemaFile: true,
@@ -20,7 +24,7 @@ import { UserModule } from './user/user.module';
           playground: !options.isProduction,
           path: options.endpoint,
           context({ req }) {
-            return context.create(req);
+            return new ExecutionContext(prisma).create(req);
           },
         };
       },
@@ -30,7 +34,11 @@ import { UserModule } from './user/user.module';
     UserModule,
     SecurityModule,
   ],
-  providers: [Context],
-  exports: [Context],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthorizationGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { createUnionType } from '@nestjs/graphql';
 import { User } from '@prisma/client';
-import { Context } from 'src/context';
+import { ExecutionContext } from 'src/execution-context';
 import { UserEntity } from './user.entity';
 import { ViewerEntity } from './viewer.entity';
 
@@ -9,7 +9,7 @@ import { ViewerEntity } from './viewer.entity';
  * @param value User object.
  * @param context Application context.
  */
-async function resolveType(value: User, context: Context) {
+async function resolveType(value: User, context: ExecutionContext) {
   if (context.user && context.user.id == value.id) {
     return ViewerEntity;
   }

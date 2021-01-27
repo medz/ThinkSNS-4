@@ -1,7 +1,7 @@
-import { Context } from './context';
+import { ExecutionContext } from './execution-context';
 
 declare module 'express' {
   export interface Request {
-    context: Context;
+    context: ExecutionContext;
   }
 }

@@ -14,7 +14,8 @@ import {
   USER_LOGIN_FIELD_EXISTED,
   USER_PHONE_FIELD_EXISTED,
 } from 'src/constants';
-import { Context } from 'src/context';
+import { Context } from 'src/context.decorator';
+import { ExecutionContext } from 'src/execution-context';
 import { PasswordHelper } from 'src/helper';
 import { UpdateViewerArgs } from './dto/update-viewer.args';
 import { ViewerEntity } from './entities/viewer.entity';
@@ -30,7 +31,6 @@ const constants = {
 @Resolver(() => ViewerEntity)
 export class ViewerResolver {
   constructor(
-    private readonly context: Context,
     private readonly userService: UserService,
     private readonly prismaClient: PrismaClient,
   ) {}
@@ -59,13 +59,14 @@ export class ViewerResolver {
     description: 'Query the HTTP endpoint Authorization user.',
   })
   @AuthorizationWith()
-  viewer() {
-    return this.context.user;
+  viewer(@Context() context: ExecutionContext) {
+    return context.user;
   }
 
   @Mutation(() => ViewerEntity)
   @AuthorizationWith()
   async updateViewer(
+    @Context() context: ExecutionContext,
     @Args({
       type: () => UpdateViewerArgs,
       description: 'Update viewer args.',
@@ -73,7 +74,7 @@ export class ViewerResolver {
     args: UpdateViewerArgs,
   ) {
     const { data, security, type, newPhoneSecurity } = args;
-    const { user } = this.context;
+    const { user } = context;
     for await (const key of Object.keys(data)) {
       // Convert to password hash
       if (key === 'password') {
@@ -116,7 +117,7 @@ export class ViewerResolver {
       if (compared instanceof Function) {
         compared();
       }
-      return (this.context.user = await this.prismaClient.user.update({
+      return (context.user = await this.prismaClient.user.update({
         where: { id: user.id },
         data,
       }));
