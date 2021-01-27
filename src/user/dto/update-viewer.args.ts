@@ -12,4 +12,10 @@ export class UpdateViewerArgs extends PickType(
     description: 'User update input',
   })
   data: UserUpdateInput;
+
+  @Field(() => String, {
+    nullable: true,
+    description: 'Update phone need set new phone security code',
+  })
+  newPhoneSecurity?: string;
 }
