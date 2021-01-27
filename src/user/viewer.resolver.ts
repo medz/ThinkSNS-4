@@ -2,12 +2,12 @@ import {
   Args,
   Mutation,
   Parent,
+  Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
 import { PrismaClient, User } from '@prisma/client';
-import { HasTokenExpiredType } from 'src/authorization-token/enums';
-import { Authorization } from 'src/authorization.decorator';
+import { AuthorizationWith } from 'src/authorization.decorator';
 import {
   SECURITY_COMPARE_FAILED,
   USER_EMAIL_FIELD_EXISTED,
@@ -55,8 +55,16 @@ export class ViewerResolver {
     return email;
   }
 
+  @Query(() => ViewerEntity, {
+    description: 'Query the HTTP endpoint Authorization user.',
+  })
+  @AuthorizationWith()
+  viewer() {
+    return this.context.user;
+  }
+
   @Mutation(() => ViewerEntity)
-  @Authorization({ hasAuthorization: true, type: HasTokenExpiredType.AUTH })
+  @AuthorizationWith()
   async updateViewer(
     @Args({
       type: () => UpdateViewerArgs,

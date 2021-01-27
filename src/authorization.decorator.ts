@@ -17,7 +17,7 @@ export interface AuthDecoratorOptions {
  * @param param.hasAuthorization Has need validate
  * @param param.type validate token type.
  */
-export function Authorization(options: AuthDecoratorOptions) {
+export function Authorization(options?: AuthDecoratorOptions) {
   return applyDecorators(
     SetMetadata(AUTH_METADATA_HAS_AUTHORIZATION, options?.hasAuthorization),
     SetMetadata(
@@ -27,3 +27,21 @@ export function Authorization(options: AuthDecoratorOptions) {
     UseGuards(AuthorizationGuard),
   );
 }
+
+/**
+ * Http auth validate token.
+ */
+export const AuthorizationWith = () =>
+  Authorization({
+    hasAuthorization: true,
+    type: HasTokenExpiredType.AUTH,
+  });
+
+/**
+ * Http auth, without validate token.
+ */
+export const AuthorizationWithout = () =>
+  Authorization({
+    hasAuthorization: false,
+    type: HasTokenExpiredType.AUTH,
+  });

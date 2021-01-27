@@ -100,7 +100,7 @@ export class AuthorizationTokenEntityResolver {
     hasAuthorization: true,
     type: HasTokenExpiredType.REFRESH,
   })
-  refreshAuthorization() {
+  refreshAuthorizationToken() {
     return this.authorizationTokenService.refreshAuthorizationToken(
       this.context.authorizationToken,
     );
