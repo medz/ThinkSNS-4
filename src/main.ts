@@ -3,9 +3,15 @@ import { NestFactory } from '@nestjs/core';
 import { getConfig, loadConfig } from './app.config';
 import { AppModule } from './app.module';
 
+// Get Socfony ENV filename.
 const [_, __, dontEnvFilename] = process.argv;
+
+// Load ENV copnfig.
 loadConfig(dontEnvFilename);
 
+/**
+ * Create SOcfony bootstrap.
+ */
 async function bootstrap() {
   const logger = new Logger('Socfony');
   const { port } = getConfig();
@@ -16,4 +22,5 @@ async function bootstrap() {
   logger.log(`Server listening on ${url}`);
 }
 
+// run app.
 bootstrap();

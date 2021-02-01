@@ -11,6 +11,9 @@ import { AuthorizationGuard } from './authorization.guard';
 import { PrismaClient } from '@prisma/client';
 import { TencentCloudModule } from './tencent-cloud';
 
+/**
+ * Root app module.
+ */
 @Global()
 @Module({
   imports: [

@@ -51,6 +51,9 @@ const client: ClassProvider<PrismaClient> = {
   },
 };
 
+/**
+ * Prisma module.
+ */
 @Global()
 @Module({
   providers: [client],

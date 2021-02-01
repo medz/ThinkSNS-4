@@ -6,6 +6,9 @@ import { UserInterfaceResolver } from './user-interface.resolver';
 import { UserService } from './user.service';
 import { ViewerResolver } from './viewer.resolver';
 
+/**
+ * User module.
+ */
 @Module({
   imports: [PrismaModule, UserProfileModule, SecurityModule],
   providers: [UserService, UserInterfaceResolver, ViewerResolver],

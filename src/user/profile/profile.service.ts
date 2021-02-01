@@ -1,10 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient, User, UserProfile } from '@prisma/client';
 
+/**
+ * User profile service.
+ */
 @Injectable()
 export class UserProfileService {
+  /**
+   * Create the user profile service.
+   * @param prisma Prisma client.
+   */
   constructor(private readonly prisma: PrismaClient) {}
 
+  /**
+   * Resolve user profile.
+   * @param user need resolve profile user.
+   */
   async resolveProfile(
     user:
       | User

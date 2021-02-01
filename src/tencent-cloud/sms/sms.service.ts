@@ -3,8 +3,14 @@ import { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190
 import { SendSmsRequest } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sms/v20190711/sms_models';
 import { getCredential } from '../common';
 
+/**
+ * Tencent Cloud SMS service.
+ */
 @Injectable()
 export class TencentCloudSmsService {
+  /**
+   * Get SMS base options.
+   */
   get baseOptions(): Pick<
     SendSmsRequest,
     'SmsSdkAppid' | 'Sign' | 'ExtendCode' | 'SenderId'

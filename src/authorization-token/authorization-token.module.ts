@@ -4,6 +4,9 @@ import { UserModule } from 'src/user/user.module';
 import { AuthorizationTokenEntityResolver } from './authorization-token.resolver';
 import { AuthorizationTokenService } from './authorization-token.service';
 
+/**
+ * Authorization token module.
+ */
 @Global()
 @Module({
   imports: [PrismaModule, UserModule],

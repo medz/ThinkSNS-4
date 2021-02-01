@@ -1,5 +1,8 @@
 import { customAlphabet, nanoid } from 'nanoid';
 
+/**
+ * ID helper.
+ */
 export namespace IDHelper {
   /**
    * Generate secure URL-friendly unique ID
@@ -27,6 +30,11 @@ export namespace IDHelper {
   export const readability = (size: number): string =>
     customAlphabet('23456789qwertyupasdfghjklzxcvbnm', size)();
 
+  /**
+   * Generate a custom alphabet ID.
+   * @param alphabet custom alphabet
+   * @param size Size of the ID.
+   */
   export const custom = (alphabet: string, size: number) =>
     customAlphabet(alphabet, size)();
 }

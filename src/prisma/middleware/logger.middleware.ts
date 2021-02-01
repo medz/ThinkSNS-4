@@ -6,6 +6,9 @@ import { Prisma } from '@prisma/client';
  * @param logger Logger
  */
 export function PrismaLoggerMiddleware(logger: Logger): Prisma.Middleware {
+  /**
+   * Prisma logger middleware.
+   */
   return function (params, next) {
     logger.debug(
       `Query ${params.model}.${params.action}\nArgs: ${JSON.stringify(

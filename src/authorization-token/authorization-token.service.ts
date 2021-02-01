@@ -9,10 +9,10 @@ import { IDHelper } from 'src/helper';
 import { UserService } from 'src/user/user.service';
 import { UserSecurityCompareType } from 'src/user/enums';
 import {
-  AUTH_TOKEN_DEFAULT_EXPORED_IN,
-  AUTH_TOKEN_DEFAULT_EXPORED_UNIT,
-  AUTH_TOKEN_DEFAULT_REFRESH_EXPORED_IN,
-  AUTH_TOKEN_DEFAULT_REFRESH_EXPORED_UNIT,
+  AUTH_TOKEN_DEFAULT_EXPIRED_IN,
+  AUTH_TOKEN_DEFAULT_EXPIRED_UNIT,
+  AUTH_TOKEN_DEFAULT_REFRESH_EXPIRED_IN,
+  AUTH_TOKEN_DEFAULT_REFRESH_EXPIRED_UNIT,
   AUTH_TOKEN_VVALIDITY_PERIOD_KEY,
 } from './constants';
 import { HasTokenExpiredType } from './enums';
@@ -43,12 +43,12 @@ export class AuthorizationTokenService {
 
     return {
       expiredIn: {
-        value: expiredIn.value || AUTH_TOKEN_DEFAULT_EXPORED_IN,
-        unit: expiredIn.unit || AUTH_TOKEN_DEFAULT_EXPORED_UNIT,
+        value: expiredIn.value || AUTH_TOKEN_DEFAULT_EXPIRED_IN,
+        unit: expiredIn.unit || AUTH_TOKEN_DEFAULT_EXPIRED_UNIT,
       },
       refreshExpiredIn: {
-        value: refreshExpiredIn.value || AUTH_TOKEN_DEFAULT_REFRESH_EXPORED_IN,
-        unit: refreshExpiredIn.unit || AUTH_TOKEN_DEFAULT_REFRESH_EXPORED_UNIT,
+        value: refreshExpiredIn.value || AUTH_TOKEN_DEFAULT_REFRESH_EXPIRED_IN,
+        unit: refreshExpiredIn.unit || AUTH_TOKEN_DEFAULT_REFRESH_EXPIRED_UNIT,
       },
     };
   }

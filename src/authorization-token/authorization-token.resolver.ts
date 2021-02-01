@@ -29,6 +29,10 @@ export class AuthorizationTokenEntityResolver {
     private readonly prisma: PrismaClient,
   ) {}
 
+  /**
+   * Resolve AuthorizationTokenEntity user field.
+   * @param token HTTP endpoint AuthorizationToken
+   */
   @Field(() => ViewerEntity)
   user(
     @Parent()
@@ -46,7 +50,13 @@ export class AuthorizationTokenEntityResolver {
     });
   }
 
-  @Query(() => AuthorizationTokenEntity)
+  /**
+   * Query HTTP endpoint AuthorizationTokenEntity
+   * @param context App runner execution context.
+   */
+  @Query(() => AuthorizationTokenEntity, {
+    description: 'Query HTTP endpoint AuthorizationTokenEntity',
+  })
   @Authorization({
     hasAuthorization: true,
     type: HasTokenExpiredType.AUTH,
@@ -55,7 +65,13 @@ export class AuthorizationTokenEntityResolver {
     return context.authorizationToken;
   }
 
-  @Mutation(() => AuthorizationTokenEntity)
+  /**
+   * Create AuthorizationTokenEntity
+   * @param args Create `AuthorizationTokenEntity` args.
+   */
+  @Mutation(() => AuthorizationTokenEntity, {
+    description: 'Create AuthorizationTokenEntity',
+  })
   async createAuthorizationToken(
     @Args({
       type: () => CreateAuthorizationTokenArgs,

@@ -4,13 +4,25 @@ import * as dayjs from 'dayjs';
 import { IDHelper } from 'src/helper';
 import { TencentCloudSmsService } from 'src/tencent-cloud/sms';
 
+/**
+ * Security SMS service.
+ */
 @Injectable()
 export class SecuritySmsService {
+  /**
+   * Create the service.
+   * @param tencentCloudSmsService Tencent Cloud SMS service.
+   * @param prisma Prisma client.
+   */
   constructor(
     private readonly tencentCloudSmsService: TencentCloudSmsService,
     private readonly prisma: PrismaClient,
   ) {}
 
+  /**
+   * Get SMS options.
+   * @param hasChina Has china.
+   */
   getOptions(hasChina: boolean) {
     const expiredIn = Number.parseInt(
       process.env.TENCENT_CLOUD_SMS_EXPIRED_IN || '300',
@@ -65,6 +77,11 @@ export class SecuritySmsService {
     return security;
   }
 
+  /**
+   * Compase phone security code.
+   * @param phone phone number.
+   * @param code The sent phone security SMS code.
+   */
   async compareCode(
     phone: string,
     code: string,
@@ -89,6 +106,10 @@ export class SecuritySmsService {
     return false;
   }
 
+  /**
+   * Update security to used.
+   * @param security Security code.
+   */
   async updateCodeToUsed(security: SecuritySmsCode) {
     return await this.prisma.securitySmsCode.update({
       where: { id: security.id },

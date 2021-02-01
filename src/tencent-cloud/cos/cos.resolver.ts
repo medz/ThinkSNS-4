@@ -12,27 +12,45 @@ import { TencentCloudStsFederationToken } from '../sts';
 import { TencentCloudCosCredentials } from './entities/cos.entity';
 import { TencentCloudCosService } from './soc.service';
 
+/**
+ * Allow upload File MIME-type.
+ */
 export enum AllowUploadFileType {
-  // 图片
+  // Images
   JPG = '.jpg',
   PNG = '.png',
   GIF = '.gif',
-  // 视频
+  // Video
   MP4 = '.mp4',
   OGG = '.ogg',
-  // 音频
+  // Audio
   MP3 = '.mp3',
   WAV = '.wav',
 }
 
+/**
+ * Register `AllowUploadFileType` to GraphQL schema.
+ */
 registerEnumType(AllowUploadFileType, {
   name: 'AllowUploadFileType',
+  description: 'Allow upload File MIME-type',
 });
 
+/**
+ * Tencent Cloud COS credentials resolver.
+ */
 @Resolver(() => TencentCloudCosCredentials)
 export class TencentCloudCosResolver {
+  /**
+   * Create the resolver.
+   * @param cosService Tencent Cloud COS service.
+   */
   constructor(private readonly cosService: TencentCloudCosService) {}
 
+  /**
+   * Resolve Tencent Cloud STS federation token.
+   * @param param SOcfony runner execution context.
+   */
   @ResolveField(() => TencentCloudStsFederationToken)
   authorization(
     @Parent()
@@ -45,6 +63,9 @@ export class TencentCloudCosResolver {
     return authorization();
   }
 
+  /**
+   * Create Tencent Cloud COS read credential
+   */
   @Mutation(() => TencentCloudCosCredentials, {
     description: 'Create Tencent Cloud COS read credential',
   })
@@ -58,6 +79,10 @@ export class TencentCloudCosResolver {
     });
   }
 
+  /**
+   * Create Tencent Cloud COS write credential
+   * @param type `AllowUploadFileType` item.
+   */
   @Mutation(() => TencentCloudCosCredentials, {
     description: 'Create Tencent Cloud COS write credential',
   })

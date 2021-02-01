@@ -12,14 +12,27 @@ import { HasTokenExpiredType } from './authorization-token/enums';
 import { UNAUTHORIZED } from './constants';
 import { ExecutionContext as IContext } from './execution-context';
 
+/**
+ * Authorization guard.
+ */
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
+  /**
+   * Create Authorization guard.
+   * @param reflector NestJS core reflector.
+   * @param authorizationTokenService Authorization token service.
+   * @param prismaClient Prisma Client.
+   */
   constructor(
     private readonly reflector: Reflector,
     private readonly authorizationTokenService: AuthorizationTokenService,
     private readonly prismaClient: PrismaClient,
   ) {}
 
+  /**
+   * Resolver context.
+   * @param context NestJS execution context.
+   */
   resolveContext(context: ExecutionContext): IContext {
     if (context.getType<GqlContextType>() === 'graphql') {
       return GqlExecutionContext.create(context).getContext();
@@ -28,6 +41,10 @@ export class AuthorizationGuard implements CanActivate {
     return context.switchToHttp().getRequest<Request>().context;
   }
 
+  /**
+   * Get token has need validate.
+   * @param context NextJS execution context.
+   */
   getHasAuthorization(context: ExecutionContext) {
     return this.reflector.get<boolean>(
       AUTH_METADATA_HAS_AUTHORIZATION,
@@ -35,6 +52,10 @@ export class AuthorizationGuard implements CanActivate {
     );
   }
 
+  /**
+   * Get token validate type.
+   * @param context NestJS execution context
+   */
   getHasAuthorizationType(context: ExecutionContext) {
     return this.reflector.get<HasTokenExpiredType>(
       AUTH_METADATA_HAS_AUTHORIZATION_TYPE,
@@ -42,6 +63,11 @@ export class AuthorizationGuard implements CanActivate {
     );
   }
 
+  /**
+   * Can activel token handler.
+   * @param context NestJS execution context
+   * @param type Token validate type.
+   */
   canActivelyTokenHandler(
     context: ExecutionContext,
     type: HasTokenExpiredType,
@@ -55,6 +81,10 @@ export class AuthorizationGuard implements CanActivate {
     return user && has;
   }
 
+  /**
+   * Initialzd Socfony execution context.
+   * @param context NestJS execution context
+   */
   async initializeContext(context: ExecutionContext) {
     if (context.getType() === 'http') {
       return await IContext.create(
@@ -64,6 +94,10 @@ export class AuthorizationGuard implements CanActivate {
     }
   }
 
+  /**
+   * Can activate guard.
+   * @param context NestJS execution context.
+   */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     await this.initializeContext(context);
 

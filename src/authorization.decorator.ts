@@ -6,6 +6,9 @@ import {
 import { HasTokenExpiredType } from './authorization-token/enums';
 import { AuthorizationGuard } from './authorization.guard';
 
+/**
+ * Auth Decorator Options.
+ */
 export interface AuthDecoratorOptions {
   hasAuthorization?: boolean;
   type?: HasTokenExpiredType;

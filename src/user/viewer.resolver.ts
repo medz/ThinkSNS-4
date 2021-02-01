@@ -22,19 +22,34 @@ import { ViewerEntity } from './entities/viewer.entity';
 import { UserSecurityCompareType } from './enums';
 import { UserService } from './user.service';
 
+/**
+ * User error codes.
+ */
 const constants = {
   USER_LOGIN_FIELD_EXISTED,
   USER_PHONE_FIELD_EXISTED,
   USER_EMAIL_FIELD_EXISTED,
 };
 
+/**
+ * Viewer entity resolver.
+ */
 @Resolver(() => ViewerEntity)
 export class ViewerResolver {
+  /**
+   * Create viewer entity resolver.
+   * @param userService User service.
+   * @param prismaClient Prisma client.
+   */
   constructor(
     private readonly userService: UserService,
     private readonly prismaClient: PrismaClient,
   ) {}
 
+  /**
+   * Resolver viewer phone field.
+   * @param user Parent context user.
+   */
   @ResolveField(() => String)
   phone(@Parent() user: User) {
     const { phone } = user;
@@ -45,6 +60,10 @@ export class ViewerResolver {
     return phone;
   }
 
+  /**
+   * Resolve viewer email field.
+   * @param user Parent context user.
+   */
   @ResolveField(() => String)
   email(@Parent() user: User) {
     const { email } = user;
@@ -55,6 +74,10 @@ export class ViewerResolver {
     return email;
   }
 
+  /**
+   * Query the HTTP endpoint Authorization user.
+   * @param context Socfony execution context.
+   */
   @Query(() => ViewerEntity, {
     description: 'Query the HTTP endpoint Authorization user.',
   })
@@ -63,7 +86,14 @@ export class ViewerResolver {
     return context.user;
   }
 
-  @Mutation(() => ViewerEntity)
+  /**
+   * Update viewer.
+   * @param context Scofony exection context
+   * @param args Update viewer args.
+   */
+  @Mutation(() => ViewerEntity, {
+    description: 'Update viewer',
+  })
   @AuthorizationWith()
   async updateViewer(
     @Context() context: ExecutionContext,

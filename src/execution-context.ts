@@ -1,7 +1,16 @@
 import { Request } from 'express';
 import { AuthorizationToken, Prisma, PrismaClient, User } from '@prisma/client';
 
+/**
+ * Socfony execution context.
+ */
 export class ExecutionContext {
+  /**
+   * Create a execution context.
+   * @param request Express request.
+   * @param authorizationToken Authorization token
+   * @param user User.
+   */
   private constructor(
     public request: Request,
     public authorizationToken?: AuthorizationToken,
@@ -12,7 +21,10 @@ export class ExecutionContext {
    * Create kernel context.
    * @param request Express request.
    */
-  static async create(prismaClient: PrismaClient, request: Request): Promise<ExecutionContext> {
+  static async create(
+    prismaClient: PrismaClient,
+    request: Request,
+  ): Promise<ExecutionContext> {
     const token = this.getHttpAuthorization(request);
     if (
       request.context &&

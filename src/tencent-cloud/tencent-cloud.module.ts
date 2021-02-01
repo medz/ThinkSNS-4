@@ -4,6 +4,9 @@ import { TencentCloudCosResolver } from './cos/cos.resolver';
 import { TencentCloudSmsService } from './sms';
 import { TencentCloudStsService } from './sts';
 
+/**
+ * Tencent Cloud module.
+ */
 @Module({
   providers: [
     TencentCloudStsService,

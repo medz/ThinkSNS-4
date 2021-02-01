@@ -4,8 +4,15 @@ import { PasswordHelper } from 'src/helper';
 import { SecuritySmsService } from 'src/security/security-sms.service';
 import { UserSecurityCompareType } from './enums';
 
+/**
+ * User service.
+ */
 @Injectable()
 export class UserService {
+  /**
+   * Create user service.
+   * @param securitySmsService Security SMS service.
+   */
   constructor(private readonly securitySmsService: SecuritySmsService) {}
 
   /**
@@ -18,6 +25,12 @@ export class UserService {
     return await PasswordHelper.compare(password, user.password);
   }
 
+  /**
+   * Compare secuity.
+   * @param user Need compare user.
+   * @param type compare type.
+   * @param security Security object.
+   */
   async compareSecurity(
     user: User,
     type: UserSecurityCompareType,

@@ -6,11 +6,24 @@ import { Context } from 'src/context.decorator';
 import { ExecutionContext } from 'src/execution-context';
 import { SecuritySmsService } from './security-sms.service';
 
+/**
+ * Security SMS resolver.
+ */
 @Resolver()
 export class SecuritySmsResolver {
+  /**
+   * Create the resolver.
+   * @param securitySmsService Secyrity SMS service.
+   */
   constructor(private readonly securitySmsService: SecuritySmsService) {}
 
-  @Mutation(() => GraphQLISODateTime)
+  /**
+   * Create a security SMS code for phone number.
+   * @param phone Need create Security SMS code phone number.
+   */
+  @Mutation(() => GraphQLISODateTime, {
+    description: 'Create a security SMS code for phone number',
+  })
   async createSecurity(
     @Args({
       name: 'phone',
@@ -23,7 +36,13 @@ export class SecuritySmsResolver {
     return expiredAt;
   }
 
-  @Mutation(() => GraphQLISODateTime)
+  /**
+   * Create the viewer security SMS code.
+   * @param context Socfony app execution context.
+   */
+  @Mutation(() => GraphQLISODateTime, {
+    description: 'Create the viewer security SMS code',
+  })
   @Authorization({ hasAuthorization: true, type: HasTokenExpiredType.AUTH })
   async createViewerSecurity(@Context() context: ExecutionContext) {
     const { phone } = context.user || {};

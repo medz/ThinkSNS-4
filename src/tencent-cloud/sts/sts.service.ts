@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/sts/v20180813/sts_client';
 import { getCredential } from '../common';
 
+/**
+ * Tencent Cloud STS service.
+ */
 @Injectable()
 export class TencentCloudStsService {
   /**

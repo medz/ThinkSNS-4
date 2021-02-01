@@ -1,29 +1,17 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType, PartialType, PickType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
+import { ViewerEntity } from '../entities/viewer.entity';
 
-@InputType()
-export class UserWhereUniqueInput implements Prisma.UserWhereUniqueInput {
-  @Field(() => ID, {
-    description: 'User ID',
-    nullable: true,
-  })
-  id?: string;
-
-  @Field(() => String, {
-    description: 'User login name',
-    nullable: true,
-  })
-  login?: string;
-
-  @Field(() => String, {
-    description: 'User email',
-    nullable: true,
-  })
-  email?: string;
-
-  @Field(() => String, {
-    description: 'User phone number',
-    nullable: true,
-  })
-  phone?: string;
-}
+/**
+ * User where inique input
+ */
+@InputType({
+  description: 'User where inique input',
+})
+export class UserWhereUniqueInput
+  extends PickType(
+    PartialType(ViewerEntity),
+    ['id', 'login', 'email', 'phone'] as const,
+    InputType,
+  )
+  implements Prisma.UserWhereUniqueInput {}

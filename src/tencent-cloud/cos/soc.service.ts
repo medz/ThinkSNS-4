@@ -2,10 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { IDHelper } from 'src/helper';
 import { TencentCloudStsService } from '../sts';
 
+/**
+ * Tencent Cloud COS service.
+ */
 @Injectable()
 export class TencentCloudCosService {
+  /**
+   * Create the COS service.
+   * @param sts Tencent Cloud STS service.
+   */
   constructor(private readonly sts: TencentCloudStsService) {}
 
+  /**
+   * Get COS options.
+   */
   get options() {
     return {
       bucket: process.env.TENCENT_CLOUD_COS_BUCKET,
