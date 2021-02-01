@@ -1,0 +1,6 @@
+{
+    "tsconfig": "tsconfig.build.json",
+    "language": "en-US",
+    "name": "Socfony Server",
+    "theme": "material"
+}
