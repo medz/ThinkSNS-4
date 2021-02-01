@@ -8,26 +8,26 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [15.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Build 🔧
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npx @compodoc/compodoc -c .compodocrc.json -d docs src
-    - name: Set cname 🔗
-    - run: echo "docs.socfony.com" > docs/CNAME
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      GITHUB_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
-      BRANCH: gh-pages
-      FOLDER: docs
-      CLEAN: true
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Build 🔧
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npx @compodoc/compodoc -c .compodocrc.json -d docs src
+
+      - name: Set cname 🔗
+      - run: echo "docs.socfony.com" > docs/CNAME
+      
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        GITHUB_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: docs
+        CLEAN: true
