@@ -11,7 +11,7 @@ Socfony is a full-stack open source software that builds full-platform applicati
 
 | Project | Status | Description |
 |---------|--------|-------------|
-| [Socfony App](https://github.com/socfony/socfony-app) |  [![Socfony App](https://img.shields.io/badge/flutter-wip-0076D6?style=for-the-badge&logo=flutter)](https://github.com/socfony/socfony-app) | Socfony App with Flutter |
+| [Socfony App](https://github.com/socfony/socfony-app) |  [![Socfony App](https://img.shields.io/badge/flutter-wip-0076D6?style=for-badge&logo=flutter)](https://github.com/socfony/socfony-app) | Socfony App with Flutter |
 
 
 ## Documentation
