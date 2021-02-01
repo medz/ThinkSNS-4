@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -13,6 +13,9 @@ jobs:
 
       - name: Install and Build 🔧 
         run: npx @compodoc/compodoc -c .compodocrc.json -d docs src
+
+      - name: Set cname
+        run: echo "docs.socfony.com" > docs/CNAME
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
