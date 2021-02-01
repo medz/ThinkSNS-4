@@ -2,12 +2,8 @@
 
 Socfony is a full-stack open source software that builds full-platform application with social networking as the core. Socfony plugin mechanism allows more developers or teams to write more functions for it, can help you solve the complexity of developing full-platform software.
 
-## Community
-
-| QR code or link | Description |
-|-----------------|-------------|
-| ![Tencent QQ group number: 30568679](.github/qq-group.png) | Tencent QQ Group, number: `30568679`. |
-| [Socfony website](https://socfony.com) | Socfony project website.
+[![QQ Group: 30568679](https://img.shields.io/badge/qq%20group-30568679-eb1923?logo=tencent-qq&style=for-the-badge)](https://qm.qq.com/cgi-bin/qm/qr?k=yORvTv7AvoAvpsjL3OOHgrNNZplYh1NN&jump_from=webapi)
+[![Socfony Website](https://img.shields.io/badge/website-socfony.com-0076D6?style=for-the-badge)](https://socfony.com)
 
 ## License
 
