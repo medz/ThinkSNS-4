@@ -12,13 +12,13 @@ export class ExecutionContext {
    * Create kernel context.
    * @param request Express request.
    */
-  static async create(prismaClient: PrismaClient, request: Request) {
+  static async create(prismaClient: PrismaClient, request: Request): Promise<ExecutionContext> {
     const token = this.getHttpAuthorization(request);
     if (
       request.context &&
       request.context.authorizationToken?.token === token
     ) {
-      return this;
+      return request.context;
     }
 
     const authorizationToken = await this.getAuthorizationToken(
