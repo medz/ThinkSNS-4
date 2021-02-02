@@ -18,8 +18,16 @@ import {
 import { HasTokenExpiredType } from './enums';
 import { AuthorizationTokenValidityPeriod } from './types';
 
+/**
+ * Authorization token service.
+ */
 @Injectable()
 export class AuthorizationTokenService {
+  /**
+   * Create Authotization token service.
+   * @param prisma Prisma client.
+   * @param userService User service.
+   */
   constructor(
     private readonly prisma: PrismaClient,
     private readonly userService: UserService,
@@ -104,6 +112,12 @@ export class AuthorizationTokenService {
     return token;
   }
 
+  /**
+   * Create token with security.
+   * @param user Creathe token with user.
+   * @param type creat compare security type.
+   * @param security security object.
+   */
   async createTokenWithSecurity(
     user: User,
     type: UserSecurityCompareType,

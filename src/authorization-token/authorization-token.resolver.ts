@@ -22,8 +22,16 @@ import { CreateAuthorizationTokenArgs } from './dto/create-authorization-token.a
 import { AuthorizationTokenEntity } from './entities/authorization-token.entity';
 import { HasTokenExpiredType } from './enums';
 
+/**
+ * AuthorizationTokenEntity resolver.
+ */
 @Resolver(() => AuthorizationTokenEntity)
 export class AuthorizationTokenEntityResolver {
+  /**
+   * Create Authorization resolver.
+   * @param authorizationTokenService Authorization token service.
+   * @param prisma Prisma client.
+   */
   constructor(
     private readonly authorizationTokenService: AuthorizationTokenService,
     private readonly prisma: PrismaClient,

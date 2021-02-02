@@ -3,10 +3,15 @@ import { NestFactory } from '@nestjs/core';
 import { getConfig, loadConfig } from './app.config';
 import { AppModule } from './app.module';
 
-// Get Socfony ENV filename.
+/**
+ * Get Socfony ENV filename
+ * @var dontEnvFilename Socfony env config filename.
+ */
 const [_, __, dontEnvFilename] = process.argv;
 
-// Load ENV copnfig.
+/**
+ * Load ENV copnfig
+ */
 loadConfig(dontEnvFilename);
 
 /**

@@ -1,6 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { config as dontEnvConfig } from 'dotenv';
 
+/**
+ * Socfony app config.
+ */
 export interface SocfonyConfig {
   /**
    * Is production.

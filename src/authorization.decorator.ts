@@ -10,7 +10,14 @@ import { AuthorizationGuard } from './authorization.guard';
  * Auth Decorator Options.
  */
 export interface AuthDecoratorOptions {
+  /**
+   * Has authorization token
+   */
   hasAuthorization?: boolean;
+
+  /**
+   * Has authorization token type.
+   */
   type?: HasTokenExpiredType;
 }
 
