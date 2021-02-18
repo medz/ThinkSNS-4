@@ -61,7 +61,7 @@ export class SecuritySmsService {
 
     const security = await this.prisma.securitySmsCode.create({
       data: {
-        id: IDHelper.id(32),
+        id: IDHelper.id(64),
         phone,
         code,
         expiredAt,

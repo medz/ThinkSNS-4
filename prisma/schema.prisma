@@ -12,11 +12,11 @@ generator client {
 
 /// User model
 model User {
-  id        String   @id /// User ID
-  login     String?  @unique /// User-defined login name
-  email     String?  @unique /// User bound E-Mail address
-  phone     String?  @unique /// User bound phone number
-  password  String? /// Encrypted password
+  id        String   @id @database.Char(64) /// User ID
+  login     String?  @unique @database.VarChar(199) /// User-defined login name
+  email     String?  @unique @database.VarChar(199) /// User bound E-Mail address
+  phone     String?  @unique @database.VarChar(199) /// User bound phone number
+  password  String?  @database.VarChar(255) /// Encrypted password
   createdAt DateTime @default(now()) /// User account created date
 
   profile             UserProfile? /// the user profile
@@ -27,19 +27,19 @@ model User {
 
 /// User profile
 model UserProfile {
-  userId    String   @id /// The profile owner ID
+  userId    String   @id @database.Char(64) /// The profile owner ID
   user      User     @relation(fields: [userId], references: [id]) /// The profile owner
-  name      String? /// user display name
-  avatar    String? /// user avatar
-  bio       String? /// user bio
-  location  String? /// user location
+  name      String?  @database.VarChar(100) /// user display name
+  avatar    String?  @database.VarChar(255) /// user avatar
+  bio       String?  @database.Text /// user bio
+  location  String?  @database.VarChar(255) /// user location
   updatedAt DateTime @updatedAt /// The profile updated datetime
 }
 
 /// Authorization Token
 model AuthorizationToken {
-  userId           String /// User ID
-  token            String   @id
+  userId           String   @database.Char(64) /// User ID
+  token            String   @id @database.Char(128) /// Token
   expiredAt        DateTime /// Token expired date.
   refreshExpiredAt DateTime /// Use the token refresh expired data.
 
@@ -51,8 +51,8 @@ model AuthorizationToken {
 
 /// Setting
 model Setting {
-  namespace String /// Setting namespace
-  name      String /// setting name key
+  namespace String   @database.VarChar(199) /// Setting namespace
+  name      String   @database.VarChar(199) /// setting name key
   value     Json /// setting value
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -63,9 +63,9 @@ model Setting {
 
 /// SMS Security code
 model SecuritySmsCode {
-  id        String    @id /// Security code id
-  phone     String /// Sent phone number
-  code      String /// Security code
+  id        String    @id @database.Char(64) /// Security code id
+  phone     String    @database.VarChar(199) /// Sent phone number
+  code      String    @database.VarChar(50) /// Security code
   createdAt DateTime  @default(now()) /// The code created at.
   expiredAt DateTime /// The code expired at
   usedAt    DateTime? /// The code used at
