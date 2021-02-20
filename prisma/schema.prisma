@@ -19,8 +19,9 @@ model User {
   password  String?  @database.VarChar(255) /// Encrypted password
   createdAt DateTime @default(now()) /// User account created date
 
-  profile             UserProfile? /// the user profile
   authorizationTokens AuthorizationToken[] /// The user authorization tokens
+  profile             UserProfile? /// the user profile
+  moments             Moment[] /// The user moments
 
   @@index([createdAt])
 }
@@ -39,11 +40,11 @@ model UserProfile {
 /// Authorization Token
 model AuthorizationToken {
   userId           String   @database.Char(64) /// User ID
+  user             User     @relation(fields: [userId]) /// The token bound user
   token            String   @id @database.Char(128) /// Token
   expiredAt        DateTime /// Token expired date.
   refreshExpiredAt DateTime /// Use the token refresh expired data.
 
-  user User @relation(fields: [userId]) /// The token bound user
   @@index([userId])
   @@index([expiredAt])
   @@index([refreshExpiredAt])
@@ -73,4 +74,19 @@ model SecuritySmsCode {
   @@index([phone])
   @@index([code])
   @@index([usedAt])
+}
+
+/// Moment
+model Moment {
+  id        String    @id @database.Char(64) /// Moment id
+  title     String    @database.VarChar(199) /// Moment title
+  content   String    @database.Text /// Moment content
+  media     Json /// Moment media
+  createdAt DateTime  @default(now()) /// Moment created at
+  deletedAt DateTime? /// Moment deleted
+  ownerId   String    @database.Char(64) /// The moment owner id
+  owner     User      @relation(fields: [ownerId]) /// The moment owner
+
+  @@index([createdAt])
+  @@index([deletedAt])
 }
