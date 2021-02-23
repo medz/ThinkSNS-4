@@ -39,3 +39,8 @@ export const USER_NOT_SET_PHONE = 'USER_NOT_SET_PHONE';
  * security code validate error
  */
 export const SECURITY_COMPARE_FAILED = 'SECURITY_COMPARE_FAILED';
+
+/**
+ * Don't supported media type.
+ */
+export const MEDIA_TYPE_DONT_SUPPORTED = 'MEDIA_TYPE_DONT_SUPPORTED';

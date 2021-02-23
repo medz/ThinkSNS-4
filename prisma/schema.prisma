@@ -79,7 +79,7 @@ model SecuritySmsCode {
 /// Moment
 model Moment {
   id        String    @id @database.Char(64) /// Moment id
-  title     String    @database.VarChar(199) /// Moment title
+  title     String?   @database.VarChar(199) /// Moment title
   content   String    @database.Text /// Moment content
   media     Json /// Moment media
   createdAt DateTime  @default(now()) /// Moment created at

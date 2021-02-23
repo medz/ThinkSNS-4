@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "Moment" (
     "id" CHAR(64) NOT NULL,
-    "title" VARCHAR(199) NOT NULL,
+    "title" VARCHAR(199),
     "content" TEXT NOT NULL,
     "media" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
