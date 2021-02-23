@@ -37,7 +37,7 @@ export class MomentEntity
   /**
    * Moment media
    */
-  @Field(() => MomentMedia, { description: 'Moment media' })
+  @Field(() => MomentMedia, { nullable: true, description: 'Moment media' })
   media: Prisma.JsonValue;
 
   /**

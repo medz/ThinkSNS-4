@@ -3,7 +3,7 @@ CREATE TABLE "Moment" (
     "id" CHAR(64) NOT NULL,
     "title" VARCHAR(199),
     "content" TEXT NOT NULL,
-    "media" JSONB NOT NULL,
+    "media" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deletedAt" TIMESTAMP(3),
     "ownerId" CHAR(64) NOT NULL,

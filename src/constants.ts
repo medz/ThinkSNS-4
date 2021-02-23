@@ -44,3 +44,8 @@ export const SECURITY_COMPARE_FAILED = 'SECURITY_COMPARE_FAILED';
  * Don't supported media type.
  */
 export const MEDIA_TYPE_DONT_SUPPORTED = 'MEDIA_TYPE_DONT_SUPPORTED';
+
+/**
+ * Moment not found.
+ */
+export const MOMENT_NOT_FOUND = 'MOMENT_NOT_FOUND';

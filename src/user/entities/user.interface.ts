@@ -14,6 +14,7 @@ export class UserInterface
       Prisma.UserGetPayload<{
         include: {
           profile: true;
+          moments: false;
         };
       }>,
       'phone' | 'email' | 'password'
