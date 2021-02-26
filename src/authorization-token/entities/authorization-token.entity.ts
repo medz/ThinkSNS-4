@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prisma, User } from '@prisma/client';
-import { ViewerEntity } from 'src/user/entities/viewer.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 /**
  * HTTP endpoint authorization entity.
  */
@@ -25,7 +25,7 @@ export class AuthorizationTokenEntity
   /**
    * Logged User
    */
-  @Field((type) => ViewerEntity, {
+  @Field((type) => UserEntity, {
     description: 'Logged Viewer entity',
   })
   user: User;

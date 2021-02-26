@@ -1,6 +1,6 @@
 import { Field, InputType, PartialType, PickType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
-import { ViewerEntity } from '../entities/viewer.entity';
+import { UserEntity } from '../entities/user.entity';
 
 /**
  * User update input.
@@ -10,7 +10,7 @@ import { ViewerEntity } from '../entities/viewer.entity';
 })
 export class UserUpdateInput
   extends PartialType(
-    PickType(ViewerEntity, ['email', 'login', 'phone']),
+    PickType(UserEntity, ['email', 'login', 'phone']),
     InputType,
   )
   implements

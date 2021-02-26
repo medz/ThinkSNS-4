@@ -1,6 +1,6 @@
 import { Field, ID, InputType, PartialType, PickType } from '@nestjs/graphql';
 import { Prisma } from '@prisma/client';
-import { ViewerEntity } from '../entities/viewer.entity';
+import { UserEntity } from '../entities/user.entity';
 
 /**
  * User where inique input
@@ -10,7 +10,7 @@ import { ViewerEntity } from '../entities/viewer.entity';
 })
 export class UserWhereUniqueInput
   extends PickType(
-    PartialType(ViewerEntity),
+    PartialType(UserEntity),
     ['id', 'login', 'email', 'phone'] as const,
     InputType,
   )

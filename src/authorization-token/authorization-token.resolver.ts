@@ -1,9 +1,9 @@
 import {
   Args,
-  Field,
   Mutation,
   Parent,
   Query,
+  ResolveField,
   Resolver,
 } from '@nestjs/graphql';
 import { Prisma, PrismaClient } from '@prisma/client';
@@ -15,7 +15,7 @@ import {
 import { Context } from 'src/context.decorator';
 import { ExecutionContext } from 'src/execution-context';
 import { IDHelper } from 'src/helper';
-import { ViewerEntity } from 'src/user/entities/viewer.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { UserSecurityCompareType } from 'src/user/enums';
 import { AuthorizationTokenService } from './authorization-token.service';
 import { CreateAuthorizationTokenArgs } from './dto/create-authorization-token.args';
@@ -41,7 +41,7 @@ export class AuthorizationTokenEntityResolver {
    * Resolve AuthorizationTokenEntity user field.
    * @param token HTTP endpoint AuthorizationToken
    */
-  @Field(() => ViewerEntity)
+  @ResolveField(() => UserEntity)
   user(
     @Parent()
     token: Prisma.AuthorizationTokenGetPayload<{
@@ -117,7 +117,7 @@ export class AuthorizationTokenEntityResolver {
    * Refresh HTTP endpoint authorization token entity.
    * @param client token query Prisma client.
    */
-  @Mutation((returns) => AuthorizationTokenEntity, {
+  @Mutation(() => AuthorizationTokenEntity, {
     description: 'Refresh HTTP endpoint authorization token entity.',
   })
   @Authorization({

@@ -1,6 +1,6 @@
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import { Prisma, User } from '@prisma/client';
-import { UserUnion } from 'src/user/entities/user.union';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { MomentMedia } from './media.entity';
 
 /**
@@ -61,6 +61,6 @@ export class MomentEntity
   /**
    * Moment owner
    */
-  @Field(() => UserUnion, { description: 'The moment owner' })
+  @Field(() => UserEntity, { description: 'The moment owner' })
   owner: User;
 }
