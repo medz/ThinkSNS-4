@@ -40,7 +40,7 @@ model UserProfile {
 /// Authorization Token
 model AuthorizationToken {
   userId           String   @database.Char(64) /// User ID
-  user             User     @relation(fields: [userId]) /// The token bound user
+  user             User     @relation(fields: [userId], references: [id]) /// The token bound user
   token            String   @id @database.Char(128) /// Token
   expiredAt        DateTime /// Token expired date.
   refreshExpiredAt DateTime /// Use the token refresh expired data.
@@ -85,7 +85,7 @@ model Moment {
   createdAt DateTime  @default(now()) /// Moment created at
   deletedAt DateTime? /// Moment deleted
   ownerId   String    @database.Char(64) /// The moment owner id
-  owner     User      @relation(fields: [ownerId]) /// The moment owner
+  owner     User      @relation(fields: [ownerId], references: [id]) /// The moment owner
 
   @@index([createdAt])
   @@index([deletedAt])
