@@ -11,8 +11,19 @@ import { MEDIA_TYPE_DONT_SUPPORTED } from 'src/constants';
  * Media type.
  */
 export enum MomentMediaType {
+  /**
+   * Video type.
+   */
   VIDEO,
+
+  /**
+   * Image type.
+   */
   IMAGE,
+
+  /**
+   * Audio type.
+   */
   AUDIO,
 }
 

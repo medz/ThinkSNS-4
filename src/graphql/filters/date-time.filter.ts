@@ -23,6 +23,9 @@ export class DateTimeFilter implements Prisma.DateTimeFilter {
   @Field(() => [GraphQLISODateTime], { description: 'Date in', nullable: true })
   in?: Date[];
 
+  /**
+   * Date not in
+   */
   @Field(() => [GraphQLISODateTime], {
     description: 'Date not in',
     nullable: true,

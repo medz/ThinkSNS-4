@@ -79,6 +79,11 @@ export class UserResolver {
     return email;
   }
 
+  /**
+   * resolve user `isSetPassword` field.
+   * @param user Parent context user.
+   * @returns boolean
+   */
   @ResolveField(() => Boolean)
   isSetPassword(@Parent() user: User) {
     return !!user.password;
@@ -124,6 +129,7 @@ export class UserResolver {
   ) {
     const { data, security, type, newPhoneSecurity } = args;
     const { user } = context;
+
     for await (const key of Object.keys(data)) {
       // Convert to password hash
       if (key === 'password') {
@@ -157,6 +163,8 @@ export class UserResolver {
         throw new Error(SECURITY_COMPARE_FAILED);
       }
     }
+
+    // compared user security.
     const compared = await this.userService.compareSecurity(
       user,
       type,
