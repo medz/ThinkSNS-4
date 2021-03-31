@@ -7,6 +7,9 @@ import { MomentFindManyArgs } from './dto/moment-find-many.args';
 import { MomentWhereUniqueInput } from './dto/moment-where-unique.input';
 import { MomentEntity } from './entities/moment.entity';
 
+/**
+ * Moment entity resolver.
+ */
 @Resolver(() => MomentEntity)
 export class MomentResolver {
   constructor(private readonly prismaClient: PrismaClient) {}
@@ -38,6 +41,7 @@ export class MomentResolver {
    */
   @Query(() => [MomentEntity], {
     description: 'Find zero or more Moments that matches the filter',
+    nullable: 'items',
   })
   momentFindMany(
     @Args({ type: () => MomentFindManyArgs }) args: MomentFindManyArgs,

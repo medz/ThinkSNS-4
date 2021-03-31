@@ -15,6 +15,10 @@ export enum MomentMediaType {
   IMAGE,
   AUDIO,
 }
+
+/**
+ * Reguster moment media type enum.
+ */
 registerEnumType(MomentMediaType, {
   name: 'MomentMediaType',
   description: 'Media type.',
