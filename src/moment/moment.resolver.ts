@@ -56,7 +56,11 @@ export class MomentResolver {
   momentFindFirst(
     @Args({ type: () => MomentFindFirstArgs }) args: MomentFindFirstArgs,
   ) {
-    return this.prismaClient.moment.findFirst(args);
+    return this.prismaClient.moment.findFirst(
+      Object.assign({}, args, {
+        rejectOnNotFound: false,
+      }),
+    );
   }
 
   /**

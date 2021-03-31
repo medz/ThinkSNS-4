@@ -8,6 +8,8 @@ import { MomentFindManyArgs } from './moment-find-many.args';
 @ArgsType()
 export class MomentFindFirstArgs
   extends OmitType(MomentFindManyArgs, ['skip', 'take'] as const, ArgsType)
-  implements Omit<Prisma.MomentFindFirstArgs, 'select' | 'include'> {
-  rejectOnNotFound: false = false;
-}
+  implements
+    Omit<
+      Prisma.MomentFindFirstArgs,
+      'select' | 'include' | 'rejectOnNotFound'
+    > {}
