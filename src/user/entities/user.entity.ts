@@ -53,7 +53,7 @@ export class UserEntity
     description: 'User bound Phone full number.',
   })
   phone: string;
-  
+
   /**
    * Has the user set a password.
    */

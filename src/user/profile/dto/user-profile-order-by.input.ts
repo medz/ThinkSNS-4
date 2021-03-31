@@ -6,7 +6,6 @@ import { Prisma } from '@prisma/client';
  */
 @InputType({ description: 'User profile order by input' })
 export class UserProfileOrderByInput implements Prisma.UserProfileOrderByInput {
-
   /**
    * `userId` field sort order
    */
