@@ -1,9 +1,14 @@
+import './register-enums';
+
 import { GraphQLModule as _ } from '@nestjs/graphql';
 import { PrismaClient } from '@prisma/client';
 import { getConfig } from 'src/app.config';
 import { ExecutionContext } from 'src/execution-context';
 import { PrismaModule } from 'src/prisma';
 
+/**
+ * Create GraphQL module.
+ */
 export const GraphQLModule = _.forRootAsync({
   imports: [PrismaModule],
   inject: [PrismaClient],

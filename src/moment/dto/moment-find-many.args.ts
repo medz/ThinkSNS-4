@@ -4,11 +4,17 @@ import { MomentOrderByInput } from './moment-order-by.input';
 import { MomentWhereUniqueInput } from './moment-where-unique.input';
 import { MomentWhereInput } from './moment-where.input';
 
+/**
+ * Register moment scalar field enum.
+ */
 registerEnumType(Prisma.MomentScalarFieldEnum, {
   name: 'MomentScalarFieldEnum',
   description: 'Moment scalar field enum.',
 });
 
+/**
+ * Moment find many args.
+ */
 @ArgsType()
 export class MomentFindManyArgs
   implements
@@ -16,12 +22,18 @@ export class MomentFindManyArgs
       Prisma.MomentFindManyArgs,
       'where' | 'orderBy' | 'cursor' | 'take' | 'skip' | 'distinct'
     > {
+  /**
+   * Filter, which Moments to fetch.
+   */
   @Field(() => MomentWhereInput, {
     nullable: true,
     description: 'Filter, which Moments to fetch.',
   })
   where?: MomentWhereInput;
 
+  /**
+   * Determine the order of Moments to fetch.
+   */
   @Field(() => [MomentOrderByInput], {
     nullable: true,
     description: 'Determine the order of Moments to fetch.',
@@ -57,6 +69,9 @@ export class MomentFindManyArgs
   })
   skip?: number;
 
+  /**
+   * Sets the query distinct
+   */
   @Field(() => [Prisma.MomentScalarFieldEnum], {
     nullable: true,
     description: 'Sets the query distinct',
