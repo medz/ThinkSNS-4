@@ -42,7 +42,7 @@
     "@prisma/client": "^2.17.0",
     "apollo-server-express": "^2.21.0",
     "bcrypt": "^5.0.0",
-    "class-transformer": "^0.3.2",
+    "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
