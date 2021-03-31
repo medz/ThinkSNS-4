@@ -7,6 +7,7 @@
 		"url": "https://github.com/socfony/socfony/issues"
 	},
 	"dependencies": {
+		"@apollo/gateway": "^0.24.4",
 		"@nestjs/common": "^7.6.12",
 		"@nestjs/core": "^7.6.12",
 		"@nestjs/graphql": "^7.9.9",
