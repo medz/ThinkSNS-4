@@ -12,8 +12,7 @@ import { UserWhereUniqueInput } from './dto';
 import { UserEntity } from './entities/user.entity';
 import {
   SECURITY_COMPARE_FAILED,
-  USER_EMAIL_FIELD_EXISTED,
-  USER_LOGIN_FIELD_EXISTED,
+  USER_USERNAME_FIELD_EXISTED,
   USER_PHONE_FIELD_EXISTED,
 } from 'src/constants';
 import { UserService } from './user.service';
@@ -30,9 +29,8 @@ import { UserProfileService } from './profile/profile.service';
  * User error codes.
  */
 const constants = {
-  USER_LOGIN_FIELD_EXISTED,
+  USER_USERNAME_FIELD_EXISTED,
   USER_PHONE_FIELD_EXISTED,
-  USER_EMAIL_FIELD_EXISTED,
 };
 
 /**
@@ -63,20 +61,6 @@ export class UserResolver {
     }
 
     return phone;
-  }
-
-  /**
-   * Resolve viewer email field.
-   * @param user Parent context user.
-   */
-  @ResolveField(() => String)
-  email(@Parent() user: User) {
-    const { email } = user;
-    if (email) {
-      return email.replace(/^(\w{1}).*?(\w{1}?)\@(.*)$/, '$1***$2@$3');
-    }
-
-    return email;
   }
 
   /**

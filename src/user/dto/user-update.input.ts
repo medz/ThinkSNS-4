@@ -9,12 +9,8 @@ import { UserEntity } from '../entities/user.entity';
   description: 'User update input',
 })
 export class UserUpdateInput
-  extends PartialType(
-    PickType(UserEntity, ['email', 'login', 'phone']),
-    InputType,
-  )
-  implements
-    Pick<Prisma.UserUpdateInput, 'login' | 'phone' | 'email' | 'password'> {
+  extends PartialType(PickType(UserEntity, ['username', 'phone']), InputType)
+  implements Pick<Prisma.UserUpdateInput, 'username' | 'phone' | 'password'> {
   /**
    * User new password.
    */

@@ -19,17 +19,13 @@ export const AUTHORIZATION_TOKEN_CREATE_USER_WHERE_ALLOW_ONE =
  */
 export const USER_NOT_FOUND = 'USER_NOT_FOUND';
 /**
- * User `login` existed
+ * User `username` existed
  */
-export const USER_LOGIN_FIELD_EXISTED = 'USER_LOGIN_FIELD_EXISTED';
+export const USER_USERNAME_FIELD_EXISTED = 'USER_USERNAME_FIELD_EXISTED';
 /**
  * user `phone` existed.
  */
 export const USER_PHONE_FIELD_EXISTED = 'USER_PHONE_FIELD_EXISTED';
-/**
- * user `email` existed.
- */
-export const USER_EMAIL_FIELD_EXISTED = 'USER_EMAIL_FIELD_EXISTED';
 /**
  * User not set phone.
  */

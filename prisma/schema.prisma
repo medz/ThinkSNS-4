@@ -13,8 +13,7 @@ generator client {
 /// User model
 model User {
   id        String   @id @database.Char(64) /// User ID
-  login     String?  @unique @database.VarChar(199) /// User-defined login name
-  email     String?  @unique @database.VarChar(199) /// User bound E-Mail address
+  username  String?  @unique @database.VarChar(199) /// username
   phone     String?  @unique @database.VarChar(199) /// User bound phone number
   password  String?  @database.VarChar(255) /// Encrypted password
   createdAt DateTime @default(now()) /// User account created date

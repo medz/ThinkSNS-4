@@ -11,7 +11,7 @@ import { UserEntity } from '../entities/user.entity';
 export class UserWhereUniqueInput
   extends PickType(
     PartialType(UserEntity),
-    ['id', 'login', 'email', 'phone'] as const,
+    ['id', 'username', 'phone'] as const,
     InputType,
   )
   implements Prisma.UserWhereUniqueInput {}

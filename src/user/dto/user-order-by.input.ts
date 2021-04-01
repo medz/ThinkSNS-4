@@ -23,16 +23,7 @@ export class UserOrderByInput implements Prisma.UserOrderByInput {
     nullable: true,
     description: 'Field sort order',
   })
-  login?: Prisma.SortOrder;
-
-  /**
-   * Field sort order
-   */
-  @Field(() => Prisma.SortOrder, {
-    nullable: true,
-    description: 'Field sort order',
-  })
-  email?: Prisma.SortOrder;
+  username?: Prisma.SortOrder;
 
   /**
    * Field sort order

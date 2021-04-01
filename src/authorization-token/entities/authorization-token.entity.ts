@@ -18,7 +18,7 @@ export class AuthorizationTokenEntity
    * Logged user id.
    */
   @Field((type) => ID, {
-    description: 'Login user ID',
+    description: 'User ID',
   })
   userId: string;
 

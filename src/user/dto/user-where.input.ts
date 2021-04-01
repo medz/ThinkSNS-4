@@ -37,19 +37,13 @@ export class UserWhereInput
   id?: StringFilter;
 
   /**
-   * login name filter
+   * Username filter
    */
   @Field(() => StringFilter, {
     nullable: true,
-    description: 'login name filter',
+    description: 'username filter',
   })
-  login?: StringFilter;
-
-  /**
-   * E-Mail filter
-   */
-  @Field(() => StringFilter, { nullable: true, description: 'E-Mail filter' })
-  email?: StringFilter;
+  username?: StringFilter;
 
   /**
    * user phone number filter

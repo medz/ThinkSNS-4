@@ -22,28 +22,19 @@ export class UserEntity
   /**
    * User ID
    */
-  @Field((type) => ID, {
+  @Field(() => ID, {
     description: 'User ID',
   })
   id: string;
 
   /**
-   * User login name
+   * User username
    */
-  @Field((type) => String, {
+  @Field(() => String, {
     nullable: true,
-    description: 'User login name',
+    description: 'User username',
   })
-  login: string;
-
-  /**
-   * User bound E-Mail address.
-   */
-  @Field((type) => String, {
-    nullable: true,
-    description: 'User bound E-Mail address.',
-  })
-  email: string;
+  username: string;
 
   /**
    * User bound Phone full number.
