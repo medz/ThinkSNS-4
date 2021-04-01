@@ -95,7 +95,11 @@ export class AuthorizationTokenEntityResolver {
       where,
       rejectOnNotFound: false,
     });
-    if (type === UserSecurityCompareType.SMS_CODE && !user && where.phone) {
+    if (
+      type === UserSecurityCompareType.PHONE_SMS_CODE &&
+      !user &&
+      where.phone
+    ) {
       user = await this.prisma.user.create({
         data: {
           id: IDHelper.id(64),

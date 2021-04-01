@@ -138,6 +138,8 @@ export class UserResolver {
       throw new Error(SECURITY_COMPARE_FAILED);
     }
 
+    compared();
+
     return await this.prismaClient.user.update({
       where: { id: context.user.id },
       data: { password: await PasswordHelper.hash(password) },
@@ -189,6 +191,8 @@ export class UserResolver {
       throw new Error(SECURITY_COMPARE_FAILED);
     }
 
+    compared();
+
     return await this.prismaClient.user.update({
       where: { id: context.user.id },
       data: { username },
@@ -237,12 +241,15 @@ export class UserResolver {
 
     const newPhoneCompared = await this.userService.compareSecurity(
       Object.assign({}, context.user, { phone }),
-      UserSecurityCompareType.SMS_CODE,
+      UserSecurityCompareType.PHONE_SMS_CODE,
       newPhoneSecurity,
     );
     if (!newPhoneCompared || !(newPhoneCompared instanceof Function)) {
       throw new Error(USER_UPDATE_PHONE_SECURITY_COMPARE_FAILED);
     }
+
+    compared();
+    newPhoneCompared();
 
     return await this.prismaClient.user.update({
       where: { id: context.user.id },

@@ -6,8 +6,8 @@ import { registerEnumType } from '@nestjs/graphql';
 export enum UserSecurityCompareType {
   // password
   PASSWORD,
-  // SMS code
-  SMS_CODE,
+  // Phone SMS code
+  PHONE_SMS_CODE,
 }
 
 /**

@@ -39,7 +39,7 @@ export class UserService {
     switch (type) {
       case UserSecurityCompareType.PASSWORD:
         return await this.comparePassword(user, security);
-      case UserSecurityCompareType.SMS_CODE:
+      case UserSecurityCompareType.PHONE_SMS_CODE:
         const value = await this.securitySmsService.compareCode(
           user.phone,
           security,
