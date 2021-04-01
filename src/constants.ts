@@ -37,6 +37,12 @@ export const USER_NOT_SET_PHONE = 'USER_NOT_SET_PHONE';
 export const SECURITY_COMPARE_FAILED = 'SECURITY_COMPARE_FAILED';
 
 /**
+ * User update new phone, security compare failed.
+ */
+export const USER_UPDATE_PHONE_SECURITY_COMPARE_FAILED =
+  'USER_UPDATE_PHONE_SECURITY_COMPARE_FAILED';
+
+/**
  * Don't supported media type.
  */
 export const MEDIA_TYPE_DONT_SUPPORTED = 'MEDIA_TYPE_DONT_SUPPORTED';

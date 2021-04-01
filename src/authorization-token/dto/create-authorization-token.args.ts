@@ -1,5 +1,5 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { UserWhereUniqueInput } from 'src/user/dto';
+import { UserWhereUniqueInput } from 'src/user/dto/user-where-unique.input';
 import { UserSecurityCompareType } from 'src/user/enums';
 
 /**

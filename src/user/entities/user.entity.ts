@@ -49,7 +49,7 @@ export class UserEntity
    * Has the user set a password.
    */
   @Field(() => Boolean, {
-    nullable: true,
+    nullable: false,
     description: 'Has the user set a password.',
   })
   isSetPassword: boolean;
