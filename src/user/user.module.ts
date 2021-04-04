@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from 'src/prisma';
 import { SecurityModule } from 'src/security/security.module';
 import { UserProfileModule } from './profile/profile.module';
-import { UserResolver } from './user.resolver';
+import { UserEntityFieldResolver } from './resolvers/user-entity-field.resolver';
+import { UserMutationResolver } from './resolvers/user-mutation.resolver';
+import { UserQueryResolver } from './resolvers/user-query.resolver';
 import { UserService } from './user.service';
 
 /**
@@ -10,7 +12,12 @@ import { UserService } from './user.service';
  */
 @Module({
   imports: [PrismaModule, UserProfileModule, SecurityModule],
-  providers: [UserService, UserResolver],
+  providers: [
+    UserService,
+    UserEntityFieldResolver,
+    UserMutationResolver,
+    UserQueryResolver,
+  ],
   exports: [UserService],
 })
 export class UserModule {}

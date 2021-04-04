@@ -1,114 +1,36 @@
-import {
-  Args,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
-import { PrismaClient, User } from '@prisma/client';
-import { UserEntity } from './entities/user.entity';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { PrismaClient } from '@prisma/client';
+import { AuthorizationWith } from 'src/authorization.decorator';
 import {
   SECURITY_COMPARE_FAILED,
-  USER_USERNAME_FIELD_EXISTED,
   USER_PHONE_FIELD_EXISTED,
-  USER_NOT_FOUND,
   USER_UPDATE_PHONE_SECURITY_COMPARE_FAILED,
+  USER_USERNAME_FIELD_EXISTED,
 } from 'src/constants';
-import { UserService } from './user.service';
-import { AuthorizationWith } from 'src/authorization.decorator';
 import { Context } from 'src/context.decorator';
 import { ExecutionContext } from 'src/execution-context';
 import { PasswordHelper } from 'src/helper';
-import { UserSecurityCompareType } from './enums';
-import { UserProfileEntity } from './profile/entities/profile.entity';
-import { UserProfileService } from './profile/profile.service';
-import { UserUpdatePasswordArgs } from './dto/user-update-password.args';
-import { UserUpdateUsernameArgs } from './dto/user-update-username.args';
-import { UserUpdatePhoneArgs } from './dto/user-update-phone.args';
-import { UserWhereUniqueInput } from './dto/user-where-unique.input';
+import { UserUpdatePasswordArgs } from '../dto/user-update-password.args';
+import { UserUpdatePhoneArgs } from '../dto/user-update-phone.args';
+import { UserUpdateUsernameArgs } from '../dto/user-update-username.args';
+import { UserEntity } from '../entities/user.entity';
+import { UserSecurityCompareType } from '../enums';
+import { UserService } from '../user.service';
 
 /**
- * User entity resolver
+ * User mutation resolver.
  */
 @Resolver(() => UserEntity)
-export class UserResolver {
+export class UserMutationResolver {
   /**
-   * Create user entity resolver.
+   * User mutation resolver constructor.
    * @param userService User service.
    * @param prismaClient Prisma client.
    */
   constructor(
     private readonly prismaClient: PrismaClient,
     private readonly userService: UserService,
-    private readonly userProfileService: UserProfileService,
   ) {}
-
-  /**
-   * Resolver viewer phone field.
-   * @param user Parent context user.
-   */
-  @ResolveField(() => String)
-  phone(@Parent() user: User) {
-    const { phone } = user;
-    if (phone) {
-      return phone.replace(/(.*)\d{4}(\d{4})/, '$1****$2');
-    }
-
-    return phone;
-  }
-
-  /**
-   * resolve user `isSetPassword` field.
-   * @param user Parent context user.
-   * @returns boolean
-   */
-  @ResolveField(() => Boolean)
-  isSetPassword(@Parent() user: User) {
-    return !!user.password;
-  }
-
-  /**
-   * Resolve user profile field.
-   * @param user Parent context user.
-   */
-  @ResolveField(() => UserProfileEntity)
-  profile(@Parent() user: User) {
-    return this.userProfileService.resolveProfile(user);
-  }
-
-  /**
-   * Query the HTTP endpoint Authorization user.
-   * @param context Socfony execution context.
-   */
-  @Query(() => UserEntity, {
-    description: 'Query the HTTP endpoint Authorization user.',
-  })
-  @AuthorizationWith()
-  viewer(@Context() context: ExecutionContext) {
-    return context.user;
-  }
-
-  /**
-   * Query a user where unique
-   * @param where Query a user where unique
-   */
-  @Query(() => UserEntity, {
-    description: 'Find zero or one User that matches the filter.',
-  })
-  userFindUnique(
-    @Args({
-      name: 'where',
-      type: () => UserWhereUniqueInput,
-      description: 'User where unique input',
-    })
-    where: UserWhereUniqueInput,
-  ) {
-    return this.prismaClient.user.findUnique({
-      where,
-      rejectOnNotFound: () => new Error(USER_NOT_FOUND),
-    });
-  }
 
   /**
    * Update user password.
@@ -117,10 +39,10 @@ export class UserResolver {
    * @returns UserEntity
    */
   @Mutation(() => UserEntity, {
-    description: 'Update User password',
+    description: 'Update viewer password',
   })
   @AuthorizationWith()
-  async updateUserPassword(
+  async updateViewerPassword(
     @Context() context: ExecutionContext,
     @Args({
       type: () => UserUpdatePasswordArgs,
@@ -147,16 +69,16 @@ export class UserResolver {
   }
 
   /**
-   * 用户更新用户名
-   * @param context 当前请求的上下文
-   * @param args 操作的参数
+   * Update viewer username
+   * @param context App context
+   * @param args User update username args
    * @returns UserEntity
    */
   @Mutation(() => UserEntity, {
-    description: 'Update user username field',
+    description: 'Update viewer username field',
   })
   @AuthorizationWith()
-  async updateUserUsername(
+  async updateViewerUsername(
     @Context() context: ExecutionContext,
     @Args({
       type: () => UserUpdateUsernameArgs,
@@ -206,10 +128,10 @@ export class UserResolver {
    * @returns UserEntity
    */
   @Mutation(() => UserEntity, {
-    description: 'Update user phone field',
+    description: 'Update viewer phone field',
   })
   @AuthorizationWith()
-  async updateUserPhone(
+  async updateViewerPhone(
     @Context() context: ExecutionContext,
     @Args({
       type: () => UserUpdatePhoneArgs,
