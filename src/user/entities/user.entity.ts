@@ -14,7 +14,6 @@ export class UserEntity
       Prisma.UserGetPayload<{
         include: {
           profile: true;
-          moments: false;
         };
       }>,
       'password'
@@ -39,7 +38,7 @@ export class UserEntity
   /**
    * User bound Phone full number.
    */
-  @Field((type) => String, {
+  @Field(() => String, {
     nullable: true,
     description: 'User bound Phone full number.',
   })
@@ -57,7 +56,7 @@ export class UserEntity
   /**
    * User registered date at.
    */
-  @Field((type) => GraphQLISODateTime, {
+  @Field(() => GraphQLISODateTime, {
     description: 'User registered date at.',
   })
   createdAt: Date;
@@ -65,7 +64,7 @@ export class UserEntity
   /**
    * User profile.
    */
-  @Field((type) => UserProfileEntity, {
+  @Field(() => UserProfileEntity, {
     description: 'The user profile',
   })
   profile: UserProfile;

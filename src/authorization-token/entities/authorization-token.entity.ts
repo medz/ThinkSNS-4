@@ -17,7 +17,7 @@ export class AuthorizationTokenEntity
   /**
    * Logged user id.
    */
-  @Field((type) => ID, {
+  @Field(() => ID, {
     description: 'User ID',
   })
   userId: string;
@@ -25,7 +25,7 @@ export class AuthorizationTokenEntity
   /**
    * Logged User
    */
-  @Field((type) => UserEntity, {
+  @Field(() => UserEntity, {
     description: 'Logged Viewer entity',
   })
   user: User;
@@ -33,7 +33,7 @@ export class AuthorizationTokenEntity
   /**
    * User API endpoit authorization token.
    */
-  @Field((type) => String, {
+  @Field(() => String, {
     description: 'User API endpoit authorization token.',
   })
   token: string;
@@ -41,7 +41,7 @@ export class AuthorizationTokenEntity
   /**
    * Token expired date.
    */
-  @Field((type) => Date, {
+  @Field(() => Date, {
     description: 'Token expired date',
   })
   expiredAt: Date;
@@ -49,7 +49,7 @@ export class AuthorizationTokenEntity
   /**
    * Token on refresh expired date.
    */
-  @Field((type) => Date, {
+  @Field(() => Date, {
     description: 'Token on refresh expired date',
   })
   refreshExpiredAt: Date;

@@ -18,7 +18,7 @@ export class UserProfileEntity implements UserProfileEntity {
   /**
    * User name
    */
-  @Field((type) => String, {
+  @Field(() => String, {
     description: 'User name.',
     nullable: true,
   })
@@ -27,7 +27,7 @@ export class UserProfileEntity implements UserProfileEntity {
   /**
    * User avatar storage path
    */
-  @Field((type) => String, {
+  @Field(() => String, {
     description: 'User avatar storage path.',
     nullable: true,
   })
@@ -36,7 +36,7 @@ export class UserProfileEntity implements UserProfileEntity {
   /**
    * User bio
    */
-  @Field((type) => String, {
+  @Field(() => String, {
     description: 'User bio.',
     nullable: true,
   })
@@ -45,7 +45,7 @@ export class UserProfileEntity implements UserProfileEntity {
   /**
    * User location string
    */
-  @Field((type) => String, {
+  @Field(() => String, {
     description: 'User location string.',
     nullable: true,
   })
@@ -54,7 +54,7 @@ export class UserProfileEntity implements UserProfileEntity {
   /**
    * User profile updated at
    */
-  @Field((type) => GraphQLISODateTime, {
+  @Field(() => GraphQLISODateTime, {
     description: 'User profile updated at.',
     nullable: true,
   })
