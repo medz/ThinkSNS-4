@@ -58,7 +58,7 @@
 		"prebuild": "rimraf dist",
 		"prestart": "rimraf dist && nest build",
 		"preserve": "rimraf dist",
-		"format": "prettier --write src",
+		"format": "prettier --write src \"prisma/**/*.js\"",
 		"start": "node dist/main",
 		"serve": "nest start --watch"
 	},
