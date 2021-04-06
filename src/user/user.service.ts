@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { SecuritySmsCode, User } from '@prisma/client';
 import { PasswordHelper } from 'src/helper';
 import { SecuritySmsService } from 'src/security/security-sms.service';
 import { UserSecurityCompareType } from './enums';
@@ -35,19 +35,15 @@ export class UserService {
     user: User,
     type: UserSecurityCompareType,
     security: string,
-  ): Promise<boolean | Function> {
+  ): Promise<boolean | (() => Promise<SecuritySmsCode>)> {
     switch (type) {
       case UserSecurityCompareType.PASSWORD:
         return await this.comparePassword(user, security);
       case UserSecurityCompareType.PHONE_SMS_CODE:
-        const value = await this.securitySmsService.compareCode(
+        return await this.securitySmsService.compareCodeWithUsedFn(
           user.phone,
           security,
         );
-        if (value) {
-          return () => this.securitySmsService.updateCodeToUsed(value);
-        }
-        return false;
       default:
         return false;
     }

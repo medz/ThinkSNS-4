@@ -10,6 +10,7 @@ import {
 import { Context } from 'src/context.decorator';
 import { ExecutionContext } from 'src/execution-context';
 import { PasswordHelper } from 'src/helper';
+import { SecuritySmsService } from 'src/security/security-sms.service';
 import { UserUpdatePasswordArgs } from '../dto/user-update-password.args';
 import { UserUpdatePhoneArgs } from '../dto/user-update-phone.args';
 import { UserUpdateUsernameArgs } from '../dto/user-update-username.args';
@@ -30,6 +31,7 @@ export class UserMutationResolver {
   constructor(
     private readonly prismaClient: PrismaClient,
     private readonly userService: UserService,
+    private readonly securitySmsService: SecuritySmsService,
   ) {}
 
   /**
@@ -161,9 +163,8 @@ export class UserMutationResolver {
       throw new Error(SECURITY_COMPARE_FAILED);
     }
 
-    const newPhoneCompared = await this.userService.compareSecurity(
-      Object.assign({}, context.user, { phone }),
-      UserSecurityCompareType.PHONE_SMS_CODE,
+    const newPhoneCompared = await this.securitySmsService.compareCodeWithUsedFn(
+      phone,
       newPhoneSecurity,
     );
     if (!newPhoneCompared || !(newPhoneCompared instanceof Function)) {

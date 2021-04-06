@@ -107,10 +107,28 @@ export class SecuritySmsService {
   }
 
   /**
+   * Compare code with used fn.
+   * @param phone Phone number.
+   * @param code The sent phone security SMS code.
+   * @returns `false` or `SecuritySmsCode`
+   */
+  async compareCodeWithUsedFn(
+    phone: string,
+    code: string,
+  ): Promise<false | (() => Promise<SecuritySmsCode>)> {
+    const value = await this.compareCode(phone, code);
+    if (value && value.id) {
+      return () => this.updateCodeToUsed(value);
+    }
+
+    return false;
+  }
+
+  /**
    * Update security to used.
    * @param security Security code.
    */
-  async updateCodeToUsed(security: SecuritySmsCode) {
+  async updateCodeToUsed(security: SecuritySmsCode): Promise<SecuritySmsCode> {
     return await this.prisma.securitySmsCode.update({
       where: { id: security.id },
       data: { usedAt: new Date() },
