@@ -2,7 +2,9 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { PrismaClient } from '@prisma/client';
 import { AuthorizationWith } from 'src/authorization.decorator';
 import {
+  PASSWORD_REQUIRED,
   SECURITY_COMPARE_FAILED,
+  USER_NOT_FOUND,
   USER_PHONE_FIELD_EXISTED,
   USER_UPDATE_PHONE_SECURITY_COMPARE_FAILED,
   USER_USERNAME_FIELD_EXISTED,
@@ -11,6 +13,7 @@ import { Context } from 'src/context.decorator';
 import { ExecutionContext } from 'src/execution-context';
 import { PasswordHelper } from 'src/helper';
 import { SecuritySmsService } from 'src/security/security-sms.service';
+import { ForgotPasswordArgs } from '../dto/forgot-password.args';
 import { UserUpdatePasswordArgs } from '../dto/user-update-password.args';
 import { UserUpdatePhoneArgs } from '../dto/user-update-phone.args';
 import { UserUpdateUsernameArgs } from '../dto/user-update-username.args';
@@ -177,6 +180,46 @@ export class UserMutationResolver {
     return await this.prismaClient.user.update({
       where: { id: context.user.id },
       data: { phone },
+    });
+  }
+
+  /**
+   * Forgot password, reset phone bound user password.
+   * @param args Forgot password args.
+   * @returns User
+   */
+  @Mutation(() => UserEntity, {
+    description: 'Forgot password, reset phone bound user password.',
+  })
+  async forgotPassword(
+    @Args({
+      type: () => ForgotPasswordArgs,
+      description: 'Forgot password args.',
+    })
+    args: ForgotPasswordArgs,
+  ) {
+    const { phone, password, security } = args;
+    const user = await this.prismaClient.user.findUnique({
+      where: { phone },
+      rejectOnNotFound: () => new Error(USER_NOT_FOUND),
+    });
+    if (!password) {
+      throw new Error(PASSWORD_REQUIRED);
+    }
+
+    const compared = await this.securitySmsService.compareCodeWithUsedFn(
+      phone,
+      security,
+    );
+    if (!compared || !(compared instanceof Function)) {
+      throw new Error(SECURITY_COMPARE_FAILED);
+    }
+
+    compared();
+
+    return await this.prismaClient.user.update({
+      where: { id: user.id },
+      data: { password: await PasswordHelper.hash(password) },
     });
   }
 }

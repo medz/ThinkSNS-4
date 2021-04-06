@@ -51,3 +51,8 @@ export const MEDIA_TYPE_DONT_SUPPORTED = 'MEDIA_TYPE_DONT_SUPPORTED';
  * Moment not found.
  */
 export const MOMENT_NOT_FOUND = 'MOMENT_NOT_FOUND';
+
+/**
+ * Password required.
+ */
+export const PASSWORD_REQUIRED = 'PASSWORD_REQUIRED';
