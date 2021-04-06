@@ -1,10 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
 const { readdirSync } = require('fs');
 const { join } = require('path');
-const { seeder: defaultUserSeeder } = require('./seeders/user.seeder');
 
 const _$suffix = '.seeder.js';
-const _$seederRunnerName = 'seeder';
 const _$prisma = new PrismaClient();
 
 /**
@@ -22,12 +20,16 @@ exports.prisma = _$prisma;
  * @param {string} context seeder path context.
  * @returns {Array<Function>} Seeders.
  */
-exports.findSeeders = (context) =>
-  readdirSync(context)
-    .filter((filename) => filename.endsWith(_$suffix))
-    .map((filename) => {
-      const { [_$seederRunnerName]: main } = require(join(context, filename));
-      return main;
-    });
+exports.findSeeders = (context) => {
+  const seederFilenames = readdirSync(context).filter((filename) =>
+    filename.endsWith(_$suffix),
+  );
 
-exports.defaultUser = defaultUserSeeder;
+  const seeders = [];
+  for (const seederFilename of seederFilenames) {
+    const _$seeders = require(join(context, seederFilename));
+    seeders.push(...Object.values(_$seeders));
+  }
+
+  return seeders;
+};

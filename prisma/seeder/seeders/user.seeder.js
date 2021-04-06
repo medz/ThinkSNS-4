@@ -4,7 +4,7 @@ const helpers = require('../helpers');
 
 const _$defaultUsername = 'socfony';
 
-exports.seeder = async () => {
+exports.defaultUser = async () => {
   const user = await helpers.prisma.user.findUnique({
     where: { username: _$defaultUsername },
     rejectOnNotFound: false,

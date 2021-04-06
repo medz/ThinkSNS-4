@@ -3,6 +3,7 @@ const { findSeeders, rootSeedersContext, prisma } = require('./seeder/helpers');
 async function main() {
   const seeders = findSeeders(rootSeedersContext);
   const result = [];
+
   for await (const seeder of seeders) {
     result.push(await seeder());
   }
