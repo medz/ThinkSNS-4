@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { TencentCloudStsFederationToken } from '../../sts';
 
 /**
- * Tencent CLoud COS credential
+ * Tencent Cloud COS credential
  */
 @ObjectType({
   description: 'Tencent CLoud COS credential',
@@ -31,4 +31,13 @@ export class TencentCloudCosCredentials {
     description: 'Tencent Cloud COS bucket region',
   })
   region: string;
+
+  /**
+   * Tencent Cloud COS object key.
+   */
+  @Field(() => String, {
+    description: 'Tencent Cloud COS object key',
+    nullable: false,
+  })
+  key: string;
 }

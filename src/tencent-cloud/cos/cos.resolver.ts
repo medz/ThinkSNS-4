@@ -6,6 +6,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import * as dayjs from 'dayjs';
 import { AuthorizationWith } from 'src/authorization.decorator';
 import { IDHelper } from 'src/helper';
 import { TencentCloudStsFederationToken } from '../sts';
@@ -74,8 +75,10 @@ export class TencentCloudCosResolver {
       authorization: () => Promise<TencentCloudStsFederationToken>;
     }
   > {
+    const key = '*';
     return Object.assign({}, this.cosService.options, {
-      authorization: () => this.cosService.createTemporaryReadCredential(),
+      authorization: () => this.cosService.createTemporaryReadCredential(key),
+      key,
     });
   }
 
@@ -99,9 +102,11 @@ export class TencentCloudCosResolver {
       authorization: () => Promise<TencentCloudStsFederationToken>;
     }
   > {
+    const key = dayjs().format('YYYY/MM/DD/') + IDHelper.id(64) + type;
+
     return Object.assign({}, this.cosService.options, {
-      authorization: () =>
-        this.cosService.createTemporaryWriteCredential(IDHelper.id(64) + type),
+      authorization: () => this.cosService.createTemporaryWriteCredential(key),
+      key,
     });
   }
 }

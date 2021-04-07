@@ -33,11 +33,11 @@ export class TencentCloudCosService {
   /**
    * Create Tencent Cloud COS temporary read credential.
    */
-  async createTemporaryReadCredential() {
+  createTemporaryReadCredential(name: string = '*') {
     const { bucket, region } = this.options;
     const stsClient = this.sts.createClient(region);
     const [_, uid] = bucket.split('-');
-    return await stsClient.GetFederationToken({
+    return stsClient.GetFederationToken({
       Name: IDHelper.alphabet(32),
       DurationSeconds: this.temporaryCredentialDurationSeconds,
       Policy: JSON.stringify({
@@ -50,7 +50,7 @@ export class TencentCloudCosService {
               'name/cos:HeadObject',
               'name/cos:OptionsObject',
             ],
-            resource: [`qcs::cos:${region}:uid/${uid}:${bucket}/*`],
+            resource: [`qcs::cos:${region}:uid/${uid}:${bucket}/${name}`],
           },
         ],
       }),
@@ -61,11 +61,11 @@ export class TencentCloudCosService {
    * Create Tencent Cloud COS temporary write credential.
    * @param name Tencent Cloud COS object key.
    */
-  async createTemporaryWriteCredential(name: string) {
+  createTemporaryWriteCredential(name: string) {
     const { bucket, region } = this.options;
     const stsClient = this.sts.createClient(region);
     const [_, uid] = bucket.split('-');
-    return await stsClient.GetFederationToken({
+    return stsClient.GetFederationToken({
       Name: IDHelper.alphabet(32),
       DurationSeconds: this.temporaryCredentialDurationSeconds,
       Policy: JSON.stringify({
