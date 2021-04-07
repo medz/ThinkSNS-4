@@ -1,11 +1,11 @@
 const { nanoid } = require('nanoid');
 const { hash, genSalt } = require('bcrypt');
-const helpers = require('../helpers');
+const { prisma } = require('../helpers');
 
 const _$defaultUsername = 'socfony';
 
 exports.defaultUser = async () => {
-  const user = await helpers.prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { username: _$defaultUsername },
     rejectOnNotFound: false,
   });
@@ -16,7 +16,7 @@ exports.defaultUser = async () => {
   const salt = await genSalt(10, 'b');
   const password = await hash('socfony', salt);
 
-  return await helpers.prisma.user.create({
+  return await prisma.user.create({
     data: {
       id: nanoid(64),
       username: _$defaultUsername,
