@@ -51,7 +51,7 @@ export class MomentWhereInput
   /**
    * created at date time filter
    */
-  @Field(() => StringFilter, {
+  @Field(() => DateTimeFilter, {
     description: 'created at date time filter',
     nullable: true,
   })
