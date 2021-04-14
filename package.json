@@ -24,7 +24,7 @@
 		"nanoid": "^3.1.22",
 		"reflect-metadata": "^0.1.13",
 		"rxjs": "^6.6.3",
-		"tencentcloud-sdk-nodejs": "^4.0.90"
+		"tencentcloud-sdk-nodejs": "^4.0.97"
 	},
 	"description": "Socfony is an open source social application, quickly build your own social application.",
 	"devDependencies": {
@@ -36,7 +36,7 @@
 		"prettier": "^2.2.1",
 		"prisma": "^2.20.1",
 		"rimraf": "^3.0.2",
-		"typescript": "^4.1.5"
+		"typescript": "^4.2.3"
 	},
 	"homepage": "https://socfony.com",
 	"keywords": [
