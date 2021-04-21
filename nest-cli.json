@@ -2,7 +2,16 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "webpack": false
+    "webpack": false,
+    "plugins": [
+      {
+        "name": "@nestjs/graphql",
+        "options": {
+          "introspectComments": true,
+          "typeFileNameSuffix": [".args.ts", ".input.ts", ".filter.ts", ".entity.ts"]
+        }
+      }
+    ]
   },
   "generateOptions": {
     "spec": false
