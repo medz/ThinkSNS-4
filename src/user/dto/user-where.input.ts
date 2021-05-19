@@ -75,7 +75,7 @@ export class UserWhereInput
   /**
    * user moment list relation filter
    */
-  @Field(() => UserProfileRelationFilter, {
+  @Field(() => MomentListRelationFilter, {
     nullable: true,
     description: 'user moment list relation filter',
   })
