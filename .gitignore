@@ -1,6 +1,0 @@
-.env
-
-docs
-dist
-node_modules
-schema.graphql
