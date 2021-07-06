@@ -1,3 +1,4 @@
 [submodule "prisma"]
-	path = prisma
-	url = https://github.com/socfony/prisma
+	branch = main
+	path   = prisma
+	url    = https://github.com/socfony/prisma

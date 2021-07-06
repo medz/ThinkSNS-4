@@ -23,8 +23,11 @@
     "schema": "prisma/schema.prisma"
   },
   "scripts": {
-    "dev": "ncc run src/main.ts",
-    "build": "ncc build src/main.ts -o dist"
+    "dev": "ts-node-dev --transpile-only --no-notify src/main.ts",
+    "build": "ncc build src/main.ts -o dist -m",
+    "prebuild": "prisma generate",
+    "prepreview": "prisma generate",
+    "preview": "ncc run src/main.ts"
   },
   "dependencies": {
     "@prisma/client": "^2.25.0",
@@ -35,7 +38,8 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.28.6",
-    "prisma": "^2.26.0",
+    "prisma": "~2.25.0",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.3.5"
   }
 }
