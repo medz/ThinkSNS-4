@@ -1,0 +1,25 @@
+{
+  "name": "@socfony/client-api",
+  "version": "1.0.0",
+  "description": "Socfony client API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/socfony/client-api.git"
+  },
+  "keywords": [
+    "socfony",
+    "app",
+    "prisma",
+    "node"
+  ],
+  "author": "ByteGem <service@bytegem.net>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/socfony/client-api/issues"
+  },
+  "homepage": "https://github.com/socfony/client-api#readme"
+}
