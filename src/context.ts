@@ -6,7 +6,7 @@ export interface Context {
 
 const prisma = new PrismaClient();
 
-export async function context(): Promise<Context> {
+export async function context(_app: any): Promise<Context> {
     return {
         prisma,
     };
