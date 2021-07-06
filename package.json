@@ -1,11 +1,8 @@
 {
+  "private": true,
   "name": "@socfony/client-api",
   "version": "1.0.0",
   "description": "Socfony client API",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/socfony/client-api.git"
@@ -16,10 +13,25 @@
     "prisma",
     "node"
   ],
-  "author": "ByteGem <service@bytegem.net>",
+  "author": "ByteGem, Inc. <service@bytegem.net>",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/socfony/client-api/issues"
   },
-  "homepage": "https://github.com/socfony/client-api#readme"
+  "homepage": "https://github.com/socfony/client-api#readme",
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.25.0",
+    "graphql": "^15.5.1",
+    "nexus": "^1.1.0",
+    "nexus-prisma": "^0.29.1"
+  },
+  "devDependencies": {
+    "prisma": "^2.26.0"
+  }
 }
