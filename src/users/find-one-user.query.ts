@@ -11,7 +11,7 @@ export const FindOneUserQuery = queryField('user', {
     args,
     description: "使用 ID 查询一个用户",
     type: nullable(UserEntity),
-    resolve(_source, { id }, { prisma }) {
+    resolve(_source, { id }, { prisma }: RuntimeContext) {
         return prisma.user.findUnique({
             where: { id },
             rejectOnNotFound: false,
