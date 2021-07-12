@@ -1,9 +1,7 @@
 import { objectType } from "nexus";
 import { User } from "nexus-prisma";
 
-/**
- * User entity
- */
+// Define a User Entity
 export const UserEntity = objectType({
     name: User.$name,
     description: User.$description,

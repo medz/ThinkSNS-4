@@ -5,7 +5,7 @@ export interface Context {
     readonly prisma: PrismaClient;
 }
 
-export async function context(_app: any): Promise<Context> {
+export async function contextFactory(): Promise<Context> {
     return {
         prisma: prisma,
     };
