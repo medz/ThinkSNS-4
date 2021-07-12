@@ -16,5 +16,5 @@ npm i
 
 ## 许可证
 
-Socfony Client API 采用 [BSD 3-Clause "New" or "Revised" License
-](https://opensource.org/licenses/BSD-3-Clause)
+Socfony Client API 采用 [3-Clause BSD
+](https://opensource.org/licenses/BSD-3-Clause) 许可证开源。
